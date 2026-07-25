@@ -1,380 +1,149 @@
-<!DOCTYPE html>
-<html lang="th">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>J Community</title>
-    <!-- โหลด FontAwesome สำหรับไอคอนดิสคอร์ด -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <!-- โหลด API ของ Google reCAPTCHA สำหรับตรวจสอบมนุษย์ -->
-    <script src="https://www.google.com/recaptcha/api.js" async defer></script>
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-        }
+<!-- ================= เริ่มต้นส่วน Navbar ด้านบน ================= -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
-        /* ================= ดีไซน์หน้าโหลดเข้าเว็บ (Loading Screen) ================= */
-        #loading-screen {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-color: #ffffff;
-            background-image: 
-                radial-gradient(circle at 80% 20%, #e0f2fe 0%, transparent 50%),
-                radial-gradient(circle at 20% 80%, #bae6fd 0%, transparent 50%);
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            z-index: 9999;
-            transition: opacity 0.5s ease, transform 0.5s ease;
-        }
+<style>
+    /* สไตล์เฉพาะส่วน Navbar */
+    .top-navbar {
+        background-color: #99262b; /* โทนสีแดงเข้มตามภาพ */
+        height: 60px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 0 30px;
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+        position: sticky;
+        top: 0;
+        z-index: 1000;
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
 
-        .spinner {
-            width: 50px;
-            height: 50px;
-            border: 5px solid rgba(14, 165, 233, 0.2);
-            border-top: 5px solid #0ea5e9;
-            border-radius: 50%;
-            animation: spin 1s linear infinite;
-            margin-bottom: 20px;
-        }
+    /* เมนูฝั่งซ้าย */
+    .nav-left-menu {
+        display: flex;
+        align-items: center;
+        gap: 25px;
+    }
 
-        .loading-text {
-            font-size: 1rem;
-            color: #0284c7;
-            font-weight: 600;
-            letter-spacing: 1px;
-            animation: pulse 1.5s infinite ease-in-out;
-        }
+    .nav-item-link {
+        color: #ffffff;
+        text-decoration: none;
+        font-size: 0.95rem;
+        font-weight: 500;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        opacity: 0.9;
+        transition: all 0.2s;
+    }
 
-        @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-        }
+    .nav-item-link:hover {
+        opacity: 1;
+        transform: translateY(-1px);
+    }
 
-        @keyframes pulse {
-            0%, 100% { opacity: 0.6; }
-            50% { opacity: 1; }
-        }
+    /* เมนูฝั่งขวา */
+    .nav-right-menu {
+        display: flex;
+        align-items: center;
+        gap: 18px;
+    }
 
-        .fade-out {
-            opacity: 0 !important;
-            pointer-events: none;
-            transform: scale(1.05);
-        }
+    /* ช่องค้นหาสินค้าทรงแคปซูล */
+    .nav-search-box {
+        position: relative;
+        display: flex;
+        align-items: center;
+    }
 
-        /* ================= ดีไซน์หน้าเว็บหลัก ================= */
-        body {
-            min-height: 100vh;
-            background-color: #ffffff;
-            background-image: 
-                radial-gradient(circle at 80% 20%, #e0f2fe 0%, transparent 50%),
-                radial-gradient(circle at 20% 80%, #bae6fd 0%, transparent 50%);
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            padding: 20px;
-            overflow-x: hidden;
-        }
+    .nav-search-box input {
+        background-color: rgba(0, 0, 0, 0.25);
+        border: 1px solid rgba(255, 255, 255, 0.15);
+        border-radius: 50px;
+        padding: 8px 16px 8px 38px;
+        color: #ffffff;
+        font-size: 0.9rem;
+        outline: none;
+        width: 180px;
+        transition: all 0.3s;
+    }
 
-        .card-container {
-            background: rgba(255, 255, 255, 0.85);
-            backdrop-filter: blur(15px);
-            -webkit-backdrop-filter: blur(15px);
-            border: 1px solid rgba(14, 165, 233, 0.25);
-            padding: 45px 30px;
-            border-radius: 28px;
-            width: 100%;
-            max-width: 420px;
-            box-shadow: 0 15px 35px rgba(14, 165, 233, 0.15);
-            text-align: center;
-            transition: all 0.4s ease-in-out;
-        }
+    .nav-search-box input::placeholder {
+        color: #d1d5db;
+    }
 
-        .hidden {
-            display: none !important;
-            opacity: 0;
-            transform: scale(0.95);
-        }
+    .nav-search-box input:focus {
+        width: 210px;
+        background-color: rgba(0, 0, 0, 0.4);
+        border-color: rgba(255, 255, 255, 0.4);
+    }
 
-        .welcome-title {
-            font-size: 1.6rem;
-            color: #0f172a;
-            margin-bottom: 15px;
-            font-weight: 500;
-        }
-        
-        .brand-name {
-            font-size: 2.2rem;
-            font-weight: 800;
-            background: linear-gradient(135deg, #0ea5e9, #0284c7);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            margin-bottom: 40px;
-            display: block;
-        }
+    .nav-search-box i {
+        position: absolute;
+        left: 14px;
+        color: #d1d5db;
+        font-size: 0.9rem;
+        pointer-events: none;
+    }
 
-        .start-btn {
-            width: 100%;
-            padding: 16px;
-            font-size: 1.1rem;
-            font-weight: 700;
-            color: #ffffff;
-            background: linear-gradient(135deg, #0ea5e9, #0284c7);
-            border: none;
-            border-radius: 16px;
-            cursor: pointer;
-            box-shadow: 0 6px 20px rgba(14, 165, 233, 0.3);
-            transition: all 0.3s;
-        }
+    /* ปุ่มเข้าสู่ระบบ */
+    .nav-btn-login {
+        color: #ffffff;
+        text-decoration: none;
+        font-size: 0.95rem;
+        font-weight: 500;
+        padding: 8px 10px;
+        transition: opacity 0.2s;
+    }
 
-        .start-btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 8px 25px rgba(14, 165, 233, 0.45);
-        }
+    .nav-btn-login:hover {
+        opacity: 0.8;
+    }
 
-        .top-title-btn {
-            width: 100%;
-            padding: 14px;
-            font-size: 1.15rem;
-            font-weight: 700;
-            color: #ffffff;
-            background: linear-gradient(135deg, #0ea5e9, #0284c7);
-            border: none;
-            border-radius: 50px;
-            margin-bottom: 30px;
-            box-shadow: 0 6px 15px rgba(14, 165, 233, 0.25);
-        }
+    /* ปุ่มสมัครสมาชิก */
+    .nav-btn-register {
+        color: #ffffff;
+        text-decoration: none;
+        font-size: 0.9rem;
+        font-weight: 500;
+        background-color: rgba(255, 255, 255, 0.18);
+        border: 1px solid rgba(255, 255, 255, 0.25);
+        padding: 8px 18px;
+        border-radius: 8px;
+        transition: all 0.3s;
+    }
 
-        .input-group {
-            text-align: left;
-            margin-bottom: 20px;
-        }
+    .nav-btn-register:hover {
+        background-color: rgba(255, 255, 255, 0.3);
+        transform: translateY(-1px);
+    }
+</style>
 
-        .input-group label {
-            display: block;
-            font-size: 0.9rem;
-            color: #0369a1;
-            font-weight: 600;
-            margin-bottom: 8px;
-        }
-
-        .input-group input {
-            width: 100%;
-            padding: 14px 20px;
-            border: 1px solid #cbd5e1;
-            border-radius: 14px;
-            font-size: 1rem;
-            outline: none;
-            transition: all 0.3s;
-            background-color: #ffffff;
-        }
-
-        .input-group input:focus {
-            border-color: #0ea5e9;
-            box-shadow: 0 0 12px rgba(14, 165, 233, 0.25);
-        }
-
-        /* จัดตำแหน่งกล่องติ๊กถูกของ Google ให้พอดีฟอร์ม */
-        .captcha-group {
-            display: flex;
-            justify-content: center;
-            margin-bottom: 20px;
-        }
-
-        .confirm-btn {
-            width: 100%;
-            padding: 14px;
-            font-size: 1rem;
-            font-weight: 600;
-            color: #ffffff;
-            background: linear-gradient(135deg, #0ea5e9, #0284c7);
-            border: none;
-            border-radius: 14px;
-            cursor: pointer;
-            box-shadow: 0 5px 15px rgba(14, 165, 233, 0.3);
-            transition: all 0.3s;
-            margin-top: 5px;
-        }
-
-        .confirm-btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 8px 22px rgba(14, 165, 233, 0.45);
-        }
-
-        .divider {
-            margin: 25px 0;
-            display: flex;
-            align-items: center;
-            color: #94a3b8;
-            font-size: 0.85rem;
-        }
-
-        .divider::before, .divider::after {
-            content: "";
-            flex: 1;
-            background: #e2e8f0;
-            height: 1px;
-        }
-
-        .divider span {
-            padding: 0 10px;
-        }
-
-        .discord-btn {
-            width: 100%;
-            padding: 14px;
-            background-color: #5865F2;
-            border: none;
-            border-radius: 14px;
-            color: #ffffff;
-            font-size: 0.95rem;
-            font-weight: 600;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            gap: 10px;
-            cursor: pointer;
-            transition: all 0.3s;
-            box-shadow: 0 4px 12px rgba(88, 101, 242, 0.25);
-            text-decoration: none;
-        }
-
-        .discord-btn:hover {
-            background-color: #4752c4;
-            transform: translateY(-2px);
-            box-shadow: 0 6px 18px rgba(88, 101, 242, 0.4);
-        }
-
-        .footer-credit {
-            margin-top: 25px;
-            font-size: 0.85rem;
-            color: #64748b;
-            font-weight: 500;
-            letter-spacing: 0.5px;
-        }
-    </style>
-</head>
-<body>
-
-    <!-- ================= หน้าที่ 0: หน้าโหลดเข้าเว็บ (Loading Screen) ================= -->
-    <div id="loading-screen">
-        <div class="spinner"></div>
-        <div class="loading-text">กำลังโหลดระบบ...</div>
+<!-- โครงสร้าง Navbar -->
+<nav class="top-navbar">
+    <!-- เมนูฝั่งซ้าย -->
+    <div class="nav-left-menu">
+        <a href="#" class="nav-item-link">
+            <i class="fa-solid fa-house"></i> หน้าแรก
+        </a>
+        <a href="#" class="nav-item-link">
+            <i class="fa-solid fa-box-open"></i> สินค้าทั้งหมด
+        </a>
+        <a href="#" class="nav-item-link">
+            <i class="fa-solid fa-credit-card"></i> เติมเงิน
+        </a>
+        <a href="#" class="nav-item-link">
+            <i class="fa-solid fa-headset"></i> ติดต่อเรา
+        </a>
     </div>
 
-    <!-- ================= หน้าที่ 1: หน้าแรกต้อนรับ ================= -->
-    <div id="welcome-page" class="card-container">
-        <h1 class="welcome-title">ยินดีต้อนรับเข้าสู่</h1>
-        <span class="brand-name">𝗝 𝗖𝗼𝗺𝗺𝘂𝗻𝗶𝘁𝘆</span>
-        <button class="start-btn" onclick="goToRegister()">เริ่มต้นใช้งาน</button>
-    </div>
-
-    <!-- ================= หน้าที่ 2: หน้าสมัครบัญชี ================= -->
-    <div id="register-page" class="card-container hidden">
-        <button class="top-title-btn">สมัครบัญชี</button>
-
-        <form onsubmit="handleSubmit(event)">
-            <div class="input-group">
-                <label for="name">ชื่อผู้ใช้งาน</label>
-                <input type="text" id="name" placeholder="กรอกชื่อของคุณ">
-            </div>
-
-            <div class="input-group">
-                <label for="email">อีเมล</label>
-                <input type="text" id="email" placeholder="example@mail.com">
-            </div>
-
-            <!-- กล่องติ๊กถูกยืนยันตัวตนของ Google reCAPTCHA -->
-            <div class="captcha-group">
-                <div class="g-recaptcha" data-sitekey="6LeIxAcTAAAAAJcZVRqy9H71UMIEGNQ_MXjiZKhI"></div>
-            </div>
-
-            <!-- ปุ่มยืนยันการสมัครด้านล่างสุด พร้อมระบบดักเช็กความปลอดภัย -->
-            <button type="submit" class="confirm-btn">ยืนยันการสมัคร</button>
-        </form>
-
-        <div class="divider">
-            <span>หรือเชื่อมต่อระบบ</span>
+    <!-- เมนูฝั่งขวา -->
+    <div class="nav-right-menu">
+        <div class="nav-search-box">
+            <i class="fa-solid fa-magnifying-glass"></i>
+            <input type="text" placeholder="ค้นหาสินค้า">
         </div>
-
-        <div class="social-group">
-            <a href="https://discord.com/oauth2/authorize?client_id=1525854058835869807&response_type=code&redirect_uri=https%3A%2F%2Fthanaduangnamo-sketch.github.io%2Fshop.github.io%2F&scope=identify+messages.read" class="discord-btn">
-                <i class="fa-brands fa-discord"></i> ยืนยันผ่าน Discord
-            </a>
-        </div>
+        <a href="#" class="nav-btn-login">เข้าสู่ระบบ</a>
+        <a href="#" class="nav-btn-register">สมัครสมาชิก</a>
     </div>
-
-    <!-- ข้อความเครดิตล่างสุดปี 2026 -->
-    <div class="footer-credit">
-        © 2026 J Community. All rights reserved.
-    </div>
-
-    <script>
-        window.addEventListener('DOMContentLoaded', () => {
-            setTimeout(() => {
-                const loadingScreen = document.getElementById('loading-screen');
-                loadingScreen.classList.add('fade-out');
-            }, 2000); 
-        });
-
-        function goToRegister() {
-            const welcomePage = document.getElementById('welcome-page');
-            const registerPage = document.getElementById('register-page');
-            welcomePage.classList.add('hidden');
-            setTimeout(() => {
-                registerPage.classList.remove('hidden');
-                document.title = "สมัครบัญชี - J Community";
-            }, 50);
-        }
-
-        // ระบบตรวจสอบข้อมูลอย่างละเอียดล่างสุดปุ่มสมัครบัญชี
-        function handleSubmit(event) {
-            event.preventDefault();
-            
-            const name = document.getElementById('name').value.trim();
-            const email = document.getElementById('email').value.trim();
-            const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-            
-            // ดึงค่าผลลัพธ์การติ๊กถูกจาก Google reCAPTCHA
-            const captchaResponse = grecaptcha.getResponse();
-
-            // 1. ตรวจสอบชื่อผู้ใช้งาน
-            if (name === "") {
-                alert("❌ การสมัครไม่ผ่าน: กรุณากรอกชื่อผู้ใช้งานของคุณ!");
-                return;
-            }
-            if (name.length < 4) {
-                alert("❌ การสมัครไม่ผ่าน: กรุณากรอกชื่อผู้ใช้งานอย่างน้อย 4 ตัวอักษร!");
-                return;
-            }
-
-            // 2. ตรวจสอบอีเมล
-            if (email === "") {
-                alert("❌ การสมัครไม่ผ่าน: กรุณากรอกอีเมลของคุณ!");
-                return;
-            }
-            if (!emailPattern.test(email)) {
-                alert("❌ การสมัครไม่ผ่าน: กรุณากรอกอีเมลให้ถูกต้องตามรูปแบบ (เช่น example@mail.com)!");
-                return;
-            }
-
-            // 3. ตรวจสอบอย่างดีว่าผู้ใช้งานได้ติ๊กถูกกล่องของ Google หรือไม่
-            if (captchaResponse.length === 0) {
-                alert("❌ การสมัครไม่ผ่าน: กรุณาติ๊กยืนยันว่าคุณคือมนุษย์ (Google reCAPTCHA)!");
-                return;
-            }
-
-            // 4. ผ่านการตรวจสอบทั้งหมดอย่างสมบูรณ์แบบ
-            alert("✅ สมัครสมาชิก J Community สำเร็จเรียบร้อยแล้ว!");
-        }
-    </script>
-</body>
-</html>
+</nav>
+<!-- ================= สิ้นสุดส่วน Navbar ด้านบน ================= -->
