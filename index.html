@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>J Community</title>
-    <!-- โหลดฟอนต์ Google Fonts (Kanit) เพื่อความสวยงาม -->
+    <!-- Google Fonts (Kanit) -->
     <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;600&display=swap" rel="stylesheet">
     
     <style>
@@ -16,8 +16,9 @@
         }
 
         body {
-            background-color: #0f172a; /* พื้นหลังโทนเข้ม */
+            background-color: #0f172a;
             color: #ffffff;
+            min-height: 100vh;
         }
 
         /* แถบบน (OS Top Bar) */
@@ -25,9 +26,9 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-            height: 60px;
+            height: 65px;
             padding: 0 2rem;
-            background: rgba(30, 41, 59, 0.7); /* กระจกใสแบบ OS Modern */
+            background: rgba(30, 41, 59, 0.75);
             backdrop-filter: blur(12px);
             border-bottom: 1px solid rgba(255, 255, 255, 0.1);
             position: sticky;
@@ -35,15 +36,14 @@
             z-index: 1000;
         }
 
-        /* โลโก้ J Community */
         .brand-logo {
             font-size: 1.3rem;
             font-weight: 600;
-            letter-spacing: 0.5px;
             color: #38bdf8;
             display: flex;
             align-items: center;
             gap: 8px;
+            cursor: pointer;
         }
 
         .brand-logo::before {
@@ -56,41 +56,131 @@
             box-shadow: 0 0 10px #38bdf8;
         }
 
-        /* กลุ่มเมนูนำทาง */
         .nav-links {
             display: flex;
             list-style: none;
-            gap: 1.5rem;
+            gap: 1rem;
             align-items: center;
         }
 
-        .nav-links a {
-            text-decoration: none;
+        /* ปุ่มเมนู */
+        .nav-btn {
+            background: transparent;
+            border: none;
             color: #cbd5e1;
             font-size: 0.95rem;
             padding: 0.5rem 1rem;
             border-radius: 8px;
+            cursor: pointer;
             transition: all 0.2s ease-in-out;
         }
 
-        /* Effect ตอนเอาเมาส์ชี้เมนู */
-        .nav-links a:hover {
+        .nav-btn:hover {
             color: #ffffff;
             background: rgba(255, 255, 255, 0.1);
         }
 
-        /* ปุ่มเข้าสู่ระบบแบบพิเศษ */
+        /* ปุ่มสร้างบัญชี (แบบเส้นขอบ) */
+        .btn-register {
+            border: 1px solid #38bdf8;
+            color: #38bdf8;
+        }
+
+        .btn-register:hover {
+            background: rgba(56, 189, 248, 0.1);
+            color: #ffffff;
+        }
+
+        /* ปุ่มเข้าสู่ระบบ (แบบปุ่มทึบ) */
         .btn-login {
             background: linear-gradient(135deg, #0284c7, #2563eb);
-            color: #ffffff !important;
+            color: #ffffff;
             font-weight: 500;
             box-shadow: 0 4px 12px rgba(37, 99, 235, 0.3);
         }
 
         .btn-login:hover {
-            background: linear-gradient(135deg, #0369a1, #1d4ed8) !important;
-            box-shadow: 0 4px 16px rgba(37, 99, 235, 0.5);
+            background: linear-gradient(135deg, #0369a1, #1d4ed8);
             transform: translateY(-1px);
+        }
+
+        /* ส่วนแสดงเนื้อหาแต่ละหน้า */
+        .main-container {
+            max-width: 1200px;
+            margin: 2rem auto;
+            padding: 0 1rem;
+        }
+
+        .page-section {
+            display: none; /* ซ่อนทุกหน้าไว้ก่อน */
+            animation: fadeIn 0.3s ease-in-out;
+        }
+
+        .page-section.active {
+            display: block; /* แสดงเฉพาะหน้าที่เลือก */
+        }
+
+        /* กล่องฟอร์ม (Login/Register) */
+        .auth-card {
+            max-width: 400px;
+            margin: 3rem auto;
+            background: rgba(30, 41, 59, 0.7);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 16px;
+            padding: 2rem;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+        }
+
+        .auth-card h2 {
+            margin-bottom: 1.5rem;
+            text-align: center;
+            color: #38bdf8;
+        }
+
+        .form-group {
+            margin-bottom: 1.2rem;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-size: 0.9rem;
+            color: #94a3b8;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 0.75rem;
+            border-radius: 8px;
+            border: 1px solid #334155;
+            background: #0f172a;
+            color: #fff;
+            outline: none;
+        }
+
+        .form-group input:focus {
+            border-color: #38bdf8;
+        }
+
+        .submit-btn {
+            width: 100%;
+            padding: 0.75rem;
+            background: #2563eb;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 1rem;
+            cursor: pointer;
+            margin-top: 1rem;
+        }
+
+        .submit-btn:hover {
+            background: #1d4ed8;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
         }
     </style>
 </head>
@@ -98,17 +188,98 @@
 
     <!-- OS Top Navbar -->
     <nav class="os-navbar">
-        <div class="brand-logo">
+        <div class="brand-logo" onclick="switchPage('home')">
             𝗝 𝗖𝗼𝗺𝗺𝘂𝗻𝗶𝘁𝘆
         </div>
         
-        <ul class="nav-links">
-            <li><a href="#">หน้าแรก</a></li>
-            <li><a href="#">ร้านค้า</a></li>
-            <li><a href="#">เติมเงิน</a></li>
-            <li><a href="#" class="btn-login">เข้าสู่ระบบ</a></li>
-        </ul>
+        <div class="nav-links">
+            <button class="nav-btn" onclick="switchPage('home')">หน้าแรก</button>
+            <button class="nav-btn" onclick="switchPage('shop')">ร้านค้า</button>
+            <button class="nav-btn" onclick="switchPage('topup')">เติมเงิน</button>
+            <button class="nav-btn btn-register" onclick="switchPage('register')">สร้างบัญชี</button>
+            <button class="nav-btn btn-login" onclick="switchPage('login')">เข้าสู่ระบบ</button>
+        </div>
     </nav>
+
+    <!-- Content Sections -->
+    <div class="main-container">
+        
+        <!-- หน้าหลัก -->
+        <div id="home" class="page-section active">
+            <h1>ยินดีต้อนรับสู่ 𝗝 𝗖𝗼𝗺𝗺𝘂𝗻𝗶𝘁𝘆</h1>
+            <p style="color: #94a3b8; margin-top: 10px;">ระบบพร้อมใช้งานแล้ว สามารถเลือกเข้าสู่ระบบหรือสมัครสมาชิกได้เลยครับ</p>
+        </div>
+
+        <!-- หน้าร้านค้า -->
+        <div id="shop" class="page-section">
+            <h1>🛒 ร้านค้า</h1>
+            <p style="color: #94a3b8; margin-top: 10px;">รายการสินค้าทั้งหมดจะแสดงที่นี่</p>
+        </div>
+
+        <!-- หน้าเติมเงิน -->
+        <div id="topup" class="page-section">
+            <h1>💳 เติมเงิน</h1>
+            <p style="color: #94a3b8; margin-top: 10px;">เลือกช่องทางการเติมเงินของคุณ</p>
+        </div>
+
+        <!-- หน้าสร้างบัญชี -->
+        <div id="register" class="page-section">
+            <div class="auth-card">
+                <h2>✨ สร้างบัญชีใหม่</h2>
+                <form onsubmit="event.preventDefault(); alert('สมัครสมาชิกสำเร็จ!');">
+                    <div class="form-group">
+                        <label>ชื่อผู้ใช้ (Username)</label>
+                        <input type="text" placeholder="ตั้งชื่อผู้ใช้..." required>
+                    </div>
+                    <div class="form-group">
+                        <label>อีเมล (Email)</label>
+                        <input type="email" placeholder="example@email.com" required>
+                    </div>
+                    <div class="form-group">
+                        <label>รหัสผ่าน (Password)</label>
+                        <input type="password" placeholder="อย่างน้อย 6 ตัวอักษร" required>
+                    </div>
+                    <button type="submit" class="submit-btn">ยืนยันสมัครสมาชิก</button>
+                </form>
+            </div>
+        </div>
+
+        <!-- หน้าเข้าสู่ระบบ -->
+        <div id="login" class="page-section">
+            <div class="auth-card">
+                <h2>🔑 เข้าสู่ระบบ</h2>
+                <form onsubmit="event.preventDefault(); alert('เข้าสู่ระบบสำเร็จ!');">
+                    <div class="form-group">
+                        <label>ชื่อผู้ใช้ / อีเมล</label>
+                        <input type="text" placeholder="กรอกชื่อผู้ใช้ หรือ อีเมล" required>
+                    </div>
+                    <div class="form-group">
+                        <label>รหัสผ่าน</label>
+                        <input type="password" placeholder="กรอกรหัสผ่าน" required>
+                    </div>
+                    <button type="submit" class="submit-btn">เข้าสู่ระบบ</button>
+                </form>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- Script ควบคุมการเปลี่ยนหน้า ไม่ให้เด้งหลุด -->
+    <script>
+        function switchPage(pageId) {
+            // ซ่อนทุกหน้า
+            const sections = document.querySelectorAll('.page-section');
+            sections.forEach(section => {
+                section.classList.remove('active');
+            });
+
+            // แสดงเฉพาะหน้าที่กด
+            const targetPage = document.getElementById(pageId);
+            if (targetPage) {
+                targetPage.classList.add('active');
+            }
+        }
+    </script>
 
 </body>
 </html>
