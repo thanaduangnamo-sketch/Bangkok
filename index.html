@@ -6,9 +6,10 @@
     <title>J Community</title>
     <!-- Google Fonts (Kanit) -->
     <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;600&display=swap" rel="stylesheet">
-    <!-- Google Identity Services SDK -->
-    <script src="https://accounts.google.com/gsi/client" async defer></script>
     
+    <!-- โหลด Google Identity Services API -->
+    <script src="https://accounts.google.com/gsi/client" async defer></script>
+
     <style>
         * {
             margin: 0;
@@ -18,14 +19,13 @@
         }
 
         body {
-            /* เปลี่ยนเป็นพื้นหลังโทนสีเทาเข้มแบบ Minimal OS */
             background-color: #1a1d20;
             background-image: radial-gradient(circle at 50% 0%, #2a2e33 0%, #1a1d20 75%);
             color: #f1f5f9;
             min-height: 100vh;
         }
 
-        /* แถบบน (OS Top Bar) สีเทากระจกฝ้า */
+        /* แถบบน (OS Top Bar) */
         .os-navbar {
             display: flex;
             justify-content: space-between;
@@ -69,7 +69,6 @@
             align-items: center;
         }
 
-        /* ปุ่มเมนู */
         .nav-btn {
             background: transparent;
             border: none;
@@ -86,7 +85,6 @@
             background: rgba(255, 255, 255, 0.08);
         }
 
-        /* ปุ่มสร้างบัญชี (ขอบฟ้า) */
         .btn-register {
             border: 1px solid #38bdf8;
             color: #38bdf8;
@@ -99,7 +97,6 @@
             box-shadow: 0 0 12px rgba(56, 189, 248, 0.3);
         }
 
-        /* ปุ่มเข้าสู่ระบบ */
         .btn-login {
             background: linear-gradient(135deg, #0284c7, #2563eb);
             color: #ffffff;
@@ -112,7 +109,6 @@
             transform: translateY(-1px);
         }
 
-        /* ส่วนเนื้อหาหลัก */
         .main-container {
             max-width: 1200px;
             margin: 2rem auto;
@@ -128,13 +124,11 @@
             display: block;
         }
 
-        /* การ์ดฟอร์มโทนสีเทาเข้ม สไตล์ OS Card */
         .auth-card {
             max-width: 420px;
             margin: 2rem auto;
             background: rgba(33, 37, 41, 0.85);
             backdrop-filter: blur(12px);
-            -webkit-backdrop-filter: blur(12px);
             border: 1px solid rgba(255, 255, 255, 0.08);
             border-radius: 16px;
             padding: 2.5rem 2rem;
@@ -155,38 +149,14 @@
             margin-bottom: 1.5rem;
         }
 
-        /* ปุ่ม Google */
-        .btn-google {
-            width: 100%;
+        /* สไตล์ปุ่ม Google */
+        .google-btn-wrapper {
             display: flex;
-            align-items: center;
             justify-content: center;
-            gap: 12px;
-            background: #ffffff;
-            color: #1f2937;
-            border: none;
-            padding: 0.8rem;
-            border-radius: 10px;
-            font-weight: 600;
-            font-size: 0.95rem;
-            cursor: pointer;
-            transition: all 0.2s ease-in-out;
             margin-bottom: 1.5rem;
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+            width: 100%;
         }
 
-        .btn-google:hover {
-            background: #f8fafc;
-            transform: translateY(-1px);
-            box-shadow: 0 6px 15px rgba(255, 255, 255, 0.15);
-        }
-
-        .btn-google img {
-            width: 20px;
-            height: 20px;
-        }
-
-        /* เส้นแบ่ง OR */
         .divider {
             display: flex;
             align-items: center;
@@ -225,7 +195,6 @@
             background: #121417;
             color: #fff;
             outline: none;
-            transition: all 0.2s ease-in-out;
         }
 
         .form-group input:focus {
@@ -244,13 +213,6 @@
             font-weight: 500;
             cursor: pointer;
             margin-top: 0.5rem;
-            transition: all 0.2s ease-in-out;
-            box-shadow: 0 4px 12px rgba(37, 99, 235, 0.3);
-        }
-
-        .submit-btn:hover {
-            background: linear-gradient(135deg, #0369a1, #1d4ed8);
-            transform: translateY(-1px);
         }
 
         @keyframes fadeIn {
@@ -276,15 +238,13 @@
         </div>
     </nav>
 
-    <!-- Content Sections -->
+    <!-- Main Container -->
     <div class="main-container">
         
-        <!-- หน้าหลัก -->
+        <!-- หน้าแรก -->
         <div id="home" class="page-section active">
             <h1 style="font-size: 2rem;">🖥️ ยินดีต้อนรับสู่ 𝗝 𝗖𝗼𝗺𝗺𝘂𝗻𝗶𝘁𝘆</h1>
-            <p style="color: #94a3b8; margin-top: 10px; font-size: 1rem;">
-                ระบบพร้อมใช้งานแล้ว สามารถเลือกสมัครสมาชิกด้วย Google หรือเข้าสู่ระบบได้เลยครับ
-            </p>
+            <p style="color: #94a3b8; margin-top: 10px;">เลือกสมัครสมาชิกหรือเข้าสู่ระบบได้เลยครับ</p>
         </div>
 
         <!-- หน้าร้านค้า -->
@@ -305,11 +265,26 @@
                 <h2>✨ สมัครสมาชิก</h2>
                 <p class="subtitle">เริ่มต้นใช้งานและเข้าร่วมชุมชน J Community</p>
                 
-                <!-- ปุ่ม Google Register -->
-                <button class="btn-google" onclick="handleGoogleAuth()">
-                    <img src="https://www.svgrepo.com/show/475656/google-color.svg" alt="Google">
-                    สมัครด้วย Google
-                </button>
+                <!-- ปุ่ม Google จริงจาก Google API -->
+                <div class="google-btn-wrapper">
+                    <div id="g_id_onload"
+                        data-client_id="YOUR_GOOGLE_CLIENT_ID.apps.googleusercontent.com"
+                        data-context="signup"
+                        data-ux_mode="popup"
+                        data-callback="handleCredentialResponse"
+                        data-auto_prompt="false">
+                    </div>
+
+                    <div class="g_id_signin"
+                        data-type="standard"
+                        data-shape="rectangular"
+                        data-theme="outline"
+                        data-text="signup_with"
+                        data-size="large"
+                        data-logo_alignment="left"
+                        data-width="350">
+                    </div>
+                </div>
 
                 <div class="divider"><span>หรือ สมัครด้วยอีเมล</span></div>
 
@@ -338,10 +313,17 @@
                 <p class="subtitle">กรอกข้อมูลเพื่อเข้าสู่ระบบของคุณ</p>
                 
                 <!-- ปุ่ม Google Login -->
-                <button class="btn-google" onclick="handleGoogleAuth()">
-                    <img src="https://www.svgrepo.com/show/475656/google-color.svg" alt="Google">
-                    เข้าสู่ระบบด้วย Google
-                </button>
+                <div class="google-btn-wrapper">
+                    <div class="g_id_signin"
+                        data-type="standard"
+                        data-shape="rectangular"
+                        data-theme="outline"
+                        data-text="signin_with"
+                        data-size="large"
+                        data-logo_alignment="left"
+                        data-width="350">
+                    </div>
+                </div>
 
                 <div class="divider"><span>หรือ เข้าสู่ระบบด้วยอีเมล</span></div>
 
@@ -374,8 +356,10 @@
             }
         }
 
-        function handleGoogleAuth() {
-            alert('กำลังเชื่อมต่อระบบยืนยันตัวตนผ่าน Google...');
+        // ฟังก์ชันรับข้อมูลเมื่อผู้ใช้ล็อกอินผ่าน Google สำเร็จ
+        function handleCredentialResponse(response) {
+            console.log("Encoded JWT ID token: " + response.credential);
+            alert("เข้าสู่ระบบด้วย Google สำเร็จเรียบร้อยแล้ว!");
         }
     </script>
 
