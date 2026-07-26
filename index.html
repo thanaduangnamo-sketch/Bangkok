@@ -6,6 +6,8 @@
     <title>J Community</title>
     <!-- Google Fonts (Kanit) -->
     <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;600&display=swap" rel="stylesheet">
+    <!-- Google Identity Services SDK -->
+    <script src="https://accounts.google.com/gsi/client" async defer></script>
     
     <style>
         * {
@@ -49,11 +51,12 @@
         .brand-logo::before {
             content: '';
             display: inline-block;
-            width: 10px;
+            width: 100px;
             height: 10px;
             background-color: #38bdf8;
             border-radius: 50%;
             box-shadow: 0 0 10px #38bdf8;
+            width: 10px;
         }
 
         .nav-links {
@@ -112,18 +115,18 @@
         }
 
         .page-section {
-            display: none; /* ซ่อนทุกหน้าไว้ก่อน */
+            display: none;
             animation: fadeIn 0.3s ease-in-out;
         }
 
         .page-section.active {
-            display: block; /* แสดงเฉพาะหน้าที่เลือก */
+            display: block;
         }
 
         /* กล่องฟอร์ม (Login/Register) */
         .auth-card {
             max-width: 400px;
-            margin: 3rem auto;
+            margin: 2rem auto;
             background: rgba(30, 41, 59, 0.7);
             border: 1px solid rgba(255, 255, 255, 0.1);
             border-radius: 16px;
@@ -135,6 +138,55 @@
             margin-bottom: 1.5rem;
             text-align: center;
             color: #38bdf8;
+        }
+
+        /* ปุ่ม Google Login */
+        .btn-google {
+            width: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            background: #ffffff;
+            color: #1f2937;
+            border: none;
+            padding: 0.75rem;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease-in-out;
+            margin-bottom: 1.5rem;
+        }
+
+        .btn-google:hover {
+            background: #f3f4f6;
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(255, 255, 255, 0.2);
+        }
+
+        .btn-google img {
+            width: 20px;
+            height: 20px;
+        }
+
+        /* เส้นแบ่ง OR */
+        .divider {
+            display: flex;
+            align-items: center;
+            text-align: center;
+            color: #64748b;
+            font-size: 0.85rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .divider::before, .divider::after {
+            content: '';
+            flex: 1;
+            border-bottom: 1px solid #334155;
+        }
+
+        .divider span {
+            padding: 0 10px;
         }
 
         .form-group {
@@ -171,7 +223,7 @@
             border-radius: 8px;
             font-size: 1rem;
             cursor: pointer;
-            margin-top: 1rem;
+            margin-top: 0.5rem;
         }
 
         .submit-btn:hover {
@@ -207,7 +259,7 @@
         <!-- หน้าหลัก -->
         <div id="home" class="page-section active">
             <h1>ยินดีต้อนรับสู่ 𝗝 𝗖𝗼𝗺𝗺𝘂𝗻𝗶𝘁𝘆</h1>
-            <p style="color: #94a3b8; margin-top: 10px;">ระบบพร้อมใช้งานแล้ว สามารถเลือกเข้าสู่ระบบหรือสมัครสมาชิกได้เลยครับ</p>
+            <p style="color: #94a3b8; margin-top: 10px;">เลือกสมัครสมาชิกด้วย Google หรือบัญชีปกติได้ทันที</p>
         </div>
 
         <!-- หน้าร้านค้า -->
@@ -226,7 +278,16 @@
         <div id="register" class="page-section">
             <div class="auth-card">
                 <h2>✨ สร้างบัญชีใหม่</h2>
-                <form onsubmit="event.preventDefault(); alert('สมัครสมาชิกสำเร็จ!');">
+                
+                <!-- ปุ่ม Google Register -->
+                <button class="btn-google" onclick="handleGoogleAuth()">
+                    <img src="https://www.svgrepo.com/show/475656/google-color.svg" alt="Google">
+                    สมัครด้วย Google
+                </button>
+
+                <div class="divider"><span>หรือใช้อีเมลสมัคร</span></div>
+
+                <form onsubmit="event.preventDefault(); alert('สมัครสมาชิกด้วยอีเมลสำเร็จ!');">
                     <div class="form-group">
                         <label>ชื่อผู้ใช้ (Username)</label>
                         <input type="text" placeholder="ตั้งชื่อผู้ใช้..." required>
@@ -248,6 +309,15 @@
         <div id="login" class="page-section">
             <div class="auth-card">
                 <h2>🔑 เข้าสู่ระบบ</h2>
+                
+                <!-- ปุ่ม Google Login -->
+                <button class="btn-google" onclick="handleGoogleAuth()">
+                    <img src="https://www.svgrepo.com/show/475656/google-color.svg" alt="Google">
+                    เข้าสู่ระบบด้วย Google
+                </button>
+
+                <div class="divider"><span>หรือใช้อีเมลเข้าสู่ระบบ</span></div>
+
                 <form onsubmit="event.preventDefault(); alert('เข้าสู่ระบบสำเร็จ!');">
                     <div class="form-group">
                         <label>ชื่อผู้ใช้ / อีเมล</label>
@@ -264,20 +334,24 @@
 
     </div>
 
-    <!-- Script ควบคุมการเปลี่ยนหน้า ไม่ให้เด้งหลุด -->
     <script>
+        // ฟังก์ชันสลับหน้า
         function switchPage(pageId) {
-            // ซ่อนทุกหน้า
             const sections = document.querySelectorAll('.page-section');
             sections.forEach(section => {
                 section.classList.remove('active');
             });
 
-            // แสดงเฉพาะหน้าที่กด
             const targetPage = document.getElementById(pageId);
             if (targetPage) {
                 targetPage.classList.add('active');
             }
+        }
+
+        // ฟังก์ชันจำลองการทำงานเมื่อกดปุ่ม Google
+        function handleGoogleAuth() {
+            alert('กำลังเชื่อมต่อระบบยืนยันตัวตนผ่าน Google...');
+            // เมื่อเชื่อมกับ Backend ในอนาคต ให้ใส่ Client ID จาก Google Cloud Console ตรงนี้ครับ
         }
     </script>
 
