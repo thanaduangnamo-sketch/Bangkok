@@ -18,25 +18,24 @@
         }
 
         body {
-            /* พื้นหลังรูปภาพป่าไม้สวยงาม + Overlay โทนเข้ม */
-            background: linear-gradient(rgba(15, 23, 42, 0.65), rgba(15, 23, 42, 0.75)), 
-                        url('https://images.unsplash.com/photo-1511497584788-8767611136f6?q=80&w=1920&auto=format&fit=crop') no-repeat center center fixed;
-            background-size: cover;
-            color: #ffffff;
+            /* เปลี่ยนเป็นพื้นหลังโทนสีเทาเข้มแบบ Minimal OS */
+            background-color: #1a1d20;
+            background-image: radial-gradient(circle at 50% 0%, #2a2e33 0%, #1a1d20 75%);
+            color: #f1f5f9;
             min-height: 100vh;
         }
 
-        /* แถบบน (OS Top Bar) สไตล์กระจกฝ้าแบบ OS */
+        /* แถบบน (OS Top Bar) สีเทากระจกฝ้า */
         .os-navbar {
             display: flex;
             justify-content: space-between;
             align-items: center;
             height: 65px;
             padding: 0 2rem;
-            background: rgba(15, 23, 42, 0.55);
+            background: rgba(33, 37, 41, 0.75);
             backdrop-filter: blur(16px);
             -webkit-backdrop-filter: blur(16px);
-            border-bottom: 1px solid rgba(255, 255, 255, 0.15);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.08);
             position: sticky;
             top: 0;
             z-index: 1000;
@@ -50,7 +49,7 @@
             align-items: center;
             gap: 8px;
             cursor: pointer;
-            text-shadow: 0 0 10px rgba(56, 189, 248, 0.5);
+            text-shadow: 0 0 10px rgba(56, 189, 248, 0.4);
         }
 
         .brand-logo::before {
@@ -74,7 +73,7 @@
         .nav-btn {
             background: transparent;
             border: none;
-            color: #e2e8f0;
+            color: #94a3b8;
             font-size: 0.95rem;
             padding: 0.5rem 1rem;
             border-radius: 8px;
@@ -84,10 +83,10 @@
 
         .nav-btn:hover {
             color: #ffffff;
-            background: rgba(255, 255, 255, 0.15);
+            background: rgba(255, 255, 255, 0.08);
         }
 
-        /* ปุ่มสร้างบัญชี (ขอบเรืองแสง) */
+        /* ปุ่มสร้างบัญชี (ขอบฟ้า) */
         .btn-register {
             border: 1px solid #38bdf8;
             color: #38bdf8;
@@ -95,9 +94,9 @@
         }
 
         .btn-register:hover {
-            background: rgba(56, 189, 248, 0.2);
+            background: rgba(56, 189, 248, 0.15);
             color: #ffffff;
-            box-shadow: 0 0 12px rgba(56, 189, 248, 0.4);
+            box-shadow: 0 0 12px rgba(56, 189, 248, 0.3);
         }
 
         /* ปุ่มเข้าสู่ระบบ */
@@ -105,7 +104,7 @@
             background: linear-gradient(135deg, #0284c7, #2563eb);
             color: #ffffff;
             font-weight: 500;
-            box-shadow: 0 4px 12px rgba(37, 99, 235, 0.4);
+            box-shadow: 0 4px 12px rgba(37, 99, 235, 0.3);
         }
 
         .btn-login:hover {
@@ -122,24 +121,24 @@
 
         .page-section {
             display: none;
-            animation: fadeIn 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+            animation: fadeIn 0.3s ease-in-out;
         }
 
         .page-section.active {
             display: block;
         }
 
-        /* การ์ดฟอร์มลงทะเบียน/เข้าสู่ระบบ สไตล์กระจกใส (Glassmorphism) */
+        /* การ์ดฟอร์มโทนสีเทาเข้ม สไตล์ OS Card */
         .auth-card {
             max-width: 420px;
             margin: 2rem auto;
-            background: rgba(15, 23, 42, 0.65);
-            backdrop-filter: blur(20px);
-            -webkit-backdrop-filter: blur(20px);
-            border: 1px solid rgba(255, 255, 255, 0.18);
-            border-radius: 20px;
+            background: rgba(33, 37, 41, 0.85);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 16px;
             padding: 2.5rem 2rem;
-            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.5);
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.4);
         }
 
         .auth-card h2 {
@@ -156,7 +155,7 @@
             margin-bottom: 1.5rem;
         }
 
-        /* ปุ่มสมัครผ่าน Google */
+        /* ปุ่ม Google */
         .btn-google {
             width: 100%;
             display: flex;
@@ -178,8 +177,8 @@
 
         .btn-google:hover {
             background: #f8fafc;
-            transform: translateY(-2px);
-            box-shadow: 0 6px 15px rgba(255, 255, 255, 0.25);
+            transform: translateY(-1px);
+            box-shadow: 0 6px 15px rgba(255, 255, 255, 0.15);
         }
 
         .btn-google img {
@@ -192,7 +191,7 @@
             display: flex;
             align-items: center;
             text-align: center;
-            color: #94a3b8;
+            color: #64748b;
             font-size: 0.85rem;
             margin-bottom: 1.5rem;
         }
@@ -200,7 +199,7 @@
         .divider::before, .divider::after {
             content: '';
             flex: 1;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.15);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
         }
 
         .divider span {
@@ -222,8 +221,8 @@
             width: 100%;
             padding: 0.8rem 1rem;
             border-radius: 10px;
-            border: 1px solid rgba(255, 255, 255, 0.15);
-            background: rgba(15, 23, 42, 0.6);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            background: #121417;
             color: #fff;
             outline: none;
             transition: all 0.2s ease-in-out;
@@ -231,7 +230,6 @@
 
         .form-group input:focus {
             border-color: #38bdf8;
-            background: rgba(15, 23, 42, 0.8);
             box-shadow: 0 0 0 3px rgba(56, 189, 248, 0.2);
         }
 
@@ -253,11 +251,10 @@
         .submit-btn:hover {
             background: linear-gradient(135deg, #0369a1, #1d4ed8);
             transform: translateY(-1px);
-            box-shadow: 0 6px 16px rgba(37, 99, 235, 0.4);
         }
 
         @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(12px); }
+            from { opacity: 0; transform: translateY(8px); }
             to { opacity: 1; transform: translateY(0); }
         }
     </style>
@@ -284,22 +281,22 @@
         
         <!-- หน้าหลัก -->
         <div id="home" class="page-section active">
-            <h1 style="font-size: 2.2rem; text-shadow: 0 2px 10px rgba(0,0,0,0.5);">🌲 ยินดีต้อนรับสู่ 𝗝 𝗖𝗼𝗺𝗺𝘂𝗻𝗶𝘁𝘆</h1>
-            <p style="color: #cbd5e1; margin-top: 10px; font-size: 1.1rem; text-shadow: 0 2px 5px rgba(0,0,0,0.5);">
-                เข้าสู่สังคมเกมมิ่งในบรรยากาศป่าไม้สุดผ่อนคลาย สมัครสมาชิกร่วมกับเราได้แล้ววันนี้
+            <h1 style="font-size: 2rem;">🖥️ ยินดีต้อนรับสู่ 𝗝 𝗖𝗼𝗺𝗺𝘂𝗻𝗶𝘁𝘆</h1>
+            <p style="color: #94a3b8; margin-top: 10px; font-size: 1rem;">
+                ระบบพร้อมใช้งานแล้ว สามารถเลือกสมัครสมาชิกด้วย Google หรือเข้าสู่ระบบได้เลยครับ
             </p>
         </div>
 
         <!-- หน้าร้านค้า -->
         <div id="shop" class="page-section">
             <h1>🛒 ร้านค้า</h1>
-            <p style="color: #cbd5e1; margin-top: 10px;">รายการสินค้าทั้งหมดจะแสดงที่นี่</p>
+            <p style="color: #94a3b8; margin-top: 10px;">รายการสินค้าทั้งหมดจะแสดงที่นี่</p>
         </div>
 
         <!-- หน้าเติมเงิน -->
         <div id="topup" class="page-section">
             <h1>💳 เติมเงิน</h1>
-            <p style="color: #cbd5e1; margin-top: 10px;">เลือกช่องทางการเติมเงินของคุณ</p>
+            <p style="color: #94a3b8; margin-top: 10px;">เลือกช่องทางการเติมเงินของคุณ</p>
         </div>
 
         <!-- หน้าสร้างบัญชี (Register) -->
@@ -365,7 +362,6 @@
     </div>
 
     <script>
-        // ฟังก์ชันสลับหน้าโดยไม่รีเฟรช
         function switchPage(pageId) {
             const sections = document.querySelectorAll('.page-section');
             sections.forEach(section => {
@@ -378,7 +374,6 @@
             }
         }
 
-        // ฟังก์ชันตัวอย่างเมื่อกดปุ่ม Google
         function handleGoogleAuth() {
             alert('กำลังเชื่อมต่อระบบยืนยันตัวตนผ่าน Google...');
         }
