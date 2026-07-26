@@ -18,21 +18,25 @@
         }
 
         body {
-            background-color: #0f172a;
+            /* พื้นหลังรูปภาพป่าไม้สวยงาม + Overlay โทนเข้ม */
+            background: linear-gradient(rgba(15, 23, 42, 0.65), rgba(15, 23, 42, 0.75)), 
+                        url('https://images.unsplash.com/photo-1511497584788-8767611136f6?q=80&w=1920&auto=format&fit=crop') no-repeat center center fixed;
+            background-size: cover;
             color: #ffffff;
             min-height: 100vh;
         }
 
-        /* แถบบน (OS Top Bar) */
+        /* แถบบน (OS Top Bar) สไตล์กระจกฝ้าแบบ OS */
         .os-navbar {
             display: flex;
             justify-content: space-between;
             align-items: center;
             height: 65px;
             padding: 0 2rem;
-            background: rgba(30, 41, 59, 0.75);
-            backdrop-filter: blur(12px);
-            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            background: rgba(15, 23, 42, 0.55);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.15);
             position: sticky;
             top: 0;
             z-index: 1000;
@@ -46,17 +50,17 @@
             align-items: center;
             gap: 8px;
             cursor: pointer;
+            text-shadow: 0 0 10px rgba(56, 189, 248, 0.5);
         }
 
         .brand-logo::before {
             content: '';
             display: inline-block;
-            width: 100px;
+            width: 10px;
             height: 10px;
             background-color: #38bdf8;
             border-radius: 50%;
             box-shadow: 0 0 10px #38bdf8;
-            width: 10px;
         }
 
         .nav-links {
@@ -70,7 +74,7 @@
         .nav-btn {
             background: transparent;
             border: none;
-            color: #cbd5e1;
+            color: #e2e8f0;
             font-size: 0.95rem;
             padding: 0.5rem 1rem;
             border-radius: 8px;
@@ -80,26 +84,28 @@
 
         .nav-btn:hover {
             color: #ffffff;
-            background: rgba(255, 255, 255, 0.1);
+            background: rgba(255, 255, 255, 0.15);
         }
 
-        /* ปุ่มสร้างบัญชี (แบบเส้นขอบ) */
+        /* ปุ่มสร้างบัญชี (ขอบเรืองแสง) */
         .btn-register {
             border: 1px solid #38bdf8;
             color: #38bdf8;
+            background: rgba(56, 189, 248, 0.05);
         }
 
         .btn-register:hover {
-            background: rgba(56, 189, 248, 0.1);
+            background: rgba(56, 189, 248, 0.2);
             color: #ffffff;
+            box-shadow: 0 0 12px rgba(56, 189, 248, 0.4);
         }
 
-        /* ปุ่มเข้าสู่ระบบ (แบบปุ่มทึบ) */
+        /* ปุ่มเข้าสู่ระบบ */
         .btn-login {
             background: linear-gradient(135deg, #0284c7, #2563eb);
             color: #ffffff;
             font-weight: 500;
-            box-shadow: 0 4px 12px rgba(37, 99, 235, 0.3);
+            box-shadow: 0 4px 12px rgba(37, 99, 235, 0.4);
         }
 
         .btn-login:hover {
@@ -107,7 +113,7 @@
             transform: translateY(-1px);
         }
 
-        /* ส่วนแสดงเนื้อหาแต่ละหน้า */
+        /* ส่วนเนื้อหาหลัก */
         .main-container {
             max-width: 1200px;
             margin: 2rem auto;
@@ -116,52 +122,64 @@
 
         .page-section {
             display: none;
-            animation: fadeIn 0.3s ease-in-out;
+            animation: fadeIn 0.4s cubic-bezier(0.16, 1, 0.3, 1);
         }
 
         .page-section.active {
             display: block;
         }
 
-        /* กล่องฟอร์ม (Login/Register) */
+        /* การ์ดฟอร์มลงทะเบียน/เข้าสู่ระบบ สไตล์กระจกใส (Glassmorphism) */
         .auth-card {
-            max-width: 400px;
+            max-width: 420px;
             margin: 2rem auto;
-            background: rgba(30, 41, 59, 0.7);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            border-radius: 16px;
-            padding: 2rem;
-            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+            background: rgba(15, 23, 42, 0.65);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.18);
+            border-radius: 20px;
+            padding: 2.5rem 2rem;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.5);
         }
 
         .auth-card h2 {
-            margin-bottom: 1.5rem;
+            margin-bottom: 0.5rem;
             text-align: center;
-            color: #38bdf8;
+            color: #ffffff;
+            font-size: 1.6rem;
         }
 
-        /* ปุ่ม Google Login */
+        .auth-card p.subtitle {
+            text-align: center;
+            color: #94a3b8;
+            font-size: 0.9rem;
+            margin-bottom: 1.5rem;
+        }
+
+        /* ปุ่มสมัครผ่าน Google */
         .btn-google {
             width: 100%;
             display: flex;
             align-items: center;
             justify-content: center;
-            gap: 10px;
+            gap: 12px;
             background: #ffffff;
             color: #1f2937;
             border: none;
-            padding: 0.75rem;
-            border-radius: 8px;
+            padding: 0.8rem;
+            border-radius: 10px;
             font-weight: 600;
+            font-size: 0.95rem;
             cursor: pointer;
             transition: all 0.2s ease-in-out;
             margin-bottom: 1.5rem;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
         }
 
         .btn-google:hover {
-            background: #f3f4f6;
-            transform: translateY(-1px);
-            box-shadow: 0 4px 12px rgba(255, 255, 255, 0.2);
+            background: #f8fafc;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 15px rgba(255, 255, 255, 0.25);
         }
 
         .btn-google img {
@@ -174,7 +192,7 @@
             display: flex;
             align-items: center;
             text-align: center;
-            color: #64748b;
+            color: #94a3b8;
             font-size: 0.85rem;
             margin-bottom: 1.5rem;
         }
@@ -182,11 +200,11 @@
         .divider::before, .divider::after {
             content: '';
             flex: 1;
-            border-bottom: 1px solid #334155;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.15);
         }
 
         .divider span {
-            padding: 0 10px;
+            padding: 0 12px;
         }
 
         .form-group {
@@ -197,41 +215,49 @@
             display: block;
             margin-bottom: 0.5rem;
             font-size: 0.9rem;
-            color: #94a3b8;
+            color: #cbd5e1;
         }
 
         .form-group input {
             width: 100%;
-            padding: 0.75rem;
-            border-radius: 8px;
-            border: 1px solid #334155;
-            background: #0f172a;
+            padding: 0.8rem 1rem;
+            border-radius: 10px;
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            background: rgba(15, 23, 42, 0.6);
             color: #fff;
             outline: none;
+            transition: all 0.2s ease-in-out;
         }
 
         .form-group input:focus {
             border-color: #38bdf8;
+            background: rgba(15, 23, 42, 0.8);
+            box-shadow: 0 0 0 3px rgba(56, 189, 248, 0.2);
         }
 
         .submit-btn {
             width: 100%;
-            padding: 0.75rem;
-            background: #2563eb;
+            padding: 0.8rem;
+            background: linear-gradient(135deg, #0284c7, #2563eb);
             color: white;
             border: none;
-            border-radius: 8px;
+            border-radius: 10px;
             font-size: 1rem;
+            font-weight: 500;
             cursor: pointer;
             margin-top: 0.5rem;
+            transition: all 0.2s ease-in-out;
+            box-shadow: 0 4px 12px rgba(37, 99, 235, 0.3);
         }
 
         .submit-btn:hover {
-            background: #1d4ed8;
+            background: linear-gradient(135deg, #0369a1, #1d4ed8);
+            transform: translateY(-1px);
+            box-shadow: 0 6px 16px rgba(37, 99, 235, 0.4);
         }
 
         @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(10px); }
+            from { opacity: 0; transform: translateY(12px); }
             to { opacity: 1; transform: translateY(0); }
         }
     </style>
@@ -258,26 +284,29 @@
         
         <!-- หน้าหลัก -->
         <div id="home" class="page-section active">
-            <h1>ยินดีต้อนรับสู่ 𝗝 𝗖𝗼𝗺𝗺𝘂𝗻𝗶𝘁𝘆</h1>
-            <p style="color: #94a3b8; margin-top: 10px;">เลือกสมัครสมาชิกด้วย Google หรือบัญชีปกติได้ทันที</p>
+            <h1 style="font-size: 2.2rem; text-shadow: 0 2px 10px rgba(0,0,0,0.5);">🌲 ยินดีต้อนรับสู่ 𝗝 𝗖𝗼𝗺𝗺𝘂𝗻𝗶𝘁𝘆</h1>
+            <p style="color: #cbd5e1; margin-top: 10px; font-size: 1.1rem; text-shadow: 0 2px 5px rgba(0,0,0,0.5);">
+                เข้าสู่สังคมเกมมิ่งในบรรยากาศป่าไม้สุดผ่อนคลาย สมัครสมาชิกร่วมกับเราได้แล้ววันนี้
+            </p>
         </div>
 
         <!-- หน้าร้านค้า -->
         <div id="shop" class="page-section">
             <h1>🛒 ร้านค้า</h1>
-            <p style="color: #94a3b8; margin-top: 10px;">รายการสินค้าทั้งหมดจะแสดงที่นี่</p>
+            <p style="color: #cbd5e1; margin-top: 10px;">รายการสินค้าทั้งหมดจะแสดงที่นี่</p>
         </div>
 
         <!-- หน้าเติมเงิน -->
         <div id="topup" class="page-section">
             <h1>💳 เติมเงิน</h1>
-            <p style="color: #94a3b8; margin-top: 10px;">เลือกช่องทางการเติมเงินของคุณ</p>
+            <p style="color: #cbd5e1; margin-top: 10px;">เลือกช่องทางการเติมเงินของคุณ</p>
         </div>
 
-        <!-- หน้าสร้างบัญชี -->
+        <!-- หน้าสร้างบัญชี (Register) -->
         <div id="register" class="page-section">
             <div class="auth-card">
-                <h2>✨ สร้างบัญชีใหม่</h2>
+                <h2>✨ สมัครสมาชิก</h2>
+                <p class="subtitle">เริ่มต้นใช้งานและเข้าร่วมชุมชน J Community</p>
                 
                 <!-- ปุ่ม Google Register -->
                 <button class="btn-google" onclick="handleGoogleAuth()">
@@ -285,7 +314,7 @@
                     สมัครด้วย Google
                 </button>
 
-                <div class="divider"><span>หรือใช้อีเมลสมัคร</span></div>
+                <div class="divider"><span>หรือ สมัครด้วยอีเมล</span></div>
 
                 <form onsubmit="event.preventDefault(); alert('สมัครสมาชิกด้วยอีเมลสำเร็จ!');">
                     <div class="form-group">
@@ -300,15 +329,16 @@
                         <label>รหัสผ่าน (Password)</label>
                         <input type="password" placeholder="อย่างน้อย 6 ตัวอักษร" required>
                     </div>
-                    <button type="submit" class="submit-btn">ยืนยันสมัครสมาชิก</button>
+                    <button type="submit" class="submit-btn">ยืนยันการสมัครสมาชิก</button>
                 </form>
             </div>
         </div>
 
-        <!-- หน้าเข้าสู่ระบบ -->
+        <!-- หน้าเข้าสู่ระบบ (Login) -->
         <div id="login" class="page-section">
             <div class="auth-card">
                 <h2>🔑 เข้าสู่ระบบ</h2>
+                <p class="subtitle">กรอกข้อมูลเพื่อเข้าสู่ระบบของคุณ</p>
                 
                 <!-- ปุ่ม Google Login -->
                 <button class="btn-google" onclick="handleGoogleAuth()">
@@ -316,7 +346,7 @@
                     เข้าสู่ระบบด้วย Google
                 </button>
 
-                <div class="divider"><span>หรือใช้อีเมลเข้าสู่ระบบ</span></div>
+                <div class="divider"><span>หรือ เข้าสู่ระบบด้วยอีเมล</span></div>
 
                 <form onsubmit="event.preventDefault(); alert('เข้าสู่ระบบสำเร็จ!');">
                     <div class="form-group">
@@ -335,7 +365,7 @@
     </div>
 
     <script>
-        // ฟังก์ชันสลับหน้า
+        // ฟังก์ชันสลับหน้าโดยไม่รีเฟรช
         function switchPage(pageId) {
             const sections = document.querySelectorAll('.page-section');
             sections.forEach(section => {
@@ -348,10 +378,9 @@
             }
         }
 
-        // ฟังก์ชันจำลองการทำงานเมื่อกดปุ่ม Google
+        // ฟังก์ชันตัวอย่างเมื่อกดปุ่ม Google
         function handleGoogleAuth() {
             alert('กำลังเชื่อมต่อระบบยืนยันตัวตนผ่าน Google...');
-            // เมื่อเชื่อมกับ Backend ในอนาคต ให้ใส่ Client ID จาก Google Cloud Console ตรงนี้ครับ
         }
     </script>
 
