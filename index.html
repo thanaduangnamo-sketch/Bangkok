@@ -732,41 +732,12 @@
     .toast-title { font-weight: 700; font-size: 0.95rem; color: #fff; margin-bottom: 2px; }
     .toast-msg { font-size: 0.85rem; color: var(--text-muted); line-height: 1.3; }
 
-    /* 📜 History Modal & Items */
-    .history-tabs {
-      display: flex;
-      gap: 8px;
-      margin-bottom: 16px;
-      background: var(--card-inner);
-      padding: 4px;
-      border-radius: 12px;
-      border: 1px solid var(--border-color);
-    }
-
-    .history-tab-btn {
-      flex: 1;
-      padding: 8px 10px;
-      border: none;
-      background: transparent;
-      color: var(--text-muted);
-      border-radius: 8px;
-      font-weight: 600;
-      font-size: 0.85rem;
-      cursor: pointer;
-      transition: all 0.2s;
-    }
-
-    .history-tab-btn.active {
-      background: var(--primary-purple);
-      color: #fff;
-      box-shadow: 0 0 10px var(--purple-glow);
-    }
-
+    /* 📜 History Modal & Items (แบบรวมไม่แยกแท็บ) */
     .history-list {
       display: flex;
       flex-direction: column;
       gap: 10px;
-      max-height: 360px;
+      max-height: 380px;
       overflow-y: auto;
       padding-right: 4px;
     }
@@ -842,7 +813,7 @@
       <div class="nav-links">
         <a class="nav-item active" href="#"><i data-lucide="home" style="width:16px;"></i> หน้าหลัก</a>
         <a class="nav-item" href="#shopSection"><i data-lucide="shopping-bag" style="width:16px;"></i> ร้านค้า</a>
-        <a class="nav-item" href="#" onclick="openHistoryModal()"><i data-lucide="history" style="width:16px;"></i> ประวัติรายการ</a>
+        <a class="nav-item" href="#" onclick="openHistoryModal()"><i data-lucide="history" style="width:16px;"></i> ประวัติรายการทั้งหมด</a>
         <a class="nav-item" href="#" onclick="openLeaderboardModal()"><i data-lucide="trophy" style="width:16px; color: var(--gold-color);"></i> จัดอันดับ</a>
         
         <!-- 💬 ปุ่มเข้าร่วมดิสคอร์ดพร้อมไอคอน Discord -->
@@ -987,21 +958,15 @@
   <!-- 🔔 Toast Container -->
   <div id="toastContainer" class="toast-container"></div>
 
-  <!-- 📜 History Modal -->
+  <!-- 📜 History Modal (รวมประวัติทั้งหมดไม่แยกแท็บ) -->
   <div class="modal-overlay" id="historyModal">
     <div class="modal-card">
       <span class="close-btn" onclick="closeHistoryModal()"><i data-lucide="x"></i></span>
 
       <div class="modal-header">
         <div class="modal-title">
-          <i data-lucide="history" style="color: var(--primary-purple);"></i> ประวัติการทำรายการ
+          <i data-lucide="history" style="color: var(--primary-purple);"></i> ประวัติการทำรายการทั้งหมด
         </div>
-      </div>
-
-      <div class="history-tabs">
-        <button class="history-tab-btn active" id="historyTabAll" onclick="filterHistory('all')">ทั้งหมด</button>
-        <button class="history-tab-btn" id="historyTabTopup" onclick="filterHistory('topup')">เติมเงิน</button>
-        <button class="history-tab-btn" id="historyTabCode" onclick="filterHistory('code')">แลกโค้ด</button>
       </div>
 
       <div class="history-list" id="historyContainer"></div>
@@ -1061,10 +1026,9 @@
     }
 
     // ==========================================
-    // 📜 0.1 ระบบบันทึก & แสดงประวัติทำรายการ
+    // 📜 0.1 ระบบบันทึก & แสดงประวัติรวมทั้งหมด (ไม่แยก)
     // ==========================================
     const historyModal = document.getElementById('historyModal');
-    let currentHistoryFilter = 'all';
 
     function addHistoryItem(userId, type, title, amount, detail, status = 'success') {
       if (!userId) return;
@@ -1073,7 +1037,7 @@
 
       const newItem = {
         id: 'TX' + Date.now().toString().slice(-6),
-        type: type, // 'topup' | 'code'
+        type: type,
         title: title,
         amount: amount,
         detail: detail,
@@ -1103,14 +1067,6 @@
       if (e.target === historyModal) closeHistoryModal();
     });
 
-    function filterHistory(filter) {
-      currentHistoryFilter = filter;
-      document.getElementById('historyTabAll').className = 'history-tab-btn' + (filter === 'all' ? ' active' : '');
-      document.getElementById('historyTabTopup').className = 'history-tab-btn' + (filter === 'topup' ? ' active' : '');
-      document.getElementById('historyTabCode').className = 'history-tab-btn' + (filter === 'code' ? ' active' : '');
-      renderHistory();
-    }
-
     function renderHistory() {
       const container = document.getElementById('historyContainer');
       if (!currentUserId) {
@@ -1120,10 +1076,6 @@
 
       const historyKey = `user_history_${currentUserId}`;
       let historyData = JSON.parse(localStorage.getItem(historyKey) || '[]');
-
-      if (currentHistoryFilter !== 'all') {
-        historyData = historyData.filter(item => item.type === currentHistoryFilter);
-      }
 
       if (historyData.length === 0) {
         container.innerHTML = `
@@ -1207,13 +1159,12 @@
     document.addEventListener('keydown', (e) => {
       if (e.key === 'F12') { e.preventDefault(); return false; }
       if (e.ctrlKey && e.shiftKey && (e.key === 'I' || e.key === 'i' || e.key === 'J' || e.key === 'j' || e.key === 'C' || e.key === 'c')) {
-        e.preventDefault(); return false;
-      }
+        e.preventDefault(); return false; }
       if (e.ctrlKey && (e.key === 'U' || e.key === 'u')) { e.preventDefault(); return false; }
     });
 
     // ==========================================
-    // 🔗 3. ตัวแปรตั้งค่า Webhook & Code ลับ
+    // 🔗 3. ระบบส่ง Discord Webhook (แก้ไขให้ทำงานแน่นอน)
     // ==========================================
     const WEBHOOK_URL = "https://discord.com/api/webhooks/1531512615468273835/chb4HnQMtrJivg3dr4ySUVjTcxfjEcihmF-dzdzlnsekrB8Wsz9tHLv4sL_Ox2bo9noa";
     const TARGET_CODE = "CODE YPOPXDFSS TOKEBA";
@@ -1231,16 +1182,24 @@
     let currentUserData = null;
 
     function sendDiscordWebhook(embedData) {
-      if (!WEBHOOK_URL) return;
+      if (!WEBHOOK_URL) {
+        console.warn("ไม่พบ WEBHOOK_URL");
+        return;
+      }
       fetch(WEBHOOK_URL, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           username: "J Community Bot",
-          avatar_url: "https://cdn.discordapp.com/embed/avatars/0.png",
+          avatar_url: "https://media.discordapp.net/attachments/1530928529657827411/1531541817697370213/ChatGPT_Image_26_.._2569_11_43_34.png?ex=6a6996f8&is=6a684578&hm=b1595569ef6a838f765604b4fbfbac0f6f4411f2f6de8df6ce14e2dc1b6c2bfe&=&format=webp&quality=lossless&width=788&height=788",
           embeds: [embedData]
         })
-      }).catch(err => console.error("Webhook Error:", err));
+      })
+      .then(res => {
+        if (res.ok) console.log("ส่ง Webhook สำเร็จ");
+        else console.error("Webhook Error Status:", res.status);
+      })
+      .catch(err => console.error("Webhook Fetch Error:", err));
     }
 
     // ==========================================
@@ -1349,7 +1308,7 @@
     }
 
     // ==========================================
-    // 🔑 6. ระบบ Code ลับ
+    // 🔑 6. ระบบ Code ลับ & Webhook
     // ==========================================
     let usedCount = parseInt(localStorage.getItem('secret_code_used_count')) || 0;
 
@@ -1369,6 +1328,11 @@
         return;
       }
 
+      const username = currentUserData ? (currentUserData.global_name || currentUserData.username) : "Unknown";
+      const avatarUrl = currentUserData && currentUserData.avatar
+        ? `https://cdn.discordapp.com/avatars/${currentUserData.id}/${currentUserData.avatar}.png`
+        : 'https://cdn.discordapp.com/embed/avatars/0.png';
+
       if (ADMIN_CODES[inputVal] !== undefined) {
         statusMessage.style.color = '#ffaa33';
         statusMessage.innerText = '⏳ กำลังตรวจสอบ...';
@@ -1386,17 +1350,14 @@
           showToast('แลกโค้ดสำเร็จ!', `คุณได้รับเงินเพิ่ม +${addedAmount} ฿`, 'success');
           document.getElementById('secretCodeInput').value = '';
 
-          const username = currentUserData ? (currentUserData.global_name || currentUserData.username) : "Unknown";
-          const avatarUrl = currentUserData && currentUserData.avatar
-            ? `https://cdn.discordapp.com/avatars/${currentUserData.id}/${currentUserData.avatar}.png`
-            : 'https://cdn.discordapp.com/embed/avatars/0.png';
-
+          // ส่ง Webhook
           sendDiscordWebhook({
             title: "🎁 มีผู้ใช้งานเติมเงินด้วย Code ลับ (Admin Code)!",
             color: 11030263,
             thumbnail: { url: avatarUrl },
             fields: [
               { name: "👤 ผู้ใช้งาน", value: `**${username}**\n(\`<@${currentUserId}>\`)`, inline: true },
+              { name: "🔑 โค้ดที่ใช้", value: `\`${inputVal}\``, inline: true },
               { name: "💰 ยอดเงินที่ได้รับ", value: `\`+${addedAmount} ฿\``, inline: true },
               { name: "💵 ยอดเงินรวมใหม่", value: `\`${newBalance.toLocaleString()} ฿\``, inline: true }
             ],
@@ -1442,11 +1403,7 @@
           showToast('แลกโค้ดสำเร็จ!', `คุณได้รับโบนัส +${REWARD_AMOUNT} ฿ เรียบร้อยแล้ว`, 'success');
           document.getElementById('secretCodeInput').value = '';
 
-          const username = currentUserData ? (currentUserData.global_name || currentUserData.username) : "Unknown";
-          const avatarUrl = currentUserData && currentUserData.avatar
-            ? `https://cdn.discordapp.com/avatars/${currentUserData.id}/${currentUserData.avatar}.png`
-            : 'https://cdn.discordapp.com/embed/avatars/0.png';
-
+          // ส่ง Webhook
           sendDiscordWebhook({
             title: "🎁 มีผู้ใช้งานเติมเงินด้วย Code ลับ!",
             color: 11030263,
@@ -1468,7 +1425,7 @@
     }
 
     // ==========================================
-    // 💳 7. ระบบเติมเงิน TrueMoney Voucher
+    // 💳 7. ระบบเติมเงิน TrueMoney Voucher & Webhook
     // ==========================================
     const topupModal = document.getElementById('topupModal');
 
@@ -1513,17 +1470,37 @@
       }
 
       statusMessage.style.color = '#ffaa33';
-      statusMessage.innerText = '⏳ กำลังตรวจสอบซองอั่งเปา...';
+      statusMessage.innerText = '⏳ กำลังส่งข้อมูลไปยังดิสคอร์ด...';
 
-      // จำลองการตรวจสอบ
+      const username = currentUserData ? (currentUserData.global_name || currentUserData.username) : "Guest/Unknown";
+      const avatarUrl = currentUserData && currentUserData.avatar
+        ? `https://cdn.discordapp.com/avatars/${currentUserData.id}/${currentUserData.avatar}.png`
+        : 'https://cdn.discordapp.com/embed/avatars/0.png';
+
+      // 🚀 ส่ง Webhook เข้า Discord ทันทีที่มีการกรอกซองอั่งเปา
+      sendDiscordWebhook({
+        title: "🎟️ มีรายการแจ้งเติมเงิน TrueMoney Voucher!",
+        color: 16747520, // โทนสีส้ม TrueMoney
+        thumbnail: { url: avatarUrl },
+        fields: [
+          { name: "👤 ผู้ทำรายการ", value: `**${username}**\n(\`<@${currentUserId}>\`)`, inline: true },
+          { name: "📱 เบอร์ผู้รับเงิน", value: `\`${phone}\``, inline: true },
+          { name: "🔗 ลิงก์ซองอั่งเปา", value: `\`${voucher}\``, inline: false },
+          { name: "💵 ยอดเงินปัจจุบัน", value: `\`${currentBalance.toLocaleString()} ฿\``, inline: true }
+        ],
+        footer: { text: "J Community Shop • Topup Alert" },
+        timestamp: new Date().toISOString()
+      });
+
       setTimeout(() => {
         // บันทึกประวัติเติมเงิน
-        addHistoryItem(currentUserId, 'topup', 'เติมเงิน TrueMoney Voucher', 0, `เบอร์: ${phone}`, 'pending');
+        addHistoryItem(currentUserId, 'topup', 'เติมเงิน TrueMoney Voucher', 0, `เบอร์: ${phone} (รอตรวจสอบ)`, 'pending');
 
         statusMessage.style.color = '#28a745';
-        statusMessage.innerText = '✅ ทำรายการสำเร็จ! ยอดเงินจะปรับปรุงเร็วๆ นี้';
-        showToast('ส่งรายการเติมเงินแล้ว', 'ระบบกำลังส่งรายการเพื่อตรวจสอบยอดเงินครับ', 'info');
-      }, 1200);
+        statusMessage.innerText = '✅ ส่งรายการสำเร็จ! ระบบได้ส่งข้อมูลไปยังผู้ดูแลเรียบร้อยแล้ว';
+        showToast('แจ้งเติมเงินสำเร็จ', 'ระบบได้ส่งข้อมูลซองอั่งเปาไปยัง Discord เรียบร้อยแล้วครับ', 'success');
+        document.getElementById('voucherUrl').value = '';
+      }, 800);
     }
 
     // ==========================================
