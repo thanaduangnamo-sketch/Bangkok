@@ -24,7 +24,6 @@
       --text-muted: #99888c;
       --border-color: #2a181c;
       --truemoney-color: #ff8c00;
-      --promptpay-color: #00427a;
     }
 
     * {
@@ -44,7 +43,7 @@
       position: relative;
     }
 
-    /* Ambient Glow Background */
+    /* Background Glow Effect */
     body::before {
       content: '';
       position: absolute;
@@ -58,14 +57,14 @@
       z-index: 0;
     }
 
-    /* Navbar */
+    /* Navbar ด้านบน */
     header {
       position: relative;
       z-index: 10;
       display: flex;
       justify-content: space-between;
       align-items: center;
-      padding: 18px 5%;
+      padding: 16px 5%;
       background: rgba(10, 3, 4, 0.85);
       backdrop-filter: blur(10px);
       border-bottom: 1px solid var(--border-color);
@@ -94,7 +93,7 @@
     .nav-links {
       display: flex;
       align-items: center;
-      gap: 20px;
+      gap: 16px;
     }
 
     .nav-item {
@@ -104,15 +103,15 @@
       display: flex;
       align-items: center;
       gap: 6px;
-      transition: color 0.2s;
       text-decoration: none;
+      transition: color 0.2s;
     }
 
     .nav-item:hover, .nav-item.active {
       color: #fff;
     }
 
-    /* ปุ่มเติมเงิน */
+    /* ปุ่มเติมเงิน บน Navbar */
     .btn-topup-nav {
       background: rgba(255, 42, 75, 0.15);
       border: 1px solid rgba(255, 42, 75, 0.4);
@@ -134,7 +133,7 @@
       box-shadow: 0 0 15px rgba(255, 42, 75, 0.4);
     }
 
-    /* ปุ่มล็อกอินปกติ */
+    /* ปุ่มเข้าสู่ระบบด้วย Discord บน Navbar */
     .btn-login-discord {
       background: var(--discord-blue);
       color: var(--text-main);
@@ -154,14 +153,14 @@
       background: var(--discord-blue-hover);
     }
 
-    /* โปรไฟล์ Discord บน Navbar */
+    /* โปรไฟล์ Discord บน Navbar เมื่อล็อกอินแล้ว */
     .user-profile-bar {
       display: flex;
       align-items: center;
       gap: 10px;
       background: var(--card-bg);
       border: 1px solid var(--border-color);
-      padding: 6px 14px 6px 8px;
+      padding: 5px 12px 5px 6px;
       border-radius: 30px;
     }
 
@@ -246,7 +245,6 @@
       background: var(--discord-blue);
       color: white;
       text-decoration: none;
-      border: none;
       padding: 14px 32px;
       border-radius: 12px;
       font-size: 1.1rem;
@@ -264,7 +262,7 @@
       background: var(--discord-blue-hover);
     }
 
-    /* Modal Background */
+    /* Topup Modal */
     .modal-overlay {
       position: fixed;
       top: 0;
@@ -287,12 +285,11 @@
       pointer-events: all;
     }
 
-    /* Topup Modal Window */
     .topup-card {
       background: var(--card-bg);
       border: 1px solid var(--border-color);
       width: 100%;
-      max-width: 440px;
+      max-width: 420px;
       border-radius: 20px;
       padding: 28px;
       box-shadow: 0 0 50px rgba(0, 0, 0, 0.9), 0 0 30px rgba(255, 42, 75, 0.1);
@@ -313,9 +310,7 @@
       cursor: pointer;
     }
 
-    .close-btn:hover {
-      color: #fff;
-    }
+    .close-btn:hover { color: #fff; }
 
     .topup-header {
       text-align: center;
@@ -367,10 +362,7 @@
       color: #33a0ff;
     }
 
-    /* Input & Forms */
-    .form-group {
-      margin-bottom: 18px;
-    }
+    .form-group { margin-bottom: 18px; }
 
     .form-label {
       display: block;
@@ -388,12 +380,9 @@
       color: white;
       font-size: 0.95rem;
       outline: none;
-      transition: border-color 0.2s;
     }
 
-    .input-field:focus {
-      border-color: var(--primary-red);
-    }
+    .input-field:focus { border-color: var(--primary-red); }
 
     .btn-submit-topup {
       width: 100%;
@@ -405,16 +394,13 @@
       font-weight: 600;
       font-size: 1rem;
       cursor: pointer;
-      transition: background 0.2s;
       display: flex;
       align-items: center;
       justify-content: center;
       gap: 8px;
     }
 
-    .btn-submit-topup:hover {
-      background: var(--primary-red-hover);
-    }
+    .btn-submit-topup:hover { background: var(--primary-red-hover); }
 
     .qr-box {
       text-align: center;
@@ -425,11 +411,7 @@
       margin: 0 auto 15px;
     }
 
-    .qr-box img {
-      width: 100%;
-      height: auto;
-      display: block;
-    }
+    .qr-box img { width: 100%; display: block; }
 
     #statusMessage {
       margin-top: 12px;
@@ -440,32 +422,35 @@
 </head>
 <body>
 
-  <!-- Navbar -->
+  <!-- Navbar ด้านบน -->
   <header>
     <div class="logo">
       <div class="logo-icon">J</div>
       <span>J Community</span>
     </div>
 
+    <!-- เมนูกลาง + ปุ่มเติมเงิน -->
     <div class="nav-links">
-      <a class="nav-item active" href="#"><i data-lucide="home" style="width:16px; height:16px;"></i> หน้าหลัก</a>
-      <!-- ปุ่มเติมเงินบน แถบบน -->
+      <a class="nav-item active" href="#"><i data-lucide="home" style="width:16px;"></i> หน้าหลัก</a>
+      
+      <!-- ปุ่มเติมเงินบนแถบบน -->
       <button class="btn-topup-nav" onclick="openTopupModal()">
-        <i data-lucide="wallet" style="width:16px; height:16px;"></i> เติมเงิน
+        <i data-lucide="wallet" style="width:16px;"></i> เติมเงิน
       </button>
     </div>
 
-    <!-- โซนปุ่มล็อกอิน / แสดงโปรไฟล์บน Navbar -->
+    <!-- ปุ่มล็อกอิน Discord / โปรไฟล์ -->
     <div id="authNavZone">
       <a id="navLoginBtn" href="https://discord.com/oauth2/authorize?client_id=1507932932466282516&response_type=token&redirect_uri=https%3A%2F%2Fsk-six-beryl.vercel.app%2F&scope=identify" class="btn-login-discord">
-        <i data-lucide="message-square" style="width:16px; height:16px;"></i> เข้าสู่ระบบด้วย Discord
+        <i data-lucide="message-square" style="width:16px;"></i> เข้าสู่ระบบด้วย Discord
       </a>
 
+      <!-- แสดงรูปและชื่อเมื่อล็อกอินแล้ว -->
       <div id="navProfileZone" class="user-profile-bar" style="display: none;">
         <img id="userAvatar" class="user-avatar-small" src="" alt="Avatar">
         <span id="userName" class="user-name-text">Loading...</span>
         <button class="btn-logout-icon" onclick="logoutDiscord()" title="ออกจากระบบ">
-          <i data-lucide="log-out" style="width:14px; height:14px;"></i>
+          <i data-lucide="log-out" style="width:14px;"></i>
         </button>
       </div>
     </div>
@@ -474,17 +459,17 @@
   <!-- Hero Section -->
   <main class="hero-container">
     <div class="badge">
-      <i data-lucide="sparkles" style="width:14px; height:14px;"></i> ยินดีต้อนรับ
+      <i data-lucide="sparkles" style="width:14px;"></i> ยินดีต้อนรับ
     </div>
     <h1 class="hero-title">J Community <span>Shop</span></h1>
     <p class="hero-subtitle" id="heroSubtitle">ร้านของเรา — เข้าสู่ระบบด้วย Discord เพื่อเริ่มใช้งาน</p>
 
     <a id="heroCtaBtn" href="https://discord.com/oauth2/authorize?client_id=1507932932466282516&response_type=token&redirect_uri=https%3A%2F%2Fsk-six-beryl.vercel.app%2F&scope=identify" class="btn-main-cta">
-      <i data-lucide="message-square" style="width:20px; height:20px;"></i> เข้าสู่ระบบด้วย Discord
+      <i data-lucide="message-square" style="width:20px;"></i> เข้าสู่ระบบด้วย Discord
     </a>
   </main>
 
-  <!-- Topup Modal Window -->
+  <!-- Topup Modal Window (ป๊อบอัพเติมเงิน) -->
   <div class="modal-overlay" id="topupModal">
     <div class="topup-card">
       <span class="close-btn" onclick="closeTopupModal()"><i data-lucide="x"></i></span>
@@ -495,7 +480,7 @@
         </div>
       </div>
 
-      <!-- Payment Method Tabs -->
+      <!-- Payment Tabs -->
       <div class="payment-tabs">
         <button class="tab-btn active-tw" id="tabTW" onclick="switchTab('tw')">
           <i data-lucide="gift" style="width:16px;"></i> ซอง TrueMoney
@@ -505,7 +490,7 @@
         </button>
       </div>
 
-      <!-- 1. TrueMoney Voucher Form -->
+      <!-- TrueMoney Form -->
       <div id="viewTW">
         <div class="form-group">
           <label class="form-label">กรอกลิงก์ซองอั่งเปา TrueMoney Wallet:</label>
@@ -516,10 +501,9 @@
         </button>
       </div>
 
-      <!-- 2. PromptPay QR View -->
+      <!-- PromptPay View -->
       <div id="viewPP" style="display: none;">
         <div class="qr-box">
-          <!-- สามารถใส่ QR Code PromptPay จริงของคุณได้ที่นี่ -->
           <img src="https://api.qrserver.com/v1/create-qr-code/?size=180x180&data=PROMPTPAY_EXAMPLE" alt="PromptPay QR">
         </div>
         <p style="text-align: center; font-size: 0.85rem; color: var(--text-muted);">
@@ -534,7 +518,7 @@
   <script>
     lucide.createIcons();
 
-    // Modal Control
+    // Modal Operations
     const topupModal = document.getElementById('topupModal');
     function openTopupModal() { topupModal.classList.add('active'); }
     function closeTopupModal() { topupModal.classList.remove('active'); }
@@ -543,15 +527,13 @@
       if (e.target === topupModal) closeTopupModal();
     });
 
-    // Tab Switcher
+    // Tab Switching
     function switchTab(type) {
       const tabTW = document.getElementById('tabTW');
       const tabPP = document.getElementById('tabPP');
       const viewTW = document.getElementById('viewTW');
       const viewPP = document.getElementById('viewPP');
-      const statusMessage = document.getElementById('statusMessage');
-
-      statusMessage.innerText = '';
+      document.getElementById('statusMessage').innerText = '';
 
       if (type === 'tw') {
         tabTW.className = 'tab-btn active-tw';
@@ -566,8 +548,8 @@
       }
     }
 
-    // Process TrueMoney Voucher Link
-    async function processVoucher() {
+    // Process Voucher
+    function processVoucher() {
       const voucherInput = document.getElementById('voucherUrl').value.trim();
       const statusMessage = document.getElementById('statusMessage');
 
@@ -580,32 +562,11 @@
       statusMessage.style.color = '#ffaa33';
       statusMessage.innerText = '⏳ กำลังตรวจสอบซองอั่งเปา...';
 
-      try {
-        // ตัวอย่างการตัดเอา Code Voucher จากลิงก์
-        const voucherCode = voucherInput.split('v=')[1] || voucherInput;
-
-        /*
-          💡 ตรงนี้คือจุดเชื่อมต่อระบบ Backend จริงของคุณ:
-          ตัวอย่างยิง request ไปยัง API เติมเงินของคุณ เช่น:
-          
-          const res = await fetch('/api/topup', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ voucher: voucherCode, token: localStorage.getItem('discord_token') })
-          });
-        */
-
-        // ตัวอย่างการจำลองผลลัพธ์
-        setTimeout(() => {
-          statusMessage.style.color = '#28a745';
-          statusMessage.innerText = '✅ เติมเงินสำเร็จเรียบร้อยแล้ว!';
-          document.getElementById('voucherUrl').value = '';
-        }, 1200);
-
-      } catch (err) {
-        statusMessage.style.color = '#ff2a4b';
-        statusMessage.innerText = '❌ ไม่สามารถทำรายการได้ กรุณาลองใหม่อีกครั้ง';
-      }
+      setTimeout(() => {
+        statusMessage.style.color = '#28a745';
+        statusMessage.innerText = '✅ เติมเงินสำเร็จเรียบร้อยแล้ว!';
+        document.getElementById('voucherUrl').value = '';
+      }, 1200);
     }
 
     // Discord Login Check
