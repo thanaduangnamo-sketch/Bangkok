@@ -31,7 +31,6 @@
       --border-color: #281838;
       --truemoney-color: #ff8c00;
       --green-accent: #28a745;
-      --gold-color: #ffd700;
     }
 
     * {
@@ -66,7 +65,6 @@
       z-index: 0;
     }
 
-    /* Modern Scrollbar */
     ::-webkit-scrollbar {
       width: 8px;
     }
@@ -245,9 +243,9 @@
     .btn-add-balance:hover { transform: scale(1.15); }
 
     .btn-logout-icon {
-      background: rgba(168, 85, 247, 0.15);
-      border: 1px solid rgba(168, 85, 247, 0.3);
-      color: var(--primary-purple);
+      background: rgba(239, 68, 68, 0.15);
+      border: 1px solid rgba(239, 68, 68, 0.3);
+      color: #ef4444;
       width: 30px;
       height: 30px;
       border-radius: 50%;
@@ -258,9 +256,9 @@
       transition: all 0.2s;
     }
 
-    .btn-logout-icon:hover { background: var(--primary-purple); color: white; }
+    .btn-logout-icon:hover { background: #ef4444; color: white; }
 
-    /* Main Container */
+    /* Main Layout */
     .container {
       position: relative;
       z-index: 1;
@@ -271,7 +269,6 @@
       flex: 1;
     }
 
-    /* Hero Section */
     .hero-container {
       text-align: center;
       padding: 20px 0 35px;
@@ -310,7 +307,7 @@
       margin-bottom: 25px;
     }
 
-    /* Modern Shop Section UI Upgrade */
+    /* Shop Container UI */
     .shop-wrapper {
       background: rgba(17, 10, 23, 0.7);
       border: 1px solid var(--border-color);
@@ -477,6 +474,17 @@
       box-shadow: 0 16px 36px rgba(0, 0, 0, 0.6), 0 0 25px rgba(168, 85, 247, 0.25);
     }
 
+    .product-card.closed-card {
+      opacity: 0.75;
+      border-color: rgba(239, 68, 68, 0.3);
+    }
+
+    .product-card.closed-card:hover {
+      transform: none;
+      box-shadow: none;
+      border-color: rgba(239, 68, 68, 0.4);
+    }
+
     .product-img-wrap {
       width: 100%;
       height: 175px;
@@ -540,8 +548,8 @@
     }
 
     .product-stock-badge.out-of-stock {
-      background: rgba(239, 68, 68, 0.2);
-      border-color: rgba(239, 68, 68, 0.4);
+      background: rgba(239, 68, 68, 0.25);
+      border-color: rgba(239, 68, 68, 0.5);
       color: #f87171;
     }
 
@@ -644,20 +652,19 @@
     }
 
     .btn-buy-product.disabled {
-      background: rgba(255, 255, 255, 0.08);
-      color: var(--text-muted);
+      background: rgba(239, 68, 68, 0.15);
+      color: #fca5a5;
       cursor: not-allowed;
       box-shadow: none;
-      border: 1px solid rgba(255, 255, 255, 0.1);
+      border: 1px solid rgba(239, 68, 68, 0.3);
     }
 
     .btn-buy-product.disabled:hover {
-      background: rgba(255, 255, 255, 0.08);
+      background: rgba(239, 68, 68, 0.15);
       transform: none;
       box-shadow: none;
     }
 
-    /* Empty State Card */
     .empty-stock-card {
       background: var(--card-bg);
       border: 1px dashed var(--border-color);
@@ -695,7 +702,7 @@
       color: var(--text-muted);
     }
 
-    /* Modals System */
+    /* Modal Styles */
     .modal-overlay {
       position: fixed;
       top: 0;
@@ -843,85 +850,6 @@
 
     .qr-box img { width: 100%; height: auto; display: block; }
 
-    #statusMessage { margin-top: 14px; font-size: 0.88rem; text-align: center; font-weight: 500; min-height: 20px; }
-
-    /* Leaderboard Styles */
-    .leaderboard-list {
-      display: flex;
-      flex-direction: column;
-      gap: 10px;
-      max-height: 340px;
-      overflow-y: auto;
-      padding-right: 5px;
-    }
-
-    .leaderboard-item {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      background: var(--card-inner);
-      border: 1px solid var(--border-color);
-      padding: 10px 14px;
-      border-radius: 12px;
-      transition: all 0.2s;
-    }
-
-    .leaderboard-item:hover {
-      border-color: rgba(168, 85, 247, 0.4);
-      transform: translateX(2px);
-    }
-
-    .rank-user-info {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-    }
-
-    .rank-number {
-      font-weight: 700;
-      font-size: 1.1rem;
-      width: 28px;
-      text-align: center;
-    }
-
-    .rank-1 { color: #ffd700; }
-    .rank-2 { color: #c0c0c0; }
-    .rank-3 { color: #cd7f32; }
-
-    .rank-avatar {
-      width: 38px;
-      height: 38px;
-      border-radius: 50%;
-      object-fit: cover;
-      border: 2px solid var(--border-color);
-    }
-
-    .rank-user-details {
-      display: flex;
-      flex-direction: column;
-    }
-
-    .rank-username {
-      font-size: 0.95rem;
-      font-weight: 600;
-      color: #fff;
-    }
-
-    .rank-user-id {
-      font-size: 0.75rem;
-      color: var(--text-muted);
-    }
-
-    .rank-balance {
-      font-weight: 700;
-      font-size: 0.95rem;
-      color: #4cd964;
-      background: rgba(40, 167, 69, 0.12);
-      border: 1px solid rgba(40, 167, 69, 0.25);
-      padding: 4px 10px;
-      border-radius: 20px;
-    }
-
     /* Toast Notification System */
     #toastContainer {
       position: fixed;
@@ -967,7 +895,6 @@
 </head>
 <body>
 
-  <!-- Toast Notification Container -->
   <div id="toastContainer"></div>
 
   <!-- Navbar Header -->
@@ -981,7 +908,6 @@
       <div class="nav-links">
         <a class="nav-item active" href="#"><i data-lucide="home" style="width:16px;"></i> หน้าหลัก</a>
         <a class="nav-item" href="#shopSection"><i data-lucide="shopping-bag" style="width:16px;"></i> ร้านค้า</a>
-        <a class="nav-item" href="#" onclick="openLeaderboardModal()"><i data-lucide="trophy" style="width:16px; color: var(--gold-color);"></i> จัดอันดับ</a>
         
         <button class="btn-topup-nav" onclick="openTopupModal()">
           <i data-lucide="wallet" style="width:16px;"></i> เติมเงิน
@@ -997,7 +923,7 @@
 
       <div id="navProfileZone" class="user-profile-bar" style="display: none;">
         <img id="userAvatar" class="user-avatar-small" src="https://placehold.co/100/180e21/a855f7?text=U" alt="Avatar">
-        <span id="userName" class="user-name-text">Loading...</span>
+        <span id="userName" class="user-name-text">กำลังโหลด...</span>
 
         <!-- User Balance Badge -->
         <div class="user-balance-badge">
@@ -1014,7 +940,6 @@
   </header>
 
   <div class="container">
-    <!-- Hero Banner Section -->
     <section class="hero-container">
       <div class="badge">
         <i data-lucide="sparkles" style="width:14px;"></i> ยินดีต้อนรับสู่ J Community
@@ -1026,7 +951,6 @@
     <!-- Shop Main Section -->
     <section id="shopSection">
       <div class="shop-wrapper">
-        <!-- Shop Header & Navigation Controls -->
         <div class="shop-header-container">
           <div class="shop-title-group">
             <div class="shop-title-icon">
@@ -1141,25 +1065,6 @@
           <i data-lucide="sparkles" style="width:18px;"></i> แลก Code ลับ
         </button>
       </div>
-
-      <div id="statusMessage"></div>
-    </div>
-  </div>
-
-  <!-- Leaderboard Modal Overlay -->
-  <div class="modal-overlay" id="leaderboardModal">
-    <div class="modal-card">
-      <span class="close-btn" onclick="closeLeaderboardModal()"><i data-lucide="x"></i></span>
-
-      <div class="modal-header">
-        <div class="modal-title" style="color: var(--gold-color);">
-          <i data-lucide="trophy"></i> อันดับผู้ถือครองเงินสูงสุด
-        </div>
-      </div>
-
-      <div class="leaderboard-list" id="leaderboardContainer">
-        <!-- Rendered dynamically -->
-      </div>
     </div>
   </div>
 
@@ -1170,7 +1075,6 @@
   <script>
     lucide.createIcons();
 
-    // Context Menu & DevTools Security Shortcuts
     document.addEventListener('contextmenu', (e) => e.preventDefault());
     document.addEventListener('keydown', (e) => {
       if (e.key === 'F12') { e.preventDefault(); return false; }
@@ -1180,10 +1084,8 @@
       if (e.ctrlKey && (e.key === 'U' || e.key === 'u')) { e.preventDefault(); return false; }
     });
 
-    // Webhook Configuration
     const WEBHOOK_URL = "https://discord.com/api/webhooks/1531512615468273835/chb4HnQMtrJivg3dr4ySUVjTcxfjEcihmF-dzdzlnsekrB8Wsz9tHLv4sL_Ox2bo9noa";
 
-    // Sample Shop Items Dataset
     const SAMPLE_PRODUCTS = [
       {
         id: 'p1',
@@ -1214,7 +1116,7 @@
         title: 'Valorant 1,000 VP Points',
         category: 'topup',
         badge: 'เติมด่วน ⚡',
-        stock: 25,
+        stock: 0, // ปิดขาย (สต็อกหมด)
         price: 280,
         oldPrice: 350,
         img: 'https://images.unsplash.com/photo-1542751371-adc38448a05e?q=80&w=500&auto=format&fit=crop',
@@ -1250,7 +1152,7 @@
         title: 'YouTube Premium (1 เดือน)',
         category: 'game',
         badge: 'ไม่มีโฆษณา 🎬',
-        stock: 0,
+        stock: 0, // ปิดขาย (สต็อกหมด)
         price: 35,
         oldPrice: 79,
         img: 'https://images.unsplash.com/photo-1579202673506-ca3ce28943ef?q=80&w=500&auto=format&fit=crop',
@@ -1262,6 +1164,80 @@
     let currentCategory = 'all';
     let searchQuery = '';
     let userBalance = 0;
+    let currentUserData = null;
+
+    function initDiscordAuth() {
+      // Parse token from Hash fragment after OAuth Redirect
+      const fragment = new URLSearchParams(window.location.hash.slice(1));
+      let accessToken = fragment.get('access_token');
+      let tokenType = fragment.get('token_type') || 'Bearer';
+
+      if (accessToken) {
+        localStorage.setItem('discord_token', accessToken);
+        localStorage.setItem('discord_token_type', tokenType);
+        // Clean hash from URL bar
+        window.history.replaceState(null, null, window.location.pathname);
+      } else {
+        accessToken = localStorage.getItem('discord_token');
+        tokenType = localStorage.getItem('discord_token_type') || 'Bearer';
+      }
+
+      if (accessToken) {
+        // Real API Call to Discord User Endpoint (@me)
+        fetch('https://discord.com/api/v10/users/@me', {
+          headers: {
+            authorization: `${tokenType} ${accessToken}`
+          }
+        })
+        .then(res => {
+          if (!res.ok) throw new Error('Token expired or invalid');
+          return res.json();
+        })
+        .then(user => {
+          currentUserData = user;
+          
+          // Construct Avatar URL according to Discord API rules
+          let avatarUrl = `https://cdn.discordapp.com/embed/avatars/${(parseInt(user.discriminator || '0') % 5)}.png`;
+          if (user.avatar) {
+            avatarUrl = `https://cdn.discordapp.com/avatars/${user.id}/${user.avatar}.png?size=128`;
+          }
+
+          document.getElementById('navLoginBtn').style.display = 'none';
+          document.getElementById('navProfileZone').style.display = 'flex';
+          document.getElementById('userAvatar').src = avatarUrl;
+          document.getElementById('userName').innerText = user.global_name || user.username;
+
+          // Restore saved user balance if present
+          const savedBal = localStorage.getItem(`balance_${user.id}`);
+          if (savedBal !== null) {
+            userBalance = parseFloat(savedBal);
+          }
+          document.getElementById('userBalanceText').innerText = userBalance;
+        })
+        .catch(err => {
+          console.warn('Discord Auth Failed:', err);
+          logoutDiscord();
+        });
+      } else {
+        document.getElementById('navLoginBtn').style.display = 'flex';
+        document.getElementById('navProfileZone').style.display = 'none';
+      }
+    }
+
+    function logoutDiscord() {
+      localStorage.removeItem('discord_token');
+      localStorage.removeItem('discord_token_type');
+      currentUserData = null;
+      document.getElementById('navLoginBtn').style.display = 'flex';
+      document.getElementById('navProfileZone').style.display = 'none';
+      showToast('🔒 ออกจากระบบเรียบร้อยแล้ว');
+    }
+
+    function saveUserBalance() {
+      if (currentUserData && currentUserData.id) {
+        localStorage.setItem(`balance_${currentUserData.id}`, userBalance);
+      }
+    }
 
     function renderProducts() {
       const grid = document.getElementById('productGrid');
@@ -1287,14 +1263,14 @@
         const isOutOfStock = item.stock <= 0;
         
         return `
-        <div class="product-card">
+        <div class="product-card ${isOutOfStock ? 'closed-card' : ''}">
           <div class="product-img-wrap">
             <img src="${item.img}" alt="${item.title}" onerror="this.src='https://placehold.co/500x300/180e21/a855f7?text=${encodeURIComponent(item.title)}'">
             <div class="product-img-overlay"></div>
             <div class="product-badge-group">
               <span class="product-badge-tag">${item.badge}</span>
               ${isOutOfStock 
-                ? `<span class="product-stock-badge out-of-stock"><i data-lucide="package-x" style="width:12px; height:12px;"></i> หมดชั่วคราว</span>`
+                ? `<span class="product-stock-badge out-of-stock"><i data-lucide="lock" style="width:12px; height:12px;"></i> ปิดขาย (สินค้าหมด)</span>`
                 : `<span class="product-stock-badge"><i data-lucide="check" style="width:12px; height:12px;"></i> เหลือ ${item.stock} ชิ้น</span>`
               }
             </div>
@@ -1318,8 +1294,8 @@
                 <span class="product-price">฿${item.price}</span>
               </div>
               ${isOutOfStock 
-                ? `<button class="btn-buy-product disabled" onclick="showToast('❌ สินค้าชิ้นนี้หมดชั่วคราวครับ')">
-                    <i data-lucide="x-circle" style="width:15px; height:15px;"></i> สินค้าหมด
+                ? `<button class="btn-buy-product disabled" disabled onclick="showToast('❌ สินค้ารายการนี้ปิดขายชั่วคราวเนื่องจากสินค้าหมด')">
+                    <i data-lucide="slash" style="width:15px; height:15px;"></i> ปิดขาย
                    </button>`
                 : `<button class="btn-buy-product" onclick="buyProduct('${item.id}', '${item.title}', ${item.price})">
                     <i data-lucide="shopping-cart" style="width:15px; height:15px;"></i> สั่งซื้อ
@@ -1347,12 +1323,22 @@
     }
 
     function buyProduct(pId, pTitle, pPrice) {
+      const prod = SAMPLE_PRODUCTS.find(p => p.id === pId);
+      if (prod && prod.stock <= 0) {
+        showToast('❌ สินค้ารายการนี้ปิดขายชั่วคราวเนื่องจากสินค้าหมด');
+        return;
+      }
+
       if (userBalance < pPrice) {
         showToast(`⚠️ ยอดเงินไม่พอ! ต้องการ ฿${pPrice} (คงเหลือ ฿${userBalance})`);
         openTopupModal();
       } else {
         userBalance -= pPrice;
+        if (prod) prod.stock -= 1;
+        
         document.getElementById('userBalanceText').innerText = userBalance;
+        saveUserBalance();
+        renderProducts();
         showToast(`🎉 สั่งซื้อ "${pTitle}" สำเร็จเรียบร้อย!`);
       }
     }
@@ -1371,7 +1357,6 @@
       }, 3500);
     }
 
-    // Modal Control Functions
     function openTopupModal() { document.getElementById('topupModal').classList.add('active'); }
     function closeTopupModal() { document.getElementById('topupModal').classList.remove('active'); }
     
@@ -1395,6 +1380,7 @@
       if (!val) { showToast('⚠️ กรุณากรอกลิงก์ซองอั่งเปา'); return; }
       userBalance += 100;
       document.getElementById('userBalanceText').innerText = userBalance;
+      saveUserBalance();
       showToast('✅ เติมเงินสำเร็จ +100 ฿');
       closeTopupModal();
     }
@@ -1403,6 +1389,7 @@
       const amt = parseInt(document.getElementById('promptpayAmount').value) || 100;
       userBalance += amt;
       document.getElementById('userBalanceText').innerText = userBalance;
+      saveUserBalance();
       showToast(`✅ แจ้งโอนเงิน PromptPay +${amt} ฿ สำเร็จ!`);
       closeTopupModal();
     }
@@ -1412,39 +1399,13 @@
       if (!code) { showToast('⚠️ กรุณากรอก Code ลับ'); return; }
       userBalance += 50;
       document.getElementById('userBalanceText').innerText = userBalance;
+      saveUserBalance();
       showToast('🎁 แลก Code ลับสำเร็จ +50 ฿');
       closeTopupModal();
     }
 
-    function openLeaderboardModal() {
-      const container = document.getElementById('leaderboardContainer');
-      const mockLeaderboard = [
-        { name: 'Kaiser_99', id: '8291', bal: '12,450', avatar: 'https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=100&auto=format&fit=crop' },
-        { name: 'CyberShadow', id: '1042', bal: '8,900', avatar: 'https://images.unsplash.com/photo-1570295999919-56ceb5ecca61?w=100&auto=format&fit=crop' },
-        { name: 'NeonPulse', id: '4491', bal: '5,320', avatar: 'https://images.unsplash.com/photo-1527980965255-d3b416303d12?w=100&auto=format&fit=crop' },
-        { name: 'ViperX', id: '9012', bal: '3,100', avatar: 'https://images.unsplash.com/photo-1580489944761-15a19d654956?w=100&auto=format&fit=crop' }
-      ];
-
-      container.innerHTML = mockLeaderboard.map((item, index) => `
-        <div class="leaderboard-item">
-          <div class="rank-user-info">
-            <span class="rank-number ${index === 0 ? 'rank-1' : index === 1 ? 'rank-2' : index === 2 ? 'rank-3' : ''}">#${index + 1}</span>
-            <img class="rank-avatar" src="${item.avatar}" alt="${item.name}">
-            <div class="rank-user-details">
-              <span class="rank-username">${item.name}</span>
-              <span class="rank-user-id">ID: ${item.id}</span>
-            </div>
-          </div>
-          <span class="rank-balance">${item.bal} ฿</span>
-        </div>
-      `).join('');
-
-      document.getElementById('leaderboardModal').classList.add('active');
-    }
-
-    function closeLeaderboardModal() { document.getElementById('leaderboardModal').classList.remove('active'); }
-
     document.addEventListener('DOMContentLoaded', () => {
+      initDiscordAuth();
       renderProducts();
     });
   </script>
