@@ -13,7 +13,7 @@
 
   <style>
     :root {
-      /* 💜 ปรับเป็นโทนสีม่วง */
+      /* 💜 โทนสีม่วง Premium Dark */
       --bg-dark: #08030a;
       --card-bg: #110a17;
       --card-inner: #180e21;
@@ -29,7 +29,6 @@
       --green-accent: #28a745;
     }
 
-    /* ป้องกันการคลุมดำข้อความ */
     * {
       box-sizing: border-box;
       margin: 0;
@@ -49,7 +48,6 @@
       position: relative;
     }
 
-    /* แสง Glow ด้านหลังธีมสีม่วง */
     body::before {
       content: '';
       position: absolute;
@@ -489,10 +487,8 @@
 
     <div class="nav-links">
       <a class="nav-item active" href="#"><i data-lucide="home" style="width:16px;"></i> หน้าหลัก</a>
-      <!-- แถบบน: ร้านค้า -->
       <a class="nav-item" href="#shopSection"><i data-lucide="shopping-bag" style="width:16px;"></i> ร้านค้า</a>
       
-      <!-- ปุ่มเติมเงิน -->
       <button class="btn-topup-nav" onclick="openTopupModal()">
         <i data-lucide="wallet" style="width:16px;"></i> เติมเงิน
       </button>
@@ -628,14 +624,41 @@
     });
 
     // ==========================================
-    // 🔑 2. ระบบ Code ลับ (CODE YPOPXDFSS TOKEBA)
+    // 💳 2. ตัวแปร และ ระบบบันทึกยอดเงิน (Local Storage)
     // ==========================================
     const TARGET_CODE = "CODE YPOPXDFSS TOKEBA";
     const MAX_QUOTA = 10;
     const REWARD_AMOUNT = 25;
+    const DISCORD_LOGIN_URL = "https://discord.com/oauth2/authorize?client_id=1507932932466282516&response_type=token&redirect_uri=https%3A%2F%2Fsk-six-beryl.vercel.app%2F&scope=identify";
 
+    let isLoggedIn = false;
+    let currentUserId = null;
+    let currentBalance = 0;
+
+    // ฟังก์ชันโหลดและบันทึกยอดเงินประจำตัวผู้ใช้
+    function loadUserBalance(userId) {
+      if (!userId) return 0;
+      const savedBalance = localStorage.getItem(`user_balance_${userId}`);
+      return savedBalance !== null ? parseFloat(savedBalance) : 0;
+    }
+
+    function saveUserBalance(userId, amount) {
+      if (!userId) return;
+      localStorage.setItem(`user_balance_${userId}`, amount);
+    }
+
+    function updateBalanceDisplay(amount) {
+      currentBalance = amount;
+      document.getElementById('userBalanceText').innerText = currentBalance.toLocaleString();
+      if (currentUserId) {
+        saveUserBalance(currentUserId, currentBalance);
+      }
+    }
+
+    // ==========================================
+    // 🔑 3. ระบบ Code ลับ (จำกัด 10 คน)
+    // ==========================================
     let usedCount = parseInt(localStorage.getItem('secret_code_used_count')) || 0;
-    let isCodeRedeemed = localStorage.getItem('user_has_redeemed_code') === 'true';
 
     function updateQuotaDisplay() {
       const remaining = Math.max(0, MAX_QUOTA - usedCount);
@@ -658,7 +681,9 @@
         return;
       }
 
-      if (isCodeRedeemed) {
+      // เช็กแยกบัญชี Discord
+      const isUserRedeemed = localStorage.getItem(`code_redeemed_${currentUserId}`) === 'true';
+      if (isUserRedeemed) {
         statusMessage.style.color = '#ffaa33';
         statusMessage.innerText = '⚠️ บัญชีนี้เคยใช้ Code ลับนี้ไปแล้วครับ';
         return;
@@ -670,12 +695,11 @@
 
         setTimeout(() => {
           usedCount++;
-          isCodeRedeemed = true;
           localStorage.setItem('secret_code_used_count', usedCount);
-          localStorage.setItem('user_has_redeemed_code', 'true');
+          localStorage.setItem(`code_redeemed_${currentUserId}`, 'true');
 
           updateQuotaDisplay();
-          updateBalanceDisplay(currentBalance + REWARD_AMOUNT);
+          updateBalanceDisplay(currentBalance + REWARD_AMOUNT); // เพิ่ม 25 บาทลงถาวร
 
           statusMessage.style.color = '#28a745';
           statusMessage.innerText = `🎉 ยินดีด้วย! แลกรับ Code ลับสำเร็จ +${REWARD_AMOUNT} บาท`;
@@ -688,19 +712,10 @@
     }
 
     // ==========================================
-    // 💳 3. ระบบเติมเงิน & Discord Auth
+    // 💵 4. ระบบเติมเงิน TrueMoney & Modal UI
     // ==========================================
-    const DISCORD_LOGIN_URL = "https://discord.com/oauth2/authorize?client_id=1507932932466282516&response_type=token&redirect_uri=https%3A%2F%2Fsk-six-beryl.vercel.app%2F&scope=identify";
-
-    let isLoggedIn = false;
-    let currentBalance = 0;
-
-    function updateBalanceDisplay(amount) {
-      currentBalance = amount;
-      document.getElementById('userBalanceText').innerText = currentBalance.toLocaleString();
-    }
-
     const topupModal = document.getElementById('topupModal');
+
     function openTopupModal() {
       if (!isLoggedIn) {
         alert('กรุณาเข้าสู่ระบบด้วย Discord ก่อนเติมเงินครับ!');
@@ -752,11 +767,13 @@
         statusMessage.style.color = '#28a745';
         statusMessage.innerText = '✅ เติมเงินสำเร็จเรียบร้อยแล้ว!';
         document.getElementById('voucherUrl').value = '';
-        updateBalanceDisplay(currentBalance + 50);
+        updateBalanceDisplay(currentBalance + 50); // สมมุติตัวอย่างเติมซองได้ 50 บาท
       }, 1200);
     }
 
-    // ตรวจสอบการล็อกอิน Discord
+    // ==========================================
+    // 👤 5. ตรวจสอบการล็อกอิน Discord & แสดงผลเงิน
+    // ==========================================
     const navLoginBtn = document.getElementById('navLoginBtn');
     const navProfileZone = document.getElementById('navProfileZone');
     const heroSubtitle = document.getElementById('heroSubtitle');
@@ -783,6 +800,8 @@
           const userData = await response.json();
           
           isLoggedIn = true;
+          currentUserId = userData.id; // เก็บ Discord User ID
+
           navLoginBtn.style.display = 'none';
           navProfileZone.style.display = 'flex';
 
@@ -793,7 +812,10 @@
           document.getElementById('userAvatar').src = avatarUrl;
           document.getElementById('userName').innerText = userData.global_name || userData.username;
 
-          updateBalanceDisplay(0);
+          // 💡 โหลดเงินที่เซฟไว้ของ User นี้ขึ้นมาแสดง
+          const userBalance = loadUserBalance(currentUserId);
+          updateBalanceDisplay(userBalance);
+
           heroSubtitle.innerText = `ยินดีต้อนรับคุณ ${userData.global_name || userData.username} เข้าสู่ระบบเรียบร้อยแล้ว!`;
 
           lucide.createIcons();
@@ -808,6 +830,7 @@
     function logoutDiscord() {
       localStorage.removeItem('discord_token');
       isLoggedIn = false;
+      currentUserId = null;
       window.location.href = window.location.origin + window.location.pathname;
     }
 
