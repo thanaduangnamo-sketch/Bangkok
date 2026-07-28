@@ -43,7 +43,6 @@
       position: relative;
     }
 
-    /* Background Glow Effect */
     body::before {
       content: '';
       position: absolute;
@@ -57,7 +56,7 @@
       z-index: 0;
     }
 
-    /* Navbar ด้านบน */
+    /* Navbar */
     header {
       position: relative;
       z-index: 10;
@@ -107,9 +106,7 @@
       transition: color 0.2s;
     }
 
-    .nav-item:hover, .nav-item.active {
-      color: #fff;
-    }
+    .nav-item:hover, .nav-item.active { color: #fff; }
 
     /* ปุ่มเติมเงิน บน Navbar */
     .btn-topup-nav {
@@ -133,7 +130,7 @@
       box-shadow: 0 0 15px rgba(255, 42, 75, 0.4);
     }
 
-    /* ปุ่มเข้าสู่ระบบด้วย Discord บน Navbar */
+    /* ปุ่มเข้าสู่ระบบ Discord */
     .btn-login-discord {
       background: var(--discord-blue);
       color: var(--text-main);
@@ -149,11 +146,9 @@
       transition: all 0.2s;
     }
 
-    .btn-login-discord:hover {
-      background: var(--discord-blue-hover);
-    }
+    .btn-login-discord:hover { background: var(--discord-blue-hover); }
 
-    /* โปรไฟล์ Discord บน Navbar เมื่อล็อกอินแล้ว */
+    /* โปรไฟล์ Discord บน Navbar */
     .user-profile-bar {
       display: flex;
       align-items: center;
@@ -231,9 +226,7 @@
       letter-spacing: -0.5px;
     }
 
-    .hero-title span {
-      color: var(--primary-red);
-    }
+    .hero-title span { color: var(--primary-red); }
 
     .hero-subtitle {
       color: var(--text-muted);
@@ -262,7 +255,7 @@
       background: var(--discord-blue-hover);
     }
 
-    /* Topup Modal */
+    /* Topup Modal Window */
     .modal-overlay {
       position: fixed;
       top: 0;
@@ -298,9 +291,7 @@
       transition: transform 0.3s ease;
     }
 
-    .modal-overlay.active .topup-card {
-      transform: scale(1);
-    }
+    .modal-overlay.active .topup-card { transform: scale(1); }
 
     .close-btn {
       position: absolute;
@@ -326,7 +317,6 @@
       gap: 8px;
     }
 
-    /* Payment Tabs */
     .payment-tabs {
       display: flex;
       gap: 10px;
@@ -422,30 +412,28 @@
 </head>
 <body>
 
-  <!-- Navbar ด้านบน -->
+  <!-- Navbar -->
   <header>
     <div class="logo">
       <div class="logo-icon">J</div>
       <span>J Community</span>
     </div>
 
-    <!-- เมนูกลาง + ปุ่มเติมเงิน -->
     <div class="nav-links">
       <a class="nav-item active" href="#"><i data-lucide="home" style="width:16px;"></i> หน้าหลัก</a>
       
-      <!-- ปุ่มเติมเงินบนแถบบน -->
+      <!-- ปุ่มเติมเงิน -->
       <button class="btn-topup-nav" onclick="openTopupModal()">
         <i data-lucide="wallet" style="width:16px;"></i> เติมเงิน
       </button>
     </div>
 
-    <!-- ปุ่มล็อกอิน Discord / โปรไฟล์ -->
+    <!-- โซนปุ่มล็อกอิน / แสดงโปรไฟล์ -->
     <div id="authNavZone">
       <a id="navLoginBtn" href="https://discord.com/oauth2/authorize?client_id=1507932932466282516&response_type=token&redirect_uri=https%3A%2F%2Fsk-six-beryl.vercel.app%2F&scope=identify" class="btn-login-discord">
         <i data-lucide="message-square" style="width:16px;"></i> เข้าสู่ระบบด้วย Discord
       </a>
 
-      <!-- แสดงรูปและชื่อเมื่อล็อกอินแล้ว -->
       <div id="navProfileZone" class="user-profile-bar" style="display: none;">
         <img id="userAvatar" class="user-avatar-small" src="" alt="Avatar">
         <span id="userName" class="user-name-text">Loading...</span>
@@ -469,7 +457,7 @@
     </a>
   </main>
 
-  <!-- Topup Modal Window (ป๊อบอัพเติมเงิน) -->
+  <!-- Topup Modal Window -->
   <div class="modal-overlay" id="topupModal">
     <div class="topup-card">
       <span class="close-btn" onclick="closeTopupModal()"><i data-lucide="x"></i></span>
@@ -480,7 +468,6 @@
         </div>
       </div>
 
-      <!-- Payment Tabs -->
       <div class="payment-tabs">
         <button class="tab-btn active-tw" id="tabTW" onclick="switchTab('tw')">
           <i data-lucide="gift" style="width:16px;"></i> ซอง TrueMoney
@@ -490,7 +477,6 @@
         </button>
       </div>
 
-      <!-- TrueMoney Form -->
       <div id="viewTW">
         <div class="form-group">
           <label class="form-label">กรอกลิงก์ซองอั่งเปา TrueMoney Wallet:</label>
@@ -501,7 +487,6 @@
         </button>
       </div>
 
-      <!-- PromptPay View -->
       <div id="viewPP" style="display: none;">
         <div class="qr-box">
           <img src="https://api.qrserver.com/v1/create-qr-code/?size=180x180&data=PROMPTPAY_EXAMPLE" alt="PromptPay QR">
@@ -518,16 +503,30 @@
   <script>
     lucide.createIcons();
 
-    // Modal Operations
+    // URL สำหรับเข้าสู่ระบบ Discord
+    const DISCORD_LOGIN_URL = "https://discord.com/oauth2/authorize?client_id=1507932932466282516&response_type=token&redirect_uri=https%3A%2F%2Fsk-six-beryl.vercel.app%2F&scope=identify";
+
+    // ตัวแปรเช็คสถานะการล็อกอิน
+    let isLoggedIn = false;
+
+    // ฟังก์ชันเปิด Modal เติมเงิน (เช็กล็อกอินก่อน)
     const topupModal = document.getElementById('topupModal');
-    function openTopupModal() { topupModal.classList.add('active'); }
+    function openTopupModal() {
+      if (!isLoggedIn) {
+        alert('กรุณาเข้าสู่ระบบด้วย Discord ก่อนเติมเงินครับ!');
+        window.location.href = DISCORD_LOGIN_URL;
+        return;
+      }
+      topupModal.classList.add('active');
+    }
+
     function closeTopupModal() { topupModal.classList.remove('active'); }
 
     topupModal.addEventListener('click', (e) => {
       if (e.target === topupModal) closeTopupModal();
     });
 
-    // Tab Switching
+    // สลับแท็บชำระเงิน
     function switchTab(type) {
       const tabTW = document.getElementById('tabTW');
       const tabPP = document.getElementById('tabPP');
@@ -548,7 +547,7 @@
       }
     }
 
-    // Process Voucher
+    // ฟังก์ชันกดยืนยันเติมเงิน
     function processVoucher() {
       const voucherInput = document.getElementById('voucherUrl').value.trim();
       const statusMessage = document.getElementById('statusMessage');
@@ -569,7 +568,7 @@
       }, 1200);
     }
 
-    // Discord Login Check
+    // ฟังก์ชันตรวจสอบล็อกอิน Discord
     const navLoginBtn = document.getElementById('navLoginBtn');
     const navProfileZone = document.getElementById('navProfileZone');
     const heroCtaBtn = document.getElementById('heroCtaBtn');
@@ -596,6 +595,7 @@
 
           const userData = await response.json();
           
+          isLoggedIn = true; // ตั้งค่าสถานะล็อกอินเป็นจริง
           navLoginBtn.style.display = 'none';
           navProfileZone.style.display = 'flex';
 
@@ -620,6 +620,7 @@
 
     function logoutDiscord() {
       localStorage.removeItem('discord_token');
+      isLoggedIn = false;
       window.location.href = window.location.origin + window.location.pathname;
     }
 
