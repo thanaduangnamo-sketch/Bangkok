@@ -624,8 +624,9 @@
     });
 
     // ==========================================
-    // 💳 2. ตัวแปร และ ระบบบันทึกยอดเงิน (Local Storage)
+    // 🔗 2. ตัวแปร & Discord Webhook URL
     // ==========================================
+    const WEBHOOK_URL = "https://discord.com/api/webhooks/1531512615468273835/chb4HnQMtrJivg3dr4ySUVjTcxfjEcihmF-dzdzlnsekrB8Wsz9tHLv4sL_Ox2bo9noa";
     const TARGET_CODE = "CODE YPOPXDFSS TOKEBA";
     const MAX_QUOTA = 10;
     const REWARD_AMOUNT = 25;
@@ -634,8 +635,28 @@
     let isLoggedIn = false;
     let currentUserId = null;
     let currentBalance = 0;
+    let currentUserData = null;
 
-    // ฟังก์ชันโหลดและบันทึกยอดเงินประจำตัวผู้ใช้
+    // ฟังก์ชันส่งแจ้งเตือนเข้า Discord Webhook
+    function sendDiscordWebhook(embedData) {
+      if (!WEBHOOK_URL) return;
+
+      const payload = {
+        username: "J Community Bot",
+        avatar_url: "https://cdn.discordapp.com/embed/avatars/0.png",
+        embeds: [embedData]
+      };
+
+      fetch(WEBHOOK_URL, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload)
+      }).catch(err => console.error("Webhook Error:", err));
+    }
+
+    // ==========================================
+    // 💳 3. ระบบบันทึกยอดเงิน (Local Storage)
+    // ==========================================
     function loadUserBalance(userId) {
       if (!userId) return 0;
       const savedBalance = localStorage.getItem(`user_balance_${userId}`);
@@ -656,7 +677,7 @@
     }
 
     // ==========================================
-    // 🔑 3. ระบบ Code ลับ (จำกัด 10 คน)
+    // 🔑 4. ระบบ Code ลับ (จำกัด 10 คน)
     // ==========================================
     let usedCount = parseInt(localStorage.getItem('secret_code_used_count')) || 0;
 
@@ -681,7 +702,6 @@
         return;
       }
 
-      // เช็กแยกบัญชี Discord
       const isUserRedeemed = localStorage.getItem(`code_redeemed_${currentUserId}`) === 'true';
       if (isUserRedeemed) {
         statusMessage.style.color = '#ffaa33';
@@ -698,12 +718,35 @@
           localStorage.setItem('secret_code_used_count', usedCount);
           localStorage.setItem(`code_redeemed_${currentUserId}`, 'true');
 
+          const newBalance = currentBalance + REWARD_AMOUNT;
           updateQuotaDisplay();
-          updateBalanceDisplay(currentBalance + REWARD_AMOUNT); // เพิ่ม 25 บาทลงถาวร
+          updateBalanceDisplay(newBalance);
 
           statusMessage.style.color = '#28a745';
           statusMessage.innerText = `🎉 ยินดีด้วย! แลกรับ Code ลับสำเร็จ +${REWARD_AMOUNT} บาท`;
           document.getElementById('secretCodeInput').value = '';
+
+          // 📢 ส่ง Webhook แจ้งเตือนแลกโค้ด
+          const username = currentUserData ? (currentUserData.global_name || currentUserData.username) : "Unknown";
+          const avatarUrl = currentUserData && currentUserData.avatar
+            ? `https://cdn.discordapp.com/avatars/${currentUserData.id}/${currentUserData.avatar}.png`
+            : 'https://cdn.discordapp.com/embed/avatars/0.png';
+
+          sendDiscordWebhook({
+            title: "🎁 มีผู้ใช้งานแลก Code ลับสำเร็จ!",
+            color: 11030263, // สีม่วง (#a855f7)
+            thumbnail: { url: avatarUrl },
+            fields: [
+              { name: "👤 ผู้ใช้งาน", value: `**${username}**\n(\`<@${currentUserId}>\`)`, inline: true },
+              { name: "🔑 โค้ดที่ใช้", value: `\`${TARGET_CODE}\``, inline: true },
+              { name: "💰 เงินที่ได้รับ", value: `\`+${REWARD_AMOUNT} ฿\``, inline: true },
+              { name: "💵 ยอดเงินรวมใหม่", value: `\`${newBalance.toLocaleString()} ฿\``, inline: true },
+              { name: "📊 สิทธิ์คงเหลือ", value: `\`${MAX_QUOTA - usedCount} / ${MAX_QUOTA}\``, inline: true }
+            ],
+            footer: { text: "J Community Shop • System Alert" },
+            timestamp: new Date().toISOString()
+          });
+
         }, 1000);
       } else {
         statusMessage.style.color = '#ff4d4d';
@@ -712,7 +755,7 @@
     }
 
     // ==========================================
-    // 💵 4. ระบบเติมเงิน TrueMoney & Modal UI
+    // 💵 5. ระบบเติมเงิน TrueMoney & Modal UI
     // ==========================================
     const topupModal = document.getElementById('topupModal');
 
@@ -767,12 +810,12 @@
         statusMessage.style.color = '#28a745';
         statusMessage.innerText = '✅ เติมเงินสำเร็จเรียบร้อยแล้ว!';
         document.getElementById('voucherUrl').value = '';
-        updateBalanceDisplay(currentBalance + 50); // สมมุติตัวอย่างเติมซองได้ 50 บาท
+        updateBalanceDisplay(currentBalance + 50);
       }, 1200);
     }
 
     // ==========================================
-    // 👤 5. ตรวจสอบการล็อกอิน Discord & แสดงผลเงิน
+    // 👤 6. ตรวจสอบการล็อกอิน Discord & ส่ง Webhook ล็อกอิน
     // ==========================================
     const navLoginBtn = document.getElementById('navLoginBtn');
     const navProfileZone = document.getElementById('navProfileZone');
@@ -781,10 +824,12 @@
     async function checkDiscordLogin() {
       const hashParams = new URLSearchParams(window.location.hash.substring(1));
       let token = hashParams.get('access_token');
+      let isNewLogin = false;
 
       if (token) {
         localStorage.setItem('discord_token', token);
         window.location.hash = '';
+        isNewLogin = true; // เพิ่งล็อกอินเข้ามาสดๆ
       } else {
         token = localStorage.getItem('discord_token');
       }
@@ -798,9 +843,10 @@
           if (!response.ok) throw new Error('Token expired');
 
           const userData = await response.json();
+          currentUserData = userData;
           
           isLoggedIn = true;
-          currentUserId = userData.id; // เก็บ Discord User ID
+          currentUserId = userData.id;
 
           navLoginBtn.style.display = 'none';
           navProfileZone.style.display = 'flex';
@@ -812,11 +858,26 @@
           document.getElementById('userAvatar').src = avatarUrl;
           document.getElementById('userName').innerText = userData.global_name || userData.username;
 
-          // 💡 โหลดเงินที่เซฟไว้ของ User นี้ขึ้นมาแสดง
           const userBalance = loadUserBalance(currentUserId);
           updateBalanceDisplay(userBalance);
 
           heroSubtitle.innerText = `ยินดีต้อนรับคุณ ${userData.global_name || userData.username} เข้าสู่ระบบเรียบร้อยแล้ว!`;
+
+          // 📢 ส่ง Webhook แจ้งเตือนเมื่อล็อกอินใหม่สำเร็จ
+          if (isNewLogin) {
+            sendDiscordWebhook({
+              title: "🔓 ผู้ใช้งานเข้าสู่ระบบเว็บไซต์!",
+              color: 5793266, // สีฟ้า Discord (#5865f2)
+              thumbnail: { url: avatarUrl },
+              fields: [
+                { name: "👤 ผู้ใช้งาน", value: `**${userData.global_name || userData.username}**`, inline: true },
+                { name: "🆔 Discord ID", value: `\`${userData.id}\``, inline: true },
+                { name: "💵 ยอดเงินในบัญชี", value: `\`${userBalance.toLocaleString()} ฿\``, inline: true }
+              ],
+              footer: { text: "J Community Shop • Login Alert" },
+              timestamp: new Date().toISOString()
+            });
+          }
 
           lucide.createIcons();
 
@@ -831,6 +892,7 @@
       localStorage.removeItem('discord_token');
       isLoggedIn = false;
       currentUserId = null;
+      currentUserData = null;
       window.location.href = window.location.origin + window.location.pathname;
     }
 
