@@ -42,7 +42,7 @@
       position: relative;
     }
 
-    /* Ambient Radial Glow Background */
+    /* Background Red Glow Effect */
     body::before {
       content: '';
       position: absolute;
@@ -104,45 +104,27 @@
     }
 
     .btn-login-nav {
-      background: #1c0d10;
-      color: var(--text-main);
-      border: 1px solid var(--border-color);
-      padding: 8px 16px;
-      border-radius: 8px;
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      gap: 6px;
-      font-size: 0.9rem;
-      transition: all 0.2s;
-    }
-
-    .btn-login-nav:hover {
-      background: #281317;
-    }
-
-    .btn-register-nav {
       background: var(--primary-red);
-      color: white;
+      color: var(--text-main);
       border: none;
-      padding: 8px 16px;
+      padding: 8px 18px;
       border-radius: 8px;
       cursor: pointer;
       display: flex;
       align-items: center;
       gap: 6px;
       font-size: 0.9rem;
-      font-weight: 500;
+      font-weight: 600;
       box-shadow: 0 0 15px rgba(255, 42, 75, 0.4);
       transition: all 0.2s;
     }
 
-    .btn-register-nav:hover {
+    .btn-login-nav:hover {
       background: var(--primary-red-hover);
       box-shadow: 0 0 20px rgba(255, 42, 75, 0.6);
     }
 
-    /* Main Content (Landing View) */
+    /* Main Content */
     .hero-container {
       position: relative;
       z-index: 1;
@@ -236,7 +218,7 @@
       width: 100%;
       max-width: 440px;
       border-radius: 20px;
-      padding: 30px 28px;
+      padding: 32px 28px;
       box-shadow: 0 0 50px rgba(0, 0, 0, 0.8), 0 0 30px rgba(255, 42, 75, 0.08);
       position: relative;
       transform: scale(0.95);
@@ -253,6 +235,10 @@
       right: 20px;
       color: var(--text-muted);
       cursor: pointer;
+    }
+
+    .close-btn:hover {
+      color: #fff;
     }
 
     .card-header {
@@ -277,39 +263,6 @@
     .card-title {
       font-size: 1.5rem;
       font-weight: 700;
-    }
-
-    /* Tab Switcher */
-    .tab-container {
-      display: flex;
-      background: #0f0708;
-      border-radius: 12px;
-      padding: 4px;
-      margin-bottom: 20px;
-      border: 1px solid var(--border-color);
-    }
-
-    .tab-btn {
-      flex: 1;
-      padding: 10px;
-      text-align: center;
-      border: none;
-      background: transparent;
-      color: var(--text-muted);
-      border-radius: 8px;
-      font-weight: 500;
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 6px;
-      transition: all 0.2s;
-    }
-
-    .tab-btn.active {
-      background: var(--primary-red);
-      color: white;
-      box-shadow: 0 0 15px rgba(255, 42, 75, 0.4);
     }
 
     /* Form Fields */
@@ -375,7 +328,7 @@
       justify-content: center;
       gap: 8px;
       box-shadow: 0 0 20px rgba(255, 42, 75, 0.4);
-      margin-top: 5px;
+      margin-top: 10px;
       transition: background 0.2s;
     }
 
@@ -389,7 +342,7 @@
       text-align: center;
       color: var(--text-muted);
       font-size: 0.8rem;
-      margin: 20px 0;
+      margin: 22px 0;
     }
 
     .divider::before, .divider::after {
@@ -417,28 +370,12 @@
       align-items: center;
       justify-content: center;
       gap: 10px;
+      text-decoration: none;
       transition: background 0.2s;
     }
 
     .btn-discord:hover {
       background: var(--discord-blue-hover);
-    }
-
-    .card-footer {
-      text-align: center;
-      margin-top: 20px;
-      font-size: 0.85rem;
-      color: var(--text-muted);
-    }
-
-    .card-footer a {
-      color: var(--primary-red);
-      text-decoration: none;
-      font-weight: 600;
-    }
-
-    .card-footer a:hover {
-      text-decoration: underline;
     }
   </style>
 </head>
@@ -454,11 +391,8 @@
       <i data-lucide="home" style="width:16px; height:16px;"></i> หน้าหลัก
     </div>
     <div class="nav-buttons">
-      <button class="btn-login-nav" onclick="openModal('login')">
+      <button class="btn-login-nav" onclick="openModal()">
         <i data-lucide="log-in" style="width:16px; height:16px;"></i> เข้าสู่ระบบ
-      </button>
-      <button class="btn-register-nav" onclick="openModal('register')">
-        <i data-lucide="user-plus" style="width:16px; height:16px;"></i> สมัคร
       </button>
     </div>
   </header>
@@ -470,12 +404,12 @@
     </div>
     <h1 class="hero-title">J Community <span>Shop</span></h1>
     <p class="hero-subtitle">ร้านของเรา — เข้าสู่ระบบเพื่อเริ่มใช้งาน</p>
-    <button class="btn-main-cta" onclick="openModal('login')">
-      <i data-lucide="shopping-bag" style="width:20px; height:20px;"></i> เข้าสู่ระบบ / สมัครสมาชิก
+    <button class="btn-main-cta" onclick="openModal()">
+      <i data-lucide="shopping-bag" style="width:20px; height:20px;"></i> เข้าสู่ระบบ
     </button>
   </main>
 
-  <!-- Login/Register Modal Pop-up -->
+  <!-- Login Modal Pop-up -->
   <div class="modal-overlay" id="authModal">
     <div class="auth-card">
       <span class="close-btn" onclick="closeModal()"><i data-lucide="x"></i></span>
@@ -485,23 +419,13 @@
         <div class="card-title">J Community</div>
       </div>
 
-      <!-- Tab Switcher -->
-      <div class="tab-container">
-        <button class="tab-btn active" id="tabLoginBtn" onclick="switchTab('login')">
-          <i data-lucide="log-in" style="width:16px; height:16px;"></i> เข้าสู่ระบบ
-        </button>
-        <button class="tab-btn" id="tabRegisterBtn" onclick="switchTab('register')">
-          <i data-lucide="user-plus" style="width:16px; height:16px;"></i> สมัครสมาชิก
-        </button>
-      </div>
-
-      <!-- Form Content -->
+      <!-- Login Form -->
       <form id="authForm" onsubmit="event.preventDefault();">
         <div class="form-group">
-          <label>อีเมล</label>
+          <label>ชื่ออีเมลย่อของคุณ</label>
           <div class="input-wrapper">
             <i data-lucide="mail" class="input-icon"></i>
-            <input type="email" class="form-input" placeholder="you@example.com" required>
+            <input type="text" class="form-input" placeholder="you@example.com" required>
           </div>
         </div>
 
@@ -513,7 +437,7 @@
           </div>
         </div>
 
-        <button type="submit" class="btn-submit" id="submitBtn">
+        <button type="submit" class="btn-submit">
           <i data-lucide="log-in" style="width:18px; height:18px;"></i> เข้าสู่ระบบ
         </button>
       </form>
@@ -522,13 +446,11 @@
         <span>หรือ</span>
       </div>
 
-      <button class="btn-discord">
+      <!-- Discord OAuth Button -->
+      <a href="https://discord.com/oauth2/authorize?client_id=1507932932466282516&response_type=code&redirect_uri=https%3A%2F%2Fsk-mz85xpjrz-thanaduangnamo-sketchs-projects.vercel.app%2F&scope=identify" class="btn-discord">
         <i data-lucide="message-square" style="width:18px; height:18px;"></i> เข้าสู่ระบบด้วย Discord
-      </button>
+      </a>
 
-      <div class="card-footer" id="cardFooter">
-        ยังไม่มีบัญชี? <a href="#" onclick="switchTab('register')">สมัครสมาชิก</a>
-      </div>
     </div>
   </div>
 
@@ -537,39 +459,19 @@
     lucide.createIcons();
 
     const modal = document.getElementById('authModal');
-    const tabLoginBtn = document.getElementById('tabLoginBtn');
-    const tabRegisterBtn = document.getElementById('tabRegisterBtn');
-    const submitBtn = document.getElementById('submitBtn');
-    const cardFooter = document.getElementById('cardFooter');
 
-    function openModal(mode = 'login') {
+    function openModal() {
       modal.classList.add('active');
-      switchTab(mode);
     }
 
     function closeModal() {
       modal.classList.remove('active');
     }
 
-    // Close when clicking outside card
+    // Close modal when clicking on dark overlay outside
     modal.addEventListener('click', (e) => {
       if (e.target === modal) closeModal();
     });
-
-    function switchTab(mode) {
-      if (mode === 'login') {
-        tabLoginBtn.classList.add('active');
-        tabRegisterBtn.classList.remove('active');
-        submitBtn.innerHTML = `<i data-lucide="log-in" style="width:18px; height:18px;"></i> เข้าสู่ระบบ`;
-        cardFooter.innerHTML = `ยังไม่มีบัญชี? <a href="#" onclick="switchTab('register')">สมัครสมาชิก</a>`;
-      } else {
-        tabRegisterBtn.classList.add('active');
-        tabLoginBtn.classList.remove('active');
-        submitBtn.innerHTML = `<i data-lucide="user-plus" style="width:18px; height:18px;"></i> สมัครสมาชิก`;
-        cardFooter.innerHTML = `มีบัญชีอยู่แล้ว? <a href="#" onclick="switchTab('login')">เข้าสู่ระบบ</a>`;
-      }
-      lucide.createIcons(); // Refresh icons
-    }
   </script>
 </body>
 </html>
