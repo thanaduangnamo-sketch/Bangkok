@@ -65,6 +65,7 @@
       padding: 18px 5%;
       background: rgba(10, 3, 4, 0.8);
       backdrop-filter: blur(10px);
+      border-bottom: 1px solid var(--border-color);
     }
 
     .logo {
@@ -93,16 +94,15 @@
       gap: 8px;
       color: var(--text-muted);
       font-size: 0.95rem;
-      cursor: pointer;
     }
 
-    .btn-login-nav {
+    /* ปุ่มล็อกอินปกติ */
+    .btn-login-discord {
       background: var(--discord-blue);
       color: var(--text-main);
-      border: none;
+      text-decoration: none;
       padding: 8px 18px;
       border-radius: 8px;
-      cursor: pointer;
       display: flex;
       align-items: center;
       gap: 8px;
@@ -112,8 +112,53 @@
       transition: all 0.2s;
     }
 
-    .btn-login-nav:hover {
+    .btn-login-discord:hover {
       background: var(--discord-blue-hover);
+    }
+
+    /* กล่องแสดงโปรไฟล์ Discord บน Navbar หลังล็อกอิน */
+    .user-profile-bar {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      background: var(--card-bg);
+      border: 1px solid var(--border-color);
+      padding: 6px 14px 6px 8px;
+      border-radius: 30px;
+    }
+
+    .user-avatar-small {
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      border: 2px solid var(--discord-blue);
+      object-fit: cover;
+    }
+
+    .user-name-text {
+      font-size: 0.9rem;
+      font-weight: 600;
+      color: #fff;
+    }
+
+    .btn-logout-icon {
+      background: rgba(255, 42, 75, 0.15);
+      border: 1px solid rgba(255, 42, 75, 0.3);
+      color: var(--primary-red);
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: all 0.2s;
+      margin-left: 4px;
+    }
+
+    .btn-logout-icon:hover {
+      background: var(--primary-red);
+      color: white;
     }
 
     /* Hero Section */
@@ -162,13 +207,13 @@
     .btn-main-cta {
       background: var(--discord-blue);
       color: white;
+      text-decoration: none;
       border: none;
       padding: 14px 32px;
       border-radius: 12px;
       font-size: 1.1rem;
       font-weight: 600;
-      cursor: pointer;
-      display: flex;
+      display: inline-flex;
       align-items: center;
       gap: 10px;
       box-shadow: 0 0 30px rgba(88, 101, 242, 0.5);
@@ -179,172 +224,6 @@
       transform: translateY(-2px);
       box-shadow: 0 0 40px rgba(88, 101, 242, 0.7);
       background: var(--discord-blue-hover);
-    }
-
-    /* Modal Overlay */
-    .modal-overlay {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background: rgba(0, 0, 0, 0.75);
-      backdrop-filter: blur(8px);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      z-index: 100;
-      opacity: 0;
-      pointer-events: none;
-      transition: opacity 0.3s ease;
-    }
-
-    .modal-overlay.active {
-      opacity: 1;
-      pointer-events: all;
-    }
-
-    /* Auth Card Window */
-    .auth-card {
-      background: var(--card-bg);
-      border: 1px solid var(--border-color);
-      width: 100%;
-      max-width: 400px;
-      border-radius: 20px;
-      padding: 32px 28px;
-      box-shadow: 0 0 50px rgba(0, 0, 0, 0.8), 0 0 30px rgba(255, 42, 75, 0.08);
-      position: relative;
-      transform: scale(0.95);
-      transition: transform 0.3s ease;
-    }
-
-    .modal-overlay.active .auth-card {
-      transform: scale(1);
-    }
-
-    .close-btn {
-      position: absolute;
-      top: 18px;
-      right: 20px;
-      color: var(--text-muted);
-      cursor: pointer;
-    }
-
-    .close-btn:hover {
-      color: #fff;
-    }
-
-    .card-header {
-      text-align: center;
-      margin-bottom: 25px;
-    }
-
-    .card-logo-icon {
-      width: 60px;
-      height: 60px;
-      background: linear-gradient(135deg, #ff2a4b, #99001a);
-      border-radius: 16px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 1.8rem;
-      font-weight: 800;
-      margin: 0 auto 12px;
-      box-shadow: 0 0 25px rgba(255, 42, 75, 0.5);
-    }
-
-    .card-title {
-      font-size: 1.5rem;
-      font-weight: 700;
-    }
-
-    .card-subtitle {
-      font-size: 0.9rem;
-      color: var(--text-muted);
-      margin-top: 4px;
-    }
-
-    /* Discord Single Button */
-    .btn-discord {
-      width: 100%;
-      background: var(--discord-blue);
-      color: white;
-      border: none;
-      padding: 14px;
-      border-radius: 12px;
-      font-size: 1rem;
-      font-weight: 600;
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 10px;
-      text-decoration: none;
-      box-shadow: 0 0 20px rgba(88, 101, 242, 0.4);
-      transition: all 0.2s;
-    }
-
-    .btn-discord:hover {
-      background: var(--discord-blue-hover);
-      box-shadow: 0 0 30px rgba(88, 101, 242, 0.6);
-    }
-
-    /* Profile View */
-    .profile-container {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      text-align: center;
-      gap: 12px;
-      padding: 10px 0;
-    }
-
-    .user-avatar {
-      width: 85px;
-      height: 85px;
-      border-radius: 50%;
-      border: 3px solid var(--discord-blue);
-      box-shadow: 0 0 20px rgba(88, 101, 242, 0.5);
-      object-fit: cover;
-    }
-
-    .user-name {
-      font-size: 1.3rem;
-      font-weight: 700;
-    }
-
-    .discord-badge {
-      background: rgba(88, 101, 242, 0.15);
-      border: 1px solid rgba(88, 101, 242, 0.3);
-      color: #7289da;
-      padding: 4px 12px;
-      border-radius: 20px;
-      font-size: 0.8rem;
-      display: flex;
-      align-items: center;
-      gap: 6px;
-    }
-
-    .btn-logout {
-      width: 100%;
-      background: #2a181c;
-      color: var(--primary-red);
-      border: 1px solid var(--border-color);
-      padding: 11px;
-      border-radius: 10px;
-      font-size: 0.9rem;
-      font-weight: 600;
-      cursor: pointer;
-      margin-top: 20px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 8px;
-      transition: all 0.2s;
-    }
-
-    .btn-logout:hover {
-      background: rgba(255, 42, 75, 0.15);
     }
   </style>
 </head>
@@ -359,10 +238,22 @@
     <div class="nav-links">
       <i data-lucide="home" style="width:16px; height:16px;"></i> หน้าหลัก
     </div>
-    <div class="nav-buttons">
-      <button class="btn-login-nav" id="navLoginBtn" onclick="openModal()">
-        <i data-lucide="message-square" style="width:16px; height:16px;"></i> เข้าสู่ระบบ
-      </button>
+
+    <!-- โซนปุ่มล็อกอิน / แสดงโปรไฟล์บน Navbar -->
+    <div id="authNavZone">
+      <!-- แสดงเมื่อยังไม่ได้ล็อกอิน -->
+      <a id="navLoginBtn" href="https://discord.com/oauth2/authorize?client_id=1507932932466282516&response_type=token&redirect_uri=https%3A%2F%2Fsk-six-beryl.vercel.app%2F&scope=identify" class="btn-login-discord">
+        <i data-lucide="message-square" style="width:16px; height:16px;"></i> เข้าสู่ระบบด้วย Discord
+      </a>
+
+      <!-- แสดงโปรไฟล์ + ปุ่มออก เมื่อล็อกอินแล้ว (ซ่อนไว้เริ่มต้น) -->
+      <div id="navProfileZone" class="user-profile-bar" style="display: none;">
+        <img id="userAvatar" class="user-avatar-small" src="" alt="Avatar">
+        <span id="userName" class="user-name-text">Loading...</span>
+        <button class="btn-logout-icon" onclick="logoutDiscord()" title="ออกจากระบบ">
+          <i data-lucide="log-out" style="width:14px; height:14px;"></i>
+        </button>
+      </div>
     </div>
   </header>
 
@@ -372,76 +263,35 @@
       <i data-lucide="sparkles" style="width:14px; height:14px;"></i> ยินดีต้อนรับ
     </div>
     <h1 class="hero-title">J Community <span>Shop</span></h1>
-    <p class="hero-subtitle">ร้านของเรา — เข้าสู่ระบบด้วย Discord เพื่อเริ่มใช้งาน</p>
-    <button class="btn-main-cta" id="mainCtaBtn" onclick="openModal()">
+    <p class="hero-subtitle" id="heroSubtitle">ร้านของเรา — เข้าสู่ระบบด้วย Discord เพื่อเริ่มใช้งาน</p>
+
+    <!-- ปุ่มใหญ่กลางหน้าจอ -->
+    <a id="heroCtaBtn" href="https://discord.com/oauth2/authorize?client_id=1507932932466282516&response_type=token&redirect_uri=https%3A%2F%2Fsk-six-beryl.vercel.app%2F&scope=identify" class="btn-main-cta">
       <i data-lucide="message-square" style="width:20px; height:20px;"></i> เข้าสู่ระบบด้วย Discord
-    </button>
+    </a>
   </main>
-
-  <!-- Login Modal -->
-  <div class="modal-overlay" id="authModal">
-    <div class="auth-card">
-      <span class="close-btn" onclick="closeModal()"><i data-lucide="x"></i></span>
-
-      <!-- 1. หน้าล็อกอิน (Discord ลิงก์ใหม่) -->
-      <div id="loginView">
-        <div class="card-header">
-          <div class="card-logo-icon">J</div>
-          <div class="card-title">J Community</div>
-          <div class="card-subtitle">เข้าสู่ระบบเพื่อใช้งานบริการของเรา</div>
-        </div>
-
-        <!-- อัปเดตลิงก์เป็น Redirect URI ใหม่เรียบร้อยแล้ว -->
-        <a href="https://discord.com/oauth2/authorize?client_id=1507932932466282516&response_type=token&redirect_uri=https%3A%2F%2Fsk-six-beryl.vercel.app%2F&scope=identify" class="btn-discord">
-          <i data-lucide="message-square" style="width:20px; height:20px;"></i> เข้าสู่ระบบด้วย Discord
-        </a>
-      </div>
-
-      <!-- 2. หน้าโปรไฟล์ -->
-      <div id="profileView" style="display: none;">
-        <div class="profile-container">
-          <img id="discordAvatar" class="user-avatar" src="https://cdn.discordapp.com/embed/avatars/0.png" alt="Discord Avatar">
-          <div class="user-name" id="discordUsername">กำลังโหลด...</div>
-          <div class="discord-badge">
-            <i data-lucide="check-circle" style="width:14px; height:14px;"></i> เชื่อมต่อ Discord แล้ว
-          </div>
-        </div>
-
-        <button class="btn-logout" onclick="logoutDiscord()">
-          <i data-lucide="log-out" style="width:16px; height:16px;"></i> ออกจากระบบ
-        </button>
-      </div>
-
-    </div>
-  </div>
 
   <script>
     lucide.createIcons();
 
-    const modal = document.getElementById('authModal');
-    const loginView = document.getElementById('loginView');
-    const profileView = document.getElementById('profileView');
     const navLoginBtn = document.getElementById('navLoginBtn');
-    const mainCtaBtn = document.getElementById('mainCtaBtn');
-
-    function openModal() { modal.classList.add('active'); }
-    function closeModal() { modal.classList.remove('active'); }
-
-    modal.addEventListener('click', (e) => {
-      if (e.target === modal) closeModal();
-    });
+    const navProfileZone = document.getElementById('navProfileZone');
+    const heroCtaBtn = document.getElementById('heroCtaBtn');
+    const heroSubtitle = document.getElementById('heroSubtitle');
 
     async function checkDiscordLogin() {
+      // ดึง Token จาก URL Hash หลังล็อกอิน
       const hashParams = new URLSearchParams(window.location.hash.substring(1));
       let token = hashParams.get('access_token');
 
       if (token) {
         localStorage.setItem('discord_token', token);
-        window.location.hash = ''; 
+        window.location.hash = ''; // เคลียร์ Token บนช่องค้นหา
       } else {
         token = localStorage.getItem('discord_token');
       }
 
+      // ถ้ามี Token ให้ยิงไปขอชื่อและรูปจาก Discord API
       if (token) {
         try {
           const response = await fetch('https://discord.com/api/v10/users/@me', {
@@ -451,8 +301,24 @@
           if (!response.ok) throw new Error('Token expired');
 
           const userData = await response.json();
-          renderProfile(userData.global_name || userData.username, userData.id, userData.avatar);
-          openModal();
+          
+          // 1. ซ่อนปุ่มล็อกอินเดิม แล้วเปิดแสดงโปรไฟล์บน Navbar
+          navLoginBtn.style.display = 'none';
+          navProfileZone.style.display = 'flex';
+
+          // 2. ตั้งค่าชื่อและรูปโปรไฟล์จริง
+          const avatarUrl = userData.avatar
+            ? `https://cdn.discordapp.com/avatars/${userData.id}/${userData.avatar}.png`
+            : 'https://cdn.discordapp.com/embed/avatars/0.png';
+
+          document.getElementById('userAvatar').src = avatarUrl;
+          document.getElementById('userName').innerText = userData.global_name || userData.username;
+
+          // 3. เปลี่ยนข้อความในหน้าหลัก
+          heroSubtitle.innerText = `ยินดีต้อนรับคุณ ${userData.global_name || userData.username} เข้าสู่ระบบแล้ว!`;
+          heroCtaBtn.style.display = 'none'; // ซ่อนปุ่มล็อกอินกลางหน้าจอ
+
+          lucide.createIcons();
 
         } catch (err) {
           console.error('Login Error:', err);
@@ -461,22 +327,7 @@
       }
     }
 
-    function renderProfile(username, id, avatar) {
-      loginView.style.display = 'none';
-      profileView.style.display = 'block';
-
-      const avatarUrl = (id && avatar) 
-        ? `https://cdn.discordapp.com/avatars/${id}/${avatar}.png`
-        : 'https://cdn.discordapp.com/embed/avatars/0.png';
-
-      document.getElementById('discordAvatar').src = avatarUrl;
-      document.getElementById('discordUsername').innerText = username;
-
-      navLoginBtn.innerHTML = `<i data-lucide="user" style="width:16px; height:16px;"></i> โปรไฟล์`;
-      mainCtaBtn.innerHTML = `<i data-lucide="user" style="width:20px; height:20px;"></i> ดูโปรไฟล์ของคุณ`;
-      lucide.createIcons();
-    }
-
+    // ฟังก์ชันออกจากระบบ
     function logoutDiscord() {
       localStorage.removeItem('discord_token');
       window.location.href = window.location.origin + window.location.pathname;
