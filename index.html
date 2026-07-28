@@ -15,7 +15,6 @@
     :root {
       --bg-dark: #0a0304;
       --card-bg: #140a0c;
-      --input-bg: #221215;
       --primary-red: #ff2a4b;
       --primary-red-hover: #e01f3e;
       --discord-blue: #5865f2;
@@ -42,7 +41,7 @@
       position: relative;
     }
 
-    /* Ambient Background Glow Effect */
+    /* Ambient Glow Background */
     body::before {
       content: '';
       position: absolute;
@@ -56,7 +55,7 @@
       z-index: 0;
     }
 
-    /* Header / Navbar */
+    /* Navbar */
     header {
       position: relative;
       z-index: 10;
@@ -98,7 +97,7 @@
     }
 
     .btn-login-nav {
-      background: var(--primary-red);
+      background: var(--discord-blue);
       color: var(--text-main);
       border: none;
       padding: 8px 18px;
@@ -106,18 +105,18 @@
       cursor: pointer;
       display: flex;
       align-items: center;
-      gap: 6px;
+      gap: 8px;
       font-size: 0.9rem;
       font-weight: 600;
-      box-shadow: 0 0 15px rgba(255, 42, 75, 0.4);
+      box-shadow: 0 0 15px rgba(88, 101, 242, 0.4);
       transition: all 0.2s;
     }
 
     .btn-login-nav:hover {
-      background: var(--primary-red-hover);
+      background: var(--discord-blue-hover);
     }
 
-    /* Hero / Landing Section */
+    /* Hero Section */
     .hero-container {
       position: relative;
       z-index: 1;
@@ -161,7 +160,7 @@
     }
 
     .btn-main-cta {
-      background: var(--primary-red);
+      background: var(--discord-blue);
       color: white;
       border: none;
       padding: 14px 32px;
@@ -172,13 +171,14 @@
       display: flex;
       align-items: center;
       gap: 10px;
-      box-shadow: 0 0 35px rgba(255, 42, 75, 0.5);
+      box-shadow: 0 0 30px rgba(88, 101, 242, 0.5);
       transition: all 0.3s ease;
     }
 
     .btn-main-cta:hover {
       transform: translateY(-2px);
-      box-shadow: 0 0 45px rgba(255, 42, 75, 0.7);
+      box-shadow: 0 0 40px rgba(88, 101, 242, 0.7);
+      background: var(--discord-blue-hover);
     }
 
     /* Modal Overlay */
@@ -209,7 +209,7 @@
       background: var(--card-bg);
       border: 1px solid var(--border-color);
       width: 100%;
-      max-width: 440px;
+      max-width: 400px;
       border-radius: 20px;
       padding: 32px 28px;
       box-shadow: 0 0 50px rgba(0, 0, 0, 0.8), 0 0 30px rgba(255, 42, 75, 0.08);
@@ -240,14 +240,14 @@
     }
 
     .card-logo-icon {
-      width: 55px;
-      height: 55px;
+      width: 60px;
+      height: 60px;
       background: linear-gradient(135deg, #ff2a4b, #99001a);
       border-radius: 16px;
       display: flex;
       align-items: center;
       justify-content: center;
-      font-size: 1.5rem;
+      font-size: 1.8rem;
       font-weight: 800;
       margin: 0 auto 12px;
       box-shadow: 0 0 25px rgba(255, 42, 75, 0.5);
@@ -258,100 +258,21 @@
       font-weight: 700;
     }
 
-    /* Form UI */
-    .form-group {
-      margin-bottom: 18px;
-      text-align: left;
-    }
-
-    .form-group label {
-      display: block;
+    .card-subtitle {
       font-size: 0.9rem;
-      font-weight: 600;
-      margin-bottom: 8px;
-    }
-
-    .input-wrapper {
-      position: relative;
-      display: flex;
-      align-items: center;
-    }
-
-    .input-icon {
-      position: absolute;
-      left: 14px;
       color: var(--text-muted);
-      width: 18px;
-      height: 18px;
+      margin-top: 4px;
     }
 
-    .form-input {
-      width: 100%;
-      background: var(--input-bg);
-      border: 1px solid var(--border-color);
-      padding: 12px 14px 12px 42px;
-      border-radius: 10px;
-      color: white;
-      font-size: 0.95rem;
-      outline: none;
-      transition: border-color 0.2s;
-    }
-
-    .form-input:focus {
-      border-color: var(--primary-red);
-    }
-
-    .btn-submit {
-      width: 100%;
-      background: var(--primary-red);
-      color: white;
-      border: none;
-      padding: 12px;
-      border-radius: 10px;
-      font-size: 1rem;
-      font-weight: 600;
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 8px;
-      box-shadow: 0 0 20px rgba(255, 42, 75, 0.4);
-      margin-top: 10px;
-      transition: background 0.2s;
-    }
-
-    .btn-submit:hover {
-      background: var(--primary-red-hover);
-    }
-
-    .divider {
-      display: flex;
-      align-items: center;
-      text-align: center;
-      color: var(--text-muted);
-      font-size: 0.8rem;
-      margin: 22px 0;
-    }
-
-    .divider::before, .divider::after {
-      content: '';
-      flex: 1;
-      border-bottom: 1px solid var(--border-color);
-    }
-
-    .divider span {
-      padding: 0 10px;
-    }
-
-    /* Discord Button */
+    /* Discord Single Button */
     .btn-discord {
       width: 100%;
       background: var(--discord-blue);
       color: white;
       border: none;
-      padding: 12px;
-      border-radius: 10px;
-      font-size: 0.95rem;
+      padding: 14px;
+      border-radius: 12px;
+      font-size: 1rem;
       font-weight: 600;
       cursor: pointer;
       display: flex;
@@ -359,14 +280,16 @@
       justify-content: center;
       gap: 10px;
       text-decoration: none;
-      transition: background 0.2s;
+      box-shadow: 0 0 20px rgba(88, 101, 242, 0.4);
+      transition: all 0.2s;
     }
 
     .btn-discord:hover {
       background: var(--discord-blue-hover);
+      box-shadow: 0 0 30px rgba(88, 101, 242, 0.6);
     }
 
-    /* Profile View (Discord Logged In) */
+    /* Profile View */
     .profile-container {
       display: flex;
       flex-direction: column;
@@ -438,68 +361,43 @@
     </div>
     <div class="nav-buttons">
       <button class="btn-login-nav" id="navLoginBtn" onclick="openModal()">
-        <i data-lucide="log-in" style="width:16px; height:16px;"></i> เข้าสู่ระบบ
+        <i data-lucide="message-square" style="width:16px; height:16px;"></i> เข้าสู่ระบบ
       </button>
     </div>
   </header>
 
-  <!-- Hero Landing Section -->
+  <!-- Hero Section -->
   <main class="hero-container">
     <div class="badge">
       <i data-lucide="sparkles" style="width:14px; height:14px;"></i> ยินดีต้อนรับ
     </div>
     <h1 class="hero-title">J Community <span>Shop</span></h1>
-    <p class="hero-subtitle">ร้านของเรา — เข้าสู่ระบบเพื่อเริ่มใช้งาน</p>
+    <p class="hero-subtitle">ร้านของเรา — เข้าสู่ระบบด้วย Discord เพื่อเริ่มใช้งาน</p>
     <button class="btn-main-cta" id="mainCtaBtn" onclick="openModal()">
-      <i data-lucide="shopping-bag" style="width:20px; height:20px;"></i> เข้าสู่ระบบ
+      <i data-lucide="message-square" style="width:20px; height:20px;"></i> เข้าสู่ระบบด้วย Discord
     </button>
   </main>
 
-  <!-- Login & Profile Modal -->
+  <!-- Login Modal -->
   <div class="modal-overlay" id="authModal">
     <div class="auth-card">
       <span class="close-btn" onclick="closeModal()"><i data-lucide="x"></i></span>
 
-      <!-- 1. Form เข้าสู่ระบบปกติ -->
+      <!-- 1. หน้าล็อกอิน (Discord ลิงก์ใหม่) -->
       <div id="loginView">
         <div class="card-header">
           <div class="card-logo-icon">J</div>
           <div class="card-title">J Community</div>
+          <div class="card-subtitle">เข้าสู่ระบบเพื่อใช้งานบริการของเรา</div>
         </div>
 
-        <form onsubmit="event.preventDefault();">
-          <div class="form-group">
-            <label>ชื่ออีเมลย่อของคุณ</label>
-            <div class="input-wrapper">
-              <i data-lucide="mail" class="input-icon"></i>
-              <input type="text" class="form-input" placeholder="you@example.com" required>
-            </div>
-          </div>
-
-          <div class="form-group">
-            <label>รหัสผ่าน</label>
-            <div class="input-wrapper">
-              <i data-lucide="lock" class="input-icon"></i>
-              <input type="password" class="form-input" placeholder="อย่างน้อย 6 ตัวอักษร" required>
-            </div>
-          </div>
-
-          <button type="submit" class="btn-submit">
-            <i data-lucide="log-in" style="width:18px; height:18px;"></i> เข้าสู่ระบบ
-          </button>
-        </form>
-
-        <div class="divider">
-          <span>หรือ</span>
-        </div>
-
-        <!-- ปรับเปลี่ยนลิงก์เป็น response_type=token เพื่อให้ดึง API Direct ได้ -->
-        <a href="https://discord.com/oauth2/authorize?client_id=1507932932466282516&response_type=token&redirect_uri=https%3A%2F%2Fsk-mz85xpjrz-thanaduangnamo-sketchs-projects.vercel.app%2F&scope=identify" class="btn-discord">
-          <i data-lucide="message-square" style="width:18px; height:18px;"></i> เข้าสู่ระบบด้วย Discord
+        <!-- อัปเดตลิงก์เป็น Redirect URI ใหม่เรียบร้อยแล้ว -->
+        <a href="https://discord.com/oauth2/authorize?client_id=1507932932466282516&response_type=token&redirect_uri=https%3A%2F%2Fsk-six-beryl.vercel.app%2F&scope=identify" class="btn-discord">
+          <i data-lucide="message-square" style="width:20px; height:20px;"></i> เข้าสู่ระบบด้วย Discord
         </a>
       </div>
 
-      <!-- 2. Profile เมื่อล็อกอิน Discord สำเร็จ -->
+      <!-- 2. หน้าโปรไฟล์ -->
       <div id="profileView" style="display: none;">
         <div class="profile-container">
           <img id="discordAvatar" class="user-avatar" src="https://cdn.discordapp.com/embed/avatars/0.png" alt="Discord Avatar">
@@ -534,32 +432,30 @@
     });
 
     async function checkDiscordLogin() {
-      // 1. ตรวจหา Token จาก URL Hash (ที่ส่งกลับมาจาก Discord)
       const hashParams = new URLSearchParams(window.location.hash.substring(1));
       let token = hashParams.get('access_token');
 
       if (token) {
         localStorage.setItem('discord_token', token);
-        window.location.hash = ''; // ล้าง Token จากแถบ URL เพื่อความปลอดภัย
+        window.location.hash = ''; 
       } else {
         token = localStorage.getItem('discord_token');
       }
 
-      // 2. ถ้านำ Token ไปร้องขอ API Discord สำเร็จ ให้เปลี่ยนมุมมองเป็นหน้าโปรไฟล์
       if (token) {
         try {
           const response = await fetch('https://discord.com/api/v10/users/@me', {
             headers: { Authorization: `Bearer ${token}` }
           });
 
-          if (!response.ok) throw new Error('Token หมดอายุ');
+          if (!response.ok) throw new Error('Token expired');
 
           const userData = await response.json();
           renderProfile(userData.global_name || userData.username, userData.id, userData.avatar);
-          openModal(); // เปิด Modal หน้าโปรไฟล์ขึ้นมาอัตโนมัติ
+          openModal();
 
         } catch (err) {
-          console.error('Login Failed:', err);
+          console.error('Login Error:', err);
           logoutDiscord();
         }
       }
