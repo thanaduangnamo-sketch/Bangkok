@@ -27,11 +27,14 @@
       --green-accent: #28a745;
     }
 
+    /* ป้องกันการคลุมดำข้อความ */
     * {
       box-sizing: border-box;
       margin: 0;
       padding: 0;
       font-family: 'Prompt', sans-serif;
+      user-select: none;
+      -webkit-user-select: none;
     }
 
     body {
@@ -109,7 +112,6 @@
 
     .nav-item:hover, .nav-item.active { color: #fff; }
 
-    /* ปุ่มเติมเงิน บน Navbar */
     .btn-topup-nav {
       background: rgba(255, 42, 75, 0.15);
       border: 1px solid rgba(255, 42, 75, 0.4);
@@ -131,7 +133,6 @@
       box-shadow: 0 0 15px rgba(255, 42, 75, 0.4);
     }
 
-    /* ปุ่มเข้าสู่ระบบ Discord */
     .btn-login-discord {
       background: var(--discord-blue);
       color: var(--text-main);
@@ -149,7 +150,6 @@
 
     .btn-login-discord:hover { background: var(--discord-blue-hover); }
 
-    /* โปรไฟล์ Discord บน Navbar */
     .user-profile-bar {
       display: flex;
       align-items: center;
@@ -174,7 +174,6 @@
       color: #fff;
     }
 
-    /* กล่องแสดงยอดเงินข้างชื่อ */
     .user-balance-badge {
       display: flex;
       align-items: center;
@@ -188,7 +187,6 @@
       font-weight: 600;
     }
 
-    /* ปุ่มบวกเติมเงินข้างยอดเงิน */
     .btn-add-balance {
       background: var(--primary-red);
       color: white;
@@ -205,9 +203,7 @@
       transition: transform 0.2s;
     }
 
-    .btn-add-balance:hover {
-      transform: scale(1.15);
-    }
+    .btn-add-balance:hover { transform: scale(1.15); }
 
     .btn-logout-icon {
       background: rgba(255, 42, 75, 0.15);
@@ -224,72 +220,138 @@
       margin-left: 4px;
     }
 
-    .btn-logout-icon:hover {
-      background: var(--primary-red);
-      color: white;
+    .btn-logout-icon:hover { background: var(--primary-red); color: white; }
+
+    /* Main Container */
+    .container {
+      position: relative;
+      z-index: 1;
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 40px 20px;
+      width: 100%;
     }
 
     /* Hero Section */
     .hero-container {
-      position: relative;
-      z-index: 1;
-      flex: 1;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
       text-align: center;
-      padding: 40px 20px;
+      padding: 20px 0 40px;
     }
 
     .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
       background: rgba(255, 42, 75, 0.1);
       border: 1px solid rgba(255, 42, 75, 0.2);
       color: var(--primary-red);
       padding: 4px 16px;
       border-radius: 20px;
       font-size: 0.85rem;
-      display: flex;
-      align-items: center;
-      gap: 6px;
       margin-bottom: 20px;
     }
 
     .hero-title {
-      font-size: 3.5rem;
+      font-size: 3rem;
       font-weight: 800;
       margin-bottom: 10px;
-      letter-spacing: -0.5px;
     }
 
     .hero-title span { color: var(--primary-red); }
 
     .hero-subtitle {
       color: var(--text-muted);
-      font-size: 1.1rem;
-      margin-bottom: 35px;
+      font-size: 1rem;
+      margin-bottom: 20px;
     }
 
-    .btn-main-cta {
-      background: var(--discord-blue);
-      color: white;
-      text-decoration: none;
-      padding: 14px 32px;
-      border-radius: 12px;
-      font-size: 1.1rem;
-      font-weight: 600;
-      display: inline-flex;
+    /* Shop Section (ร้านค้า) */
+    .shop-section-title {
+      font-size: 1.5rem;
+      font-weight: 700;
+      margin-bottom: 20px;
+      display: flex;
       align-items: center;
       gap: 10px;
-      box-shadow: 0 0 30px rgba(88, 101, 242, 0.5);
-      transition: all 0.3s ease;
+      border-bottom: 1px solid var(--border-color);
+      padding-bottom: 10px;
     }
 
-    .btn-main-cta:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 0 40px rgba(88, 101, 242, 0.7);
-      background: var(--discord-blue-hover);
+    .products-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+      gap: 20px;
+      margin-bottom: 40px;
     }
+
+    .product-card {
+      background: var(--card-bg);
+      border: 1px solid var(--border-color);
+      border-radius: 16px;
+      padding: 20px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      transition: transform 0.2s, border-color 0.2s;
+    }
+
+    .product-card:hover {
+      transform: translateY(-4px);
+      border-color: rgba(255, 42, 75, 0.4);
+    }
+
+    .product-icon {
+      width: 50px;
+      height: 50px;
+      background: rgba(255, 42, 75, 0.1);
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--primary-red);
+      margin-bottom: 15px;
+    }
+
+    .product-title {
+      font-size: 1.1rem;
+      font-weight: 700;
+      margin-bottom: 6px;
+    }
+
+    .product-desc {
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      margin-bottom: 15px;
+    }
+
+    .product-bottom {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-top: 10px;
+    }
+
+    .product-price {
+      font-size: 1.2rem;
+      font-weight: 700;
+      color: #4cd964;
+    }
+
+    .btn-buy {
+      background: var(--primary-red);
+      color: white;
+      border: none;
+      padding: 8px 16px;
+      border-radius: 8px;
+      font-weight: 600;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      transition: background 0.2s;
+    }
+
+    .btn-buy:hover { background: var(--primary-red-hover); }
 
     /* Topup Modal Window */
     .modal-overlay {
@@ -309,10 +371,7 @@
       transition: opacity 0.3s ease;
     }
 
-    .modal-overlay.active {
-      opacity: 1;
-      pointer-events: all;
-    }
+    .modal-overlay.active { opacity: 1; pointer-events: all; }
 
     .topup-card {
       background: var(--card-bg);
@@ -339,10 +398,7 @@
 
     .close-btn:hover { color: #fff; }
 
-    .topup-header {
-      text-align: center;
-      margin-bottom: 20px;
-    }
+    .topup-header { text-align: center; margin-bottom: 20px; }
 
     .topup-title {
       font-size: 1.4rem;
@@ -353,11 +409,7 @@
       gap: 8px;
     }
 
-    .payment-tabs {
-      display: flex;
-      gap: 10px;
-      margin-bottom: 20px;
-    }
+    .payment-tabs { display: flex; gap: 10px; margin-bottom: 20px; }
 
     .tab-btn {
       flex: 1;
@@ -439,11 +491,7 @@
 
     .qr-box img { width: 100%; display: block; }
 
-    #statusMessage {
-      margin-top: 12px;
-      font-size: 0.85rem;
-      text-align: center;
-    }
+    #statusMessage { margin-top: 12px; font-size: 0.85rem; text-align: center; }
   </style>
 </head>
 <body>
@@ -457,6 +505,8 @@
 
     <div class="nav-links">
       <a class="nav-item active" href="#"><i data-lucide="home" style="width:16px;"></i> หน้าหลัก</a>
+      <!-- เพิ่มแถบบน: ร้านค้า -->
+      <a class="nav-item" href="#shopSection"><i data-lucide="shopping-bag" style="width:16px;"></i> ร้านค้า</a>
       
       <!-- ปุ่มเติมเงิน -->
       <button class="btn-topup-nav" onclick="openTopupModal()">
@@ -464,18 +514,17 @@
       </button>
     </div>
 
-    <!-- โซนปุ่มล็อกอิน / แสดงโปรไฟล์ -->
+    <!-- โปรไฟล์ / ล็อกอิน -->
     <div id="authNavZone">
       <a id="navLoginBtn" href="https://discord.com/oauth2/authorize?client_id=1507932932466282516&response_type=token&redirect_uri=https%3A%2F%2Fsk-six-beryl.vercel.app%2F&scope=identify" class="btn-login-discord">
         <i data-lucide="message-square" style="width:16px;"></i> เข้าสู่ระบบด้วย Discord
       </a>
 
-      <!-- โซนโปรไฟล์ + ยอดเงินคงเหลือ -->
       <div id="navProfileZone" class="user-profile-bar" style="display: none;">
         <img id="userAvatar" class="user-avatar-small" src="" alt="Avatar">
         <span id="userName" class="user-name-text">Loading...</span>
 
-        <!-- ส่วนแสดงยอดเงินคงเหลือ ข้างๆ ชื่อ -->
+        <!-- ยอดเงินข้างชื่อ -->
         <div class="user-balance-badge">
           <i data-lucide="coins" style="width:14px;"></i>
           <span id="userBalanceText">0</span> ฿
@@ -489,18 +538,70 @@
     </div>
   </header>
 
-  <!-- Hero Section -->
-  <main class="hero-container">
-    <div class="badge">
-      <i data-lucide="sparkles" style="width:14px;"></i> ยินดีต้อนรับ
-    </div>
-    <h1 class="hero-title">J Community <span>Shop</span></h1>
-    <p class="hero-subtitle" id="heroSubtitle">ร้านของเรา — เข้าสู่ระบบด้วย Discord เพื่อเริ่มใช้งาน</p>
+  <div class="container">
+    <!-- Hero Section -->
+    <section class="hero-container">
+      <div class="badge">
+        <i data-lucide="sparkles" style="width:14px;"></i> ยินดีต้อนรับ
+      </div>
+      <h1 class="hero-title">J Community <span>Shop</span></h1>
+      <p class="hero-subtitle" id="heroSubtitle">ร้านค้าสินค้าดิจิทัล — เข้าสู่ระบบด้วย Discord เพื่อเริ่มสั่งซื้อสินค้า</p>
+    </section>
 
-    <a id="heroCtaBtn" href="https://discord.com/oauth2/authorize?client_id=1507932932466282516&response_type=token&redirect_uri=https%3A%2F%2Fsk-six-beryl.vercel.app%2F&scope=identify" class="btn-main-cta">
-      <i data-lucide="message-square" style="width:20px;"></i> เข้าสู่ระบบด้วย Discord
-    </a>
-  </main>
+    <!-- Shop Section (ร้านค้าใช้งานได้จริง) -->
+    <section id="shopSection">
+      <div class="shop-section-title">
+        <i data-lucide="shopping-cart" style="color: var(--primary-red);"></i> ร้านค้าสินค้าพร้อมส่ง
+      </div>
+
+      <div class="products-grid">
+        <!-- สินค้าชิ้นที่ 1 -->
+        <div class="product-card">
+          <div>
+            <div class="product-icon"><i data-lucide="shield-check" style="width:28px; height:28px;"></i></div>
+            <div class="product-title">VIP Discord Role</div>
+            <div class="product-desc">ยศพิเศษใน Discord Server พร้อมสิทธิพิเศษในการพิมพ์ช่องยศ</div>
+          </div>
+          <div class="product-bottom">
+            <div class="product-price">20 ฿</div>
+            <button class="btn-buy" onclick="buyProduct('VIP Discord Role', 20)">
+              <i data-lucide="shopping-bag" style="width:16px;"></i> ซื้อเลย
+            </button>
+          </div>
+        </div>
+
+        <!-- สินค้าชิ้นที่ 2 -->
+        <div class="product-card">
+          <div>
+            <div class="product-icon"><i data-lucide="gem" style="width:28px; height:28px;"></i></div>
+            <div class="product-title">Roblox Script Pass</div>
+            <div class="product-desc">สคริปต์พรีเมียม ถาวร อัปเดตฟรีตลอดอายุการใช้งาน</div>
+          </div>
+          <div class="product-bottom">
+            <div class="product-price">50 ฿</div>
+            <button class="btn-buy" onclick="buyProduct('Roblox Script Pass', 50)">
+              <i data-lucide="shopping-bag" style="width:16px;"></i> ซื้อเลย
+            </button>
+          </div>
+        </div>
+
+        <!-- สินค้าชิ้นที่ 3 -->
+        <div class="product-card">
+          <div>
+            <div class="product-icon"><i data-lucide="zap" style="width:28px; height:28px;"></i></div>
+            <div class="product-title">Nitro Boost 1 เดือน</div>
+            <div class="product-desc">Discord Nitro แบบ Boost 2 ครั้ง ปลดล็อกส่งรูปขนาดใหญ่</div>
+          </div>
+          <div class="product-bottom">
+            <div class="product-price">120 ฿</div>
+            <button class="btn-buy" onclick="buyProduct('Nitro Boost 1 เดือน', 120)">
+              <i data-lucide="shopping-bag" style="width:16px;"></i> ซื้อเลย
+            </button>
+          </div>
+        </div>
+      </div>
+    </section>
+  </div>
 
   <!-- Topup Modal Window -->
   <div class="modal-overlay" id="topupModal">
@@ -548,18 +649,65 @@
   <script>
     lucide.createIcons();
 
+    // ==========================================
+    // 🔒 1. ป้องกันการกด F12 และเปิด DevTools
+    // ==========================================
+    document.addEventListener('contextmenu', (e) => e.preventDefault()); // ห้ามคลิกขวา
+
+    document.addEventListener('keydown', (e) => {
+      // ห้ามกด F12
+      if (e.key === 'F12') {
+        e.preventDefault();
+        return false;
+      }
+      // ห้ามกด Ctrl+Shift+I, Ctrl+Shift+J, Ctrl+Shift+C (Chrome/Edge DevTools)
+      if (e.ctrlKey && e.shiftKey && (e.key === 'I' || e.key === 'i' || e.key === 'J' || e.key === 'j' || e.key === 'C' || e.key === 'c')) {
+        e.preventDefault();
+        return false;
+      }
+      // ห้ามกด Ctrl+U (ดู Source Code)
+      if (e.ctrlKey && (e.key === 'U' || e.key === 'u')) {
+        e.preventDefault();
+        return false;
+      }
+    });
+
+    // ==========================================
+    // 🛒 2. ระบบร้านค้า และ การซื้อสินค้า
+    // ==========================================
     const DISCORD_LOGIN_URL = "https://discord.com/oauth2/authorize?client_id=1507932932466282516&response_type=token&redirect_uri=https%3A%2F%2Fsk-six-beryl.vercel.app%2F&scope=identify";
 
     let isLoggedIn = false;
-    let currentBalance = 0; // ยอดเงินคงเหลือเริ่มต้น 0 บาท
+    let currentBalance = 0;
 
-    // ฟังก์ชันอัปเดตยอดเงินบนหน้าเว็บ
     function updateBalanceDisplay(amount) {
       currentBalance = amount;
       document.getElementById('userBalanceText').innerText = currentBalance.toLocaleString();
     }
 
-    // ฟังก์ชันเปิด Modal เติมเงิน
+    // ฟังก์ชันซื้อสินค้า
+    function buyProduct(productName, price) {
+      if (!isLoggedIn) {
+        alert('❌ กรุณาเข้าสู่ระบบด้วย Discord ก่อนทำการสั่งซื้อครับ!');
+        window.location.href = DISCORD_LOGIN_URL;
+        return;
+      }
+
+      if (currentBalance < price) {
+        alert(`❌ ยอดเงินของคุณไม่พอสำหรับซื้อ "${productName}" (ราคา ${price} บาท)\nกรุณาเติมเงินก่อนครับ`);
+        openTopupModal();
+        return;
+      }
+
+      if (confirm(`คุณต้องการยืนยันการสั่งซื้อ "${productName}" ในราคา ${price} บาท หรือไม่?`)) {
+        updateBalanceDisplay(currentBalance - price);
+        alert(`🎉 สั่งซื้อสำเร็จ! คุณได้รับ "${productName}" เรียบร้อยแล้ว`);
+      }
+    }
+
+    // ==========================================
+    // 💳 3. ระบบเติมเงิน & Discord Auth
+    // ==========================================
     const topupModal = document.getElementById('topupModal');
     function openTopupModal() {
       if (!isLoggedIn) {
@@ -576,7 +724,6 @@
       if (e.target === topupModal) closeTopupModal();
     });
 
-    // สลับแท็บชำระเงิน
     function switchTab(type) {
       const tabTW = document.getElementById('tabTW');
       const tabPP = document.getElementById('tabPP');
@@ -597,7 +744,6 @@
       }
     }
 
-    // ฟังก์ชันยืนยันเติมเงิน
     function processVoucher() {
       const voucherInput = document.getElementById('voucherUrl').value.trim();
       const statusMessage = document.getElementById('statusMessage');
@@ -615,16 +761,13 @@
         statusMessage.style.color = '#28a745';
         statusMessage.innerText = '✅ เติมเงินสำเร็จเรียบร้อยแล้ว!';
         document.getElementById('voucherUrl').value = '';
-
-        // (ตัวอย่าง) เมื่อเติมเงินสำเร็จ เพิ่มเงินเข้าไป 50 บาท
-        updateBalanceDisplay(currentBalance + 50);
+        updateBalanceDisplay(currentBalance + 50); // สมมุติตัวอย่างเพิ่ม 50 บาท
       }, 1200);
     }
 
-    // ฟังก์ชันตรวจสอบล็อกอิน Discord
+    // ตรวจสอบสถานะการเข้าสู่ระบบ Discord
     const navLoginBtn = document.getElementById('navLoginBtn');
     const navProfileZone = document.getElementById('navProfileZone');
-    const heroCtaBtn = document.getElementById('heroCtaBtn');
     const heroSubtitle = document.getElementById('heroSubtitle');
 
     async function checkDiscordLogin() {
@@ -659,11 +802,8 @@
           document.getElementById('userAvatar').src = avatarUrl;
           document.getElementById('userName').innerText = userData.global_name || userData.username;
 
-          // แสดงเงินคงเหลือเริ่มต้น 0 บาท
           updateBalanceDisplay(0);
-
-          heroSubtitle.innerText = `ยินดีต้อนรับคุณ ${userData.global_name || userData.username} เข้าสู่ระบบแล้ว!`;
-          heroCtaBtn.style.display = 'none';
+          heroSubtitle.innerText = `ยินดีต้อนรับคุณ ${userData.global_name || userData.username} เลือกซื้อสินค้าด้านล่างได้เลยครับ!`;
 
           lucide.createIcons();
 
