@@ -42,7 +42,7 @@
       position: relative;
     }
 
-    /* Ambient Glow Background Effect */
+    /* Ambient Background Glow Effect */
     body::before {
       content: '';
       position: absolute;
@@ -493,7 +493,7 @@
           <span>หรือ</span>
         </div>
 
-        <!-- Discord OAuth Button (ปรับ response_type=token เพื่อให้ดึง API ตรงได้) -->
+        <!-- ปรับเปลี่ยนลิงก์เป็น response_type=token เพื่อให้ดึง API Direct ได้ -->
         <a href="https://discord.com/oauth2/authorize?client_id=1507932932466282516&response_type=token&redirect_uri=https%3A%2F%2Fsk-mz85xpjrz-thanaduangnamo-sketchs-projects.vercel.app%2F&scope=identify" class="btn-discord">
           <i data-lucide="message-square" style="width:18px; height:18px;"></i> เข้าสู่ระบบด้วย Discord
         </a>
@@ -502,8 +502,8 @@
       <!-- 2. Profile เมื่อล็อกอิน Discord สำเร็จ -->
       <div id="profileView" style="display: none;">
         <div class="profile-container">
-          <img id="discordAvatar" class="user-avatar" src="" alt="Discord Avatar">
-          <div class="user-name" id="discordUsername">Loading...</div>
+          <img id="discordAvatar" class="user-avatar" src="https://cdn.discordapp.com/embed/avatars/0.png" alt="Discord Avatar">
+          <div class="user-name" id="discordUsername">กำลังโหลด...</div>
           <div class="discord-badge">
             <i data-lucide="check-circle" style="width:14px; height:14px;"></i> เชื่อมต่อ Discord แล้ว
           </div>
@@ -533,45 +533,30 @@
       if (e.target === modal) closeModal();
     });
 
-    // ดึงข้อมูลโปรไฟล์จาก Discord API
     async function checkDiscordLogin() {
-      // ดึง access_token จาก URL Hash หลังล็อกอิน
+      // 1. ตรวจหา Token จาก URL Hash (ที่ส่งกลับมาจาก Discord)
       const hashParams = new URLSearchParams(window.location.hash.substring(1));
       let token = hashParams.get('access_token');
 
       if (token) {
         localStorage.setItem('discord_token', token);
-        window.location.hash = ''; // เคลียร์ Token ออกจากแถบ URL
+        window.location.hash = ''; // ล้าง Token จากแถบ URL เพื่อความปลอดภัย
       } else {
         token = localStorage.getItem('discord_token');
       }
 
+      // 2. ถ้านำ Token ไปร้องขอ API Discord สำเร็จ ให้เปลี่ยนมุมมองเป็นหน้าโปรไฟล์
       if (token) {
         try {
-          // ยิง API ไปขอโปรไฟล์จาก Discord
           const response = await fetch('https://discord.com/api/v10/users/@me', {
             headers: { Authorization: `Bearer ${token}` }
           });
 
-          if (!response.ok) throw new Error('Token expired');
+          if (!response.ok) throw new Error('Token หมดอายุ');
 
           const userData = await response.json();
-
-          // แสดงผลข้อมูลจริงที่ดึงได้
-          loginView.style.display = 'none';
-          profileView.style.display = 'block';
-
-          const avatarUrl = userData.avatar
-            ? `https://cdn.discordapp.com/avatars/${userData.id}/${userData.avatar}.png`
-            : 'https://cdn.discordapp.com/embed/avatars/0.png';
-
-          document.getElementById('discordAvatar').src = avatarUrl;
-          document.getElementById('discordUsername').innerText = userData.global_name || userData.username;
-
-          // เปลี่ยนปุ่มบนหน้าเว็บเป็นข้อมูลโปรไฟล์
-          navLoginBtn.innerHTML = `<i data-lucide="user" style="width:16px; height:16px;"></i> โปรไฟล์`;
-          mainCtaBtn.innerHTML = `<i data-lucide="user" style="width:20px; height:20px;"></i> ดูโปรไฟล์ของคุณ`;
-          lucide.createIcons();
+          renderProfile(userData.global_name || userData.username, userData.id, userData.avatar);
+          openModal(); // เปิด Modal หน้าโปรไฟล์ขึ้นมาอัตโนมัติ
 
         } catch (err) {
           console.error('Login Failed:', err);
@@ -580,12 +565,27 @@
       }
     }
 
-    function logoutDiscord() {
-      localStorage.removeItem('discord_token');
-      window.location.href = window.location.pathname;
+    function renderProfile(username, id, avatar) {
+      loginView.style.display = 'none';
+      profileView.style.display = 'block';
+
+      const avatarUrl = (id && avatar) 
+        ? `https://cdn.discordapp.com/avatars/${id}/${avatar}.png`
+        : 'https://cdn.discordapp.com/embed/avatars/0.png';
+
+      document.getElementById('discordAvatar').src = avatarUrl;
+      document.getElementById('discordUsername').innerText = username;
+
+      navLoginBtn.innerHTML = `<i data-lucide="user" style="width:16px; height:16px;"></i> โปรไฟล์`;
+      mainCtaBtn.innerHTML = `<i data-lucide="user" style="width:20px; height:20px;"></i> ดูโปรไฟล์ของคุณ`;
+      lucide.createIcons();
     }
 
-    // รันระบบตรวจจับเมื่อหน้าเว็บโหลดเสร็จ
+    function logoutDiscord() {
+      localStorage.removeItem('discord_token');
+      window.location.href = window.location.origin + window.location.pathname;
+    }
+
     checkDiscordLogin();
   </script>
 </body>
