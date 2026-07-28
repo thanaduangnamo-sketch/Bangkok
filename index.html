@@ -13,19 +13,20 @@
 
   <style>
     :root {
-      --bg-dark: #0a0304;
-      --card-bg: #140a0c;
-      --card-inner: #1c0e11;
-      --primary-red: #ff2a4b;
-      --primary-red-hover: #e01f3e;
+      /* 💜 ปรับเป็นโทนสีม่วง */
+      --bg-dark: #08030a;
+      --card-bg: #110a17;
+      --card-inner: #180e21;
+      --primary-purple: #a855f7;
+      --primary-purple-hover: #9333ea;
+      --purple-glow: rgba(168, 85, 247, 0.4);
       --discord-blue: #5865f2;
       --discord-blue-hover: #4752c4;
       --text-main: #ffffff;
-      --text-muted: #99888c;
-      --border-color: #2a181c;
+      --text-muted: #a095b0;
+      --border-color: #281838;
       --truemoney-color: #ff8c00;
       --green-accent: #28a745;
-      --code-color: #a855f7;
     }
 
     /* ป้องกันการคลุมดำข้อความ */
@@ -48,6 +49,7 @@
       position: relative;
     }
 
+    /* แสง Glow ด้านหลังธีมสีม่วง */
     body::before {
       content: '';
       position: absolute;
@@ -56,7 +58,7 @@
       transform: translate(-50%, -50%);
       width: 600px;
       height: 600px;
-      background: radial-gradient(circle, rgba(255, 42, 75, 0.15) 0%, rgba(0, 0, 0, 0) 70%);
+      background: radial-gradient(circle, rgba(168, 85, 247, 0.18) 0%, rgba(0, 0, 0, 0) 70%);
       pointer-events: none;
       z-index: 0;
     }
@@ -69,7 +71,7 @@
       justify-content: space-between;
       align-items: center;
       padding: 16px 5%;
-      background: rgba(10, 3, 4, 0.85);
+      background: rgba(8, 3, 10, 0.85);
       backdrop-filter: blur(10px);
       border-bottom: 1px solid var(--border-color);
     }
@@ -85,13 +87,13 @@
     .logo-icon {
       width: 35px;
       height: 35px;
-      background: linear-gradient(135deg, #ff2a4b, #800015);
+      background: linear-gradient(135deg, #a855f7, #581c87);
       border-radius: 8px;
       display: flex;
       align-items: center;
       justify-content: center;
       font-weight: bold;
-      box-shadow: 0 0 12px rgba(255, 42, 75, 0.4);
+      box-shadow: 0 0 12px var(--purple-glow);
     }
 
     .nav-links {
@@ -114,9 +116,9 @@
     .nav-item:hover, .nav-item.active { color: #fff; }
 
     .btn-topup-nav {
-      background: rgba(255, 42, 75, 0.15);
-      border: 1px solid rgba(255, 42, 75, 0.4);
-      color: var(--primary-red);
+      background: rgba(168, 85, 247, 0.15);
+      border: 1px solid rgba(168, 85, 247, 0.4);
+      color: var(--primary-purple);
       padding: 7px 16px;
       border-radius: 20px;
       font-size: 0.9rem;
@@ -129,9 +131,9 @@
     }
 
     .btn-topup-nav:hover {
-      background: var(--primary-red);
+      background: var(--primary-purple);
       color: white;
-      box-shadow: 0 0 15px rgba(255, 42, 75, 0.4);
+      box-shadow: 0 0 15px var(--purple-glow);
     }
 
     .btn-login-discord {
@@ -189,7 +191,7 @@
     }
 
     .btn-add-balance {
-      background: var(--primary-red);
+      background: var(--primary-purple);
       color: white;
       border: none;
       width: 20px;
@@ -207,9 +209,9 @@
     .btn-add-balance:hover { transform: scale(1.15); }
 
     .btn-logout-icon {
-      background: rgba(255, 42, 75, 0.15);
-      border: 1px solid rgba(255, 42, 75, 0.3);
-      color: var(--primary-red);
+      background: rgba(168, 85, 247, 0.15);
+      border: 1px solid rgba(168, 85, 247, 0.3);
+      color: var(--primary-purple);
       width: 28px;
       height: 28px;
       border-radius: 50%;
@@ -221,7 +223,7 @@
       margin-left: 4px;
     }
 
-    .btn-logout-icon:hover { background: var(--primary-red); color: white; }
+    .btn-logout-icon:hover { background: var(--primary-purple); color: white; }
 
     /* Main Container */
     .container {
@@ -243,9 +245,9 @@
       display: inline-flex;
       align-items: center;
       gap: 6px;
-      background: rgba(255, 42, 75, 0.1);
-      border: 1px solid rgba(255, 42, 75, 0.2);
-      color: var(--primary-red);
+      background: rgba(168, 85, 247, 0.1);
+      border: 1px solid rgba(168, 85, 247, 0.25);
+      color: var(--primary-purple);
       padding: 4px 16px;
       border-radius: 20px;
       font-size: 0.85rem;
@@ -258,7 +260,7 @@
       margin-bottom: 10px;
     }
 
-    .hero-title span { color: var(--primary-red); }
+    .hero-title span { color: var(--primary-purple); }
 
     .hero-subtitle {
       color: var(--text-muted);
@@ -295,12 +297,12 @@
     .empty-icon-box {
       width: 70px;
       height: 70px;
-      background: rgba(255, 42, 75, 0.1);
+      background: rgba(168, 85, 247, 0.1);
       border-radius: 50%;
       display: flex;
       align-items: center;
       justify-content: center;
-      color: var(--primary-red);
+      color: var(--primary-purple);
       margin-bottom: 16px;
     }
 
@@ -323,7 +325,7 @@
       left: 0;
       width: 100%;
       height: 100%;
-      background: rgba(0, 0, 0, 0.8);
+      background: rgba(0, 0, 0, 0.85);
       backdrop-filter: blur(8px);
       display: flex;
       align-items: center;
@@ -343,7 +345,7 @@
       max-width: 440px;
       border-radius: 20px;
       padding: 28px;
-      box-shadow: 0 0 50px rgba(0, 0, 0, 0.9), 0 0 30px rgba(255, 42, 75, 0.1);
+      box-shadow: 0 0 50px rgba(0, 0, 0, 0.9), 0 0 30px var(--purple-glow);
       position: relative;
       transform: scale(0.95);
       transition: transform 0.3s ease;
@@ -404,8 +406,8 @@
     }
 
     .tab-btn.active-code {
-      background: rgba(168, 85, 247, 0.15);
-      border-color: var(--code-color);
+      background: rgba(168, 85, 247, 0.2);
+      border-color: var(--primary-purple);
       color: #c084fc;
     }
 
@@ -429,11 +431,11 @@
       outline: none;
     }
 
-    .input-field:focus { border-color: var(--primary-red); }
+    .input-field:focus { border-color: var(--primary-purple); }
 
     .btn-submit-topup {
       width: 100%;
-      background: var(--primary-red);
+      background: var(--primary-purple);
       color: white;
       border: none;
       padding: 12px;
@@ -445,16 +447,10 @@
       align-items: center;
       justify-content: center;
       gap: 8px;
+      transition: background 0.2s;
     }
 
-    .btn-submit-topup:hover { background: var(--primary-red-hover); }
-
-    .btn-submit-code {
-      background: var(--code-color);
-    }
-    .btn-submit-code:hover {
-      background: #9333ea;
-    }
+    .btn-submit-topup:hover { background: var(--primary-purple-hover); }
 
     .qr-box {
       text-align: center;
@@ -468,8 +464,8 @@
     .qr-box img { width: 100%; display: block; }
 
     .code-info-box {
-      background: rgba(168, 85, 247, 0.1);
-      border: 1px solid rgba(168, 85, 247, 0.25);
+      background: rgba(168, 85, 247, 0.12);
+      border: 1px solid rgba(168, 85, 247, 0.3);
       border-radius: 10px;
       padding: 10px 14px;
       margin-bottom: 15px;
@@ -539,7 +535,7 @@
     <!-- Shop Section (แจ้งสต็อกยังไม่ลง) -->
     <section id="shopSection">
       <div class="shop-section-title">
-        <i data-lucide="shopping-cart" style="color: var(--primary-red);"></i> ร้านค้าสินค้า
+        <i data-lucide="shopping-cart" style="color: var(--primary-purple);"></i> ร้านค้าสินค้า
       </div>
 
       <div class="empty-stock-card">
@@ -559,7 +555,7 @@
 
       <div class="topup-header">
         <div class="topup-title">
-          <i data-lucide="credit-card" style="color: var(--primary-red);"></i> เติมเงินเข้าระบบ
+          <i data-lucide="credit-card" style="color: var(--primary-purple);"></i> เติมเงินเข้าระบบ
         </div>
       </div>
 
@@ -606,7 +602,7 @@
           <label class="form-label">กรอก Code ลับเพื่อรับเงินฟรี (25 บาท):</label>
           <input type="text" id="secretCodeInput" class="input-field" placeholder="กรอก Code ลับที่นี่..." style="text-transform: uppercase;" />
         </div>
-        <button class="btn-submit-topup btn-submit-code" onclick="processSecretCode()">
+        <button class="btn-submit-topup" onclick="processSecretCode()">
           <i data-lucide="sparkles" style="width:18px;"></i> แลก Code ลับ
         </button>
       </div>
@@ -635,8 +631,8 @@
     // 🔑 2. ระบบ Code ลับ (CODE YPOPXDFSS TOKEBA)
     // ==========================================
     const TARGET_CODE = "CODE YPOPXDFSS TOKEBA";
-    const MAX_QUOTA = 10; // จำกัด 10 คน
-    const REWARD_AMOUNT = 25; // กำหนดมูลค่าที่ได้ 25 บาท
+    const MAX_QUOTA = 10;
+    const REWARD_AMOUNT = 25;
 
     let usedCount = parseInt(localStorage.getItem('secret_code_used_count')) || 0;
     let isCodeRedeemed = localStorage.getItem('user_has_redeemed_code') === 'true';
@@ -651,26 +647,23 @@
       const statusMessage = document.getElementById('statusMessage');
 
       if (!inputVal) {
-        statusMessage.style.color = '#ff2a4b';
+        statusMessage.style.color = '#ff4d4d';
         statusMessage.innerText = '❌ กรุณากรอก Code ลับก่อนครับ';
         return;
       }
 
-      // ตรวจสอบว่าโค้ดหมดหรือยัง
       if (usedCount >= MAX_QUOTA) {
-        statusMessage.style.color = '#ff2a4b';
+        statusMessage.style.color = '#ff4d4d';
         statusMessage.innerText = '❌ โค้ดนี้หมดอายุแล้ว';
         return;
       }
 
-      // ตรวจสอบว่าเคยแลกไปหรือยัง
       if (isCodeRedeemed) {
         statusMessage.style.color = '#ffaa33';
         statusMessage.innerText = '⚠️ บัญชีนี้เคยใช้ Code ลับนี้ไปแล้วครับ';
         return;
       }
 
-      // ตรวจสอบความถูกต้องของโค้ด
       if (inputVal === TARGET_CODE) {
         statusMessage.style.color = '#ffaa33';
         statusMessage.innerText = '⏳ กำลังตรวจสอบ Code ลับ...';
@@ -682,14 +675,14 @@
           localStorage.setItem('user_has_redeemed_code', 'true');
 
           updateQuotaDisplay();
-          updateBalanceDisplay(currentBalance + REWARD_AMOUNT); // เพิ่มเงินเข้าบัญชี +25 บาท
+          updateBalanceDisplay(currentBalance + REWARD_AMOUNT);
 
           statusMessage.style.color = '#28a745';
           statusMessage.innerText = `🎉 ยินดีด้วย! แลกรับ Code ลับสำเร็จ +${REWARD_AMOUNT} บาท`;
           document.getElementById('secretCodeInput').value = '';
         }, 1000);
       } else {
-        statusMessage.style.color = '#ff2a4b';
+        statusMessage.style.color = '#ff4d4d';
         statusMessage.innerText = '❌ Code ลับไม่ถูกต้อง กรุณาตรวจสอบอีกครั้ง';
       }
     }
@@ -747,7 +740,7 @@
       const statusMessage = document.getElementById('statusMessage');
 
       if (!voucherInput) {
-        statusMessage.style.color = '#ff2a4b';
+        statusMessage.style.color = '#ff4d4d';
         statusMessage.innerText = '❌ กรุณากรอกลิงก์ซองอั่งเปา';
         return;
       }
