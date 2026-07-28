@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>J Community - ระบบเติมเงิน</title>
+  <title>J Community - เติมเงิน</title>
   <!-- Google Fonts: Prompt -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -27,6 +27,7 @@
       --border-color: #281838;
       --truemoney-color: #ff8c00;
       --green-accent: #28a745;
+      --gold-color: #ffd700;
     }
 
     * {
@@ -44,7 +45,6 @@
       min-height: 100vh;
       display: flex;
       flex-direction: column;
-      align-items: center;
       position: relative;
       overflow-x: hidden;
       transition: background-color 0.3s ease;
@@ -64,7 +64,7 @@
       transition: background 0.3s ease;
     }
 
-    /* Header */
+    /* Navbar Header - รวมแถบบนครบชุด */
     header {
       width: 100%;
       position: relative;
@@ -135,16 +135,41 @@
     .dot-pink   { background-color: #ec4899; color: #ec4899; }
     .dot-orange { background-color: #f97316; color: #f97316; }
 
-    .btn-back-home {
+    /* เมนูเชื่อมโยงหน้าต่างๆ */
+    .nav-links {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      margin-left: 10px;
+    }
+
+    .nav-item {
       color: var(--text-muted);
-      text-decoration: none;
+      font-size: 0.95rem;
+      cursor: pointer;
       display: flex;
       align-items: center;
       gap: 6px;
-      font-size: 0.9rem;
+      text-decoration: none;
       transition: color 0.2s;
     }
-    .btn-back-home:hover { color: #fff; }
+
+    .nav-item:hover, .nav-item.active { color: #fff; }
+
+    .btn-topup-nav {
+      background: var(--primary-purple);
+      border: 1px solid var(--purple-glow);
+      color: #fff;
+      padding: 6px 14px;
+      border-radius: 20px;
+      font-size: 0.85rem;
+      font-weight: 600;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      box-shadow: 0 0 12px var(--purple-glow);
+    }
 
     .btn-login-discord {
       background: var(--discord-blue);
@@ -200,7 +225,24 @@
       font-weight: 600;
     }
 
-    /* Main Container */
+    .btn-logout-icon {
+      background: rgba(168, 85, 247, 0.15);
+      border: 1px solid var(--purple-glow);
+      color: var(--primary-purple);
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: all 0.2s;
+      margin-left: 4px;
+    }
+
+    .btn-logout-icon:hover { background: var(--primary-purple); color: white; }
+
+    /* Main Topup Container */
     .topup-container {
       position: relative;
       z-index: 1;
@@ -351,11 +393,50 @@
       text-align: center;
       min-height: 24px;
     }
+
+    /* Modals */
+    .modal-overlay {
+      position: fixed;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      background: rgba(0, 0, 0, 0.85);
+      backdrop-filter: blur(8px);
+      display: flex; align-items: center; justify-content: center;
+      z-index: 100;
+      opacity: 0; pointer-events: none;
+      transition: opacity 0.3s ease;
+    }
+
+    .modal-overlay.active { opacity: 1; pointer-events: all; }
+
+    .modal-card {
+      background: var(--card-bg);
+      border: 1px solid var(--border-color);
+      width: 100%; max-width: 460px;
+      border-radius: 20px; padding: 28px;
+      box-shadow: 0 0 50px rgba(0, 0, 0, 0.9), 0 0 30px var(--purple-glow);
+      position: relative;
+    }
+
+    .close-btn { position: absolute; top: 18px; right: 20px; color: var(--text-muted); cursor: pointer; }
+    .close-btn:hover { color: #fff; }
+
+    /* Leaderboard */
+    .leaderboard-list { display: flex; flex-direction: column; gap: 10px; max-height: 340px; overflow-y: auto; }
+    .leaderboard-item { display: flex; align-items: center; justify-content: space-between; background: var(--card-inner); border: 1px solid var(--border-color); padding: 10px 14px; border-radius: 12px; }
+    .rank-user-info { display: flex; align-items: center; gap: 12px; }
+    .rank-number { font-weight: 700; font-size: 1.1rem; width: 28px; text-align: center; }
+    .rank-1 { color: #ffd700; } .rank-2 { color: #c0c0c0; } .rank-3 { color: #cd7f32; }
+    .rank-avatar { width: 38px; height: 38px; border-radius: 50%; object-fit: cover; }
+    .rank-user-details { display: flex; flex-direction: column; }
+    .rank-username { font-size: 0.95rem; font-weight: 600; color: #fff; }
+    .rank-user-id { font-size: 0.75rem; color: var(--text-muted); }
+    .rank-balance { font-weight: 700; font-size: 0.95rem; color: #4cd964; background: rgba(40, 167, 69, 0.12); border: 1px solid rgba(40, 167, 69, 0.25); padding: 4px 10px; border-radius: 20px; }
   </style>
 </head>
 <body>
 
-  <!-- Header Bar -->
+  <!-- Navbar Header ครบชุด -->
   <header>
     <div class="nav-left-group">
       <a href="index.html" class="logo">
@@ -371,8 +452,20 @@
         <div class="color-dot dot-pink" onclick="changeTheme('pink')" title="สีชมพู"></div>
         <div class="color-dot dot-orange" onclick="changeTheme('orange')" title="สีส้ม"></div>
       </div>
+
+      <!-- เมนูเส้นทาง -->
+      <div class="nav-links">
+        <a class="nav-item" href="index.html"><i data-lucide="home" style="width:16px;"></i> หน้าหลัก</a>
+        <a class="nav-item" href="index.html#shopSection"><i data-lucide="shopping-bag" style="width:16px;"></i> ร้านค้า</a>
+        <a class="nav-item" href="#" onclick="openLeaderboardModal()"><i data-lucide="trophy" style="width:16px; color: var(--gold-color);"></i> จัดอันดับ</a>
+        
+        <div class="btn-topup-nav">
+          <i data-lucide="wallet" style="width:16px;"></i> เติมเงิน
+        </div>
+      </div>
     </div>
 
+    <!-- ส่วนโปรไฟล์ / เข้าสู่ระบบ -->
     <div>
       <a id="navLoginBtn" href="https://discord.com/oauth2/authorize?client_id=1507932932466282516&response_type=token&redirect_uri=https%3A%2F%2Fsk-six-beryl.vercel.app%2F&scope=identify" class="btn-login-discord">
         <i data-lucide="message-square" style="width:16px;"></i> เข้าสู่ระบบด้วย Discord
@@ -386,16 +479,16 @@
           <i data-lucide="coins" style="width:14px;"></i>
           <span id="userBalanceText">0</span> ฿
         </div>
+
+        <button class="btn-logout-icon" onclick="logoutDiscord()" title="ออกจากระบบ">
+          <i data-lucide="log-out" style="width:14px;"></i>
+        </button>
       </div>
     </div>
   </header>
 
   <!-- Content Container -->
   <div class="topup-container">
-    <div style="margin-bottom: 16px;">
-      <a href="index.html" class="btn-back-home"><i data-lucide="arrow-left" style="width:16px;"></i> กลับหน้าหลักร้านค้า</a>
-    </div>
-
     <div class="topup-card">
       <div class="topup-header">
         <div class="topup-title">
@@ -454,6 +547,17 @@
       </div>
 
       <div id="statusMessage"></div>
+    </div>
+  </div>
+
+  <!-- Leaderboard Modal -->
+  <div class="modal-overlay" id="leaderboardModal">
+    <div class="modal-card">
+      <span class="close-btn" onclick="closeLeaderboardModal()"><i data-lucide="x"></i></span>
+      <div style="text-align:center; font-size: 1.3rem; font-weight:700; color: var(--gold-color); margin-bottom: 20px;">
+        <i data-lucide="trophy"></i> อันดับผู้ถือครองเงินสูงสุด
+      </div>
+      <div class="leaderboard-list" id="leaderboardContainer"></div>
     </div>
   </div>
 
@@ -564,7 +668,67 @@
       });
     }
 
-    // 4. ระบบแลก Code
+    function logoutDiscord() {
+      localStorage.removeItem('discord_access_token');
+      isLoggedIn = false;
+      currentUserId = null;
+      document.getElementById('navLoginBtn').style.display = 'flex';
+      document.getElementById('navProfileZone').style.display = 'none';
+    }
+
+    // 4. Leaderboard Modal
+    const leaderboardModal = document.getElementById('leaderboardModal');
+    function openLeaderboardModal() {
+      renderLeaderboard();
+      leaderboardModal.classList.add('active');
+    }
+    function closeLeaderboardModal() { leaderboardModal.classList.remove('active'); }
+
+    function renderLeaderboard() {
+      const container = document.getElementById('leaderboardContainer');
+      const usersList = [];
+      for (let i = 0; i < localStorage.length; i++) {
+        const key = localStorage.key(i);
+        if (key.startsWith('user_profile_')) {
+          const userId = key.replace('user_profile_', '');
+          const profile = JSON.parse(localStorage.getItem(key));
+          const balance = parseFloat(localStorage.getItem(`user_balance_${userId}`)) || 0;
+          usersList.push({ id: userId, name: profile.name, avatar: profile.avatar, balance: balance });
+        }
+      }
+      usersList.sort((a, b) => b.balance - a.balance);
+
+      if (usersList.length === 0) {
+        container.innerHTML = `<div style="text-align: center; color: var(--text-muted); padding: 20px;">ยังไม่มีข้อมูลอันดับ</div>`;
+        return;
+      }
+
+      let html = '';
+      usersList.forEach((user, index) => {
+        let rankBadge = `${index + 1}`;
+        let rankClass = '';
+        if (index === 0) { rankBadge = '🥇'; rankClass = 'rank-1'; }
+        else if (index === 1) { rankBadge = '🥈'; rankClass = 'rank-2'; }
+        else if (index === 2) { rankBadge = '🥉'; rankClass = 'rank-3'; }
+
+        html += `
+          <div class="leaderboard-item">
+            <div class="rank-user-info">
+              <span class="rank-number ${rankClass}">${rankBadge}</span>
+              <img src="${user.avatar}" class="rank-avatar" alt="Avatar">
+              <div class="rank-user-details">
+                <span class="rank-username">${user.name}</span>
+                <span class="rank-user-id">ID: ${user.id}</span>
+              </div>
+            </div>
+            <div class="rank-balance">${user.balance.toLocaleString()} ฿</div>
+          </div>
+        `;
+      });
+      container.innerHTML = html;
+    }
+
+    // 5. ระบบแลก Code
     let usedCount = parseInt(localStorage.getItem('secret_code_used_count')) || 0;
 
     function processSecretCode() {
@@ -619,7 +783,7 @@
       }
     }
 
-    // 5. ระบบ TrueMoney
+    // 6. ระบบ TrueMoney
     function processVoucher() {
       const statusMessage = document.getElementById('statusMessage');
       const phone = document.getElementById('receiverPhone').value.trim();
