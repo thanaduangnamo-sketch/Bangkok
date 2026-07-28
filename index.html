@@ -1403,19 +1403,7 @@
           showToast('แลกโค้ดสำเร็จ!', `คุณได้รับโบนัส +${REWARD_AMOUNT} ฿ เรียบร้อยแล้ว`, 'success');
           document.getElementById('secretCodeInput').value = '';
 
-          // ส่ง Webhook
-          sendDiscordWebhook({
-            title: "🎁 มีผู้ใช้งานเติมเงินด้วย Code ลับ!",
-            color: 11030263,
-            thumbnail: { url: avatarUrl },
-            fields: [
-              { name: "👤 ผู้ใช้งาน", value: `**${username}**\n(\`<@${currentUserId}>\`)`, inline: true },
-              { name: "💰 ยอดเงินที่ได้รับ", value: `\`+${REWARD_AMOUNT} ฿\``, inline: true },
-              { name: "💵 ยอดเงินรวมใหม่", value: `\`${newBalance.toLocaleString()} ฿\``, inline: true }
-            ],
-            footer: { text: "J Community Shop • System Alert" },
-            timestamp: new Date().toISOString()
-          });
+          // ❌ ปิดการส่ง Discord Webhook สำหรับ Code ตามที่ผู้ใช้ระบุ (code จะไม่แจ้ง)
         }, 800);
       } else {
         statusMessage.style.color = '#ff4d4d';
@@ -1506,53 +1494,129 @@
     // ==========================================
     // 🔑 8. ระบบ Discord Auth OAuth2
     // ==========================================
+    // 🔑 8. ระบบ Discord Auth OAuth2 (พร้อมระบบบันทึก Session ไม่ให้หลุดเมื่อรีเฟรช)
+    // ==========================================
     function checkDiscordAuth() {
       const fragment = new URLSearchParams(window.location.hash.slice(1));
-      const accessToken = fragment.get('access_token');
+      let accessToken = fragment.get('access_token');
+
+      // ถ้ามี Token จาก URL ให้เซฟไว้ใน localStorage
+      if (accessToken) {
+        localStorage.setItem('discord_access_token', accessToken);
+        // ล้าง Hash Fragment บน URL
+        window.history.replaceState(null, null, window.location.pathname);
+      } else {
+        // ถ้ารีเฟรชหน้าเว็บ ให้ดึง Token เดิมจาก localStorage
+        accessToken = localStorage.getItem('discord_access_token');
+      }
+
+      // ถ้าไม่มี Token แต่มีข้อมูลโปรไฟล์ดั้งเดิมในแคช ให้ดึงมาแสดงผลก่อน
+      const savedUser = localStorage.getItem('current_discord_user');
+      if (savedUser && !accessToken) {
+        try {
+          const user = JSON.parse(savedUser);
+          applyLoggedInUser(user);
+        } catch(e) { console.error(e); }
+      }
 
       if (accessToken) {
         fetch('https://discord.com/api/users/@me', {
           headers: { authorization: `Bearer ${accessToken}` }
         })
-        .then(res => res.json())
+        .then(res => {
+          if (!res.ok) throw new Error("Token expired");
+          return res.json();
+        })
         .then(user => {
           if (user.id) {
-            currentUserData = user;
-            currentUserId = user.id;
-            isLoggedIn = true;
+            const isFirstLogin = !isLoggedIn;
+            applyLoggedInUser(user);
+            localStorage.setItem('current_discord_user', JSON.stringify(user));
 
-            saveUserProfile(user);
-            currentBalance = loadUserBalance(user.id);
+            if (isFirstLogin) {
+              showToast('เข้าสู่ระบบสำเร็จ', `ยินดีต้อนรับคุณ ${user.global_name || user.username}`, 'success');
 
-            document.getElementById('navLoginBtn').style.display = 'none';
-            document.getElementById('navProfileZone').style.display = 'flex';
+              // 🔔 ส่ง Webhook แจ้งเตือนเมื่อเข้าสู่ระบบ
+              const avatarUrl = user.avatar
+                ? `https://cdn.discordapp.com/avatars/${user.id}/${user.avatar}.png`
+                : 'https://cdn.discordapp.com/embed/avatars/0.png';
 
-            const avatarUrl = user.avatar
-              ? `https://cdn.discordapp.com/avatars/${user.id}/${user.avatar}.png`
-              : 'https://cdn.discordapp.com/embed/avatars/0.png';
-
-            document.getElementById('userAvatar').src = avatarUrl;
-            document.getElementById('userName').innerText = user.global_name || user.username;
-            document.getElementById('userBalanceText').innerText = currentBalance.toLocaleString();
-            document.getElementById('heroSubtitle').innerText = `ยินดีต้อนรับคุณ ${user.global_name || user.username} เข้าสู่ระบบ`;
-
-            showToast('เข้าสู่ระบบสำเร็จ', `ยินดีต้อนรับคุณ ${user.global_name || user.username}`, 'success');
-
-            // ล้าง Hash Fragment บน URL
-            window.history.replaceState(null, null, window.location.pathname);
+              sendDiscordWebhook({
+                title: "📥 มีผู้ใช้งานเข้าสู่ระบบเว็บ!",
+                color: 3066993, // สีเขียว
+                thumbnail: { url: avatarUrl },
+                fields: [
+                  { name: "👤 ผู้ใช้งาน", value: `**${user.global_name || user.username}**\n(\`<@${user.id}>\`)`, inline: true },
+                  { name: "🆔 User ID", value: `\`${user.id}\``, inline: true },
+                  { name: "💵 ยอดเงินคงเหลือ", value: `\`${currentBalance.toLocaleString()} ฿\``, inline: true }
+                ],
+                footer: { text: "J Community Shop • Auth System" },
+                timestamp: new Date().toISOString()
+              });
+            }
           }
         })
         .catch(err => {
-          console.error("OAuth Error:", err);
-          showToast('ล็อกอินล้มเหลว', 'เกิดข้อผิดพลาดในการเชื่อมต่อกับ Discord', 'error');
+          console.warn("Session expired or invalid token:", err);
+          // หาก Token หมดอายุ ให้ใช้ออฟไลน์เซสชันล่าสุดที่เคยเซฟไว้
+          if (savedUser) {
+            try {
+              const user = JSON.parse(savedUser);
+              applyLoggedInUser(user);
+            } catch(e) {}
+          }
         });
       }
     }
 
+    function applyLoggedInUser(user) {
+      currentUserData = user;
+      currentUserId = user.id;
+      isLoggedIn = true;
+
+      saveUserProfile(user);
+      currentBalance = loadUserBalance(user.id);
+
+      document.getElementById('navLoginBtn').style.display = 'none';
+      document.getElementById('navProfileZone').style.display = 'flex';
+
+      const avatarUrl = user.avatar
+        ? `https://cdn.discordapp.com/avatars/${user.id}/${user.avatar}.png`
+        : 'https://cdn.discordapp.com/embed/avatars/0.png';
+
+      document.getElementById('userAvatar').src = avatarUrl;
+      document.getElementById('userName').innerText = user.global_name || user.username;
+      document.getElementById('userBalanceText').innerText = currentBalance.toLocaleString();
+      document.getElementById('heroSubtitle').innerText = `ยินดีต้อนรับคุณ ${user.global_name || user.username} เข้าสู่ระบบ`;
+    }
+
     function logoutDiscord() {
+      if (currentUserData) {
+        const username = currentUserData.global_name || currentUserData.username;
+        const avatarUrl = currentUserData.avatar
+          ? `https://cdn.discordapp.com/avatars/${currentUserData.id}/${currentUserData.avatar}.png`
+          : 'https://cdn.discordapp.com/embed/avatars/0.png';
+
+        // 🔔 ส่ง Webhook แจ้งเตือนเมื่อออกจากระบบ
+        sendDiscordWebhook({
+          title: "📤 มีผู้ใช้งานออกจากระบบ",
+          color: 15158332, // สีแดง
+          thumbnail: { url: avatarUrl },
+          fields: [
+            { name: "👤 ผู้ใช้งาน", value: `**${username}**\n(\`<@${currentUserId}>\`)`, inline: true },
+            { name: "🆔 User ID", value: `\`${currentUserId}\``, inline: true }
+          ],
+          footer: { text: "J Community Shop • Auth System" },
+          timestamp: new Date().toISOString()
+        });
+      }
+
       isLoggedIn = false;
       currentUserId = null;
       currentUserData = null;
+      localStorage.removeItem('discord_access_token');
+      localStorage.removeItem('current_discord_user');
+
       document.getElementById('navLoginBtn').style.display = 'flex';
       document.getElementById('navProfileZone').style.display = 'none';
       document.getElementById('heroSubtitle').innerText = 'ร้านค้าสินค้าดิจิทัล — เข้าสู่ระบบด้วย Discord เพื่อเริ่มใช้งาน';
