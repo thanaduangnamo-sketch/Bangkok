@@ -674,6 +674,150 @@
       padding: 4px 10px;
       border-radius: 20px;
     }
+
+    /* 🔔 Toast Notification System */
+    .toast-container {
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      z-index: 9999;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      max-width: 380px;
+      width: calc(100% - 40px);
+      pointer-events: none;
+    }
+
+    .toast-card {
+      background: var(--card-bg);
+      border: 1px solid var(--border-color);
+      padding: 14px 18px;
+      border-radius: 14px;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5), 0 0 20px var(--purple-glow);
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+      pointer-events: auto;
+      animation: slideInRight 0.35s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+      backdrop-filter: blur(12px);
+      transition: all 0.3s ease;
+    }
+
+    .toast-card.toast-hiding {
+      opacity: 0;
+      transform: translateX(100%);
+    }
+
+    @keyframes slideInRight {
+      from { opacity: 0; transform: translateX(100%); }
+      to { opacity: 1; transform: translateX(0); }
+    }
+
+    .toast-icon {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 6px;
+      border-radius: 10px;
+      flex-shrink: 0;
+    }
+
+    .toast-success .toast-icon { background: rgba(40, 167, 69, 0.2); color: #4cd964; }
+    .toast-error .toast-icon   { background: rgba(255, 77, 77, 0.2); color: #ff4d4d; }
+    .toast-warning .toast-icon { background: rgba(255, 170, 51, 0.2); color: #ffaa33; }
+    .toast-info .toast-icon    { background: rgba(0, 180, 216, 0.2); color: #00b4d8; }
+
+    .toast-content { flex: 1; }
+    .toast-title { font-weight: 700; font-size: 0.95rem; color: #fff; margin-bottom: 2px; }
+    .toast-msg { font-size: 0.85rem; color: var(--text-muted); line-height: 1.3; }
+
+    /* 📜 History Modal & Items */
+    .history-tabs {
+      display: flex;
+      gap: 8px;
+      margin-bottom: 16px;
+      background: var(--card-inner);
+      padding: 4px;
+      border-radius: 12px;
+      border: 1px solid var(--border-color);
+    }
+
+    .history-tab-btn {
+      flex: 1;
+      padding: 8px 10px;
+      border: none;
+      background: transparent;
+      color: var(--text-muted);
+      border-radius: 8px;
+      font-weight: 600;
+      font-size: 0.85rem;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .history-tab-btn.active {
+      background: var(--primary-purple);
+      color: #fff;
+      box-shadow: 0 0 10px var(--purple-glow);
+    }
+
+    .history-list {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      max-height: 360px;
+      overflow-y: auto;
+      padding-right: 4px;
+    }
+
+    .history-item {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background: var(--card-inner);
+      border: 1px solid var(--border-color);
+      padding: 12px 16px;
+      border-radius: 12px;
+      transition: all 0.2s;
+    }
+
+    .history-item:hover { border-color: var(--purple-glow); }
+
+    .history-left {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .history-icon-box {
+      width: 38px;
+      height: 38px;
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: rgba(168, 85, 247, 0.15);
+      color: var(--primary-purple);
+      flex-shrink: 0;
+    }
+
+    .history-title-text { font-weight: 600; font-size: 0.9rem; color: #fff; }
+    .history-time-text { font-size: 0.75rem; color: var(--text-muted); margin-top: 2px; }
+
+    .history-right { text-align: right; }
+    .history-amount-plus { font-weight: 700; color: #4cd964; font-size: 0.95rem; }
+    .history-status-badge {
+      font-size: 0.72rem;
+      padding: 2px 8px;
+      border-radius: 12px;
+      display: inline-block;
+      margin-top: 3px;
+      font-weight: 500;
+    }
+
+    .status-success { background: rgba(40, 167, 69, 0.15); color: #4cd964; border: 1px solid rgba(40, 167, 69, 0.3); }
+    .status-pending { background: rgba(255, 170, 51, 0.15); color: #ffaa33; border: 1px solid rgba(255, 170, 51, 0.3); }
   </style>
 </head>
 <body>
@@ -698,6 +842,7 @@
       <div class="nav-links">
         <a class="nav-item active" href="#"><i data-lucide="home" style="width:16px;"></i> หน้าหลัก</a>
         <a class="nav-item" href="#shopSection"><i data-lucide="shopping-bag" style="width:16px;"></i> ร้านค้า</a>
+        <a class="nav-item" href="#" onclick="openHistoryModal()"><i data-lucide="history" style="width:16px;"></i> ประวัติรายการ</a>
         <a class="nav-item" href="#" onclick="openLeaderboardModal()"><i data-lucide="trophy" style="width:16px; color: var(--gold-color);"></i> จัดอันดับ</a>
         
         <!-- 💬 ปุ่มเข้าร่วมดิสคอร์ดพร้อมไอคอน Discord -->
@@ -839,6 +984,30 @@
     </div>
   </div>
 
+  <!-- 🔔 Toast Container -->
+  <div id="toastContainer" class="toast-container"></div>
+
+  <!-- 📜 History Modal -->
+  <div class="modal-overlay" id="historyModal">
+    <div class="modal-card">
+      <span class="close-btn" onclick="closeHistoryModal()"><i data-lucide="x"></i></span>
+
+      <div class="modal-header">
+        <div class="modal-title">
+          <i data-lucide="history" style="color: var(--primary-purple);"></i> ประวัติการทำรายการ
+        </div>
+      </div>
+
+      <div class="history-tabs">
+        <button class="history-tab-btn active" id="historyTabAll" onclick="filterHistory('all')">ทั้งหมด</button>
+        <button class="history-tab-btn" id="historyTabTopup" onclick="filterHistory('topup')">เติมเงิน</button>
+        <button class="history-tab-btn" id="historyTabCode" onclick="filterHistory('code')">แลกโค้ด</button>
+      </div>
+
+      <div class="history-list" id="historyContainer"></div>
+    </div>
+  </div>
+
   <!-- Leaderboard Modal -->
   <div class="modal-overlay" id="leaderboardModal">
     <div class="modal-card">
@@ -856,6 +1025,146 @@
 
   <script>
     lucide.createIcons();
+
+    // ==========================================
+    // 🔔 0. ระบบแจ้งเตือนในเว็บ (Toast Notifications)
+    // ==========================================
+    function showToast(title, message, type = 'info', duration = 3500) {
+      const container = document.getElementById('toastContainer');
+      if (!container) return;
+
+      const toast = document.createElement('div');
+      toast.className = `toast-card toast-${type}`;
+
+      let iconName = 'info';
+      if (type === 'success') iconName = 'check-circle';
+      else if (type === 'error') iconName = 'alert-circle';
+      else if (type === 'warning') iconName = 'alert-triangle';
+
+      toast.innerHTML = `
+        <div class="toast-icon">
+          <i data-lucide="${iconName}" style="width:20px; height:20px;"></i>
+        </div>
+        <div class="toast-content">
+          <div class="toast-title">${title}</div>
+          <div class="toast-msg">${message}</div>
+        </div>
+      `;
+
+      container.appendChild(toast);
+      lucide.createIcons({ targets: [toast] });
+
+      setTimeout(() => {
+        toast.classList.add('toast-hiding');
+        setTimeout(() => toast.remove(), 350);
+      }, duration);
+    }
+
+    // ==========================================
+    // 📜 0.1 ระบบบันทึก & แสดงประวัติทำรายการ
+    // ==========================================
+    const historyModal = document.getElementById('historyModal');
+    let currentHistoryFilter = 'all';
+
+    function addHistoryItem(userId, type, title, amount, detail, status = 'success') {
+      if (!userId) return;
+      const historyKey = `user_history_${userId}`;
+      const historyData = JSON.parse(localStorage.getItem(historyKey) || '[]');
+
+      const newItem = {
+        id: 'TX' + Date.now().toString().slice(-6),
+        type: type, // 'topup' | 'code'
+        title: title,
+        amount: amount,
+        detail: detail,
+        status: status,
+        timestamp: new Date().toLocaleString('th-TH', {
+          year: 'numeric', month: 'short', day: 'numeric',
+          hour: '2-digit', minute: '2-digit'
+        })
+      };
+
+      historyData.unshift(newItem); // เอาอันล่าสุดขึ้นก่อน
+      localStorage.setItem(historyKey, JSON.stringify(historyData));
+    }
+
+    function openHistoryModal() {
+      if (!isLoggedIn) {
+        showToast('กรุณาเข้าสู่ระบบ', 'กรุณาล็อกอินด้วย Discord ก่อนดูประวัติรายการครับ', 'warning');
+        return;
+      }
+      renderHistory();
+      historyModal.classList.add('active');
+    }
+
+    function closeHistoryModal() { historyModal.classList.remove('active'); }
+
+    historyModal.addEventListener('click', (e) => {
+      if (e.target === historyModal) closeHistoryModal();
+    });
+
+    function filterHistory(filter) {
+      currentHistoryFilter = filter;
+      document.getElementById('historyTabAll').className = 'history-tab-btn' + (filter === 'all' ? ' active' : '');
+      document.getElementById('historyTabTopup').className = 'history-tab-btn' + (filter === 'topup' ? ' active' : '');
+      document.getElementById('historyTabCode').className = 'history-tab-btn' + (filter === 'code' ? ' active' : '');
+      renderHistory();
+    }
+
+    function renderHistory() {
+      const container = document.getElementById('historyContainer');
+      if (!currentUserId) {
+        container.innerHTML = `<div style="text-align: center; color: var(--text-muted); padding: 20px;">ไม่พบข้อมูลผู้ใช้</div>`;
+        return;
+      }
+
+      const historyKey = `user_history_${currentUserId}`;
+      let historyData = JSON.parse(localStorage.getItem(historyKey) || '[]');
+
+      if (currentHistoryFilter !== 'all') {
+        historyData = historyData.filter(item => item.type === currentHistoryFilter);
+      }
+
+      if (historyData.length === 0) {
+        container.innerHTML = `
+          <div style="text-align: center; color: var(--text-muted); padding: 30px 20px;">
+            <i data-lucide="file-x" style="width: 32px; height: 32px; margin-bottom: 8px; opacity: 0.5;"></i>
+            <div>ยังไม่มีประวัติการทำรายการ</div>
+          </div>
+        `;
+        lucide.createIcons({ targets: [container] });
+        return;
+      }
+
+      let html = '';
+      historyData.forEach(item => {
+        const isCode = item.type === 'code';
+        const iconName = isCode ? 'key-round' : 'wallet';
+        const statusText = item.status === 'success' ? 'สำเร็จ' : 'กำลังตรวจสอบ';
+        const statusClass = item.status === 'success' ? 'status-success' : 'status-pending';
+
+        html += `
+          <div class="history-item">
+            <div class="history-left">
+              <div class="history-icon-box">
+                <i data-lucide="${iconName}" style="width:20px; height:20px;"></i>
+              </div>
+              <div>
+                <div class="history-title-text">${item.title}</div>
+                <div class="history-time-text">${item.timestamp} • ${item.detail}</div>
+              </div>
+            </div>
+            <div class="history-right">
+              <div class="history-amount-plus">+${item.amount.toLocaleString()} ฿</div>
+              <span class="history-status-badge ${statusClass}">${statusText}</span>
+            </div>
+          </div>
+        `;
+      });
+
+      container.innerHTML = html;
+      lucide.createIcons({ targets: [container] });
+    }
 
     // ==========================================
     // 🎨 1. ระบบธีมสี
@@ -1046,7 +1355,7 @@
 
     function processSecretCode() {
       if (!isLoggedIn) {
-        alert("กรุณาเข้าสู่ระบบด้วย Discord ก่อนทำรายการครับ");
+        showToast("กรุณาเข้าสู่ระบบ", "กรุณาเข้าสู่ระบบด้วย Discord ก่อนทำรายการครับ", "warning");
         return;
       }
 
@@ -1056,6 +1365,7 @@
       if (!inputVal) {
         statusMessage.style.color = '#ff4d4d';
         statusMessage.innerText = '❌ กรุณากรอก Code ลับก่อนครับ';
+        showToast('กรอกข้อมูลไม่ครบ', 'กรุณากรอก Code ลับก่อนทำรายการ', 'error');
         return;
       }
 
@@ -1068,8 +1378,12 @@
           const newBalance = currentBalance + addedAmount;
           updateBalanceDisplay(newBalance);
 
+          // บันทึกประวัติ
+          addHistoryItem(currentUserId, 'code', 'แลก Admin Code', addedAmount, `โค้ด: ${inputVal}`);
+
           statusMessage.style.color = '#28a745';
           statusMessage.innerText = `🎉 แลกรับโค้ดสำเร็จ +${addedAmount} บาท`;
+          showToast('แลกโค้ดสำเร็จ!', `คุณได้รับเงินเพิ่ม +${addedAmount} ฿`, 'success');
           document.getElementById('secretCodeInput').value = '';
 
           const username = currentUserData ? (currentUserData.global_name || currentUserData.username) : "Unknown";
@@ -1096,6 +1410,7 @@
       if (usedCount >= MAX_QUOTA) {
         statusMessage.style.color = '#ff4d4d';
         statusMessage.innerText = '❌ โค้ดนี้ไม่ถูกต้องหรือถูกใช้งานหมดแล้ว';
+        showToast('ใช้สิทธิ์ครบแล้ว', 'โค้ดนี้ถูกใช้งานสิทธิ์ครบตามจำนวนแล้วครับ', 'error');
         return;
       }
 
@@ -1103,6 +1418,7 @@
       if (isUserRedeemed) {
         statusMessage.style.color = '#ffaa33';
         statusMessage.innerText = '⚠️ บัญชีนี้เคยใช้ Code ลับนี้ไปแล้วครับ';
+        showToast('ใช้โค้ดซ้ำ', 'บัญชีนี้เคยแลกรับโค้ดนี้ไปแล้วครับ', 'warning');
         return;
       }
 
@@ -1118,8 +1434,12 @@
           const newBalance = currentBalance + REWARD_AMOUNT;
           updateBalanceDisplay(newBalance);
 
+          // บันทึกประวัติ
+          addHistoryItem(currentUserId, 'code', 'แลก Code ลับประจำวัน', REWARD_AMOUNT, 'รับโบนัสฟรี 25 บาท');
+
           statusMessage.style.color = '#28a745';
           statusMessage.innerText = `🎉 แลกรับโค้ดสำเร็จ +${REWARD_AMOUNT} บาท`;
+          showToast('แลกโค้ดสำเร็จ!', `คุณได้รับโบนัส +${REWARD_AMOUNT} ฿ เรียบร้อยแล้ว`, 'success');
           document.getElementById('secretCodeInput').value = '';
 
           const username = currentUserData ? (currentUserData.global_name || currentUserData.username) : "Unknown";
@@ -1143,6 +1463,7 @@
       } else {
         statusMessage.style.color = '#ff4d4d';
         statusMessage.innerText = '❌ Code ลับไม่ถูกต้อง';
+        showToast('โค้ดไม่ถูกต้อง', 'กรุณาตรวจสอบ Code ลับใหม่อีกครั้ง', 'error');
       }
     }
 
@@ -1153,7 +1474,7 @@
 
     function openTopupModal() {
       if (!isLoggedIn) {
-        alert("กรุณาเข้าสู่ระบบด้วย Discord ก่อนทำรายการเติมเงินครับ");
+        showToast("กรุณาเข้าสู่ระบบ", "กรุณาเข้าสู่ระบบด้วย Discord ก่อนทำรายการเติมเงินครับ", "warning");
         return;
       }
       topupModal.classList.add('active');
@@ -1187,6 +1508,7 @@
       if (!phone || !voucher) {
         statusMessage.style.color = '#ff4d4d';
         statusMessage.innerText = '❌ กรุณากรอกเบอร์โทรและลิงก์ซองให้ครบถ้วน';
+        showToast('ข้อมูลไม่ครบถ้วน', 'กรุณากรอกเบอร์โทรและลิงก์ซองอั่งเปาให้ครบถ้วน', 'error');
         return;
       }
 
@@ -1195,8 +1517,12 @@
 
       // จำลองการตรวจสอบ
       setTimeout(() => {
+        // บันทึกประวัติเติมเงิน
+        addHistoryItem(currentUserId, 'topup', 'เติมเงิน TrueMoney Voucher', 0, `เบอร์: ${phone}`, 'pending');
+
         statusMessage.style.color = '#28a745';
         statusMessage.innerText = '✅ ทำรายการสำเร็จ! ยอดเงินจะปรับปรุงเร็วๆ นี้';
+        showToast('ส่งรายการเติมเงินแล้ว', 'ระบบกำลังส่งรายการเพื่อตรวจสอบยอดเงินครับ', 'info');
       }, 1200);
     }
 
@@ -1233,11 +1559,16 @@
             document.getElementById('userBalanceText').innerText = currentBalance.toLocaleString();
             document.getElementById('heroSubtitle').innerText = `ยินดีต้อนรับคุณ ${user.global_name || user.username} เข้าสู่ระบบ`;
 
+            showToast('เข้าสู่ระบบสำเร็จ', `ยินดีต้อนรับคุณ ${user.global_name || user.username}`, 'success');
+
             // ล้าง Hash Fragment บน URL
             window.history.replaceState(null, null, window.location.pathname);
           }
         })
-        .catch(err => console.error("OAuth Error:", err));
+        .catch(err => {
+          console.error("OAuth Error:", err);
+          showToast('ล็อกอินล้มเหลว', 'เกิดข้อผิดพลาดในการเชื่อมต่อกับ Discord', 'error');
+        });
       }
     }
 
@@ -1248,6 +1579,7 @@
       document.getElementById('navLoginBtn').style.display = 'flex';
       document.getElementById('navProfileZone').style.display = 'none';
       document.getElementById('heroSubtitle').innerText = 'ร้านค้าสินค้าดิจิทัล — เข้าสู่ระบบด้วย Discord เพื่อเริ่มใช้งาน';
+      showToast('ออกจากระบบแล้ว', 'คุณได้ออกจากระบบเรียบร้อยแล้ว', 'info');
     }
 
     window.onload = function() {
