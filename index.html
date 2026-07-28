@@ -85,21 +85,19 @@
     .logo {
       display: flex;
       align-items: center;
-      gap: 10px;
+      gap: 12px;
       font-weight: 700;
       font-size: 1.2rem;
     }
 
-    .logo-icon {
-      width: 35px;
-      height: 35px;
-      background: linear-gradient(135deg, #a855f7, #581c87);
-      border-radius: 8px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-weight: bold;
+    /* 🖼️ ปรับแต่งรูปภาพโลโก้ */
+    .logo-img {
+      width: 38px;
+      height: 38px;
+      border-radius: 10px;
+      object-fit: cover;
       box-shadow: 0 0 12px var(--purple-glow);
+      border: 1px solid rgba(168, 85, 247, 0.4);
     }
 
     .nav-links {
@@ -556,7 +554,8 @@
     <!-- กลุ่มชื่อร้าน + แถบเมนู (อยู่ชิดกันทางซ้าย) -->
     <div class="nav-left-group">
       <div class="logo">
-        <div class="logo-icon">J</div>
+        <!-- 🖼️ เปลี่ยนเป็นรูปภาพจากลิงก์ Discord -->
+        <img class="logo-img" src="https://media.discordapp.net/attachments/1530928529657827411/1531541817697370213/ChatGPT_Image_26_.._2569_11_43_34.png?ex=6a6996f8&is=6a684578&hm=b1595569ef6a838f765604b4fbfbac0f6f4411f2f6de8df6ce14e2dc1b6c2bfe&=&format=webp&quality=lossless&width=788&height=788" alt="J Community Logo">
         <span>J Community</span>
       </div>
 
