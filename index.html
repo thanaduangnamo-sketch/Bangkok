@@ -24,6 +24,7 @@
       --text-muted: #99888c;
       --border-color: #2a181c;
       --truemoney-color: #ff8c00;
+      --green-accent: #28a745;
     }
 
     * {
@@ -171,6 +172,41 @@
       font-size: 0.9rem;
       font-weight: 600;
       color: #fff;
+    }
+
+    /* กล่องแสดงยอดเงินข้างชื่อ */
+    .user-balance-badge {
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      background: rgba(40, 167, 69, 0.15);
+      border: 1px solid rgba(40, 167, 69, 0.3);
+      color: #4cd964;
+      padding: 3px 10px;
+      border-radius: 20px;
+      font-size: 0.85rem;
+      font-weight: 600;
+    }
+
+    /* ปุ่มบวกเติมเงินข้างยอดเงิน */
+    .btn-add-balance {
+      background: var(--primary-red);
+      color: white;
+      border: none;
+      width: 20px;
+      height: 20px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      font-size: 0.8rem;
+      margin-left: 2px;
+      transition: transform 0.2s;
+    }
+
+    .btn-add-balance:hover {
+      transform: scale(1.15);
     }
 
     .btn-logout-icon {
@@ -434,9 +470,18 @@
         <i data-lucide="message-square" style="width:16px;"></i> เข้าสู่ระบบด้วย Discord
       </a>
 
+      <!-- โซนโปรไฟล์ + ยอดเงินคงเหลือ -->
       <div id="navProfileZone" class="user-profile-bar" style="display: none;">
         <img id="userAvatar" class="user-avatar-small" src="" alt="Avatar">
         <span id="userName" class="user-name-text">Loading...</span>
+
+        <!-- ส่วนแสดงยอดเงินคงเหลือ ข้างๆ ชื่อ -->
+        <div class="user-balance-badge">
+          <i data-lucide="coins" style="width:14px;"></i>
+          <span id="userBalanceText">0</span> ฿
+          <button class="btn-add-balance" onclick="openTopupModal()" title="เติมเงิน">+</button>
+        </div>
+
         <button class="btn-logout-icon" onclick="logoutDiscord()" title="ออกจากระบบ">
           <i data-lucide="log-out" style="width:14px;"></i>
         </button>
@@ -503,13 +548,18 @@
   <script>
     lucide.createIcons();
 
-    // URL สำหรับเข้าสู่ระบบ Discord
     const DISCORD_LOGIN_URL = "https://discord.com/oauth2/authorize?client_id=1507932932466282516&response_type=token&redirect_uri=https%3A%2F%2Fsk-six-beryl.vercel.app%2F&scope=identify";
 
-    // ตัวแปรเช็คสถานะการล็อกอิน
     let isLoggedIn = false;
+    let currentBalance = 0; // ยอดเงินคงเหลือเริ่มต้น 0 บาท
 
-    // ฟังก์ชันเปิด Modal เติมเงิน (เช็กล็อกอินก่อน)
+    // ฟังก์ชันอัปเดตยอดเงินบนหน้าเว็บ
+    function updateBalanceDisplay(amount) {
+      currentBalance = amount;
+      document.getElementById('userBalanceText').innerText = currentBalance.toLocaleString();
+    }
+
+    // ฟังก์ชันเปิด Modal เติมเงิน
     const topupModal = document.getElementById('topupModal');
     function openTopupModal() {
       if (!isLoggedIn) {
@@ -547,7 +597,7 @@
       }
     }
 
-    // ฟังก์ชันกดยืนยันเติมเงิน
+    // ฟังก์ชันยืนยันเติมเงิน
     function processVoucher() {
       const voucherInput = document.getElementById('voucherUrl').value.trim();
       const statusMessage = document.getElementById('statusMessage');
@@ -565,6 +615,9 @@
         statusMessage.style.color = '#28a745';
         statusMessage.innerText = '✅ เติมเงินสำเร็จเรียบร้อยแล้ว!';
         document.getElementById('voucherUrl').value = '';
+
+        // (ตัวอย่าง) เมื่อเติมเงินสำเร็จ เพิ่มเงินเข้าไป 50 บาท
+        updateBalanceDisplay(currentBalance + 50);
       }, 1200);
     }
 
@@ -595,7 +648,7 @@
 
           const userData = await response.json();
           
-          isLoggedIn = true; // ตั้งค่าสถานะล็อกอินเป็นจริง
+          isLoggedIn = true;
           navLoginBtn.style.display = 'none';
           navProfileZone.style.display = 'flex';
 
@@ -605,6 +658,9 @@
 
           document.getElementById('userAvatar').src = avatarUrl;
           document.getElementById('userName').innerText = userData.global_name || userData.username;
+
+          // แสดงเงินคงเหลือเริ่มต้น 0 บาท
+          updateBalanceDisplay(0);
 
           heroSubtitle.innerText = `ยินดีต้อนรับคุณ ${userData.global_name || userData.username} เข้าสู่ระบบแล้ว!`;
           heroCtaBtn.style.display = 'none';
