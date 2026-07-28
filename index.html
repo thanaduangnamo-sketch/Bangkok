@@ -995,7 +995,7 @@
           <button class="btn-add-balance" onclick="openTopupModal()" title="เติมเงิน">+</button>
         </div>
 
-        <button class="btn-logout-icon" onclick="logoutDiscord()" title="ออกจากระบบ">
+        <button class="btn-logout-icon" onclick="openLogoutModal()" title="ออกจากระบบ">
           <i data-lucide="log-out" style="width:15px;"></i>
         </button>
       </div>
@@ -1136,6 +1136,32 @@
       </div>
 
       <div class="leaderboard-list" id="leaderboardContainer"></div>
+    </div>
+  </div>
+
+  <!-- 🚪 Logout Confirmation Modal -->
+  <div class="modal-overlay" id="logoutModal">
+    <div class="modal-card" style="max-width: 400px; text-align: center;">
+      <span class="close-btn" onclick="closeLogoutModal()"><i data-lucide="x"></i></span>
+
+      <div class="modal-header">
+        <div class="modal-title" style="color: #f87171;">
+          <i data-lucide="log-out"></i> ยืนยันการออกจากระบบ
+        </div>
+      </div>
+
+      <p style="color: var(--text-muted); margin-bottom: 24px; font-weight: 500;">
+        คุณแน่ใจหรือไม่ว่าต้องการออกจากระบบบัญชี <strong id="logoutTargetName" style="color: #fff;"></strong> ?
+      </p>
+
+      <div style="display: flex; gap: 12px;">
+        <button class="btn-submit-topup" style="background: rgba(255, 255, 255, 0.1); border: 1px solid var(--border-color); color: #fff;" onclick="closeLogoutModal()">
+          ไม่ออก
+        </button>
+        <button class="btn-submit-topup" style="background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%); box-shadow: 0 4px 15px rgba(239, 68, 68, 0.4);" onclick="confirmLogout()">
+          ออก
+        </button>
+      </div>
     </div>
   </div>
 
@@ -1717,6 +1743,34 @@
       document.getElementById('userName').innerText = user.global_name || user.username;
       document.getElementById('userBalanceText').innerText = currentBalance.toLocaleString();
       document.getElementById('heroSubtitle').innerText = `ยินดีต้อนรับคุณ ${user.global_name || user.username} เข้าสู่ระบบเรียบร้อยแล้ว`;
+    }
+
+    // ==========================================
+    // 🚪 9. ระบบ Modal ยืนยันการออกจากระบบ (Logout Modal)
+    // ==========================================
+    const logoutModal = document.getElementById('logoutModal');
+
+    function openLogoutModal() {
+      if (!isLoggedIn) return;
+      const targetName = currentUserData ? (currentUserData.global_name || currentUserData.username) : '';
+      const logoutTargetName = document.getElementById('logoutTargetName');
+      if (logoutTargetName) logoutTargetName.innerText = targetName;
+      logoutModal.classList.add('active');
+    }
+
+    function closeLogoutModal() {
+      if (logoutModal) logoutModal.classList.remove('active');
+    }
+
+    if (logoutModal) {
+      logoutModal.addEventListener('click', (e) => {
+        if (e.target === logoutModal) closeLogoutModal();
+      });
+    }
+
+    function confirmLogout() {
+      closeLogoutModal();
+      logoutDiscord();
     }
 
     function logoutDiscord() {
