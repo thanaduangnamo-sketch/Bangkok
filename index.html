@@ -42,7 +42,7 @@
       position: relative;
     }
 
-    /* Background Red Glow Effect */
+    /* Ambient Background Glow */
     body::before {
       content: '';
       position: absolute;
@@ -97,12 +97,6 @@
       cursor: pointer;
     }
 
-    .nav-buttons {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-    }
-
     .btn-login-nav {
       background: var(--primary-red);
       color: var(--text-main);
@@ -121,10 +115,9 @@
 
     .btn-login-nav:hover {
       background: var(--primary-red-hover);
-      box-shadow: 0 0 20px rgba(255, 42, 75, 0.6);
     }
 
-    /* Main Content */
+    /* Main Hero Section */
     .hero-container {
       position: relative;
       z-index: 1;
@@ -183,11 +176,6 @@
       transition: all 0.3s ease;
     }
 
-    .btn-main-cta:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 0 45px rgba(255, 42, 75, 0.7);
-    }
-
     /* Modal Overlay */
     .modal-overlay {
       position: fixed;
@@ -237,10 +225,6 @@
       cursor: pointer;
     }
 
-    .close-btn:hover {
-      color: #fff;
-    }
-
     .card-header {
       text-align: center;
       margin-bottom: 25px;
@@ -265,7 +249,7 @@
       font-weight: 700;
     }
 
-    /* Form Fields */
+    /* Form UI */
     .form-group {
       margin-bottom: 18px;
       text-align: left;
@@ -301,18 +285,8 @@
       color: white;
       font-size: 0.95rem;
       outline: none;
-      transition: border-color 0.2s;
     }
 
-    .form-input:focus {
-      border-color: var(--primary-red);
-    }
-
-    .form-input::placeholder {
-      color: #665558;
-    }
-
-    /* Submit Button */
     .btn-submit {
       width: 100%;
       background: var(--primary-red);
@@ -329,11 +303,6 @@
       gap: 8px;
       box-shadow: 0 0 20px rgba(255, 42, 75, 0.4);
       margin-top: 10px;
-      transition: background 0.2s;
-    }
-
-    .btn-submit:hover {
-      background: var(--primary-red-hover);
     }
 
     .divider {
@@ -355,7 +324,6 @@
       padding: 0 10px;
     }
 
-    /* Discord Button */
     .btn-discord {
       width: 100%;
       background: var(--discord-blue);
@@ -371,11 +339,62 @@
       justify-content: center;
       gap: 10px;
       text-decoration: none;
-      transition: background 0.2s;
     }
 
-    .btn-discord:hover {
-      background: var(--discord-blue-hover);
+    /* Logged In Discord Profile UI */
+    .profile-container {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+      gap: 12px;
+    }
+
+    .user-avatar {
+      width: 85px;
+      height: 85px;
+      border-radius: 50%;
+      border: 3px solid var(--discord-blue);
+      box-shadow: 0 0 20px rgba(88, 101, 242, 0.5);
+      object-fit: cover;
+    }
+
+    .user-name {
+      font-size: 1.3rem;
+      font-weight: 700;
+    }
+
+    .discord-badge {
+      background: rgba(88, 101, 242, 0.15);
+      border: 1px solid rgba(88, 101, 242, 0.3);
+      color: #7289da;
+      padding: 4px 12px;
+      border-radius: 20px;
+      font-size: 0.8rem;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .btn-logout {
+      width: 100%;
+      background: #2a181c;
+      color: var(--primary-red);
+      border: 1px solid var(--border-color);
+      padding: 10px;
+      border-radius: 10px;
+      font-size: 0.9rem;
+      font-weight: 600;
+      cursor: pointer;
+      margin-top: 15px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+    }
+
+    .btn-logout:hover {
+      background: rgba(255, 42, 75, 0.1);
     }
   </style>
 </head>
@@ -391,7 +410,7 @@
       <i data-lucide="home" style="width:16px; height:16px;"></i> หน้าหลัก
     </div>
     <div class="nav-buttons">
-      <button class="btn-login-nav" onclick="openModal()">
+      <button class="btn-login-nav" id="navLoginBtn" onclick="openModal()">
         <i data-lucide="log-in" style="width:16px; height:16px;"></i> เข้าสู่ระบบ
       </button>
     </div>
@@ -409,56 +428,74 @@
     </button>
   </main>
 
-  <!-- Login Modal Pop-up -->
+  <!-- Modal Overlay -->
   <div class="modal-overlay" id="authModal">
     <div class="auth-card">
       <span class="close-btn" onclick="closeModal()"><i data-lucide="x"></i></span>
 
-      <div class="card-header">
-        <div class="card-logo-icon">J</div>
-        <div class="card-title">J Community</div>
+      <!-- 1. หน้าต่างฟอร์มล็อกอินปกติ (Default) -->
+      <div id="loginView">
+        <div class="card-header">
+          <div class="card-logo-icon">J</div>
+          <div class="card-title">J Community</div>
+        </div>
+
+        <form onsubmit="event.preventDefault();">
+          <div class="form-group">
+            <label>ชื่ออีเมลย่อของคุณ</label>
+            <div class="input-wrapper">
+              <i data-lucide="mail" class="input-icon"></i>
+              <input type="text" class="form-input" placeholder="you@example.com" required>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label>รหัสผ่าน</label>
+            <div class="input-wrapper">
+              <i data-lucide="lock" class="input-icon"></i>
+              <input type="password" class="form-input" placeholder="อย่างน้อย 6 ตัวอักษร" required>
+            </div>
+          </div>
+
+          <button type="submit" class="btn-submit">
+            <i data-lucide="log-in" style="width:18px; height:18px;"></i> เข้าสู่ระบบ
+          </button>
+        </form>
+
+        <div class="divider">
+          <span>หรือ</span>
+        </div>
+
+        <a href="https://discord.com/oauth2/authorize?client_id=1507932932466282516&response_type=code&redirect_uri=https%3A%2F%2Fsk-mz85xpjrz-thanaduangnamo-sketchs-projects.vercel.app%2F&scope=identify" class="btn-discord">
+          <i data-lucide="message-square" style="width:18px; height:18px;"></i> เข้าสู่ระบบด้วย Discord
+        </a>
       </div>
 
-      <!-- Login Form -->
-      <form id="authForm" onsubmit="event.preventDefault();">
-        <div class="form-group">
-          <label>ชื่ออีเมลย่อของคุณ</label>
-          <div class="input-wrapper">
-            <i data-lucide="mail" class="input-icon"></i>
-            <input type="text" class="form-input" placeholder="you@example.com" required>
+      <!-- 2. หน้าต่างโปรไฟล์เมื่อล็อกอิน Discord สำเร็จ -->
+      <div id="profileView" style="display: none;">
+        <div class="profile-container">
+          <img id="discordAvatar" class="user-avatar" src="" alt="Discord Avatar">
+          <div class="user-name" id="discordUsername">Username</div>
+          <div class="discord-badge">
+            <i data-lucide="check-circle" style="width:14px; height:14px;"></i> เชื่อมต่อ Discord แล้ว
           </div>
         </div>
 
-        <div class="form-group">
-          <label>รหัสผ่าน</label>
-          <div class="input-wrapper">
-            <i data-lucide="lock" class="input-icon"></i>
-            <input type="password" class="form-input" placeholder="อย่างน้อย 6 ตัวอักษร" required>
-          </div>
-        </div>
-
-        <button type="submit" class="btn-submit">
-          <i data-lucide="log-in" style="width:18px; height:18px;"></i> เข้าสู่ระบบ
+        <button class="btn-logout" onclick="logoutDiscord()">
+          <i data-lucide="log-out" style="width:16px; height:16px;"></i> ออกจากระบบ
         </button>
-      </form>
-
-      <div class="divider">
-        <span>หรือ</span>
       </div>
-
-      <!-- Discord OAuth Button -->
-      <a href="https://discord.com/oauth2/authorize?client_id=1507932932466282516&response_type=code&redirect_uri=https%3A%2F%2Fsk-mz85xpjrz-thanaduangnamo-sketchs-projects.vercel.app%2F&scope=identify" class="btn-discord">
-        <i data-lucide="message-square" style="width:18px; height:18px;"></i> เข้าสู่ระบบด้วย Discord
-      </a>
 
     </div>
   </div>
 
   <script>
-    // Initialize Lucide Icons
     lucide.createIcons();
 
     const modal = document.getElementById('authModal');
+    const loginView = document.getElementById('loginView');
+    const profileView = document.getElementById('profileView');
+    const navLoginBtn = document.getElementById('navLoginBtn');
 
     function openModal() {
       modal.classList.add('active');
@@ -468,10 +505,40 @@
       modal.classList.remove('active');
     }
 
-    // Close modal when clicking on dark overlay outside
     modal.addEventListener('click', (e) => {
       if (e.target === modal) closeModal();
     });
+
+    // จำลอง/ดึงข้อมูลการล็อกอินจาก Discord OAuth2
+    function checkDiscordLogin() {
+      const urlParams = new URLSearchParams(window.location.search);
+      const code = urlParams.get('code');
+
+      // ตรวจสอบว่ามีการส่ง Code กลับมาจาก Discord หรือไม่
+      if (code || localStorage.getItem('discord_logged_in') === 'true') {
+        localStorage.setItem('discord_logged_in', 'true');
+        
+        // แสดง View โปรไฟล์ Discord
+        loginView.style.display = 'none';
+        profileView.style.display = 'block';
+
+        // ตั้งค่ารูปและชื่อผู้ใช้ (จำลองตัวอย่างข้อมูลที่ดึงได้จาก Discord)
+        document.getElementById('discordAvatar').src = 'https://cdn.discordapp.com/embed/avatars/0.png';
+        document.getElementById('discordUsername').innerText = 'J Community User';
+        
+        // เปลี่ยนปุ่มบน Navbar
+        navLoginBtn.innerHTML = `<i data-lucide="user" style="width:16px; height:16px;"></i> โปรไฟล์`;
+        lucide.createIcons();
+      }
+    }
+
+    function logoutDiscord() {
+      localStorage.removeItem('discord_logged_in');
+      window.location.href = window.location.pathname; // Reload หน้าเว็บกลับสู่ค่าเริ่มต้น
+    }
+
+    // เรียกใช้ฟังก์ชันตรวจสอบตอนโหลดหน้าเว็บ
+    checkDiscordLogin();
   </script>
 </body>
 </html>
