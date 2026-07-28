@@ -62,7 +62,7 @@
       z-index: 0;
     }
 
-    /* Navbar */
+    /* Navbar Header */
     header {
       position: relative;
       z-index: 10;
@@ -73,6 +73,13 @@
       background: rgba(8, 3, 10, 0.85);
       backdrop-filter: blur(10px);
       border-bottom: 1px solid var(--border-color);
+    }
+
+    /* รวม โลโก้ + เมนู ให้มาอยู่ชิดกันด้านซ้าย */
+    .nav-left-group {
+      display: flex;
+      align-items: center;
+      gap: 20px; /* ระยะห่างระหว่างชื่อร้านกับแถบเมนู */
     }
 
     .logo {
@@ -98,7 +105,7 @@
     .nav-links {
       display: flex;
       align-items: center;
-      gap: 16px;
+      gap: 14px; /* ระยะห่างระหว่างปุ่มเมนู */
     }
 
     .nav-item {
@@ -118,9 +125,9 @@
       background: rgba(168, 85, 247, 0.15);
       border: 1px solid rgba(168, 85, 247, 0.4);
       color: var(--primary-purple);
-      padding: 7px 16px;
+      padding: 6px 14px;
       border-radius: 20px;
-      font-size: 0.9rem;
+      font-size: 0.85rem;
       font-weight: 600;
       cursor: pointer;
       display: flex;
@@ -544,24 +551,27 @@
 </head>
 <body>
 
-  <!-- Navbar -->
+  <!-- Navbar Header -->
   <header>
-    <div class="logo">
-      <div class="logo-icon">J</div>
-      <span>J Community</span>
+    <!-- กลุ่มชื่อร้าน + แถบเมนู (อยู่ชิดกันทางซ้าย) -->
+    <div class="nav-left-group">
+      <div class="logo">
+        <div class="logo-icon">J</div>
+        <span>J Community</span>
+      </div>
+
+      <div class="nav-links">
+        <a class="nav-item active" href="#"><i data-lucide="home" style="width:16px;"></i> หน้าหลัก</a>
+        <a class="nav-item" href="#shopSection"><i data-lucide="shopping-bag" style="width:16px;"></i> ร้านค้า</a>
+        <a class="nav-item" href="#" onclick="openLeaderboardModal()"><i data-lucide="trophy" style="width:16px; color: var(--gold-color);"></i> จัดอันดับ</a>
+        
+        <button class="btn-topup-nav" onclick="openTopupModal()">
+          <i data-lucide="wallet" style="width:16px;"></i> เติมเงิน
+        </button>
+      </div>
     </div>
 
-    <div class="nav-links">
-      <a class="nav-item active" href="#"><i data-lucide="home" style="width:16px;"></i> หน้าหลัก</a>
-      <a class="nav-item" href="#shopSection"><i data-lucide="shopping-bag" style="width:16px;"></i> ร้านค้า</a>
-      <a class="nav-item" href="#" onclick="openLeaderboardModal()"><i data-lucide="trophy" style="width:16px; color: var(--gold-color);"></i> จัดอันดับ</a>
-      
-      <button class="btn-topup-nav" onclick="openTopupModal()">
-        <i data-lucide="wallet" style="width:16px;"></i> เติมเงิน
-      </button>
-    </div>
-
-    <!-- โปรไฟล์ / ล็อกอิน -->
+    <!-- โปรไฟล์ / ปุ่มเข้าสู่ระบบ (อยู่ทางขวาสุด) -->
     <div id="authNavZone">
       <a id="navLoginBtn" href="https://discord.com/oauth2/authorize?client_id=1507932932466282516&response_type=token&redirect_uri=https%3A%2F%2Fsk-six-beryl.vercel.app%2F&scope=identify" class="btn-login-discord">
         <i data-lucide="message-square" style="width:16px;"></i> เข้าสู่ระบบด้วย Discord
