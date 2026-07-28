@@ -92,6 +92,7 @@
       font-size: 1.2rem;
       text-decoration: none;
       color: #fff;
+      cursor: pointer;
     }
 
     .logo-img {
@@ -437,12 +438,13 @@
   <!-- Navbar Header -->
   <header>
     <div class="nav-left-group">
-      <a href="index.html" class="logo">
+      <!-- โลโก้: กดแล้ววาร์ปไปหน้าหลัก -->
+      <div class="logo" onclick="goToHome()">
         <img class="logo-img" src="https://media.discordapp.net/attachments/1530928529657827411/1531541817697370213/ChatGPT_Image_26_.._2569_11_43_34.png" alt="Logo">
         <span>J Community</span>
-      </a>
+      </div>
 
-      <!-- 🎨 ปุ่มเปลี่ยนธีมสี (ทำงานทันทีเมื่อคลิก) -->
+      <!-- 🎨 ปุ่มเปลี่ยนธีมสี -->
       <div class="theme-picker-bar">
         <div class="color-dot dot-purple active" onclick="changeTheme('purple')" title="สีม่วง"></div>
         <div class="color-dot dot-blue" onclick="changeTheme('blue')" title="สีฟ้า"></div>
@@ -451,11 +453,11 @@
         <div class="color-dot dot-orange" onclick="changeTheme('orange')" title="สีส้ม"></div>
       </div>
 
-      <!-- ปุ่มเมนูหลัก (เชื่อมหน้า index.html) -->
+      <!-- ปุ่มเมนูหลัก (ใช้ระบบ JS วาร์ปย้ายหน้าแน่นอน) -->
       <div class="nav-links">
-        <a class="nav-item" href="index.html"><i data-lucide="home" style="width:16px;"></i> หน้าหลัก</a>
-        <a class="nav-item" href="index.html#shopSection"><i data-lucide="shopping-bag" style="width:16px;"></i> ร้านค้า</a>
-        <a class="nav-item" href="javascript:void(0)" onclick="openLeaderboardModal()"><i data-lucide="trophy" style="width:16px; color: var(--gold-color);"></i> จัดอันดับ</a>
+        <span class="nav-item" onclick="goToHome()"><i data-lucide="home" style="width:16px;"></i> หน้าหลัก</span>
+        <span class="nav-item" onclick="goToShop()"><i data-lucide="shopping-bag" style="width:16px;"></i> ร้านค้า</span>
+        <span class="nav-item" onclick="openLeaderboardModal()"><i data-lucide="trophy" style="width:16px; color: var(--gold-color);"></i> จัดอันดับ</span>
         
         <div class="btn-topup-nav" onclick="window.location.reload();">
           <i data-lucide="wallet" style="width:16px;"></i> เติมเงิน
@@ -563,7 +565,16 @@
     // สร้าง Icon
     lucide.createIcons();
 
-    // 1. ระบบจัดการธีมสี (ทำงานทันที)
+    // 🚀 ฟังก์ชันวาร์ปย้ายหน้าแน่นอน
+    function goToHome() {
+      window.location.href = 'index.html';
+    }
+
+    function goToShop() {
+      window.location.href = 'index.html#shopSection';
+    }
+
+    // 1. ระบบจัดการธีมสี
     const themePalettes = {
       purple: { bgDark: "#08030a", cardBg: "#110a17", cardInner: "#180e21", primary: "#a855f7", primaryHover: "#9333ea", glow: "rgba(168, 85, 247, 0.4)", border: "#281838" },
       blue:   { bgDark: "#030a10", cardBg: "#0a131f", cardInner: "#0f1c2e", primary: "#00b4d8", primaryHover: "#0077b6", glow: "rgba(0, 180, 216, 0.4)",  border: "#122a47" },
@@ -659,7 +670,6 @@
         document.getElementById('navLoginBtn').style.display = 'none';
         document.getElementById('navProfileZone').style.display = 'flex';
 
-        // บันทึกโปรไฟล์ลงเครื่องไว้สำหรับระบบ Leaderboard
         localStorage.setItem(`user_profile_${currentUserId}`, JSON.stringify({
           name: userNameText,
           avatar: avatarUrl
@@ -673,7 +683,6 @@
       });
     }
 
-    // ปุ่มออกจากระบบ
     function logoutDiscord() {
       localStorage.removeItem('discord_access_token');
       isLoggedIn = false;
@@ -682,7 +691,7 @@
       document.getElementById('navProfileZone').style.display = 'none';
     }
 
-    // 4. ระบบเปิด-ปิด Leaderboard Modal
+    // 4. ระบบ Leaderboard
     const leaderboardModal = document.getElementById('leaderboardModal');
     function openLeaderboardModal() {
       renderLeaderboard();
@@ -819,7 +828,6 @@
       }, 1000);
     }
 
-    // เริ่มต้นเช็กการล็อกอินทันทีที่โหลดหน้าเว็บ
     window.addEventListener('DOMContentLoaded', checkDiscordLogin);
   </script>
 </body>
