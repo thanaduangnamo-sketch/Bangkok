@@ -235,7 +235,7 @@
     /* Hero Section */
     .hero-container {
       text-align: center;
-      padding: 20px 0 40px;
+      padding: 20px 0 30px;
     }
 
     .badge {
@@ -265,7 +265,7 @@
       margin-bottom: 20px;
     }
 
-    /* Shop Section (ร้านค้า) */
+    /* Shop Section Header */
     .shop-section-title {
       font-size: 1.5rem;
       font-weight: 700;
@@ -277,81 +277,43 @@
       padding-bottom: 10px;
     }
 
-    .products-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
-      gap: 20px;
-      margin-bottom: 40px;
-    }
-
-    .product-card {
+    /* กล่องแจ้งเตือนสินค้ายังไม่ลง */
+    .empty-stock-card {
       background: var(--card-bg);
-      border: 1px solid var(--border-color);
-      border-radius: 16px;
-      padding: 20px;
+      border: 1px dashed var(--border-color);
+      border-radius: 20px;
+      padding: 60px 20px;
+      text-align: center;
       display: flex;
       flex-direction: column;
-      justify-content: space-between;
-      transition: transform 0.2s, border-color 0.2s;
+      align-items: center;
+      justify-content: center;
+      margin-top: 10px;
     }
 
-    .product-card:hover {
-      transform: translateY(-4px);
-      border-color: rgba(255, 42, 75, 0.4);
-    }
-
-    .product-icon {
-      width: 50px;
-      height: 50px;
+    .empty-icon-box {
+      width: 70px;
+      height: 70px;
       background: rgba(255, 42, 75, 0.1);
-      border-radius: 12px;
+      border-radius: 50%;
       display: flex;
       align-items: center;
       justify-content: center;
       color: var(--primary-red);
-      margin-bottom: 15px;
+      margin-bottom: 16px;
     }
 
-    .product-title {
-      font-size: 1.1rem;
+    .empty-title {
+      font-size: 1.3rem;
       font-weight: 700;
-      margin-bottom: 6px;
+      color: #fff;
+      margin-bottom: 8px;
     }
 
-    .product-desc {
-      font-size: 0.85rem;
+    .empty-desc {
+      font-size: 0.95rem;
       color: var(--text-muted);
-      margin-bottom: 15px;
     }
-
-    .product-bottom {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-top: 10px;
-    }
-
-    .product-price {
-      font-size: 1.2rem;
-      font-weight: 700;
-      color: #4cd964;
-    }
-
-    .btn-buy {
-      background: var(--primary-red);
-      color: white;
-      border: none;
-      padding: 8px 16px;
-      border-radius: 8px;
-      font-weight: 600;
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      gap: 6px;
-      transition: background 0.2s;
-    }
-
-    .btn-buy:hover { background: var(--primary-red-hover); }
 
     /* Topup Modal Window */
     .modal-overlay {
@@ -505,7 +467,7 @@
 
     <div class="nav-links">
       <a class="nav-item active" href="#"><i data-lucide="home" style="width:16px;"></i> หน้าหลัก</a>
-      <!-- เพิ่มแถบบน: ร้านค้า -->
+      <!-- แถบบน: ร้านค้า -->
       <a class="nav-item" href="#shopSection"><i data-lucide="shopping-bag" style="width:16px;"></i> ร้านค้า</a>
       
       <!-- ปุ่มเติมเงิน -->
@@ -545,60 +507,22 @@
         <i data-lucide="sparkles" style="width:14px;"></i> ยินดีต้อนรับ
       </div>
       <h1 class="hero-title">J Community <span>Shop</span></h1>
-      <p class="hero-subtitle" id="heroSubtitle">ร้านค้าสินค้าดิจิทัล — เข้าสู่ระบบด้วย Discord เพื่อเริ่มสั่งซื้อสินค้า</p>
+      <p class="hero-subtitle" id="heroSubtitle">ร้านค้าสินค้าดิจิทัล — เข้าสู่ระบบด้วย Discord เพื่อเริ่มใช้งาน</p>
     </section>
 
-    <!-- Shop Section (ร้านค้าใช้งานได้จริง) -->
+    <!-- Shop Section (แจ้งสต็อกยังไม่ลง) -->
     <section id="shopSection">
       <div class="shop-section-title">
-        <i data-lucide="shopping-cart" style="color: var(--primary-red);"></i> ร้านค้าสินค้าพร้อมส่ง
+        <i data-lucide="shopping-cart" style="color: var(--primary-red);"></i> ร้านค้าสินค้า
       </div>
 
-      <div class="products-grid">
-        <!-- สินค้าชิ้นที่ 1 -->
-        <div class="product-card">
-          <div>
-            <div class="product-icon"><i data-lucide="shield-check" style="width:28px; height:28px;"></i></div>
-            <div class="product-title">VIP Discord Role</div>
-            <div class="product-desc">ยศพิเศษใน Discord Server พร้อมสิทธิพิเศษในการพิมพ์ช่องยศ</div>
-          </div>
-          <div class="product-bottom">
-            <div class="product-price">20 ฿</div>
-            <button class="btn-buy" onclick="buyProduct('VIP Discord Role', 20)">
-              <i data-lucide="shopping-bag" style="width:16px;"></i> ซื้อเลย
-            </button>
-          </div>
+      <!-- ส่วนแสดงว่าสินค้ายังไม่ลงสต็อก -->
+      <div class="empty-stock-card">
+        <div class="empty-icon-box">
+          <i data-lucide="package-x" style="width: 36px; height: 36px;"></i>
         </div>
-
-        <!-- สินค้าชิ้นที่ 2 -->
-        <div class="product-card">
-          <div>
-            <div class="product-icon"><i data-lucide="gem" style="width:28px; height:28px;"></i></div>
-            <div class="product-title">Roblox Script Pass</div>
-            <div class="product-desc">สคริปต์พรีเมียม ถาวร อัปเดตฟรีตลอดอายุการใช้งาน</div>
-          </div>
-          <div class="product-bottom">
-            <div class="product-price">50 ฿</div>
-            <button class="btn-buy" onclick="buyProduct('Roblox Script Pass', 50)">
-              <i data-lucide="shopping-bag" style="width:16px;"></i> ซื้อเลย
-            </button>
-          </div>
-        </div>
-
-        <!-- สินค้าชิ้นที่ 3 -->
-        <div class="product-card">
-          <div>
-            <div class="product-icon"><i data-lucide="zap" style="width:28px; height:28px;"></i></div>
-            <div class="product-title">Nitro Boost 1 เดือน</div>
-            <div class="product-desc">Discord Nitro แบบ Boost 2 ครั้ง ปลดล็อกส่งรูปขนาดใหญ่</div>
-          </div>
-          <div class="product-bottom">
-            <div class="product-price">120 ฿</div>
-            <button class="btn-buy" onclick="buyProduct('Nitro Boost 1 เดือน', 120)">
-              <i data-lucide="shopping-bag" style="width:16px;"></i> ซื้อเลย
-            </button>
-          </div>
-        </div>
+        <div class="empty-title">สินค้ายังไม่ลงสต็อก</div>
+        <div class="empty-desc">ขณะนี้ยังไม่มีรายการสินค้าจำหน่าย กรุณากลับมาเช็กใหม่อีกครั้งในภายหลังครับ</div>
       </div>
     </section>
   </div>
@@ -660,7 +584,7 @@
         e.preventDefault();
         return false;
       }
-      // ห้ามกด Ctrl+Shift+I, Ctrl+Shift+J, Ctrl+Shift+C (Chrome/Edge DevTools)
+      // ห้ามกด Ctrl+Shift+I, Ctrl+Shift+J, Ctrl+Shift+C
       if (e.ctrlKey && e.shiftKey && (e.key === 'I' || e.key === 'i' || e.key === 'J' || e.key === 'j' || e.key === 'C' || e.key === 'c')) {
         e.preventDefault();
         return false;
@@ -673,7 +597,7 @@
     });
 
     // ==========================================
-    // 🛒 2. ระบบร้านค้า และ การซื้อสินค้า
+    // 💳 2. ระบบเติมเงิน & Discord Auth
     // ==========================================
     const DISCORD_LOGIN_URL = "https://discord.com/oauth2/authorize?client_id=1507932932466282516&response_type=token&redirect_uri=https%3A%2F%2Fsk-six-beryl.vercel.app%2F&scope=identify";
 
@@ -685,29 +609,6 @@
       document.getElementById('userBalanceText').innerText = currentBalance.toLocaleString();
     }
 
-    // ฟังก์ชันซื้อสินค้า
-    function buyProduct(productName, price) {
-      if (!isLoggedIn) {
-        alert('❌ กรุณาเข้าสู่ระบบด้วย Discord ก่อนทำการสั่งซื้อครับ!');
-        window.location.href = DISCORD_LOGIN_URL;
-        return;
-      }
-
-      if (currentBalance < price) {
-        alert(`❌ ยอดเงินของคุณไม่พอสำหรับซื้อ "${productName}" (ราคา ${price} บาท)\nกรุณาเติมเงินก่อนครับ`);
-        openTopupModal();
-        return;
-      }
-
-      if (confirm(`คุณต้องการยืนยันการสั่งซื้อ "${productName}" ในราคา ${price} บาท หรือไม่?`)) {
-        updateBalanceDisplay(currentBalance - price);
-        alert(`🎉 สั่งซื้อสำเร็จ! คุณได้รับ "${productName}" เรียบร้อยแล้ว`);
-      }
-    }
-
-    // ==========================================
-    // 💳 3. ระบบเติมเงิน & Discord Auth
-    // ==========================================
     const topupModal = document.getElementById('topupModal');
     function openTopupModal() {
       if (!isLoggedIn) {
@@ -803,7 +704,7 @@
           document.getElementById('userName').innerText = userData.global_name || userData.username;
 
           updateBalanceDisplay(0);
-          heroSubtitle.innerText = `ยินดีต้อนรับคุณ ${userData.global_name || userData.username} เลือกซื้อสินค้าด้านล่างได้เลยครับ!`;
+          heroSubtitle.innerText = `ยินดีต้อนรับคุณ ${userData.global_name || userData.username} เข้าสู่ระบบเรียบร้อยแล้ว!`;
 
           lucide.createIcons();
 
