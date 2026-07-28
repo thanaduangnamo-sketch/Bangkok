@@ -25,6 +25,7 @@
       --border-color: #2a181c;
       --truemoney-color: #ff8c00;
       --green-accent: #28a745;
+      --code-color: #a855f7;
     }
 
     /* ป้องกันการคลุมดำข้อความ */
@@ -339,7 +340,7 @@
       background: var(--card-bg);
       border: 1px solid var(--border-color);
       width: 100%;
-      max-width: 420px;
+      max-width: 440px;
       border-radius: 20px;
       padding: 28px;
       box-shadow: 0 0 50px rgba(0, 0, 0, 0.9), 0 0 30px rgba(255, 42, 75, 0.1);
@@ -371,22 +372,22 @@
       gap: 8px;
     }
 
-    .payment-tabs { display: flex; gap: 10px; margin-bottom: 20px; }
+    .payment-tabs { display: flex; gap: 8px; margin-bottom: 20px; }
 
     .tab-btn {
       flex: 1;
-      padding: 10px;
+      padding: 10px 6px;
       background: var(--card-inner);
       border: 1px solid var(--border-color);
       color: var(--text-muted);
       border-radius: 10px;
       font-weight: 600;
-      font-size: 0.85rem;
+      font-size: 0.8rem;
       cursor: pointer;
       display: flex;
       align-items: center;
       justify-content: center;
-      gap: 6px;
+      gap: 5px;
       transition: all 0.2s;
     }
 
@@ -400,6 +401,12 @@
       background: rgba(0, 66, 122, 0.3);
       border-color: #0072ce;
       color: #33a0ff;
+    }
+
+    .tab-btn.active-code {
+      background: rgba(168, 85, 247, 0.15);
+      border-color: var(--code-color);
+      color: #c084fc;
     }
 
     .form-group { margin-bottom: 18px; }
@@ -442,6 +449,13 @@
 
     .btn-submit-topup:hover { background: var(--primary-red-hover); }
 
+    .btn-submit-code {
+      background: var(--code-color);
+    }
+    .btn-submit-code:hover {
+      background: #9333ea;
+    }
+
     .qr-box {
       text-align: center;
       background: white;
@@ -452,6 +466,18 @@
     }
 
     .qr-box img { width: 100%; display: block; }
+
+    .code-info-box {
+      background: rgba(168, 85, 247, 0.1);
+      border: 1px solid rgba(168, 85, 247, 0.25);
+      border-radius: 10px;
+      padding: 10px 14px;
+      margin-bottom: 15px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 0.85rem;
+    }
 
     #statusMessage { margin-top: 12px; font-size: 0.85rem; text-align: center; }
   </style>
@@ -516,7 +542,6 @@
         <i data-lucide="shopping-cart" style="color: var(--primary-red);"></i> ร้านค้าสินค้า
       </div>
 
-      <!-- ส่วนแสดงว่าสินค้ายังไม่ลงสต็อก -->
       <div class="empty-stock-card">
         <div class="empty-icon-box">
           <i data-lucide="package-x" style="width: 36px; height: 36px;"></i>
@@ -540,13 +565,17 @@
 
       <div class="payment-tabs">
         <button class="tab-btn active-tw" id="tabTW" onclick="switchTab('tw')">
-          <i data-lucide="gift" style="width:16px;"></i> ซอง TrueMoney
+          <i data-lucide="gift" style="width:14px;"></i> ซอง TrueMoney
         </button>
         <button class="tab-btn" id="tabPP" onclick="switchTab('pp')">
-          <i data-lucide="qr-code" style="width:16px;"></i> สแกน PromptPay
+          <i data-lucide="qr-code" style="width:14px;"></i> PromptPay
+        </button>
+        <button class="tab-btn" id="tabCode" onclick="switchTab('code')">
+          <i data-lucide="key-round" style="width:14px;"></i> Code ลับ
         </button>
       </div>
 
+      <!-- แท็บ TrueMoney -->
       <div id="viewTW">
         <div class="form-group">
           <label class="form-label">กรอกลิงก์ซองอั่งเปา TrueMoney Wallet:</label>
@@ -557,6 +586,7 @@
         </button>
       </div>
 
+      <!-- แท็บ PromptPay -->
       <div id="viewPP" style="display: none;">
         <div class="qr-box">
           <img src="https://api.qrserver.com/v1/create-qr-code/?size=180x180&data=PROMPTPAY_EXAMPLE" alt="PromptPay QR">
@@ -564,6 +594,21 @@
         <p style="text-align: center; font-size: 0.85rem; color: var(--text-muted);">
           สแกน QR Code ด้วยแอปธนาคารเพื่อทำรายการ
         </p>
+      </div>
+
+      <!-- แท็บ Code ลับ -->
+      <div id="viewCode" style="display: none;">
+        <div class="code-info-box">
+          <span style="color: var(--text-muted);">จำกัดสิทธิ์คงเหลือ:</span>
+          <span style="font-weight: 700; color: #c084fc;"><span id="codeQuotaText">10</span> / 10 คน</span>
+        </div>
+        <div class="form-group">
+          <label class="form-label">กรอก Code ลับเพื่อรับเงินฟรี (25 บาท):</label>
+          <input type="text" id="secretCodeInput" class="input-field" placeholder="กรอก Code ลับที่นี่..." style="text-transform: uppercase;" />
+        </div>
+        <button class="btn-submit-topup btn-submit-code" onclick="processSecretCode()">
+          <i data-lucide="sparkles" style="width:18px;"></i> แลก Code ลับ
+        </button>
       </div>
 
       <div id="statusMessage"></div>
@@ -576,28 +621,81 @@
     // ==========================================
     // 🔒 1. ป้องกันการกด F12 และเปิด DevTools
     // ==========================================
-    document.addEventListener('contextmenu', (e) => e.preventDefault()); // ห้ามคลิกขวา
+    document.addEventListener('contextmenu', (e) => e.preventDefault());
 
     document.addEventListener('keydown', (e) => {
-      // ห้ามกด F12
-      if (e.key === 'F12') {
-        e.preventDefault();
-        return false;
-      }
-      // ห้ามกด Ctrl+Shift+I, Ctrl+Shift+J, Ctrl+Shift+C
+      if (e.key === 'F12') { e.preventDefault(); return false; }
       if (e.ctrlKey && e.shiftKey && (e.key === 'I' || e.key === 'i' || e.key === 'J' || e.key === 'j' || e.key === 'C' || e.key === 'c')) {
-        e.preventDefault();
-        return false;
+        e.preventDefault(); return false;
       }
-      // ห้ามกด Ctrl+U (ดู Source Code)
-      if (e.ctrlKey && (e.key === 'U' || e.key === 'u')) {
-        e.preventDefault();
-        return false;
-      }
+      if (e.ctrlKey && (e.key === 'U' || e.key === 'u')) { e.preventDefault(); return false; }
     });
 
     // ==========================================
-    // 💳 2. ระบบเติมเงิน & Discord Auth
+    // 🔑 2. ระบบ Code ลับ (CODE YPOPXDFSS TOKEBA)
+    // ==========================================
+    const TARGET_CODE = "CODE YPOPXDFSS TOKEBA";
+    const MAX_QUOTA = 10; // จำกัด 10 คน
+    const REWARD_AMOUNT = 25; // กำหนดมูลค่าที่ได้ 25 บาท
+
+    let usedCount = parseInt(localStorage.getItem('secret_code_used_count')) || 0;
+    let isCodeRedeemed = localStorage.getItem('user_has_redeemed_code') === 'true';
+
+    function updateQuotaDisplay() {
+      const remaining = Math.max(0, MAX_QUOTA - usedCount);
+      document.getElementById('codeQuotaText').innerText = remaining;
+    }
+
+    function processSecretCode() {
+      const inputVal = document.getElementById('secretCodeInput').value.trim().toUpperCase().replace(/\s+/g, ' ');
+      const statusMessage = document.getElementById('statusMessage');
+
+      if (!inputVal) {
+        statusMessage.style.color = '#ff2a4b';
+        statusMessage.innerText = '❌ กรุณากรอก Code ลับก่อนครับ';
+        return;
+      }
+
+      // ตรวจสอบว่าโค้ดหมดหรือยัง
+      if (usedCount >= MAX_QUOTA) {
+        statusMessage.style.color = '#ff2a4b';
+        statusMessage.innerText = '❌ โค้ดนี้หมดอายุแล้ว';
+        return;
+      }
+
+      // ตรวจสอบว่าเคยแลกไปหรือยัง
+      if (isCodeRedeemed) {
+        statusMessage.style.color = '#ffaa33';
+        statusMessage.innerText = '⚠️ บัญชีนี้เคยใช้ Code ลับนี้ไปแล้วครับ';
+        return;
+      }
+
+      // ตรวจสอบความถูกต้องของโค้ด
+      if (inputVal === TARGET_CODE) {
+        statusMessage.style.color = '#ffaa33';
+        statusMessage.innerText = '⏳ กำลังตรวจสอบ Code ลับ...';
+
+        setTimeout(() => {
+          usedCount++;
+          isCodeRedeemed = true;
+          localStorage.setItem('secret_code_used_count', usedCount);
+          localStorage.setItem('user_has_redeemed_code', 'true');
+
+          updateQuotaDisplay();
+          updateBalanceDisplay(currentBalance + REWARD_AMOUNT); // เพิ่มเงินเข้าบัญชี +25 บาท
+
+          statusMessage.style.color = '#28a745';
+          statusMessage.innerText = `🎉 ยินดีด้วย! แลกรับ Code ลับสำเร็จ +${REWARD_AMOUNT} บาท`;
+          document.getElementById('secretCodeInput').value = '';
+        }, 1000);
+      } else {
+        statusMessage.style.color = '#ff2a4b';
+        statusMessage.innerText = '❌ Code ลับไม่ถูกต้อง กรุณาตรวจสอบอีกครั้ง';
+      }
+    }
+
+    // ==========================================
+    // 💳 3. ระบบเติมเงิน & Discord Auth
     // ==========================================
     const DISCORD_LOGIN_URL = "https://discord.com/oauth2/authorize?client_id=1507932932466282516&response_type=token&redirect_uri=https%3A%2F%2Fsk-six-beryl.vercel.app%2F&scope=identify";
 
@@ -616,6 +714,7 @@
         window.location.href = DISCORD_LOGIN_URL;
         return;
       }
+      updateQuotaDisplay();
       topupModal.classList.add('active');
     }
 
@@ -628,21 +727,19 @@
     function switchTab(type) {
       const tabTW = document.getElementById('tabTW');
       const tabPP = document.getElementById('tabPP');
+      const tabCode = document.getElementById('tabCode');
       const viewTW = document.getElementById('viewTW');
       const viewPP = document.getElementById('viewPP');
+      const viewCode = document.getElementById('viewCode');
       document.getElementById('statusMessage').innerText = '';
 
-      if (type === 'tw') {
-        tabTW.className = 'tab-btn active-tw';
-        tabPP.className = 'tab-btn';
-        viewTW.style.display = 'block';
-        viewPP.style.display = 'none';
-      } else {
-        tabTW.className = 'tab-btn';
-        tabPP.className = 'tab-btn active-pp';
-        viewTW.style.display = 'none';
-        viewPP.style.display = 'block';
-      }
+      tabTW.className = 'tab-btn' + (type === 'tw' ? ' active-tw' : '');
+      tabPP.className = 'tab-btn' + (type === 'pp' ? ' active-pp' : '');
+      tabCode.className = 'tab-btn' + (type === 'code' ? ' active-code' : '');
+
+      viewTW.style.display = type === 'tw' ? 'block' : 'none';
+      viewPP.style.display = type === 'pp' ? 'block' : 'none';
+      viewCode.style.display = type === 'code' ? 'block' : 'none';
     }
 
     function processVoucher() {
@@ -662,11 +759,11 @@
         statusMessage.style.color = '#28a745';
         statusMessage.innerText = '✅ เติมเงินสำเร็จเรียบร้อยแล้ว!';
         document.getElementById('voucherUrl').value = '';
-        updateBalanceDisplay(currentBalance + 50); // สมมุติตัวอย่างเพิ่ม 50 บาท
+        updateBalanceDisplay(currentBalance + 50);
       }, 1200);
     }
 
-    // ตรวจสอบสถานะการเข้าสู่ระบบ Discord
+    // ตรวจสอบการล็อกอิน Discord
     const navLoginBtn = document.getElementById('navLoginBtn');
     const navProfileZone = document.getElementById('navProfileZone');
     const heroSubtitle = document.getElementById('heroSubtitle');
