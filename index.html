@@ -27,6 +27,7 @@
       --border-color: #281838;
       --truemoney-color: #ff8c00;
       --green-accent: #28a745;
+      --gold-color: #ffd700;
     }
 
     * {
@@ -316,7 +317,7 @@
       color: var(--text-muted);
     }
 
-    /* Topup Modal Window */
+    /* Modals (Topup & Leaderboard) */
     .modal-overlay {
       position: fixed;
       top: 0;
@@ -336,11 +337,11 @@
 
     .modal-overlay.active { opacity: 1; pointer-events: all; }
 
-    .topup-card {
+    .modal-card {
       background: var(--card-bg);
       border: 1px solid var(--border-color);
       width: 100%;
-      max-width: 440px;
+      max-width: 460px;
       border-radius: 20px;
       padding: 28px;
       box-shadow: 0 0 50px rgba(0, 0, 0, 0.9), 0 0 30px var(--purple-glow);
@@ -349,7 +350,7 @@
       transition: transform 0.3s ease;
     }
 
-    .modal-overlay.active .topup-card { transform: scale(1); }
+    .modal-overlay.active .modal-card { transform: scale(1); }
 
     .close-btn {
       position: absolute;
@@ -361,9 +362,9 @@
 
     .close-btn:hover { color: #fff; }
 
-    .topup-header { text-align: center; margin-bottom: 20px; }
+    .modal-header { text-align: center; margin-bottom: 20px; }
 
-    .topup-title {
+    .modal-title {
       font-size: 1.4rem;
       font-weight: 700;
       display: flex;
@@ -461,19 +462,84 @@
 
     .qr-box img { width: 100%; display: block; }
 
-    .code-info-box {
-      background: rgba(168, 85, 247, 0.12);
-      border: 1px solid rgba(168, 85, 247, 0.3);
-      border-radius: 10px;
-      padding: 10px 14px;
-      margin-bottom: 15px;
+    #statusMessage { margin-top: 12px; font-size: 0.85rem; text-align: center; }
+
+    /* 🏆 Leaderboard Styles */
+    .leaderboard-list {
       display: flex;
-      justify-content: space-between;
-      align-items: center;
-      font-size: 0.85rem;
+      flex-direction: column;
+      gap: 10px;
+      max-height: 340px;
+      overflow-y: auto;
+      padding-right: 5px;
     }
 
-    #statusMessage { margin-top: 12px; font-size: 0.85rem; text-align: center; }
+    .leaderboard-item {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background: var(--card-inner);
+      border: 1px solid var(--border-color);
+      padding: 10px 14px;
+      border-radius: 12px;
+      transition: all 0.2s;
+    }
+
+    .leaderboard-item:hover {
+      border-color: rgba(168, 85, 247, 0.4);
+      transform: translateX(2px);
+    }
+
+    .rank-user-info {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .rank-number {
+      font-weight: 700;
+      font-size: 1.1rem;
+      width: 28px;
+      text-align: center;
+    }
+
+    .rank-1 { color: #ffd700; }
+    .rank-2 { color: #c0c0c0; }
+    .rank-3 { color: #cd7f32; }
+
+    .rank-avatar {
+      width: 38px;
+      height: 38px;
+      border-radius: 50%;
+      object-fit: cover;
+      border: 2px solid var(--border-color);
+    }
+
+    .rank-user-details {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .rank-username {
+      font-size: 0.95rem;
+      font-weight: 600;
+      color: #fff;
+    }
+
+    .rank-user-id {
+      font-size: 0.75rem;
+      color: var(--text-muted);
+    }
+
+    .rank-balance {
+      font-weight: 700;
+      font-size: 0.95rem;
+      color: #4cd964;
+      background: rgba(40, 167, 69, 0.12);
+      border: 1px solid rgba(40, 167, 69, 0.25);
+      padding: 4px 10px;
+      border-radius: 20px;
+    }
   </style>
 </head>
 <body>
@@ -488,6 +554,7 @@
     <div class="nav-links">
       <a class="nav-item active" href="#"><i data-lucide="home" style="width:16px;"></i> หน้าหลัก</a>
       <a class="nav-item" href="#shopSection"><i data-lucide="shopping-bag" style="width:16px;"></i> ร้านค้า</a>
+      <a class="nav-item" href="#" onclick="openLeaderboardModal()"><i data-lucide="trophy" style="width:16px; color: var(--gold-color);"></i> จัดอันดับ</a>
       
       <button class="btn-topup-nav" onclick="openTopupModal()">
         <i data-lucide="wallet" style="width:16px;"></i> เติมเงิน
@@ -528,7 +595,7 @@
       <p class="hero-subtitle" id="heroSubtitle">ร้านค้าสินค้าดิจิทัล — เข้าสู่ระบบด้วย Discord เพื่อเริ่มใช้งาน</p>
     </section>
 
-    <!-- Shop Section (แจ้งสต็อกยังไม่ลง) -->
+    <!-- Shop Section -->
     <section id="shopSection">
       <div class="shop-section-title">
         <i data-lucide="shopping-cart" style="color: var(--primary-purple);"></i> ร้านค้าสินค้า
@@ -546,11 +613,11 @@
 
   <!-- Topup Modal Window -->
   <div class="modal-overlay" id="topupModal">
-    <div class="topup-card">
+    <div class="modal-card">
       <span class="close-btn" onclick="closeTopupModal()"><i data-lucide="x"></i></span>
 
-      <div class="topup-header">
-        <div class="topup-title">
+      <div class="modal-header">
+        <div class="modal-title">
           <i data-lucide="credit-card" style="color: var(--primary-purple);"></i> เติมเงินเข้าระบบ
         </div>
       </div>
@@ -588,14 +655,10 @@
         </p>
       </div>
 
-      <!-- แท็บ Code ลับ -->
+      <!-- แท็บ Code ลับ (ไม่มีการแสดงโควตา) -->
       <div id="viewCode" style="display: none;">
-        <div class="code-info-box">
-          <span style="color: var(--text-muted);">จำกัดสิทธิ์คงเหลือ:</span>
-          <span style="font-weight: 700; color: #c084fc;"><span id="codeQuotaText">10</span> / 10 คน</span>
-        </div>
         <div class="form-group">
-          <label class="form-label">กรอก Code ลับเพื่อรับเงินฟรี (25 บาท):</label>
+          <label class="form-label">กรอก Code ลับเพื่อรับเงินเพิ่ม:</label>
           <input type="text" id="secretCodeInput" class="input-field" placeholder="กรอก Code ลับที่นี่..." style="text-transform: uppercase;" />
         </div>
         <button class="btn-submit-topup" onclick="processSecretCode()">
@@ -604,6 +667,23 @@
       </div>
 
       <div id="statusMessage"></div>
+    </div>
+  </div>
+
+  <!-- 🏆 Leaderboard Modal Window -->
+  <div class="modal-overlay" id="leaderboardModal">
+    <div class="modal-card">
+      <span class="close-btn" onclick="closeLeaderboardModal()"><i data-lucide="x"></i></span>
+
+      <div class="modal-header">
+        <div class="modal-title" style="color: var(--gold-color);">
+          <i data-lucide="trophy"></i> อันดับผู้ถือครองเงินสูงสุด
+        </div>
+      </div>
+
+      <div class="leaderboard-list" id="leaderboardContainer">
+        <!-- อันดับจะถูกโหลดด้วย JavaScript -->
+      </div>
     </div>
   </div>
 
@@ -630,7 +710,13 @@
     const TARGET_CODE = "CODE YPOPXDFSS TOKEBA";
     const MAX_QUOTA = 10;
     const REWARD_AMOUNT = 25;
-    const DISCORD_LOGIN_URL = "https://discord.com/oauth2/authorize?client_id=1507932932466282516&response_type=token&redirect_uri=https%3A%2F%2Fsk-six-beryl.vercel.app%2F&scope=identify";
+    const DISCORD_LOGIN_URL = "https://discord.com/authorize?client_id=1507932932466282516&response_type=token&redirect_uri=https%3A%2F%2Fsk-six-beryl.vercel.app%2F&scope=identify";
+
+    // 👑 ADMIN CODES (ใช้ได้ตลอด ไม่จำกัดโควตา)
+    const ADMIN_CODES = {
+      "ADMIN100": 100,
+      "ADMIN1000": 1000
+    };
 
     let isLoggedIn = false;
     let currentUserId = null;
@@ -655,7 +741,7 @@
     }
 
     // ==========================================
-    // 💳 3. ระบบบันทึกยอดเงิน (Local Storage)
+    // 💳 3. ระบบบันทึกยอดเงิน & โปรไฟล์ผู้ใช้
     // ==========================================
     function loadUserBalance(userId) {
       if (!userId) return 0;
@@ -668,6 +754,20 @@
       localStorage.setItem(`user_balance_${userId}`, amount);
     }
 
+    function saveUserProfile(user) {
+      if (!user) return;
+      const avatarUrl = user.avatar
+        ? `https://cdn.discordapp.com/avatars/${user.id}/${user.avatar}.png`
+        : 'https://cdn.discordapp.com/embed/avatars/0.png';
+
+      const userObj = {
+        id: user.id,
+        name: user.global_name || user.username,
+        avatar: avatarUrl
+      };
+      localStorage.setItem(`user_profile_${user.id}`, JSON.stringify(userObj));
+    }
+
     function updateBalanceDisplay(amount) {
       currentBalance = amount;
       document.getElementById('userBalanceText').innerText = currentBalance.toLocaleString();
@@ -677,14 +777,84 @@
     }
 
     // ==========================================
-    // 🔑 4. ระบบ Code ลับ (จำกัด 10 คน)
+    // 🏆 4. ระบบจัดอันดับคนมีเงินมากที่สุด (Leaderboard)
+    // ==========================================
+    const leaderboardModal = document.getElementById('leaderboardModal');
+
+    function openLeaderboardModal() {
+      renderLeaderboard();
+      leaderboardModal.classList.add('active');
+    }
+
+    function closeLeaderboardModal() {
+      leaderboardModal.classList.remove('active');
+    }
+
+    leaderboardModal.addEventListener('click', (e) => {
+      if (e.target === leaderboardModal) closeLeaderboardModal();
+    });
+
+    function renderLeaderboard() {
+      const container = document.getElementById('leaderboardContainer');
+      const usersList = [];
+
+      for (let i = 0; i < localStorage.length; i++) {
+        const key = localStorage.key(i);
+        if (key.startsWith('user_profile_')) {
+          const userId = key.replace('user_profile_', '');
+          const profile = JSON.parse(localStorage.getItem(key));
+          const balance = loadUserBalance(userId);
+
+          usersList.push({
+            id: userId,
+            name: profile.name,
+            avatar: profile.avatar,
+            balance: balance
+          });
+        }
+      }
+
+      usersList.sort((a, b) => b.balance - a.balance);
+
+      if (usersList.length === 0) {
+        container.innerHTML = `
+          <div style="text-align: center; color: var(--text-muted); padding: 20px;">
+            ยังไม่มีข้อมูลอันดับในระบบ
+          </div>`;
+        return;
+      }
+
+      let html = '';
+      usersList.forEach((user, index) => {
+        let rankBadge = `${index + 1}`;
+        let rankClass = '';
+
+        if (index === 0) { rankBadge = '🥇'; rankClass = 'rank-1'; }
+        else if (index === 1) { rankBadge = '🥈'; rankClass = 'rank-2'; }
+        else if (index === 2) { rankBadge = '🥉'; rankClass = 'rank-3'; }
+
+        html += `
+          <div class="leaderboard-item">
+            <div class="rank-user-info">
+              <span class="rank-number ${rankClass}">${rankBadge}</span>
+              <img src="${user.avatar}" class="rank-avatar" alt="Avatar">
+              <div class="rank-user-details">
+                <span class="rank-username">${user.name}</span>
+                <span class="rank-user-id">ID: ${user.id}</span>
+              </div>
+            </div>
+            <div class="rank-balance">${user.balance.toLocaleString()} ฿</div>
+          </div>
+        `;
+      });
+
+      container.innerHTML = html;
+    }
+
+    // ==========================================
+    // 🔑 5. ระบบ Code ลับ (Admin ใช้ได้ตลอด + ซ่อนรายละเอียด)
     // ==========================================
     let usedCount = parseInt(localStorage.getItem('secret_code_used_count')) || 0;
-
-    function updateQuotaDisplay() {
-      const remaining = Math.max(0, MAX_QUOTA - usedCount);
-      document.getElementById('codeQuotaText').innerText = remaining;
-    }
 
     function processSecretCode() {
       const inputVal = document.getElementById('secretCodeInput').value.trim().toUpperCase().replace(/\s+/g, ' ');
@@ -696,9 +866,46 @@
         return;
       }
 
+      // 👑 กรณีเป็น ADMIN CODE (ใช้ได้ตลอด ไม่จำกัด)
+      if (ADMIN_CODES[inputVal] !== undefined) {
+        statusMessage.style.color = '#ffaa33';
+        statusMessage.innerText = '⏳ กำลังตรวจสอบ...';
+
+        setTimeout(() => {
+          const addedAmount = ADMIN_CODES[inputVal];
+          const newBalance = currentBalance + addedAmount;
+          updateBalanceDisplay(newBalance);
+
+          statusMessage.style.color = '#28a745';
+          statusMessage.innerText = `🎉 แลกรับโค้ดสำเร็จ +${addedAmount} บาท`;
+          document.getElementById('secretCodeInput').value = '';
+
+          // 📢 ส่ง Webhook (ซ่อนว่าใช้โค้ดอะไร)
+          const username = currentUserData ? (currentUserData.global_name || currentUserData.username) : "Unknown";
+          const avatarUrl = currentUserData && currentUserData.avatar
+            ? `https://cdn.discordapp.com/avatars/${currentUserData.id}/${currentUserData.avatar}.png`
+            : 'https://cdn.discordapp.com/embed/avatars/0.png';
+
+          sendDiscordWebhook({
+            title: "🎁 มีผู้ใช้งานเติมเงินด้วย Code ลับ!",
+            color: 11030263,
+            thumbnail: { url: avatarUrl },
+            fields: [
+              { name: "👤 ผู้ใช้งาน", value: `**${username}**\n(\`<@${currentUserId}>\`)`, inline: true },
+              { name: "💰 ยอดเงินที่ได้รับ", value: `\`+${addedAmount} ฿\``, inline: true },
+              { name: "💵 ยอดเงินรวมใหม่", value: `\`${newBalance.toLocaleString()} ฿\``, inline: true }
+            ],
+            footer: { text: "J Community Shop • System Alert" },
+            timestamp: new Date().toISOString()
+          });
+        }, 800);
+        return;
+      }
+
+      // 🎁 กรณีเป็น USER CODE ปกติ
       if (usedCount >= MAX_QUOTA) {
         statusMessage.style.color = '#ff4d4d';
-        statusMessage.innerText = '❌ โค้ดนี้หมดอายุแล้ว';
+        statusMessage.innerText = '❌ โค้ดนี้ไม่ถูกต้องหรือถูกใช้งานหมดแล้ว';
         return;
       }
 
@@ -711,7 +918,7 @@
 
       if (inputVal === TARGET_CODE) {
         statusMessage.style.color = '#ffaa33';
-        statusMessage.innerText = '⏳ กำลังตรวจสอบ Code ลับ...';
+        statusMessage.innerText = '⏳ กำลังตรวจสอบ...';
 
         setTimeout(() => {
           usedCount++;
@@ -719,29 +926,26 @@
           localStorage.setItem(`code_redeemed_${currentUserId}`, 'true');
 
           const newBalance = currentBalance + REWARD_AMOUNT;
-          updateQuotaDisplay();
           updateBalanceDisplay(newBalance);
 
           statusMessage.style.color = '#28a745';
-          statusMessage.innerText = `🎉 ยินดีด้วย! แลกรับ Code ลับสำเร็จ +${REWARD_AMOUNT} บาท`;
+          statusMessage.innerText = `🎉 แลกรับโค้ดสำเร็จ +${REWARD_AMOUNT} บาท`;
           document.getElementById('secretCodeInput').value = '';
 
-          // 📢 ส่ง Webhook แจ้งเตือนแลกโค้ด
+          // 📢 ส่ง Webhook (ไม่แจ้งว่าคือโค้ดอะไร และไม่แจ้งสิทธิ์คงเหลือ)
           const username = currentUserData ? (currentUserData.global_name || currentUserData.username) : "Unknown";
           const avatarUrl = currentUserData && currentUserData.avatar
             ? `https://cdn.discordapp.com/avatars/${currentUserData.id}/${currentUserData.avatar}.png`
             : 'https://cdn.discordapp.com/embed/avatars/0.png';
 
           sendDiscordWebhook({
-            title: "🎁 มีผู้ใช้งานแลก Code ลับสำเร็จ!",
-            color: 11030263, // สีม่วง (#a855f7)
+            title: "🎁 มีผู้ใช้งานเติมเงินด้วย Code ลับ!",
+            color: 11030263,
             thumbnail: { url: avatarUrl },
             fields: [
               { name: "👤 ผู้ใช้งาน", value: `**${username}**\n(\`<@${currentUserId}>\`)`, inline: true },
-              { name: "🔑 โค้ดที่ใช้", value: `\`${TARGET_CODE}\``, inline: true },
-              { name: "💰 เงินที่ได้รับ", value: `\`+${REWARD_AMOUNT} ฿\``, inline: true },
-              { name: "💵 ยอดเงินรวมใหม่", value: `\`${newBalance.toLocaleString()} ฿\``, inline: true },
-              { name: "📊 สิทธิ์คงเหลือ", value: `\`${MAX_QUOTA - usedCount} / ${MAX_QUOTA}\``, inline: true }
+              { name: "💰 ยอดเงินที่ได้รับ", value: `\`+${REWARD_AMOUNT} ฿\``, inline: true },
+              { name: "💵 ยอดเงินรวมใหม่", value: `\`${newBalance.toLocaleString()} ฿\``, inline: true }
             ],
             footer: { text: "J Community Shop • System Alert" },
             timestamp: new Date().toISOString()
@@ -750,12 +954,12 @@
         }, 1000);
       } else {
         statusMessage.style.color = '#ff4d4d';
-        statusMessage.innerText = '❌ Code ลับไม่ถูกต้อง กรุณาตรวจสอบอีกครั้ง';
+        statusMessage.innerText = '❌ Code ไม่ถูกต้อง กรุณาตรวจสอบอีกครั้ง';
       }
     }
 
     // ==========================================
-    // 💵 5. ระบบเติมเงิน TrueMoney & Modal UI
+    // 💵 6. ระบบเติมเงิน TrueMoney & Modal UI
     // ==========================================
     const topupModal = document.getElementById('topupModal');
 
@@ -765,7 +969,6 @@
         window.location.href = DISCORD_LOGIN_URL;
         return;
       }
-      updateQuotaDisplay();
       topupModal.classList.add('active');
     }
 
@@ -815,7 +1018,7 @@
     }
 
     // ==========================================
-    // 👤 6. ตรวจสอบการล็อกอิน Discord & ส่ง Webhook ล็อกอิน
+    // 👤 7. ตรวจสอบการล็อกอิน Discord
     // ==========================================
     const navLoginBtn = document.getElementById('navLoginBtn');
     const navProfileZone = document.getElementById('navProfileZone');
@@ -829,7 +1032,7 @@
       if (token) {
         localStorage.setItem('discord_token', token);
         window.location.hash = '';
-        isNewLogin = true; // เพิ่งล็อกอินเข้ามาสดๆ
+        isNewLogin = true;
       } else {
         token = localStorage.getItem('discord_token');
       }
@@ -848,6 +1051,8 @@
           isLoggedIn = true;
           currentUserId = userData.id;
 
+          saveUserProfile(userData);
+
           navLoginBtn.style.display = 'none';
           navProfileZone.style.display = 'flex';
 
@@ -863,11 +1068,10 @@
 
           heroSubtitle.innerText = `ยินดีต้อนรับคุณ ${userData.global_name || userData.username} เข้าสู่ระบบเรียบร้อยแล้ว!`;
 
-          // 📢 ส่ง Webhook แจ้งเตือนเมื่อล็อกอินใหม่สำเร็จ
           if (isNewLogin) {
             sendDiscordWebhook({
               title: "🔓 ผู้ใช้งานเข้าสู่ระบบเว็บไซต์!",
-              color: 5793266, // สีฟ้า Discord (#5865f2)
+              color: 5793266,
               thumbnail: { url: avatarUrl },
               fields: [
                 { name: "👤 ผู้ใช้งาน", value: `**${userData.global_name || userData.username}**`, inline: true },
