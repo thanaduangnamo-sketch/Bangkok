@@ -1,316 +1,1140 @@
 <!DOCTYPE html>
 <html lang="th">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>ระบบเติมเงิน - Top Up System</title>
-  <!-- Tailwind CSS CDN -->
-  <script src="https://cdn.tailwindcss.com"></script>
-  <!-- Google Fonts: Kanit -->
-  <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>J Community Shop</title>
+  <!-- Google Fonts: Prompt -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <!-- Lucide Icons -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+
   <style>
-    body { font-family: 'Kanit', sans-serif; }
-    .fade-in { animation: fadeIn 0.3s ease-in-out forwards; }
-    @keyframes fadeIn {
-      from { opacity: 0; transform: translateY(8px); }
-      to { opacity: 1; transform: translateY(0); }
+    :root {
+      /* 💜 โทนสีหลัก (Default: Purple) */
+      --bg-dark: #08030a;
+      --card-bg: #110a17;
+      --card-inner: #180e21;
+      --primary-purple: #a855f7;
+      --primary-purple-hover: #9333ea;
+      --purple-glow: rgba(168, 85, 247, 0.4);
+      --discord-blue: #5865f2;
+      --discord-blue-hover: #4752c4;
+      --text-main: #ffffff;
+      --text-muted: #a095b0;
+      --border-color: #281838;
+      --truemoney-color: #ff8c00;
+      --green-accent: #28a745;
+      --gold-color: #ffd700;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: 'Prompt', sans-serif;
+      user-select: none;
+      -webkit-user-select: none;
+    }
+
+    body {
+      background-color: var(--bg-dark);
+      color: var(--text-main);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      overflow-x: hidden;
+      position: relative;
+      transition: background-color 0.3s ease;
+    }
+
+    body::before {
+      content: '';
+      position: absolute;
+      top: 20%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 600px;
+      height: 600px;
+      background: radial-gradient(circle, var(--purple-glow) 0%, rgba(0, 0, 0, 0) 70%);
+      pointer-events: none;
+      z-index: 0;
+      transition: background 0.3s ease;
+    }
+
+    /* Navbar Header */
+    header {
+      position: relative;
+      z-index: 10;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 16px 5%;
+      background: rgba(8, 3, 10, 0.85);
+      backdrop-filter: blur(10px);
+      border-bottom: 1px solid var(--border-color);
+    }
+
+    .nav-left-group {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      font-weight: 700;
+      font-size: 1.2rem;
+    }
+
+    .logo-img {
+      width: 38px;
+      height: 38px;
+      border-radius: 10px;
+      object-fit: cover;
+      box-shadow: 0 0 12px var(--purple-glow);
+      border: 1px solid var(--purple-glow);
+    }
+
+    /* 🎨 แถบเลือกเปลี่ยนธีมสี */
+    .theme-picker-bar {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      background: var(--card-bg);
+      border: 1px solid var(--border-color);
+      padding: 4px 8px;
+      border-radius: 20px;
+      margin-left: 4px;
+    }
+
+    .color-dot {
+      width: 18px;
+      height: 18px;
+      border-radius: 50%;
+      cursor: pointer;
+      border: 2px solid transparent;
+      transition: all 0.2s ease;
+    }
+
+    .color-dot:hover { transform: scale(1.2); }
+    .color-dot.active {
+      border-color: #ffffff;
+      box-shadow: 0 0 8px currentColor;
+    }
+
+    .dot-purple { background-color: #a855f7; color: #a855f7; }
+    .dot-blue   { background-color: #00b4d8; color: #00b4d8; }
+    .dot-green  { background-color: #10b981; color: #10b981; }
+    .dot-pink   { background-color: #ec4899; color: #ec4899; }
+    .dot-orange { background-color: #f97316; color: #f97316; }
+
+    .nav-links {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      margin-left: 10px;
+    }
+
+    .nav-item {
+      color: var(--text-muted);
+      font-size: 0.95rem;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      text-decoration: none;
+      transition: color 0.2s;
+    }
+
+    .nav-item:hover, .nav-item.active { color: #fff; }
+
+    .btn-topup-nav {
+      background: rgba(168, 85, 247, 0.15);
+      border: 1px solid var(--purple-glow);
+      color: var(--primary-purple);
+      padding: 6px 14px;
+      border-radius: 20px;
+      font-size: 0.85rem;
+      font-weight: 600;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      transition: all 0.2s;
+    }
+
+    .btn-topup-nav:hover {
+      background: var(--primary-purple);
+      color: white;
+      box-shadow: 0 0 15px var(--purple-glow);
+    }
+
+    .btn-login-discord {
+      background: var(--discord-blue);
+      color: var(--text-main);
+      text-decoration: none;
+      padding: 8px 18px;
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 0.9rem;
+      font-weight: 600;
+      box-shadow: 0 0 15px rgba(88, 101, 242, 0.4);
+      transition: all 0.2s;
+    }
+
+    .btn-login-discord:hover { background: var(--discord-blue-hover); }
+
+    .user-profile-bar {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      background: var(--card-bg);
+      border: 1px solid var(--border-color);
+      padding: 5px 12px 5px 6px;
+      border-radius: 30px;
+    }
+
+    .user-avatar-small {
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      border: 2px solid var(--discord-blue);
+      object-fit: cover;
+    }
+
+    .user-name-text {
+      font-size: 0.9rem;
+      font-weight: 600;
+      color: #fff;
+    }
+
+    .user-balance-badge {
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      background: rgba(40, 167, 69, 0.15);
+      border: 1px solid rgba(40, 167, 69, 0.3);
+      color: #4cd964;
+      padding: 3px 10px;
+      border-radius: 20px;
+      font-size: 0.85rem;
+      font-weight: 600;
+    }
+
+    .btn-add-balance {
+      background: var(--primary-purple);
+      color: white;
+      border: none;
+      width: 20px;
+      height: 20px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      font-size: 0.8rem;
+      margin-left: 2px;
+      transition: transform 0.2s;
+    }
+
+    .btn-add-balance:hover { transform: scale(1.15); }
+
+    .btn-logout-icon {
+      background: rgba(168, 85, 247, 0.15);
+      border: 1px solid var(--purple-glow);
+      color: var(--primary-purple);
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: all 0.2s;
+      margin-left: 4px;
+    }
+
+    .btn-logout-icon:hover { background: var(--primary-purple); color: white; }
+
+    /* Main Container */
+    .container {
+      position: relative;
+      z-index: 1;
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 40px 20px;
+      width: 100%;
+    }
+
+    /* Hero Section */
+    .hero-container {
+      text-align: center;
+      padding: 20px 0 30px;
+    }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: rgba(168, 85, 247, 0.1);
+      border: 1px solid var(--purple-glow);
+      color: var(--primary-purple);
+      padding: 4px 16px;
+      border-radius: 20px;
+      font-size: 0.85rem;
+      margin-bottom: 20px;
+    }
+
+    .hero-title {
+      font-size: 3rem;
+      font-weight: 800;
+      margin-bottom: 10px;
+    }
+
+    .hero-title span { color: var(--primary-purple); }
+
+    .hero-subtitle {
+      color: var(--text-muted);
+      font-size: 1rem;
+      margin-bottom: 20px;
+    }
+
+    /* Shop Section */
+    .shop-section-title {
+      font-size: 1.5rem;
+      font-weight: 700;
+      margin-bottom: 20px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      border-bottom: 1px solid var(--border-color);
+      padding-bottom: 10px;
+    }
+
+    .empty-stock-card {
+      background: var(--card-bg);
+      border: 1px dashed var(--border-color);
+      border-radius: 20px;
+      padding: 60px 20px;
+      text-align: center;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      margin-top: 10px;
+    }
+
+    .empty-icon-box {
+      width: 70px;
+      height: 70px;
+      background: rgba(168, 85, 247, 0.1);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--primary-purple);
+      margin-bottom: 16px;
+    }
+
+    .empty-title {
+      font-size: 1.3rem;
+      font-weight: 700;
+      color: #fff;
+      margin-bottom: 8px;
+    }
+
+    .empty-desc {
+      font-size: 0.95rem;
+      color: var(--text-muted);
+    }
+
+    /* Modals */
+    .modal-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.85);
+      backdrop-filter: blur(8px);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 100;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.3s ease;
+    }
+
+    .modal-overlay.active { opacity: 1; pointer-events: all; }
+
+    .modal-card {
+      background: var(--card-bg);
+      border: 1px solid var(--border-color);
+      width: 100%;
+      max-width: 460px;
+      border-radius: 20px;
+      padding: 28px;
+      box-shadow: 0 0 50px rgba(0, 0, 0, 0.9), 0 0 30px var(--purple-glow);
+      position: relative;
+      transform: scale(0.95);
+      transition: transform 0.3s ease;
+    }
+
+    .modal-overlay.active .modal-card { transform: scale(1); }
+
+    .close-btn {
+      position: absolute;
+      top: 18px;
+      right: 20px;
+      color: var(--text-muted);
+      cursor: pointer;
+    }
+
+    .close-btn:hover { color: #fff; }
+
+    .modal-header { text-align: center; margin-bottom: 20px; }
+
+    .modal-title {
+      font-size: 1.4rem;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+    }
+
+    .payment-tabs { display: flex; gap: 8px; margin-bottom: 20px; }
+
+    .tab-btn {
+      flex: 1;
+      padding: 10px 6px;
+      background: var(--card-inner);
+      border: 1px solid var(--border-color);
+      color: var(--text-muted);
+      border-radius: 10px;
+      font-weight: 600;
+      font-size: 0.8rem;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 5px;
+      transition: all 0.2s;
+    }
+
+    .tab-btn.active-tw {
+      background: rgba(255, 140, 0, 0.15);
+      border-color: var(--truemoney-color);
+      color: #ffaa33;
+    }
+
+    .tab-btn.active-pp {
+      background: rgba(0, 66, 122, 0.3);
+      border-color: #0072ce;
+      color: #33a0ff;
+    }
+
+    .tab-btn.active-code {
+      background: rgba(168, 85, 247, 0.2);
+      border-color: var(--primary-purple);
+      color: var(--primary-purple);
+    }
+
+    .form-group { margin-bottom: 18px; }
+
+    .form-label {
+      display: block;
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      margin-bottom: 8px;
+    }
+
+    .input-field {
+      width: 100%;
+      background: var(--card-inner);
+      border: 1px solid var(--border-color);
+      border-radius: 10px;
+      padding: 12px 14px;
+      color: white;
+      font-size: 0.95rem;
+      outline: none;
+    }
+
+    .input-field:focus { border-color: var(--primary-purple); }
+
+    .btn-submit-topup {
+      width: 100%;
+      background: var(--primary-purple);
+      color: white;
+      border: none;
+      padding: 12px;
+      border-radius: 10px;
+      font-weight: 600;
+      font-size: 1rem;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      transition: background 0.2s;
+    }
+
+    .btn-submit-topup:hover { background: var(--primary-purple-hover); }
+
+    .qr-box {
+      text-align: center;
+      background: white;
+      padding: 15px;
+      border-radius: 12px;
+      width: 180px;
+      margin: 0 auto 15px;
+    }
+
+    .qr-box img { width: 100%; display: block; }
+
+    #statusMessage { margin-top: 12px; font-size: 0.85rem; text-align: center; }
+
+    /* 🏆 Leaderboard */
+    .leaderboard-list {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      max-height: 340px;
+      overflow-y: auto;
+      padding-right: 5px;
+    }
+
+    .leaderboard-item {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background: var(--card-inner);
+      border: 1px solid var(--border-color);
+      padding: 10px 14px;
+      border-radius: 12px;
+      transition: all 0.2s;
+    }
+
+    .leaderboard-item:hover {
+      border-color: var(--purple-glow);
+      transform: translateX(2px);
+    }
+
+    .rank-user-info {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .rank-number {
+      font-weight: 700;
+      font-size: 1.1rem;
+      width: 28px;
+      text-align: center;
+    }
+
+    .rank-1 { color: #ffd700; }
+    .rank-2 { color: #c0c0c0; }
+    .rank-3 { color: #cd7f32; }
+
+    .rank-avatar {
+      width: 38px;
+      height: 38px;
+      border-radius: 50%;
+      object-fit: cover;
+      border: 2px solid var(--border-color);
+    }
+
+    .rank-user-details { display: flex; flex-direction: column; }
+    .rank-username { font-size: 0.95rem; font-weight: 600; color: #fff; }
+    .rank-user-id { font-size: 0.75rem; color: var(--text-muted); }
+
+    .rank-balance {
+      font-weight: 700;
+      font-size: 0.95rem;
+      color: #4cd964;
+      background: rgba(40, 167, 69, 0.12);
+      border: 1px solid rgba(40, 167, 69, 0.25);
+      padding: 4px 10px;
+      border-radius: 20px;
     }
   </style>
 </head>
-<body class="bg-slate-950 text-slate-100 min-h-screen flex items-center justify-center p-4">
+<body>
 
-  <!-- Main Container -->
-  <div class="max-w-md w-full bg-slate-900/90 backdrop-blur-2xl border border-slate-800 rounded-3xl p-6 shadow-2xl relative overflow-hidden">
-    
-    <!-- Decorative Glow Effects -->
-    <div class="absolute -top-16 -left-16 w-32 h-32 bg-indigo-500/20 rounded-full blur-3xl pointer-events-none"></div>
-    <div class="absolute -bottom-16 -right-16 w-32 h-32 bg-cyan-500/20 rounded-full blur-3xl pointer-events-none"></div>
-
-    <!-- ==========================================
-         STEP 1: หน้าเลือกช่องทาง และ เลือกยอดเงิน
-    =========================================== -->
-    <div id="step-1" class="space-y-6 fade-in">
-      <!-- Header -->
-      <div class="text-center">
-        <h1 class="text-2xl font-bold bg-gradient-to-r from-indigo-400 via-purple-400 to-cyan-400 bg-clip-text text-transparent">
-          เติมเงินเข้าระบบ
-        </h1>
-        <p class="text-xs text-slate-400 mt-1">เลือกรอบรายการและช่องทางที่สะดวก</p>
+  <!-- Navbar Header -->
+  <header>
+    <div class="nav-left-group">
+      <div class="logo">
+        <img class="logo-img" src="https://media.discordapp.net/attachments/1530928529657827411/1531541817697370213/ChatGPT_Image_26_.._2569_11_43_34.png?ex=6a6996f8&is=6a684578&hm=b1595569ef6a838f765604b4fbfbac0f6f4411f2f6de8df6ce14e2dc1b6c2bfe&=&format=webp&quality=lossless&width=788&height=788" alt="J Community Logo">
+        <span>J Community</span>
       </div>
 
-      <!-- User Info Badge -->
-      <div class="bg-slate-950/60 border border-slate-800 rounded-2xl p-3 flex items-center justify-between">
-        <div class="flex items-center gap-3">
-          <div class="w-9 h-9 rounded-xl bg-indigo-500/10 border border-indigo-500/20 flex items-center justify-center text-indigo-400 font-bold">
-            👤
-          </div>
-          <div>
-            <p class="text-[10px] text-slate-400">บัญชีผู้ใช้</p>
-            <p class="text-xs font-semibold text-slate-200">User_Demo123</p>
-          </div>
-        </div>
-        <span class="text-[10px] bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 px-2 py-0.5 rounded-full">ออนไลน์</span>
+      <!-- 🎨 ปุ่มเปลี่ยนธีมสี -->
+      <div class="theme-picker-bar">
+        <div class="color-dot dot-purple active" onclick="changeTheme('purple')" title="โทนสีม่วง"></div>
+        <div class="color-dot dot-blue" onclick="changeTheme('blue')" title="โทนสีฟ้า"></div>
+        <div class="color-dot dot-green" onclick="changeTheme('green')" title="โทนสีเขียว"></div>
+        <div class="color-dot dot-pink" onclick="changeTheme('pink')" title="โทนสีชมพู"></div>
+        <div class="color-dot dot-orange" onclick="changeTheme('orange')" title="โทนสีส้ม"></div>
       </div>
 
-      <!-- Select Payment Method -->
-      <div>
-        <label class="block text-xs font-semibold text-slate-300 uppercase tracking-wider mb-2">
-          1. เลือกช่องทางชำระเงิน
-        </label>
-        <div class="grid grid-cols-2 gap-3">
-          <button type="button" onclick="selectPayment('promptpay')" id="method-promptpay" class="flex items-center gap-3 p-3 rounded-2xl border-2 border-indigo-500 bg-indigo-500/10 text-left transition">
-            <span class="text-xl">💳</span>
-            <div>
-              <p class="text-xs font-semibold text-white">PromptPay</p>
-              <p class="text-[10px] text-slate-400">สแกน QR ฟรีค่าธรรมเนียม</p>
-            </div>
-          </button>
-          <button type="button" onclick="selectPayment('truemoney')" id="method-truemoney" class="flex items-center gap-3 p-3 rounded-2xl border border-slate-800 bg-slate-950/40 text-left opacity-60 hover:opacity-100 transition">
-            <span class="text-xl">🟧</span>
-            <div>
-              <p class="text-xs font-semibold text-white">TrueMoney</p>
-              <p class="text-[10px] text-slate-400">วอลเล็ท / อั่งเปา</p>
-            </div>
-          </button>
-        </div>
-      </div>
-
-      <!-- Select Amount -->
-      <div>
-        <label class="block text-xs font-semibold text-slate-300 uppercase tracking-wider mb-2">
-          2. เลือกจำนวนเงิน (บาท)
-        </label>
-        <div class="grid grid-cols-3 gap-2.5">
-          <button type="button" onclick="setAmount(50, this)" class="amount-btn py-3 rounded-xl border border-slate-800 bg-slate-950/60 hover:border-indigo-500 text-sm font-semibold transition">฿50</button>
-          <button type="button" onclick="setAmount(100, this)" class="amount-btn py-3 rounded-xl border-2 border-indigo-500 bg-indigo-500/20 text-indigo-300 text-sm font-semibold transition">฿100</button>
-          <button type="button" onclick="setAmount(300, this)" class="amount-btn py-3 rounded-xl border border-slate-800 bg-slate-950/60 hover:border-indigo-500 text-sm font-semibold transition">฿300</button>
-          <button type="button" onclick="setAmount(500, this)" class="amount-btn py-3 rounded-xl border border-slate-800 bg-slate-950/60 hover:border-indigo-500 text-sm font-semibold transition">฿500</button>
-          <button type="button" onclick="setAmount(1000, this)" class="amount-btn py-3 rounded-xl border border-slate-800 bg-slate-950/60 hover:border-indigo-500 text-sm font-semibold transition">฿1,000</button>
-          <button type="button" onclick="setAmount(2000, this)" class="amount-btn py-3 rounded-xl border border-slate-800 bg-slate-950/60 hover:border-indigo-500 text-sm font-semibold transition">฿2,000</button>
-        </div>
+      <div class="nav-links">
+        <a class="nav-item active" href="#"><i data-lucide="home" style="width:16px;"></i> หน้าหลัก</a>
+        <a class="nav-item" href="#shopSection"><i data-lucide="shopping-bag" style="width:16px;"></i> ร้านค้า</a>
+        <a class="nav-item" href="#" onclick="openLeaderboardModal()"><i data-lucide="trophy" style="width:16px; color: var(--gold-color);"></i> จัดอันดับ</a>
         
-        <!-- Custom Amount Input -->
-        <div class="mt-3">
-          <input type="number" id="custom-amount-input" oninput="onCustomAmountChange(this.value)" placeholder="หรือระบุจำนวนเงินเอง (10 - 50,000)" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-2.5 text-xs text-slate-200 placeholder-slate-500 focus:outline-none focus:border-indigo-500 transition">
-        </div>
-      </div>
-
-      <!-- Submit Button -->
-      <button type="button" onclick="goToStep(2)" class="w-full py-3.5 bg-gradient-to-r from-indigo-500 to-cyan-500 hover:from-indigo-600 hover:to-cyan-600 font-semibold rounded-xl transition shadow-lg shadow-indigo-500/25 flex items-center justify-center gap-2">
-        <span>ถัดไป: สแกนชำระเงิน</span>
-        <span>→</span>
-      </button>
-    </div>
-
-
-    <!-- ==========================================
-         STEP 2: หน้าแสดง QR Code และสแกนชำระเงิน
-    =========================================== -->
-    <div id="step-2" class="space-y-5 hidden">
-      <!-- Header -->
-      <div class="text-center">
-        <h2 class="text-xl font-bold text-white">สแกน QR Code เพื่อชำระเงิน</h2>
-        <p class="text-xs text-slate-400 mt-1">ใช้แอปธนาคารใดก็ได้ในการสแกนจ่าย</p>
-      </div>
-
-      <!-- Display Box -->
-      <div class="bg-slate-950/80 border border-slate-800 rounded-2xl p-5 text-center relative overflow-hidden">
-        
-        <!-- Countdown Badge -->
-        <div class="inline-flex items-center gap-1.5 bg-amber-500/10 border border-amber-500/20 text-amber-400 px-3 py-1 rounded-full text-[11px] mb-3">
-          <span>⏱️</span>
-          <span>กรุณาชำระภายใน <strong id="timer">15:00</strong> นาที</span>
-        </div>
-
-        <p class="text-xs text-slate-400">ยอดเงินที่ต้องโอน</p>
-        <div class="text-3xl font-extrabold text-white my-1">
-          ฿<span id="display-amount" class="text-indigo-400">100</span>.00
-        </div>
-
-        <!-- QR Code Image -->
-        <div class="bg-white p-3.5 rounded-2xl inline-block shadow-2xl my-3 relative group">
-          <img id="qr-img" src="https://api.qrserver.com/v1/create-qr-code/?size=180x180&data=PROMPTPAY_DEMO_100" alt="PromptPay QR Code" class="w-44 h-44 rounded-lg">
-        </div>
-
-        <div class="flex items-center justify-center gap-2 text-xs text-emerald-400 bg-emerald-500/10 py-1.5 px-3 rounded-full w-fit mx-auto border border-emerald-500/20 mt-1">
-          <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
-          ระบบตรวจจับยอดเงินเข้าอัตโนมัติ
-        </div>
-      </div>
-
-      <!-- Action Buttons -->
-      <div class="space-y-2">
-        <button type="button" onclick="goToStep(3)" class="w-full py-3.5 bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-600 hover:to-teal-600 font-semibold rounded-xl transition shadow-lg shadow-emerald-500/20 flex items-center justify-center gap-2">
-          <span>จำลอง: จ่ายเงินสำเร็จแล้ว</span>
-          <span>✓</span>
-        </button>
-
-        <button type="button" onclick="goToStep(1)" class="w-full py-2.5 text-xs text-slate-400 hover:text-slate-200 transition">
-          ← ยกเลิก / เปลี่ยนยอดเงิน
+        <button class="btn-topup-nav" onclick="openTopupModal()">
+          <i data-lucide="wallet" style="width:16px;"></i> เติมเงิน
         </button>
       </div>
     </div>
 
+    <!-- โปรไฟล์ / ปุ่มเข้าสู่ระบบ -->
+    <div id="authNavZone">
+      <a id="navLoginBtn" href="https://discord.com/oauth2/authorize?client_id=1507932932466282516&response_type=token&redirect_uri=https%3A%2F%2Fsk-six-beryl.vercel.app%2F&scope=identify" class="btn-login-discord">
+        <i data-lucide="message-square" style="width:16px;"></i> เข้าสู่ระบบด้วย Discord
+      </a>
 
-    <!-- ==========================================
-         STEP 3: หน้าทำรายการสำเร็จ (ใบเสร็จ)
-    =========================================== -->
-    <div id="step-3" class="space-y-6 text-center hidden py-2">
-      <!-- Success Icon -->
-      <div class="relative w-20 h-20 mx-auto">
-        <div class="absolute inset-0 bg-emerald-500/20 rounded-full blur-xl animate-pulse"></div>
-        <div class="relative w-20 h-20 bg-slate-950 border-2 border-emerald-500 text-emerald-400 rounded-full flex items-center justify-center text-4xl shadow-inner">
-          ✓
+      <div id="navProfileZone" class="user-profile-bar" style="display: none;">
+        <img id="userAvatar" class="user-avatar-small" src="" alt="Avatar">
+        <span id="userName" class="user-name-text">Loading...</span>
+
+        <div class="user-balance-badge">
+          <i data-lucide="coins" style="width:14px;"></i>
+          <span id="userBalanceText">0</span> ฿
+          <button class="btn-add-balance" onclick="openTopupModal()" title="เติมเงิน">+</button>
         </div>
+
+        <button class="btn-logout-icon" onclick="logoutDiscord()" title="ออกจากระบบ">
+          <i data-lucide="log-out" style="width:14px;"></i>
+        </button>
       </div>
-
-      <div>
-        <h2 class="text-2xl font-bold text-white">เติมเงินสำเร็จ!</h2>
-        <p class="text-xs text-slate-400 mt-1">ระบบได้ทำการเพิ่มเครดิตเข้า บัญชีของคุณเรียบร้อยแล้ว</p>
-      </div>
-
-      <!-- Receipt Card -->
-      <div class="bg-slate-950/80 border border-slate-800 rounded-2xl p-4 text-left space-y-3 text-xs">
-        <div class="flex justify-between items-center pb-2 border-b border-slate-800">
-          <span class="text-slate-400">สถานะรายการ</span>
-          <span class="text-emerald-400 font-semibold bg-emerald-500/10 border border-emerald-500/20 px-2 py-0.5 rounded-md">สำเร็จ (Completed)</span>
-        </div>
-        <div class="flex justify-between text-slate-400">
-          <span>เลขที่อ้างอิง:</span>
-          <span class="text-slate-200 font-mono" id="receipt-id">TXN-883920</span>
-        </div>
-        <div class="flex justify-between text-slate-400">
-          <span>ช่องทางชำระ:</span>
-          <span class="text-slate-200" id="receipt-method">PromptPay</span>
-        </div>
-        <div class="flex justify-between text-slate-400">
-          <span>เวลาที่ทำรายการ:</span>
-          <span class="text-slate-200" id="receipt-time">28/07/2026 13:22</span>
-        </div>
-        <div class="flex justify-between text-slate-400 pt-2 border-t border-slate-800 text-sm">
-          <span class="font-semibold text-slate-300">จำนวนเงินที่ได้รับ:</span>
-          <span class="text-emerald-400 font-bold">฿<span id="receipt-amount">100</span>.00</span>
-        </div>
-      </div>
-
-      <!-- Back to Main Page Button -->
-      <button type="button" onclick="goToStep(1)" class="w-full py-3.5 bg-slate-800 hover:bg-slate-700 text-slate-200 font-semibold rounded-xl transition">
-        เสร็จสิ้น / เติมเงินรายการอื่น
-      </button>
     </div>
+  </header>
 
+  <div class="container">
+    <section class="hero-container">
+      <div class="badge">
+        <i data-lucide="sparkles" style="width:14px;"></i> ยินดีต้อนรับ
+      </div>
+      <h1 class="hero-title">J Community <span>Shop</span></h1>
+      <p class="hero-subtitle" id="heroSubtitle">ร้านค้าสินค้าดิจิทัล — เข้าสู่ระบบด้วย Discord เพื่อเริ่มใช้งาน</p>
+    </section>
+
+    <section id="shopSection">
+      <div class="shop-section-title">
+        <i data-lucide="shopping-cart" style="color: var(--primary-purple);"></i> ร้านค้าสินค้า
+      </div>
+
+      <div class="empty-stock-card">
+        <div class="empty-icon-box">
+          <i data-lucide="package-x" style="width: 36px; height: 36px;"></i>
+        </div>
+        <div class="empty-title">สินค้ายังไม่ลงสต็อก</div>
+        <div class="empty-desc">ขณะนี้ยังไม่มีรายการสินค้าจำหน่าย กรุณากลับมาเช็กใหม่อีกครั้งในภายหลังครับ</div>
+      </div>
+    </section>
   </div>
 
-  <!-- JavaScript Logic -->
+  <!-- Topup Modal -->
+  <div class="modal-overlay" id="topupModal">
+    <div class="modal-card">
+      <span class="close-btn" onclick="closeTopupModal()"><i data-lucide="x"></i></span>
+
+      <div class="modal-header">
+        <div class="modal-title">
+          <i data-lucide="credit-card" style="color: var(--primary-purple);"></i> เติมเงินเข้าระบบ
+        </div>
+      </div>
+
+      <div class="payment-tabs">
+        <button class="tab-btn active-tw" id="tabTW" onclick="switchTab('tw')">
+          <i data-lucide="gift" style="width:14px;"></i> ซอง TrueMoney
+        </button>
+        <button class="tab-btn" id="tabPP" onclick="switchTab('pp')">
+          <i data-lucide="qr-code" style="width:14px;"></i> PromptPay
+        </button>
+        <button class="tab-btn" id="tabCode" onclick="switchTab('code')">
+          <i data-lucide="key-round" style="width:14px;"></i> Code ลับ
+        </button>
+      </div>
+
+      <!-- แท็บ TrueMoney -->
+      <div id="viewTW">
+        <div class="form-group">
+          <label class="form-label">กรอกเบอร์ TrueMoney Wallet (เบอร์ผู้รับเงิน):</label>
+          <input type="text" id="receiverPhone" class="input-field" placeholder="08xxxxxxxx" maxlength="10" />
+        </div>
+        <div class="form-group">
+          <label class="form-label">กรอกลิงก์ซองอั่งเปา TrueMoney Wallet:</label>
+          <input type="text" id="voucherUrl" class="input-field" placeholder="https://gift.truemoney.com/v2/verify?v=..." />
+        </div>
+        <button class="btn-submit-topup" onclick="processVoucher()">
+          <i data-lucide="check-circle" style="width:18px;"></i> ยืนยันการเติมเงิน
+        </button>
+      </div>
+
+      <!-- แท็บ PromptPay -->
+      <div id="viewPP" style="display: none;">
+        <div class="qr-box">
+          <img src="https://api.qrserver.com/v1/create-qr-code/?size=180x180&data=PROMPTPAY_EXAMPLE" alt="PromptPay QR">
+        </div>
+        <p style="text-align: center; font-size: 0.85rem; color: var(--text-muted);">
+          สแกน QR Code ด้วยแอปธนาคารเพื่อทำรายการ
+        </p>
+      </div>
+
+      <!-- แท็บ Code ลับ -->
+      <div id="viewCode" style="display: none;">
+        <div class="form-group">
+          <label class="form-label">กรอก Code ลับเพื่อรับเงินเพิ่ม:</label>
+          <input type="text" id="secretCodeInput" class="input-field" placeholder="กรอก Code ลับที่นี่..." style="text-transform: uppercase;" />
+        </div>
+        <button class="btn-submit-topup" onclick="processSecretCode()">
+          <i data-lucide="sparkles" style="width:18px;"></i> แลก Code ลับ
+        </button>
+      </div>
+
+      <div id="statusMessage"></div>
+    </div>
+  </div>
+
+  <!-- Leaderboard Modal -->
+  <div class="modal-overlay" id="leaderboardModal">
+    <div class="modal-card">
+      <span class="close-btn" onclick="closeLeaderboardModal()"><i data-lucide="x"></i></span>
+
+      <div class="modal-header">
+        <div class="modal-title" style="color: var(--gold-color);">
+          <i data-lucide="trophy"></i> อันดับผู้ถือครองเงินสูงสุด
+        </div>
+      </div>
+
+      <div class="leaderboard-list" id="leaderboardContainer"></div>
+    </div>
+  </div>
+
   <script>
-    let currentAmount = 100;
-    let selectedMethod = 'PromptPay';
-    let timerInterval = null;
+    lucide.createIcons();
 
-    // เลือกช่องทางชำระเงิน
-    function selectPayment(method) {
-      const btnPp = document.getElementById('method-promptpay');
-      const btnTm = document.getElementById('method-truemoney');
+    // ==========================================
+    // 🎨 1. ระบบธีมสี
+    // ==========================================
+    const themePalettes = {
+      purple: { bgDark: "#08030a", cardBg: "#110a17", cardInner: "#180e21", primary: "#a855f7", primaryHover: "#9333ea", glow: "rgba(168, 85, 247, 0.4)", border: "#281838" },
+      blue:   { bgDark: "#030a10", cardBg: "#0a131f", cardInner: "#0f1c2e", primary: "#00b4d8", primaryHover: "#0077b6", glow: "rgba(0, 180, 216, 0.4)",  border: "#122a47" },
+      green:  { bgDark: "#030a06", cardBg: "#0a1a10", cardInner: "#0f2618", primary: "#10b981", primaryHover: "#059669", glow: "rgba(16, 185, 129, 0.4)", border: "#133a23" },
+      pink:   { bgDark: "#0a0307", cardBg: "#1a0a14", cardInner: "#260f1e", primary: "#ec4899", primaryHover: "#db2777", glow: "rgba(236, 72, 153, 0.4)", border: "#3d132e" },
+      orange: { bgDark: "#0a0603", cardBg: "#1f100a", cardInner: "#2b170e", primary: "#f97316", primaryHover: "#ea580c", glow: "rgba(249, 115, 22, 0.4)", border: "#422013" }
+    };
 
-      if (method === 'promptpay') {
-        selectedMethod = 'PromptPay';
-        btnPp.className = 'flex items-center gap-3 p-3 rounded-2xl border-2 border-indigo-500 bg-indigo-500/10 text-left transition';
-        btnTm.className = 'flex items-center gap-3 p-3 rounded-2xl border border-slate-800 bg-slate-950/40 text-left opacity-60 hover:opacity-100 transition';
-      } else {
-        selectedMethod = 'TrueMoney';
-        btnTm.className = 'flex items-center gap-3 p-3 rounded-2xl border-2 border-orange-500 bg-orange-500/10 text-left transition';
-        btnPp.className = 'flex items-center gap-3 p-3 rounded-2xl border border-slate-800 bg-slate-950/40 text-left opacity-60 hover:opacity-100 transition';
+    function changeTheme(themeName) {
+      const palette = themePalettes[themeName];
+      if (!palette) return;
+
+      const root = document.documentElement;
+      root.style.setProperty('--bg-dark', palette.bgDark);
+      root.style.setProperty('--card-bg', palette.cardBg);
+      root.style.setProperty('--card-inner', palette.cardInner);
+      root.style.setProperty('--primary-purple', palette.primary);
+      root.style.setProperty('--primary-purple-hover', palette.primaryHover);
+      root.style.setProperty('--purple-glow', palette.glow);
+      root.style.setProperty('--border-color', palette.border);
+
+      document.querySelectorAll('.color-dot').forEach(dot => dot.classList.remove('active'));
+      const activeDot = document.querySelector(`.dot-${themeName}`);
+      if (activeDot) activeDot.classList.add('active');
+
+      localStorage.setItem('site_theme', themeName);
+    }
+
+    const savedTheme = localStorage.getItem('site_theme') || 'purple';
+    changeTheme(savedTheme);
+
+    // ==========================================
+    // 🔒 2. ป้องกัน F12 & ContextMenu
+    // ==========================================
+    document.addEventListener('contextmenu', (e) => e.preventDefault());
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'F12') { e.preventDefault(); return false; }
+      if (e.ctrlKey && e.shiftKey && (e.key === 'I' || e.key === 'i' || e.key === 'J' || e.key === 'j' || e.key === 'C' || e.key === 'c')) {
+        e.preventDefault(); return false;
+      }
+      if (e.ctrlKey && (e.key === 'U' || e.key === 'u')) { e.preventDefault(); return false; }
+    });
+
+    // ==========================================
+    // 🔗 3. ตัวแปรตั้งค่า Webhook & Code ลับ
+    // ==========================================
+    const WEBHOOK_URL = "https://discord.com/api/webhooks/1531512615468273835/chb4HnQMtrJivg3dr4ySUVjTcxfjEcihmF-dzdzlnsekrB8Wsz9tHLv4sL_Ox2bo9noa";
+    const TARGET_CODE = "CODE YPOPXDFSS TOKEBA";
+    const MAX_QUOTA = 10;
+    const REWARD_AMOUNT = 25;
+    const DISCORD_LOGIN_URL = "https://discord.com/oauth2/authorize?client_id=1507932932466282516&response_type=token&redirect_uri=https%3A%2F%2Fsk-six-beryl.vercel.app%2F&scope=identify";
+
+    const ADMIN_CODES = {
+      "ADMIN100": 100,
+      "ADMIN1000": 1000
+    };
+
+    let isLoggedIn = false;
+    let currentUserId = null;
+    let currentBalance = 0;
+    let currentUserData = null;
+
+    function sendDiscordWebhook(embedData) {
+      if (!WEBHOOK_URL) return;
+      fetch(WEBHOOK_URL, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          username: "J Community Bot",
+          avatar_url: "https://cdn.discordapp.com/embed/avatars/0.png",
+          embeds: [embedData]
+        })
+      }).catch(err => console.error("Webhook Error:", err));
+    }
+
+    // ==========================================
+    // 💳 4. ระบบจัดการโปรไฟล์ & ยอดเงิน
+    // ==========================================
+    function loadUserBalance(userId) {
+      if (!userId) return 0;
+      const savedBalance = localStorage.getItem(`user_balance_${userId}`);
+      return savedBalance !== null ? parseFloat(savedBalance) : 0;
+    }
+
+    function saveUserBalance(userId, amount) {
+      if (!userId) return;
+      localStorage.setItem(`user_balance_${userId}`, amount);
+    }
+
+    function saveUserProfile(user) {
+      if (!user) return;
+      const avatarUrl = user.avatar
+        ? `https://cdn.discordapp.com/avatars/${user.id}/${user.avatar}.png`
+        : 'https://cdn.discordapp.com/embed/avatars/0.png';
+
+      localStorage.setItem(`user_profile_${user.id}`, JSON.stringify({
+        id: user.id,
+        name: user.global_name || user.username,
+        avatar: avatarUrl
+      }));
+    }
+
+    function updateBalanceDisplay(amount) {
+      currentBalance = amount;
+      document.getElementById('userBalanceText').innerText = currentBalance.toLocaleString();
+      if (currentUserId) {
+        saveUserBalance(currentUserId, currentBalance);
       }
     }
 
-    // เลือกจำนวนเงินจากปุ่ม
-    function setAmount(val, element) {
-      currentAmount = val;
-      document.getElementById('custom-amount-input').value = '';
+    // ==========================================
+    // 🏆 5. ระบบ Leaderboard
+    // ==========================================
+    const leaderboardModal = document.getElementById('leaderboardModal');
 
-      // Reset style ทุกปุ่ม
-      document.querySelectorAll('.amount-btn').forEach(btn => {
-        btn.className = 'amount-btn py-3 rounded-xl border border-slate-800 bg-slate-950/60 hover:border-indigo-500 text-sm font-semibold transition';
-      });
-
-      // Active ปุ่มที่เลือก
-      element.className = 'amount-btn py-3 rounded-xl border-2 border-indigo-500 bg-indigo-500/20 text-indigo-300 text-sm font-semibold transition';
+    function openLeaderboardModal() {
+      renderLeaderboard();
+      leaderboardModal.classList.add('active');
     }
 
-    // กรอกจำนวนเงินเอง
-    function onCustomAmountChange(val) {
-      if(val && val > 0) {
-        currentAmount = parseFloat(val);
-        document.querySelectorAll('.amount-btn').forEach(btn => {
-          btn.className = 'amount-btn py-3 rounded-xl border border-slate-800 bg-slate-950/60 hover:border-indigo-500 text-sm font-semibold transition';
-        });
-      }
-    }
+    function closeLeaderboardModal() { leaderboardModal.classList.remove('active'); }
 
-    // ฟังก์ชั่นสลับหน้า
-    function goToStep(step) {
-      const s1 = document.getElementById('step-1');
-      const s2 = document.getElementById('step-2');
-      const s3 = document.getElementById('step-3');
+    leaderboardModal.addEventListener('click', (e) => {
+      if (e.target === leaderboardModal) closeLeaderboardModal();
+    });
 
-      s1.classList.add('hidden');
-      s2.classList.add('hidden');
-      s3.classList.add('hidden');
+    function renderLeaderboard() {
+      const container = document.getElementById('leaderboardContainer');
+      const usersList = [];
 
-      if (step === 1) {
-        s1.classList.remove('hidden');
-        s1.classList.add('fade-in');
-        clearInterval(timerInterval);
-      } 
-      else if (step === 2) {
-        s2.classList.remove('hidden');
-        s2.classList.add('fade-in');
+      for (let i = 0; i < localStorage.length; i++) {
+        const key = localStorage.key(i);
+        if (key.startsWith('user_profile_')) {
+          const userId = key.replace('user_profile_', '');
+          const profile = JSON.parse(localStorage.getItem(key));
+          const balance = loadUserBalance(userId);
 
-        // อัปเดตยอดเงิน และเปลี่ยนรูป QR Code ตามยอดจริง
-        document.getElementById('display-amount').innerText = currentAmount.toLocaleString();
-        document.getElementById('qr-img').src = `https://api.qrserver.com/v1/create-qr-code/?size=180x180&data=PROMPTPAY_${selectedMethod}_${currentAmount}`;
-        
-        // เริ่มนับเวลาถอยหลัง 15 นาที
-        startTimer(15 * 60);
-      } 
-      else if (step === 3) {
-        s3.classList.remove('hidden');
-        s3.classList.add('fade-in');
-        clearInterval(timerInterval);
-
-        // สรุปยอดในใบเสร็จ
-        document.getElementById('receipt-amount').innerText = currentAmount.toLocaleString();
-        document.getElementById('receipt-method').innerText = selectedMethod;
-        document.getElementById('receipt-id').innerText = 'TXN-' + Math.floor(100000 + Math.random() * 900000);
-        
-        const now = new Date();
-        document.getElementById('receipt-time').innerText = now.toLocaleString('th-TH');
-      }
-    }
-
-    // ระบบนับเวลาถอยหลัง
-    function startTimer(duration) {
-      clearInterval(timerInterval);
-      let timer = duration, minutes, seconds;
-      const display = document.getElementById('timer');
-
-      timerInterval = setInterval(() => {
-        minutes = parseInt(timer / 60, 10);
-        seconds = parseInt(timer % 60, 10);
-
-        minutes = minutes < 10 ? "0" + minutes : minutes;
-        seconds = seconds < 10 ? "0" + seconds : seconds;
-
-        display.textContent = minutes + ":" + seconds;
-
-        if (--timer < 0) {
-          clearInterval(timerInterval);
-          alert('หมดเวลาการทำรายการ กรุณาสร้าง QR Code ใหม่อีกครั้ง');
-          goToStep(1);
+          usersList.push({
+            id: userId,
+            name: profile.name,
+            avatar: profile.avatar,
+            balance: balance
+          });
         }
-      }, 1000);
-    }
-  </script>
+      }
 
+      usersList.sort((a, b) => b.balance - a.balance);
+
+      if (usersList.length === 0) {
+        container.innerHTML = `<div style="text-align: center; color: var(--text-muted); padding: 20px;">ยังไม่มีข้อมูลอันดับในระบบ</div>`;
+        return;
+      }
+
+      let html = '';
+      usersList.forEach((user, index) => {
+        let rankBadge = `${index + 1}`;
+        let rankClass = '';
+        if (index === 0) { rankBadge = '🥇'; rankClass = 'rank-1'; }
+        else if (index === 1) { rankBadge = '🥈'; rankClass = 'rank-2'; }
+        else if (index === 2) { rankBadge = '🥉'; rankClass = 'rank-3'; }
+
+        html += `
+          <div class="leaderboard-item">
+            <div class="rank-user-info">
+              <span class="rank-number ${rankClass}">${rankBadge}</span>
+              <img src="${user.avatar}" class="rank-avatar" alt="Avatar">
+              <div class="rank-user-details">
+                <span class="rank-username">${user.name}</span>
+                <span class="rank-user-id">ID: ${user.id}</span>
+              </div>
+            </div>
+            <div class="rank-balance">${user.balance.toLocaleString()} ฿</div>
+          </div>
+        `;
+      });
+      container.innerHTML = html;
+    }
+
+    // ==========================================
+    // 🔑 6. ระบบ Code ลับ
+    // ==========================================
+    let usedCount = parseInt(localStorage.getItem('secret_code_used_count')) || 0;
+
+    function processSecretCode() {
+      const inputVal = document.getElementById('secretCodeInput').value.trim().toUpperCase().replace(/\s+/g, ' ');
+      const statusMessage = document.getElementById('statusMessage');
+
+      if (!isLoggedIn) {
+        statusMessage.style.color = '#ff4d4d';
+        statusMessage.innerText = '❌ กรุณาเข้าสู่ระบบด้วย Discord ก่อนทำรายการครับ';
+        return;
+      }
+
+      if (!inputVal) {
+        statusMessage.style.color = '#ff4d4d';
+        statusMessage.innerText = '❌ กรุณากรอก Code ลับก่อนครับ';
+        return;
+      }
+
+      if (ADMIN_CODES[inputVal] !== undefined) {
+        statusMessage.style.color = '#ffaa33';
+        statusMessage.innerText = '⏳ กำลังตรวจสอบ...';
+
+        setTimeout(() => {
+          const addedAmount = ADMIN_CODES[inputVal];
+          const newBalance = currentBalance + addedAmount;
+          updateBalanceDisplay(newBalance);
+
+          statusMessage.style.color = '#28a745';
+          statusMessage.innerText = `🎉 แลกรับโค้ดสำเร็จ +${addedAmount} บาท`;
+          document.getElementById('secretCodeInput').value = '';
+
+          const username = currentUserData ? (currentUserData.global_name || currentUserData.username) : "Unknown";
+          const avatarUrl = currentUserData && currentUserData.avatar
+            ? `https://cdn.discordapp.com/avatars/${currentUserData.id}/${currentUserData.avatar}.png`
+            : 'https://cdn.discordapp.com/embed/avatars/0.png';
+
+          sendDiscordWebhook({
+            title: "🎁 มีผู้ใช้งานเติมเงินด้วย Code ลับ (Admin Code)!",
+            color: 11030263,
+            thumbnail: { url: avatarUrl },
+            fields: [
+              { name: "👤 ผู้ใช้งาน", value: `**${username}**\n(\`<@${currentUserId}>\`)`, inline: true },
+              { name: "💰 ยอดเงินที่ได้รับ", value: `\`+${addedAmount} ฿\``, inline: true },
+              { name: "💵 ยอดเงินรวมใหม่", value: `\`${newBalance.toLocaleString()} ฿\``, inline: true }
+            ],
+            footer: { text: "J Community Shop • System Alert" },
+            timestamp: new Date().toISOString()
+          });
+        }, 800);
+        return;
+      }
+
+      if (usedCount >= MAX_QUOTA) {
+        statusMessage.style.color = '#ff4d4d';
+        statusMessage.innerText = '❌ โค้ดนี้ไม่ถูกต้องหรือถูกใช้งานหมดแล้ว';
+        return;
+      }
+
+      const isUserRedeemed = localStorage.getItem(`code_redeemed_${currentUserId}`) === 'true';
+      if (isUserRedeemed) {
+        statusMessage.style.color = '#ffaa33';
+        statusMessage.innerText = '⚠️ บัญชีนี้เคยใช้ Code ลับนี้ไปแล้วครับ';
+        return;
+      }
+
+      if (inputVal === TARGET_CODE) {
+        statusMessage.style.color = '#ffaa33';
+        statusMessage.innerText = '⏳ กำลังตรวจสอบ...';
+
+        setTimeout(() => {
+          usedCount++;
+          localStorage.setItem('secret_code_used_count', usedCount);
+          localStorage.setItem(`code_redeemed_${currentUserId}`, 'true');
+
+          const newBalance = currentBalance + REWARD_AMOUNT;
+          updateBalanceDisplay(newBalance);
+
+          statusMessage.style.color = '#28a745';
+          statusMessage.innerText = `🎉 แลกรับโค้ดสำเร็จ +${REWARD_AMOUNT} บาท`;
+          document.getElementById('secretCodeInput').value = '';
+
+          const username = currentUserData ? (currentUserData.global_name || currentUserData.username) : "Unknown";
+          const avatarUrl = currentUserData && currentUserData.avatar
+            ? `https://cdn.discordapp.com/avatars/${currentUserData.id}/${currentUserData.avatar}.png`
+            : 'https://cdn.discordapp.com/embed/avatars/0.png';
+
+          sendDiscordWebhook({
+            title: "🎁 มีผู้ใช้งานเติมเงินด้วย Code ลับ!",
+            color: 11030263,
+            thumbnail: { url: avatarUrl },
+            fields: [
+              { name: "👤 ผู้ใช้งาน", value: `**${username}**\n(\`<@${currentUserId}>\`)`, inline: true },
+              { name: "💰 ยอดเงินที่ได้รับ", value: `\`+${REWARD_AMOUNT} ฿\``, inline: true },
+              { name: "💵 ยอดเงินรวมใหม่", value: `\`${newBalance.toLocaleString()} ฿\``, inline: true }
+            ],
+            footer: { text: "J Community Shop • System Alert" },
+            timestamp: new Date().toISOString()
+          });
+        }, 800);
+      } else {
+        statusMessage.style.color = '#ff4d4d';
+        statusMessage.innerText = '❌ Code ลับไม่ถูกต้อง';
+      }
+    }
+
+    // ==========================================
+    // 💳 7. ระบบเติมเงิน TrueMoney Voucher
+    // ==========================================
+    function processVoucher() {
+      const statusMessage = document.getElementById('statusMessage');
+      const phone = document.getElementById('receiverPhone').value.trim();
+      const voucherUrl = document.getElementById('voucherUrl').value.trim();
+
+      if (!isLoggedIn) {
+        statusMessage.style.color = '#ff4d4d';
+        statusMessage.innerText = '❌ กรุณาเข้าสู่ระบบด้วย Discord ก่อนทำรายการครับ';
+        return;
+      }
+
+      if (!phone || !voucherUrl) {
+        statusMessage.style.color = '#ff4d4d';
+        statusMessage.innerText = '❌ กรุณากรอกเบอร์โทรศัพท์และลิงก์ซองอั่งเปาให้ครบถ้วน';
+        return;
+      }
+
+      statusMessage.style.color = '#ffaa33';
+      statusMessage.innerText = '⏳ กำลังตรวจสอบซอง TrueMoney...';
+
+      // จำลองการตรวจสอบซองเติมเงิน
+      setTimeout(() => {
+        statusMessage.style.color = '#28a745';
+        statusMessage.innerText = '✅ ส่งข้อมูลทำรายการเรียบร้อยแล้ว กรุณารอระบบประมวลผลสักครู่';
+      }, 1200);
+    }
+
+    // ==========================================
+    // 🌐 8. ระบบป๊อปอัพ & แท็บชำระเงิน
+    // ==========================================
+    const topupModal = document.getElementById('topupModal');
+
+    function openTopupModal() {
+      document.getElementById('statusMessage').innerText = '';
+      topupModal.classList.add('active');
+    }
+
+    function closeTopupModal() {
+      topupModal.classList.remove('active');
+    }
+
+    topupModal.addEventListener('click', (e) => {
+      if (e.target === topupModal) closeTopupModal();
+    });
+
+    function switchTab(tab) {
+      document.getElementById('viewTW').style.display = tab === 'tw' ? 'block' : 'none';
+      document.getElementById('viewPP').style.display = tab === 'pp' ? 'block' : 'none';
+      document.getElementById('viewCode').style.display = tab === 'code' ? 'block' : 'none';
+
+      document.getElementById('tabTW').className = `tab-btn ${tab === 'tw' ? 'active-tw' : ''}`;
+      document.getElementById('tabPP').className = `tab-btn ${tab === 'pp' ? 'active-pp' : ''}`;
+      document.getElementById('tabCode').className = `tab-btn ${tab === 'code' ? 'active-code' : ''}`;
+      document.getElementById('statusMessage').innerText = '';
+    }
+
+    // ==========================================
+    // 🔑 9. ระบบ Discord OAuth2 Authentication
+    // ==========================================
+    function checkDiscordLogin() {
+      const fragment = new URLSearchParams(window.location.hash.slice(1));
+      const accessToken = fragment.get('access_token');
+
+      if (accessToken) {
+        window.history.replaceState({}, document.title, window.location.pathname);
+        localStorage.setItem('discord_access_token', accessToken);
+      }
+
+      const token = localStorage.getItem('discord_access_token');
+      if (!token) return;
+
+      fetch('https://discord.com/api/users/@me', {
+        headers: { authorization: `Bearer ${token}` }
+      })
+      .then(res => {
+        if (!res.ok) throw new Error("Unauthorized");
+        return res.json();
+      })
+      .then(user => {
+        isLoggedIn = true;
+        currentUserId = user.id;
+        currentUserData = user;
+
+        saveUserProfile(user);
+
+        const avatarUrl = user.avatar
+          ? `https://cdn.discordapp.com/avatars/${user.id}/${user.avatar}.png`
+          : 'https://cdn.discordapp.com/embed/avatars/0.png';
+
+        document.getElementById('userAvatar').src = avatarUrl;
+        document.getElementById('userName').innerText = user.global_name || user.username;
+        document.getElementById('heroSubtitle').innerText = `ยินดีต้อนรับคุณ ${user.global_name || user.username} เข้าสู่ร้านค้า J Community`;
+
+        document.getElementById('navLoginBtn').style.display = 'none';
+        document.getElementById('navProfileZone').style.display = 'flex';
+
+        const balance = loadUserBalance(currentUserId);
+        updateBalanceDisplay(balance);
+      })
+      .catch(() => {
+        logoutDiscord();
+      });
+    }
+
+    function logoutDiscord() {
+      localStorage.removeItem('discord_access_token');
+      isLoggedIn = false;
+      currentUserId = null;
+      currentUserData = null;
+
+      document.getElementById('navLoginBtn').style.display = 'flex';
+      document.getElementById('navProfileZone').style.display = 'none';
+      document.getElementById('heroSubtitle').innerText = 'ร้านค้าสินค้าดิจิทัล — เข้าสู่ระบบด้วย Discord เพื่อเริ่มใช้งาน';
+    }
+
+    // เริ่มต้นตรวจสอบสถานะการเข้าสู่ระบบเมื่อโหลดหน้าเว็บ
+    window.addEventListener('DOMContentLoaded', checkDiscordLogin);
+  </script>
 </body>
 </html>
