@@ -857,9 +857,93 @@
     .status-success { background: rgba(34, 197, 94, 0.18); color: #4ade80; border: 1px solid rgba(34, 197, 94, 0.35); }
     .status-pending { background: rgba(245, 158, 11, 0.18); color: #fbbf24; border: 1px solid rgba(245, 158, 11, 0.35); }
 
+    /* 🌐 Footer Styling */
+    footer {
+      margin-top: auto;
+      background: rgba(10, 4, 18, 0.95);
+      border-top: 1px solid var(--border-color);
+      padding: 20px 3%;
+      backdrop-filter: blur(15px);
+      box-shadow: 0 -10px 30px rgba(0, 0, 0, 0.5);
+    }
+
+    .footer-container {
+      max-width: 1240px;
+      margin: 0 auto;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 16px;
+      font-size: 0.88rem;
+      color: var(--text-muted);
+    }
+
+    .footer-left {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+
+    .status-indicator {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: rgba(34, 197, 94, 0.12);
+      border: 1px solid rgba(34, 197, 94, 0.35);
+      color: #4ade80;
+      padding: 6px 14px;
+      border-radius: 20px;
+      font-weight: 700;
+      font-size: 0.82rem;
+    }
+
+    .ping-dot {
+      width: 8px;
+      height: 8px;
+      background-color: #22c55e;
+      border-radius: 50%;
+      position: relative;
+      box-shadow: 0 0 10px #22c55e;
+    }
+
+    .ping-dot::after {
+      content: '';
+      position: absolute;
+      top: -2px; left: -2px;
+      width: 12px; height: 12px;
+      border-radius: 50%;
+      border: 2px solid #22c55e;
+      animation: pulsePing 1.8s infinite ease-in-out;
+    }
+
+    @keyframes pulsePing {
+      0% { transform: scale(0.8); opacity: 1; }
+      100% { transform: scale(2.2); opacity: 0; }
+    }
+
+    .version-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: rgba(168, 85, 247, 0.15);
+      border: 1px solid var(--border-color);
+      color: var(--text-main);
+      padding: 6px 14px;
+      border-radius: 20px;
+      font-weight: 700;
+      font-size: 0.82rem;
+    }
+
+    .footer-right strong {
+      color: var(--primary-purple);
+    }
+
     @media (max-width: 900px) {
       header { flex-wrap: wrap; justify-content: center; gap: 12px; }
       .top-menu-bar { order: 3; width: 100%; overflow-x: auto; justify-content: flex-start; }
+      .footer-container { flex-direction: column; text-align: center; justify-content: center; }
     }
   </style>
 </head>
@@ -1054,6 +1138,24 @@
       <div class="leaderboard-list" id="leaderboardContainer"></div>
     </div>
   </div>
+
+  <!-- 🌐 Footer ส่วนล่างสุดของเว็บ -->
+  <footer>
+    <div class="footer-container">
+      <div class="footer-left">
+        <span class="status-indicator">
+          <span class="ping-dot"></span>
+          🟢 ระบบพร้อมใช้งาน 24/7 (ออนไลน์)
+        </span>
+        <span class="version-badge">
+          <i data-lucide="sparkles" style="width:14px; color: var(--gold-color);"></i> v2026.1 (เวอร์ชันอัปเดตใหม่ล่าสุด)
+        </span>
+      </div>
+      <div class="footer-right">
+        &copy; 2026 <strong>J Community Shop</strong>. All rights reserved.
+      </div>
+    </div>
+  </footer>
 
   <script>
     lucide.createIcons();
