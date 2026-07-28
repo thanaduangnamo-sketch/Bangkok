@@ -3,88 +3,314 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>หน้าเติมเงิน - Top Up</title>
+  <title>ระบบเติมเงิน - Top Up System</title>
   <!-- Tailwind CSS CDN -->
   <script src="https://cdn.tailwindcss.com"></script>
-  <!-- Font Sukhumvit / Kanit จาก Google Fonts -->
-  <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <!-- Google Fonts: Kanit -->
+  <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
   <style>
     body { font-family: 'Kanit', sans-serif; }
+    .fade-in { animation: fadeIn 0.3s ease-in-out forwards; }
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(8px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
   </style>
 </head>
 <body class="bg-slate-950 text-slate-100 min-h-screen flex items-center justify-center p-4">
 
-  <div class="max-w-md w-full bg-slate-900/80 backdrop-blur-xl border border-slate-800 rounded-3xl p-6 shadow-2xl shadow-indigo-500/10">
+  <!-- Main Container -->
+  <div class="max-w-md w-full bg-slate-900/90 backdrop-blur-2xl border border-slate-800 rounded-3xl p-6 shadow-2xl relative overflow-hidden">
     
-    <!-- Header -->
-    <div class="text-center mb-6">
-      <h1 class="text-2xl font-bold bg-gradient-to-r from-indigo-400 to-cyan-400 bg-clip-text text-transparent">
-        เติมเงินเข้าบัญชี
-      </h1>
-      <p class="text-xs text-slate-400 mt-1">สแกน QR Code ผ่านแอปธนาคารได้ทุกธนาคาร</p>
-    </div>
+    <!-- Decorative Glow Effects -->
+    <div class="absolute -top-16 -left-16 w-32 h-32 bg-indigo-500/20 rounded-full blur-3xl pointer-events-none"></div>
+    <div class="absolute -bottom-16 -right-16 w-32 h-32 bg-cyan-500/20 rounded-full blur-3xl pointer-events-none"></div>
 
-    <!-- Step 1: เลือกจำนวนเงิน -->
-    <div class="mb-6">
-      <label class="block text-xs font-semibold text-slate-300 uppercase tracking-wider mb-2">
-        1. เลือกจำนวนเงิน
-      </label>
-      <div class="grid grid-cols-3 gap-2">
-        <button class="py-2.5 rounded-xl border border-slate-700 bg-slate-800/50 hover:border-indigo-500 hover:bg-indigo-500/10 transition text-sm font-medium focus:ring-2 focus:ring-indigo-500 focus:border-transparent">
-          ฿50
-        </button>
-        <button class="py-2.5 rounded-xl border border-indigo-500 bg-indigo-500/20 text-indigo-300 text-sm font-medium focus:ring-2 focus:ring-indigo-500">
-          ฿100
-        </button>
-        <button class="py-2.5 rounded-xl border border-slate-700 bg-slate-800/50 hover:border-indigo-500 hover:bg-indigo-500/10 transition text-sm font-medium focus:ring-2 focus:ring-indigo-500 focus:border-transparent">
-          ฿300
-        </button>
-        <button class="py-2.5 rounded-xl border border-slate-700 bg-slate-800/50 hover:border-indigo-500 hover:bg-indigo-500/10 transition text-sm font-medium focus:ring-2 focus:ring-indigo-500 focus:border-transparent">
-          ฿500
-        </button>
-        <button class="py-2.5 rounded-xl border border-slate-700 bg-slate-800/50 hover:border-indigo-500 hover:bg-indigo-500/10 transition text-sm font-medium focus:ring-2 focus:ring-indigo-500 focus:border-transparent">
-          ฿1,000
-        </button>
-        <button class="py-2.5 rounded-xl border border-slate-700 bg-slate-800/50 hover:border-indigo-500 hover:bg-indigo-500/10 transition text-sm font-medium focus:ring-2 focus:ring-indigo-500 focus:border-transparent">
-          ระบุเอง
-        </button>
-      </div>
-    </div>
-
-    <!-- Step 2: แสดง QR Code และยอดเงิน -->
-    <div class="bg-slate-950/60 border border-slate-800 rounded-2xl p-5 text-center relative overflow-hidden mb-6">
-      <!-- Glow Decor -->
-      <div class="absolute -top-12 -right-12 w-24 h-24 bg-indigo-500/20 rounded-full blur-2xl"></div>
-      
-      <p class="text-xs text-slate-400 mb-1">ยอดที่ต้องชำระ</p>
-      <div class="text-3xl font-extrabold text-white mb-4">
-        ฿100.<span class="text-indigo-400 text-xl">00</span>
+    <!-- ==========================================
+         STEP 1: หน้าเลือกช่องทาง และ เลือกยอดเงิน
+    =========================================== -->
+    <div id="step-1" class="space-y-6 fade-in">
+      <!-- Header -->
+      <div class="text-center">
+        <h1 class="text-2xl font-bold bg-gradient-to-r from-indigo-400 via-purple-400 to-cyan-400 bg-clip-text text-transparent">
+          เติมเงินเข้าระบบ
+        </h1>
+        <p class="text-xs text-slate-400 mt-1">เลือกรอบรายการและช่องทางที่สะดวก</p>
       </div>
 
-      <!-- Container ใส่ QR Code -->
-      <div class="bg-white p-3 rounded-2xl inline-block shadow-lg shadow-black/50 mb-3">
-        <!-- คุณสามารถใช้ tag <img> หรือ JS Render สแกนสร้าง QR Code ตรงนี้ได้ -->
-        <img src="https://api.qrserver.com/v1/create-qr-code/?size=180x180&data=https://yourwebsite.com" alt="PromptPay QR Code" class="w-44 h-44 rounded-lg">
+      <!-- User Info Badge -->
+      <div class="bg-slate-950/60 border border-slate-800 rounded-2xl p-3 flex items-center justify-between">
+        <div class="flex items-center gap-3">
+          <div class="w-9 h-9 rounded-xl bg-indigo-500/10 border border-indigo-500/20 flex items-center justify-center text-indigo-400 font-bold">
+            👤
+          </div>
+          <div>
+            <p class="text-[10px] text-slate-400">บัญชีผู้ใช้</p>
+            <p class="text-xs font-semibold text-slate-200">User_Demo123</p>
+          </div>
+        </div>
+        <span class="text-[10px] bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 px-2 py-0.5 rounded-full">ออนไลน์</span>
       </div>
 
-      <div class="flex items-center justify-center gap-2 text-xs text-emerald-400 bg-emerald-500/10 py-1.5 px-3 rounded-full w-fit mx-auto border border-emerald-500/20">
-        <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
-        พร้อมพย์ (PromptPay) อัตโนมัติ
+      <!-- Select Payment Method -->
+      <div>
+        <label class="block text-xs font-semibold text-slate-300 uppercase tracking-wider mb-2">
+          1. เลือกช่องทางชำระเงิน
+        </label>
+        <div class="grid grid-cols-2 gap-3">
+          <button type="button" onclick="selectPayment('promptpay')" id="method-promptpay" class="flex items-center gap-3 p-3 rounded-2xl border-2 border-indigo-500 bg-indigo-500/10 text-left transition">
+            <span class="text-xl">💳</span>
+            <div>
+              <p class="text-xs font-semibold text-white">PromptPay</p>
+              <p class="text-[10px] text-slate-400">สแกน QR ฟรีค่าธรรมเนียม</p>
+            </div>
+          </button>
+          <button type="button" onclick="selectPayment('truemoney')" id="method-truemoney" class="flex items-center gap-3 p-3 rounded-2xl border border-slate-800 bg-slate-950/40 text-left opacity-60 hover:opacity-100 transition">
+            <span class="text-xl">🟧</span>
+            <div>
+              <p class="text-xs font-semibold text-white">TrueMoney</p>
+              <p class="text-[10px] text-slate-400">วอลเล็ท / อั่งเปา</p>
+            </div>
+          </button>
+        </div>
       </div>
-    </div>
 
-    <!-- Step 3: หมายเหตุและสถานะ -->
-    <div class="space-y-3">
-      <button class="w-full py-3.5 px-4 bg-gradient-to-r from-indigo-500 to-cyan-500 hover:from-indigo-600 hover:to-cyan-600 font-semibold rounded-xl transition duration-200 shadow-lg shadow-indigo-500/25 flex items-center justify-center gap-2">
-        <span>ตรวจสอบสถานะการชำระเงิน</span>
+      <!-- Select Amount -->
+      <div>
+        <label class="block text-xs font-semibold text-slate-300 uppercase tracking-wider mb-2">
+          2. เลือกจำนวนเงิน (บาท)
+        </label>
+        <div class="grid grid-cols-3 gap-2.5">
+          <button type="button" onclick="setAmount(50, this)" class="amount-btn py-3 rounded-xl border border-slate-800 bg-slate-950/60 hover:border-indigo-500 text-sm font-semibold transition">฿50</button>
+          <button type="button" onclick="setAmount(100, this)" class="amount-btn py-3 rounded-xl border-2 border-indigo-500 bg-indigo-500/20 text-indigo-300 text-sm font-semibold transition">฿100</button>
+          <button type="button" onclick="setAmount(300, this)" class="amount-btn py-3 rounded-xl border border-slate-800 bg-slate-950/60 hover:border-indigo-500 text-sm font-semibold transition">฿300</button>
+          <button type="button" onclick="setAmount(500, this)" class="amount-btn py-3 rounded-xl border border-slate-800 bg-slate-950/60 hover:border-indigo-500 text-sm font-semibold transition">฿500</button>
+          <button type="button" onclick="setAmount(1000, this)" class="amount-btn py-3 rounded-xl border border-slate-800 bg-slate-950/60 hover:border-indigo-500 text-sm font-semibold transition">฿1,000</button>
+          <button type="button" onclick="setAmount(2000, this)" class="amount-btn py-3 rounded-xl border border-slate-800 bg-slate-950/60 hover:border-indigo-500 text-sm font-semibold transition">฿2,000</button>
+        </div>
+        
+        <!-- Custom Amount Input -->
+        <div class="mt-3">
+          <input type="number" id="custom-amount-input" oninput="onCustomAmountChange(this.value)" placeholder="หรือระบุจำนวนเงินเอง (10 - 50,000)" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-2.5 text-xs text-slate-200 placeholder-slate-500 focus:outline-none focus:border-indigo-500 transition">
+        </div>
+      </div>
+
+      <!-- Submit Button -->
+      <button type="button" onclick="goToStep(2)" class="w-full py-3.5 bg-gradient-to-r from-indigo-500 to-cyan-500 hover:from-indigo-600 hover:to-cyan-600 font-semibold rounded-xl transition shadow-lg shadow-indigo-500/25 flex items-center justify-center gap-2">
+        <span>ถัดไป: สแกนชำระเงิน</span>
+        <span>→</span>
       </button>
+    </div>
 
-      <p class="text-[11px] text-center text-slate-500">
-        ระบบจะปรับยอดให้อัตโนมัติภายใน 1-3 นาที หลังการโอนเงินสำเร็จ
-      </p>
+
+    <!-- ==========================================
+         STEP 2: หน้าแสดง QR Code และสแกนชำระเงิน
+    =========================================== -->
+    <div id="step-2" class="space-y-5 hidden">
+      <!-- Header -->
+      <div class="text-center">
+        <h2 class="text-xl font-bold text-white">สแกน QR Code เพื่อชำระเงิน</h2>
+        <p class="text-xs text-slate-400 mt-1">ใช้แอปธนาคารใดก็ได้ในการสแกนจ่าย</p>
+      </div>
+
+      <!-- Display Box -->
+      <div class="bg-slate-950/80 border border-slate-800 rounded-2xl p-5 text-center relative overflow-hidden">
+        
+        <!-- Countdown Badge -->
+        <div class="inline-flex items-center gap-1.5 bg-amber-500/10 border border-amber-500/20 text-amber-400 px-3 py-1 rounded-full text-[11px] mb-3">
+          <span>⏱️</span>
+          <span>กรุณาชำระภายใน <strong id="timer">15:00</strong> นาที</span>
+        </div>
+
+        <p class="text-xs text-slate-400">ยอดเงินที่ต้องโอน</p>
+        <div class="text-3xl font-extrabold text-white my-1">
+          ฿<span id="display-amount" class="text-indigo-400">100</span>.00
+        </div>
+
+        <!-- QR Code Image -->
+        <div class="bg-white p-3.5 rounded-2xl inline-block shadow-2xl my-3 relative group">
+          <img id="qr-img" src="https://api.qrserver.com/v1/create-qr-code/?size=180x180&data=PROMPTPAY_DEMO_100" alt="PromptPay QR Code" class="w-44 h-44 rounded-lg">
+        </div>
+
+        <div class="flex items-center justify-center gap-2 text-xs text-emerald-400 bg-emerald-500/10 py-1.5 px-3 rounded-full w-fit mx-auto border border-emerald-500/20 mt-1">
+          <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+          ระบบตรวจจับยอดเงินเข้าอัตโนมัติ
+        </div>
+      </div>
+
+      <!-- Action Buttons -->
+      <div class="space-y-2">
+        <button type="button" onclick="goToStep(3)" class="w-full py-3.5 bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-600 hover:to-teal-600 font-semibold rounded-xl transition shadow-lg shadow-emerald-500/20 flex items-center justify-center gap-2">
+          <span>จำลอง: จ่ายเงินสำเร็จแล้ว</span>
+          <span>✓</span>
+        </button>
+
+        <button type="button" onclick="goToStep(1)" class="w-full py-2.5 text-xs text-slate-400 hover:text-slate-200 transition">
+          ← ยกเลิก / เปลี่ยนยอดเงิน
+        </button>
+      </div>
+    </div>
+
+
+    <!-- ==========================================
+         STEP 3: หน้าทำรายการสำเร็จ (ใบเสร็จ)
+    =========================================== -->
+    <div id="step-3" class="space-y-6 text-center hidden py-2">
+      <!-- Success Icon -->
+      <div class="relative w-20 h-20 mx-auto">
+        <div class="absolute inset-0 bg-emerald-500/20 rounded-full blur-xl animate-pulse"></div>
+        <div class="relative w-20 h-20 bg-slate-950 border-2 border-emerald-500 text-emerald-400 rounded-full flex items-center justify-center text-4xl shadow-inner">
+          ✓
+        </div>
+      </div>
+
+      <div>
+        <h2 class="text-2xl font-bold text-white">เติมเงินสำเร็จ!</h2>
+        <p class="text-xs text-slate-400 mt-1">ระบบได้ทำการเพิ่มเครดิตเข้า บัญชีของคุณเรียบร้อยแล้ว</p>
+      </div>
+
+      <!-- Receipt Card -->
+      <div class="bg-slate-950/80 border border-slate-800 rounded-2xl p-4 text-left space-y-3 text-xs">
+        <div class="flex justify-between items-center pb-2 border-b border-slate-800">
+          <span class="text-slate-400">สถานะรายการ</span>
+          <span class="text-emerald-400 font-semibold bg-emerald-500/10 border border-emerald-500/20 px-2 py-0.5 rounded-md">สำเร็จ (Completed)</span>
+        </div>
+        <div class="flex justify-between text-slate-400">
+          <span>เลขที่อ้างอิง:</span>
+          <span class="text-slate-200 font-mono" id="receipt-id">TXN-883920</span>
+        </div>
+        <div class="flex justify-between text-slate-400">
+          <span>ช่องทางชำระ:</span>
+          <span class="text-slate-200" id="receipt-method">PromptPay</span>
+        </div>
+        <div class="flex justify-between text-slate-400">
+          <span>เวลาที่ทำรายการ:</span>
+          <span class="text-slate-200" id="receipt-time">28/07/2026 13:22</span>
+        </div>
+        <div class="flex justify-between text-slate-400 pt-2 border-t border-slate-800 text-sm">
+          <span class="font-semibold text-slate-300">จำนวนเงินที่ได้รับ:</span>
+          <span class="text-emerald-400 font-bold">฿<span id="receipt-amount">100</span>.00</span>
+        </div>
+      </div>
+
+      <!-- Back to Main Page Button -->
+      <button type="button" onclick="goToStep(1)" class="w-full py-3.5 bg-slate-800 hover:bg-slate-700 text-slate-200 font-semibold rounded-xl transition">
+        เสร็จสิ้น / เติมเงินรายการอื่น
+      </button>
     </div>
 
   </div>
+
+  <!-- JavaScript Logic -->
+  <script>
+    let currentAmount = 100;
+    let selectedMethod = 'PromptPay';
+    let timerInterval = null;
+
+    // เลือกช่องทางชำระเงิน
+    function selectPayment(method) {
+      const btnPp = document.getElementById('method-promptpay');
+      const btnTm = document.getElementById('method-truemoney');
+
+      if (method === 'promptpay') {
+        selectedMethod = 'PromptPay';
+        btnPp.className = 'flex items-center gap-3 p-3 rounded-2xl border-2 border-indigo-500 bg-indigo-500/10 text-left transition';
+        btnTm.className = 'flex items-center gap-3 p-3 rounded-2xl border border-slate-800 bg-slate-950/40 text-left opacity-60 hover:opacity-100 transition';
+      } else {
+        selectedMethod = 'TrueMoney';
+        btnTm.className = 'flex items-center gap-3 p-3 rounded-2xl border-2 border-orange-500 bg-orange-500/10 text-left transition';
+        btnPp.className = 'flex items-center gap-3 p-3 rounded-2xl border border-slate-800 bg-slate-950/40 text-left opacity-60 hover:opacity-100 transition';
+      }
+    }
+
+    // เลือกจำนวนเงินจากปุ่ม
+    function setAmount(val, element) {
+      currentAmount = val;
+      document.getElementById('custom-amount-input').value = '';
+
+      // Reset style ทุกปุ่ม
+      document.querySelectorAll('.amount-btn').forEach(btn => {
+        btn.className = 'amount-btn py-3 rounded-xl border border-slate-800 bg-slate-950/60 hover:border-indigo-500 text-sm font-semibold transition';
+      });
+
+      // Active ปุ่มที่เลือก
+      element.className = 'amount-btn py-3 rounded-xl border-2 border-indigo-500 bg-indigo-500/20 text-indigo-300 text-sm font-semibold transition';
+    }
+
+    // กรอกจำนวนเงินเอง
+    function onCustomAmountChange(val) {
+      if(val && val > 0) {
+        currentAmount = parseFloat(val);
+        document.querySelectorAll('.amount-btn').forEach(btn => {
+          btn.className = 'amount-btn py-3 rounded-xl border border-slate-800 bg-slate-950/60 hover:border-indigo-500 text-sm font-semibold transition';
+        });
+      }
+    }
+
+    // ฟังก์ชั่นสลับหน้า
+    function goToStep(step) {
+      const s1 = document.getElementById('step-1');
+      const s2 = document.getElementById('step-2');
+      const s3 = document.getElementById('step-3');
+
+      s1.classList.add('hidden');
+      s2.classList.add('hidden');
+      s3.classList.add('hidden');
+
+      if (step === 1) {
+        s1.classList.remove('hidden');
+        s1.classList.add('fade-in');
+        clearInterval(timerInterval);
+      } 
+      else if (step === 2) {
+        s2.classList.remove('hidden');
+        s2.classList.add('fade-in');
+
+        // อัปเดตยอดเงิน และเปลี่ยนรูป QR Code ตามยอดจริง
+        document.getElementById('display-amount').innerText = currentAmount.toLocaleString();
+        document.getElementById('qr-img').src = `https://api.qrserver.com/v1/create-qr-code/?size=180x180&data=PROMPTPAY_${selectedMethod}_${currentAmount}`;
+        
+        // เริ่มนับเวลาถอยหลัง 15 นาที
+        startTimer(15 * 60);
+      } 
+      else if (step === 3) {
+        s3.classList.remove('hidden');
+        s3.classList.add('fade-in');
+        clearInterval(timerInterval);
+
+        // สรุปยอดในใบเสร็จ
+        document.getElementById('receipt-amount').innerText = currentAmount.toLocaleString();
+        document.getElementById('receipt-method').innerText = selectedMethod;
+        document.getElementById('receipt-id').innerText = 'TXN-' + Math.floor(100000 + Math.random() * 900000);
+        
+        const now = new Date();
+        document.getElementById('receipt-time').innerText = now.toLocaleString('th-TH');
+      }
+    }
+
+    // ระบบนับเวลาถอยหลัง
+    function startTimer(duration) {
+      clearInterval(timerInterval);
+      let timer = duration, minutes, seconds;
+      const display = document.getElementById('timer');
+
+      timerInterval = setInterval(() => {
+        minutes = parseInt(timer / 60, 10);
+        seconds = parseInt(timer % 60, 10);
+
+        minutes = minutes < 10 ? "0" + minutes : minutes;
+        seconds = seconds < 10 ? "0" + seconds : seconds;
+
+        display.textContent = minutes + ":" + seconds;
+
+        if (--timer < 0) {
+          clearInterval(timerInterval);
+          alert('หมดเวลาการทำรายการ กรุณาสร้าง QR Code ใหม่อีกครั้ง');
+          goToStep(1);
+        }
+      }, 1000);
+    }
+  </script>
 
 </body>
 </html>
