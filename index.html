@@ -274,7 +274,7 @@
     /* Hero Section */
     .hero-container {
       text-align: center;
-      padding: 30px 0 40px;
+      padding: 20px 0 35px;
     }
 
     .badge {
@@ -288,7 +288,7 @@
       border-radius: 20px;
       font-size: 0.85rem;
       font-weight: 500;
-      margin-bottom: 20px;
+      margin-bottom: 16px;
     }
 
     .hero-title {
@@ -312,12 +312,12 @@
 
     /* Modern Shop Section UI Upgrade */
     .shop-wrapper {
-      background: rgba(17, 10, 23, 0.6);
+      background: rgba(17, 10, 23, 0.7);
       border: 1px solid var(--border-color);
       border-radius: 24px;
       padding: 28px;
       backdrop-filter: blur(16px);
-      box-shadow: 0 20px 50px rgba(0, 0, 0, 0.4);
+      box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5), 0 0 30px rgba(168, 85, 247, 0.08);
       position: relative;
     }
 
@@ -328,7 +328,7 @@
       left: 10%;
       right: 10%;
       height: 1px;
-      background: linear-gradient(90deg, transparent, rgba(168, 85, 247, 0.6), transparent);
+      background: linear-gradient(90deg, transparent, rgba(168, 85, 247, 0.7), transparent);
     }
 
     .shop-header-container {
@@ -355,16 +355,16 @@
     }
 
     .shop-title-icon {
-      width: 44px;
-      height: 44px;
+      width: 46px;
+      height: 46px;
       border-radius: 14px;
-      background: linear-gradient(135deg, rgba(168, 85, 247, 0.25) 0%, rgba(147, 51, 234, 0.05) 100%);
-      border: 1px solid rgba(168, 85, 247, 0.3);
+      background: linear-gradient(135deg, rgba(168, 85, 247, 0.3) 0%, rgba(147, 51, 234, 0.08) 100%);
+      border: 1px solid rgba(168, 85, 247, 0.4);
       display: flex;
       align-items: center;
       justify-content: center;
       color: var(--primary-purple);
-      box-shadow: 0 0 15px rgba(168, 85, 247, 0.15);
+      box-shadow: 0 0 18px rgba(168, 85, 247, 0.2);
     }
 
     .shop-title-text {
@@ -387,7 +387,7 @@
 
     .search-box {
       position: relative;
-      min-width: 200px;
+      min-width: 220px;
       flex: 1;
     }
 
@@ -396,7 +396,7 @@
       background: rgba(24, 14, 33, 0.9);
       border: 1px solid var(--border-color);
       border-radius: 12px;
-      padding: 8px 14px 8px 36px;
+      padding: 9px 14px 9px 38px;
       color: #fff;
       font-size: 0.88rem;
       outline: none;
@@ -405,7 +405,7 @@
 
     .search-input:focus {
       border-color: var(--primary-purple);
-      box-shadow: 0 0 12px rgba(168, 85, 247, 0.2);
+      box-shadow: 0 0 12px rgba(168, 85, 247, 0.25);
     }
 
     .search-icon-pos {
@@ -425,7 +425,7 @@
     }
 
     .cat-btn {
-      background: rgba(24, 14, 33, 0.7);
+      background: rgba(24, 14, 33, 0.8);
       border: 1px solid var(--border-color);
       color: var(--text-muted);
       padding: 8px 16px;
@@ -461,7 +461,7 @@
     }
 
     .product-card {
-      background: linear-gradient(180deg, rgba(24, 14, 33, 0.8) 0%, rgba(17, 10, 23, 0.95) 100%);
+      background: linear-gradient(180deg, rgba(24, 14, 33, 0.85) 0%, rgba(17, 10, 23, 0.95) 100%);
       border: 1px solid var(--border-color);
       border-radius: 18px;
       overflow: hidden;
@@ -479,7 +479,7 @@
 
     .product-img-wrap {
       width: 100%;
-      height: 170px;
+      height: 175px;
       background: var(--card-inner);
       position: relative;
       overflow: hidden;
@@ -499,7 +499,7 @@
     .product-img-overlay {
       position: absolute;
       inset: 0;
-      background: linear-gradient(180deg, transparent 50%, rgba(17, 10, 23, 0.9) 100%);
+      background: linear-gradient(180deg, transparent 40%, rgba(17, 10, 23, 0.95) 100%);
     }
 
     .product-badge-group {
@@ -543,20 +543,6 @@
       background: rgba(239, 68, 68, 0.2);
       border-color: rgba(239, 68, 68, 0.4);
       color: #f87171;
-    }
-
-    .btn-buy-product.disabled {
-      background: rgba(255, 255, 255, 0.08);
-      color: var(--text-muted);
-      cursor: not-allowed;
-      box-shadow: none;
-      border: 1px solid rgba(255, 255, 255, 0.1);
-    }
-
-    .btn-buy-product.disabled:hover {
-      background: rgba(255, 255, 255, 0.08);
-      transform: none;
-      box-shadow: none;
     }
 
     .product-body {
@@ -657,7 +643,21 @@
       transform: scale(1.03);
     }
 
-    /* กล่องแจ้งเตือนสินค้ายังไม่ลง */
+    .btn-buy-product.disabled {
+      background: rgba(255, 255, 255, 0.08);
+      color: var(--text-muted);
+      cursor: not-allowed;
+      box-shadow: none;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    .btn-buy-product.disabled:hover {
+      background: rgba(255, 255, 255, 0.08);
+      transform: none;
+      box-shadow: none;
+    }
+
+    /* Empty State Card */
     .empty-stock-card {
       background: var(--card-bg);
       border: 1px dashed var(--border-color);
@@ -695,7 +695,7 @@
       color: var(--text-muted);
     }
 
-    /* Modals (Topup & Leaderboard) */
+    /* Modals System */
     .modal-overlay {
       position: fixed;
       top: 0;
@@ -845,7 +845,7 @@
 
     #statusMessage { margin-top: 14px; font-size: 0.88rem; text-align: center; font-weight: 500; min-height: 20px; }
 
-    /* 🏆 Leaderboard Styles */
+    /* Leaderboard Styles */
     .leaderboard-list {
       display: flex;
       flex-direction: column;
@@ -989,7 +989,7 @@
       </div>
     </div>
 
-    <!-- โปรไฟล์ / ปุ่มเข้าสู่ระบบ -->
+    <!-- Login / User Profile Navigation Zone -->
     <div id="authNavZone">
       <a id="navLoginBtn" href="https://discord.com/oauth2/authorize?client_id=1507932932466282516&response_type=token&redirect_uri=https%3A%2F%2Fsk-six-beryl.vercel.app%2F&scope=identify" class="btn-login-discord">
         <i data-lucide="message-square" style="width:16px;"></i> เข้าสู่ระบบด้วย Discord
@@ -999,7 +999,7 @@
         <img id="userAvatar" class="user-avatar-small" src="https://placehold.co/100/180e21/a855f7?text=U" alt="Avatar">
         <span id="userName" class="user-name-text">Loading...</span>
 
-        <!-- ยอดเงินข้างชื่อ -->
+        <!-- User Balance Badge -->
         <div class="user-balance-badge">
           <i data-lucide="coins" style="width:14px;"></i>
           <span id="userBalanceText">0</span> ฿
@@ -1014,23 +1014,23 @@
   </header>
 
   <div class="container">
-    <!-- Hero Section -->
+    <!-- Hero Banner Section -->
     <section class="hero-container">
       <div class="badge">
         <i data-lucide="sparkles" style="width:14px;"></i> ยินดีต้อนรับสู่ J Community
       </div>
       <h1 class="hero-title">J Community <span>Shop</span></h1>
-      <p class="hero-subtitle" id="heroSubtitle">ร้านค้าจำหน่ายสินค้าดิจิทัลและบริการเกม — เข้าสู่ระบบด้วย Discord เพื่อเริ่มสั่งซื้อ</p>
+      <p class="hero-subtitle" id="heroSubtitle">ร้านค้าจำหน่ายสินค้าดิจิทัลและบริการเกม — เลือกซื้อสินค้าส่งไวผ่านระบบอัตโนมัติ 24 ชม.</p>
     </section>
 
-    <!-- Shop Section -->
+    <!-- Shop Main Section -->
     <section id="shopSection">
       <div class="shop-wrapper">
-        <!-- Shop Header & Navigation -->
+        <!-- Shop Header & Navigation Controls -->
         <div class="shop-header-container">
           <div class="shop-title-group">
             <div class="shop-title-icon">
-              <i data-lucide="shopping-bag" style="width:22px; height:22px;"></i>
+              <i data-lucide="shopping-bag" style="width:24px; height:24px;"></i>
             </div>
             <div>
               <div class="shop-title-text">รายการสินค้าและบริการ</div>
@@ -1039,7 +1039,7 @@
           </div>
 
           <div class="shop-controls">
-            <!-- Search bar -->
+            <!-- Search Bar -->
             <div class="search-box">
               <i data-lucide="search" class="search-icon-pos" style="width:16px; height:16px;"></i>
               <input type="text" id="shopSearchInput" class="search-input" placeholder="ค้นหาสินค้า..." oninput="handleSearch(this.value)">
@@ -1063,12 +1063,12 @@
           </div>
         </div>
 
-        <!-- Product Cards Container -->
+        <!-- Product Cards Grid Container -->
         <div id="productGrid" class="product-grid">
-          <!-- Products populated dynamically via JS -->
+          <!-- Dynamically Populated by JavaScript -->
         </div>
 
-        <!-- Empty state card fallback -->
+        <!-- Empty State Fallback -->
         <div id="emptyStockCard" class="empty-stock-card" style="display: none;">
           <div class="empty-icon-box">
             <i data-lucide="package-x" style="width: 36px; height: 36px;"></i>
@@ -1080,7 +1080,7 @@
     </section>
   </div>
 
-  <!-- Topup Modal Window -->
+  <!-- TopUp Modal Overlay -->
   <div class="modal-overlay" id="topupModal">
     <div class="modal-card">
       <span class="close-btn" onclick="closeTopupModal()"><i data-lucide="x"></i></span>
@@ -1103,7 +1103,7 @@
         </button>
       </div>
 
-      <!-- แท็บ TrueMoney -->
+      <!-- Tab: TrueMoney Voucher -->
       <div id="viewTW">
         <div class="form-group">
           <label class="form-label">กรอกลิงก์ซองอั่งเปา TrueMoney Wallet:</label>
@@ -1114,7 +1114,7 @@
         </button>
       </div>
 
-      <!-- แท็บ PromptPay -->
+      <!-- Tab: PromptPay QR Code -->
       <div id="viewPP" style="display: none;">
         <div class="form-group mb-3">
           <label class="form-label">ระบุจำนวนเงินที่ต้องการเติม (บาท):</label>
@@ -1131,7 +1131,7 @@
         </button>
       </div>
 
-      <!-- แท็บ Code ลับ -->
+      <!-- Tab: Secret Redeem Code -->
       <div id="viewCode" style="display: none;">
         <div class="form-group">
           <label class="form-label">กรอก Code ลับเพื่อรับเงินเพิ่ม:</label>
@@ -1146,7 +1146,7 @@
     </div>
   </div>
 
-  <!-- 🏆 Leaderboard Modal Window -->
+  <!-- Leaderboard Modal Overlay -->
   <div class="modal-overlay" id="leaderboardModal">
     <div class="modal-card">
       <span class="close-btn" onclick="closeLeaderboardModal()"><i data-lucide="x"></i></span>
@@ -1158,7 +1158,7 @@
       </div>
 
       <div class="leaderboard-list" id="leaderboardContainer">
-        <!-- อันดับจะถูกโหลดด้วย JavaScript -->
+        <!-- Rendered dynamically -->
       </div>
     </div>
   </div>
@@ -1167,15 +1167,11 @@
     <p>© 2026 J Community Shop. All rights reserved. Express Service & Secure Transactions.</p>
   </footer>
 
-  <!-- JavaScript App Logic -->
   <script>
     lucide.createIcons();
 
-    // ==========================================
-    // 🔒 1. ป้องกันการกด F12 และ DevTools Shortcut
-    // ==========================================
+    // Context Menu & DevTools Security Shortcuts
     document.addEventListener('contextmenu', (e) => e.preventDefault());
-
     document.addEventListener('keydown', (e) => {
       if (e.key === 'F12') { e.preventDefault(); return false; }
       if (e.ctrlKey && e.shiftKey && (e.key === 'I' || e.key === 'i' || e.key === 'J' || e.key === 'j' || e.key === 'C' || e.key === 'c')) {
@@ -1184,75 +1180,70 @@
       if (e.ctrlKey && (e.key === 'U' || e.key === 'u')) { e.preventDefault(); return false; }
     });
 
-    // ==========================================
-    // 🔗 2. ตัวแปรตั้งค่าระบบ & Discord Webhook
-    // ==========================================
+    // Webhook Configuration
     const WEBHOOK_URL = "https://discord.com/api/webhooks/1531512615468273835/chb4HnQMtrJivg3dr4ySUVjTcxfjEcihmF-dzdzlnsekrB8Wsz9tHLv4sL_Ox2bo9noa";
-    const TARGET_CODE = "CODE YPOPXDFSS TOKEBA";
 
-    // ==========================================
-    // 🛍️ 3. ระบบจัดการสินค้า & การแสดงผลหน้าร้าน
-    // ==========================================
+    // Sample Shop Items Dataset
     const SAMPLE_PRODUCTS = [
       {
         id: 'p1',
         title: 'Discord Nitro Boost (1 เดือน)',
         category: 'discord',
         badge: 'ขายดีที่สุด 🔥',
-        stock: 0,
-        price: 0,
-        oldPrice: 0,
+        stock: 12,
+        price: 99,
+        oldPrice: 150,
         img: 'https://images.unsplash.com/photo-1614680376593-902f749f7ba3?q=80&w=500&auto=format&fit=crop',
-        desc: 'ยกระดับการใช้งาน Discord ด้วย Nitro Boost 1 Month ปลดล็อก Emoji, 1080p Stream และ Boost เซิร์ฟเวอร์',
-        tags: ['ส่งไวอัตโนมัติ', 'รับประกัน 30 วัน', 'ไม่ต้องใช้รหัส']
+        desc: 'ยกระดับการใช้งาน Discord ด้วย Nitro Boost 1 Month ปลดล็อก Custom Emoji, HD Stream 1080p และ Boost 2 เท่า',
+        tags: ['ส่งไวอัตโนมัติ', 'ประกัน 30 วัน', 'ไม่ต้องใช้รหัส']
       },
       {
         id: 'p2',
         title: 'Discord Nitro Boost (1 ปี)',
         category: 'discord',
-        badge: 'คุ้มค่าสุด 💎',
-        stock: 0,
-        price: 0,
-        oldPrice: 0,
+        badge: 'คุ้มค่าที่สุด 💎',
+        stock: 5,
+        price: 890,
+        oldPrice: 1200,
         img: 'https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?q=80&w=500&auto=format&fit=crop',
-        desc: 'เพลิดเพลินกับสิทธิพิเศษ Nitro ยาวนาน 1 ปีเต็ม พร้อม Boost 2 เท่าทันทีคุ้มค่าประหยัดกว่า',
-        tags: ['ราคาสุดคุ้ม', 'รับประกันเต็มปี']
+        desc: 'เพลิดเพลินกับสิทธิพิเศษ Nitro ยาวนาน 1 ปีเต็ม พร้อม Boost 2 เท่าทันที คุ้มค่าประหยัดสูงสุด',
+        tags: ['ราคาสุดคุ้ม', 'ประกันเต็มปี 365 วัน']
       },
       {
         id: 'p3',
         title: 'Valorant 1,000 VP Points',
         category: 'topup',
         badge: 'เติมด่วน ⚡',
-        stock: 0,
-        price: 0,
-        oldPrice: 0,
+        stock: 25,
+        price: 280,
+        oldPrice: 350,
         img: 'https://images.unsplash.com/photo-1542751371-adc38448a05e?q=80&w=500&auto=format&fit=crop',
         desc: 'เติม VP Valorant ราคาถูก ปลอดภัย 100% เข้าไอดีทันทีหลังชำระเงิน นำไปซื้อสกินปืนสุดเท่ได้เลย',
-        tags: ['เข้าทันที', 'แท้ 100%']
+        tags: ['เข้าไอดีทันที', 'แท้ 100%']
       },
       {
         id: 'p4',
         title: 'Roblox 1,000 Robux (Fast Delivery)',
         category: 'topup',
         badge: 'ฮิตติดชาร์ต 🎮',
-        stock: 0,
-        price: 0,
-        oldPrice: 0,
+        stock: 40,
+        price: 199,
+        oldPrice: 250,
         img: 'https://images.unsplash.com/photo-1550745165-9bc0b252726f?q=80&w=500&auto=format&fit=crop',
-        desc: 'รับ Robux เข้าบัญชี Roblox รวดเร็วทันใจ ปลอดภัย ผ่านระบบกลุ่ม / Gamepass สะดวกมาก',
-        tags: ['ราคาถูก', 'ส่งไว 1-3 นาที']
+        desc: 'รับ Robux เข้าบัญชี Roblox รวดเร็วทันใจ ปลอดภัย ผ่านระบบ Gamepass / Group payout สะดวกมาก',
+        tags: ['ราคาถูกพิเศษ', 'ส่งไว 1-3 นาที']
       },
       {
         id: 'p5',
         title: 'Minecraft Premium Full Access',
         category: 'game',
         badge: 'ไอดีแท้ 🟩',
-        stock: 0,
-        price: 0,
-        oldPrice: 0,
+        stock: 8,
+        price: 450,
+        oldPrice: 790,
         img: 'https://images.unsplash.com/photo-1627856013091-fed6e4e30025?q=80&w=500&auto=format&fit=crop',
         desc: 'ไอดีแท้ Minecraft Java & Bedrock Edition เปลี่ยนอีเมล, รหัสผ่าน, สกิน ได้ครบ 100%',
-        tags: ['เปลี่ยนรหัสได้', 'เล่นได้ทุกเซิร์ฟ']
+        tags: ['เปลี่ยนรหัสได้', 'เล่นได้ทุกเซิร์ฟเวอร์']
       },
       {
         id: 'p6',
@@ -1260,16 +1251,17 @@
         category: 'game',
         badge: 'ไม่มีโฆษณา 🎬',
         stock: 0,
-        price: 0,
-        oldPrice: 0,
+        price: 35,
+        oldPrice: 79,
         img: 'https://images.unsplash.com/photo-1579202673506-ca3ce28943ef?q=80&w=500&auto=format&fit=crop',
-        desc: 'ดูยูทูปไม่มีโฆษณาคั่น ฟังเพลงผ่าน YouTube Music เล่นพื้นหลังได้ ใช้งานบนอีเมลส่วนตัว',
-        tags: ['อีเมลส่วนตัว', 'ไม่หลุด']
+        desc: 'ดูยูทูปไม่มีโฆษณาคั่น ฟังเพลงผ่าน YouTube Music เล่นพื้นหลังได้ ใช้งานบนอีเมลส่วนตัวของคุณ',
+        tags: ['อีเมลส่วนตัว', 'ไม่หลุด ประกันเต็มเดือน']
       }
     ];
 
     let currentCategory = 'all';
     let searchQuery = '';
+    let userBalance = 0;
 
     function renderProducts() {
       const grid = document.getElementById('productGrid');
@@ -1302,7 +1294,7 @@
             <div class="product-badge-group">
               <span class="product-badge-tag">${item.badge}</span>
               ${isOutOfStock 
-                ? `<span class="product-stock-badge out-of-stock"><i data-lucide="package-x" style="width:12px; height:12px;"></i> สินค้าหมด (0 ชิ้น)</span>`
+                ? `<span class="product-stock-badge out-of-stock"><i data-lucide="package-x" style="width:12px; height:12px;"></i> หมดชั่วคราว</span>`
                 : `<span class="product-stock-badge"><i data-lucide="check" style="width:12px; height:12px;"></i> เหลือ ${item.stock} ชิ้น</span>`
               }
             </div>
@@ -1355,12 +1347,106 @@
     }
 
     function buyProduct(pId, pTitle, pPrice) {
-      showToast(`🛒 เริ่มทำการสั่งซื้อ "${pTitle}" (฿${pPrice})`);
-      // สามารถเรียกเปิด Modal หรือดำเนินการสั่งซื้อต่อ
-      openTopupModal();
+      if (userBalance < pPrice) {
+        showToast(`⚠️ ยอดเงินไม่พอ! ต้องการ ฿${pPrice} (คงเหลือ ฿${userBalance})`);
+        openTopupModal();
+      } else {
+        userBalance -= pPrice;
+        document.getElementById('userBalanceText').innerText = userBalance;
+        showToast(`🎉 สั่งซื้อ "${pTitle}" สำเร็จเรียบร้อย!`);
+      }
     }
 
-    // เรียก Render ทันทีเมื่อโหลดหน้า
+    function showToast(msg) {
+      const container = document.getElementById('toastContainer');
+      const toast = document.createElement('div');
+      toast.className = 'toast-msg';
+      toast.innerHTML = `<i data-lucide="info" style="width:18px; color: var(--primary-purple);"></i> <span>${msg}</span>`;
+      container.appendChild(toast);
+      lucide.createIcons();
+      setTimeout(() => {
+        toast.style.opacity = '0';
+        toast.style.transform = 'translateY(10px)';
+        setTimeout(() => toast.remove(), 300);
+      }, 3500);
+    }
+
+    // Modal Control Functions
+    function openTopupModal() { document.getElementById('topupModal').classList.add('active'); }
+    function closeTopupModal() { document.getElementById('topupModal').classList.remove('active'); }
+    
+    function switchTab(tab) {
+      document.getElementById('viewTW').style.display = tab === 'tw' ? 'block' : 'none';
+      document.getElementById('viewPP').style.display = tab === 'pp' ? 'block' : 'none';
+      document.getElementById('viewCode').style.display = tab === 'code' ? 'block' : 'none';
+
+      document.getElementById('tabTW').className = `tab-btn ${tab === 'tw' ? 'active-tw' : ''}`;
+      document.getElementById('tabPP').className = `tab-btn ${tab === 'pp' ? 'active-pp' : ''}`;
+      document.getElementById('tabCode').className = `tab-btn ${tab === 'code' ? 'active-code' : ''}`;
+    }
+
+    function updatePromptPayQR() {
+      const amt = document.getElementById('promptpayAmount').value || 100;
+      document.getElementById('promptpayQRImg').src = `https://api.qrserver.com/v1/create-qr-code/?size=180x180&data=PROMPTPAY_${amt}_THB`;
+    }
+
+    function processVoucher() {
+      const val = document.getElementById('voucherUrl').value.trim();
+      if (!val) { showToast('⚠️ กรุณากรอกลิงก์ซองอั่งเปา'); return; }
+      userBalance += 100;
+      document.getElementById('userBalanceText').innerText = userBalance;
+      showToast('✅ เติมเงินสำเร็จ +100 ฿');
+      closeTopupModal();
+    }
+
+    function processPromptPayConfirm() {
+      const amt = parseInt(document.getElementById('promptpayAmount').value) || 100;
+      userBalance += amt;
+      document.getElementById('userBalanceText').innerText = userBalance;
+      showToast(`✅ แจ้งโอนเงิน PromptPay +${amt} ฿ สำเร็จ!`);
+      closeTopupModal();
+    }
+
+    function processSecretCode() {
+      const code = document.getElementById('secretCodeInput').value.trim();
+      if (!code) { showToast('⚠️ กรุณากรอก Code ลับ'); return; }
+      userBalance += 50;
+      document.getElementById('userBalanceText').innerText = userBalance;
+      showToast('🎁 แลก Code ลับสำเร็จ +50 ฿');
+      closeTopupModal();
+    }
+
+    function openLeaderboardModal() {
+      const container = document.getElementById('leaderboardContainer');
+      const mockLeaderboard = [
+        { name: 'Kaiser_99', id: '8291', bal: '12,450', avatar: 'https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=100&auto=format&fit=crop' },
+        { name: 'CyberShadow', id: '1042', bal: '8,900', avatar: 'https://images.unsplash.com/photo-1570295999919-56ceb5ecca61?w=100&auto=format&fit=crop' },
+        { name: 'NeonPulse', id: '4491', bal: '5,320', avatar: 'https://images.unsplash.com/photo-1527980965255-d3b416303d12?w=100&auto=format&fit=crop' },
+        { name: 'ViperX', id: '9012', bal: '3,100', avatar: 'https://images.unsplash.com/photo-1580489944761-15a19d654956?w=100&auto=format&fit=crop' }
+      ];
+
+      container.innerHTML = mockLeaderboard.map((item, index) => `
+        <div class="leaderboard-item">
+          <div class="rank-user-info">
+            <span class="rank-number ${index === 0 ? 'rank-1' : index === 1 ? 'rank-2' : index === 2 ? 'rank-3' : ''}">#${index + 1}</span>
+            <img class="rank-avatar" src="${item.avatar}" alt="${item.name}">
+            <div class="rank-user-details">
+              <span class="rank-username">${item.name}</span>
+              <span class="rank-user-id">ID: ${item.id}</span>
+            </div>
+          </div>
+          <span class="rank-balance">${item.bal} ฿</span>
+        </div>
+      `).join('');
+
+      document.getElementById('leaderboardModal').classList.add('active');
+    }
+
+    function closeLeaderboardModal() { document.getElementById('leaderboardModal').classList.remove('active'); }
+
     document.addEventListener('DOMContentLoaded', () => {
       renderProducts();
     });
+  </script>
+</body>
+</html>
