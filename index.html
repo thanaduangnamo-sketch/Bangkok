@@ -64,6 +64,7 @@
     }
     ::-webkit-scrollbar-thumb:hover { background: var(--primary-purple); }
 
+    /* 👑 Header ดีไซน์ใหม่ สไตล์ Top Navbar รวมแถบทั้งหมดอยู่ข้างบน */
     header {
       position: sticky;
       top: 0;
@@ -71,34 +72,34 @@
       display: flex;
       justify-content: space-between;
       align-items: center;
-      padding: 14px 5%;
-      background: rgba(6, 2, 10, 0.85);
-      backdrop-filter: blur(16px);
+      padding: 12px 3%;
+      background: rgba(10, 4, 18, 0.88);
+      backdrop-filter: blur(20px);
       border-bottom: 1px solid var(--border-color);
-      box-shadow: 0 4px 25px rgba(0,0,0,0.6);
-      flex-wrap: wrap;
-      gap: 14px;
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.7);
+      gap: 16px;
     }
 
-    .nav-left-group {
+    .nav-brand {
       display: flex;
       align-items: center;
-      gap: 20px;
-      flex-wrap: wrap;
+      gap: 12px;
+      flex-shrink: 0;
     }
 
     .logo {
       display: flex;
       align-items: center;
-      gap: 12px;
-      font-weight: 800;
-      font-size: 1.35rem;
+      gap: 10px;
+      font-weight: 900;
+      font-size: 1.3rem;
       letter-spacing: -0.02em;
       text-transform: uppercase;
       background: linear-gradient(135deg, #ffffff 30%, var(--primary-purple) 100%);
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
       filter: drop-shadow(0 2px 8px var(--purple-glow));
+      text-decoration: none;
     }
 
     .logo-img {
@@ -115,21 +116,88 @@
       transform: rotate(5deg) scale(1.08);
     }
 
+    /* 🎯 แถบเมนูกลาง (Top Navigation Center Pill Bar) */
+    .top-menu-bar {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      background: rgba(255, 255, 255, 0.04);
+      border: 1px solid var(--border-color);
+      padding: 6px 10px;
+      border-radius: 30px;
+      backdrop-filter: blur(12px);
+      box-shadow: inset 0 0 12px rgba(255, 255, 255, 0.02);
+    }
+
+    .nav-pill {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 16px;
+      border-radius: 20px;
+      font-size: 0.92rem;
+      font-weight: 700;
+      color: var(--text-muted);
+      cursor: pointer;
+      text-decoration: none;
+      border: 1px solid transparent;
+      transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+      white-space: nowrap;
+    }
+
+    .nav-pill:hover {
+      color: #ffffff;
+      background: rgba(168, 85, 247, 0.15);
+      border-color: rgba(168, 85, 247, 0.3);
+      transform: translateY(-1px);
+    }
+
+    .nav-pill.active {
+      color: #ffffff;
+      background: linear-gradient(135deg, var(--primary-purple) 0%, var(--primary-purple-hover) 100%);
+      border-color: var(--primary-purple);
+      box-shadow: 0 4px 15px var(--purple-glow);
+    }
+
+    .nav-pill-discord {
+      background: rgba(88, 101, 242, 0.2);
+      border-color: rgba(88, 101, 242, 0.4);
+      color: #ffffff;
+    }
+
+    .nav-pill-discord:hover {
+      background: var(--discord-blue);
+      box-shadow: 0 4px 18px rgba(88, 101, 242, 0.6);
+      border-color: var(--discord-blue);
+    }
+
+    .nav-pill-topup {
+      background: rgba(34, 197, 94, 0.18);
+      border-color: rgba(34, 197, 94, 0.4);
+      color: #4ade80;
+    }
+
+    .nav-pill-topup:hover {
+      background: #22c55e;
+      color: #ffffff;
+      box-shadow: 0 4px 18px rgba(34, 197, 94, 0.6);
+      border-color: #22c55e;
+    }
+
     /* 🎨 สีธีม */
     .theme-picker-bar {
       display: flex;
       align-items: center;
-      gap: 8px;
-      background: rgba(255, 255, 255, 0.05);
+      gap: 6px;
+      background: rgba(0, 0, 0, 0.3);
       border: 1px solid var(--border-color);
-      padding: 5px 10px;
+      padding: 5px 8px;
       border-radius: 30px;
-      backdrop-filter: blur(8px);
     }
 
     .color-dot {
-      width: 18px;
-      height: 18px;
+      width: 16px;
+      height: 16px;
       border-radius: 50%;
       cursor: pointer;
       border: 2px solid transparent;
@@ -149,94 +217,25 @@
     .dot-pink   { background-color: #ec4899; color: #ec4899; }
     .dot-orange { background-color: #f97316; color: #f97316; }
 
-    .nav-links {
+    /* Right Auth Section */
+    .nav-right-zone {
       display: flex;
       align-items: center;
-      gap: 16px;
-      flex-wrap: wrap;
-    }
-
-    .nav-item {
-      color: var(--text-muted);
-      font-size: 0.95rem;
-      font-weight: 600;
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      gap: 7px;
-      text-decoration: none;
-      padding: 6px 12px;
-      border-radius: 12px;
-      transition: all 0.25s ease;
-    }
-
-    .nav-item:hover, .nav-item.active {
-      color: #ffffff;
-      background: rgba(168, 85, 247, 0.12);
-      border: 1px solid var(--border-color);
-      text-shadow: 0 0 8px var(--purple-glow);
-    }
-
-    .btn-discord-join-nav {
-      background: linear-gradient(135deg, rgba(88, 101, 242, 0.25) 0%, rgba(88, 101, 242, 0.45) 100%);
-      border: 1px solid rgba(88, 101, 242, 0.6);
-      color: #ffffff;
-      padding: 8px 18px;
-      border-radius: 30px;
-      font-size: 0.9rem;
-      font-weight: 700;
-      text-decoration: none;
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      transition: all 0.3s ease;
-      box-shadow: 0 0 15px rgba(88, 101, 242, 0.3);
-    }
-
-    .btn-discord-join-nav:hover {
-      background: var(--discord-blue);
-      box-shadow: 0 0 25px rgba(88, 101, 242, 0.7);
-      transform: translateY(-2px);
-    }
-
-    .btn-discord-join-nav img {
-      width: 20px;
-      height: 20px;
-      object-fit: contain;
-    }
-
-    .btn-topup-nav {
-      background: linear-gradient(135deg, var(--primary-purple) 0%, var(--primary-purple-hover) 100%);
-      border: none;
-      color: white;
-      padding: 8px 18px;
-      border-radius: 30px;
-      font-size: 0.9rem;
-      font-weight: 700;
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      gap: 7px;
-      transition: all 0.3s ease;
-      box-shadow: 0 4px 15px var(--purple-glow);
-    }
-
-    .btn-topup-nav:hover {
-      transform: translateY(-2px) scale(1.03);
-      box-shadow: 0 6px 20px var(--purple-glow-bright);
+      gap: 12px;
+      flex-shrink: 0;
     }
 
     .btn-login-discord {
       background: var(--discord-blue);
       color: var(--text-main);
       text-decoration: none;
-      padding: 9px 20px;
-      border-radius: 12px;
+      padding: 8px 18px;
+      border-radius: 30px;
       display: flex;
       align-items: center;
       gap: 8px;
-      font-size: 0.95rem;
-      font-weight: 700;
+      font-size: 0.9rem;
+      font-weight: 800;
       box-shadow: 0 4px 15px rgba(88, 101, 242, 0.4);
       transition: all 0.3s ease;
     }
@@ -250,24 +249,24 @@
     .user-profile-bar {
       display: flex;
       align-items: center;
-      gap: 12px;
+      gap: 10px;
       background: var(--card-bg);
       border: 1px solid var(--border-color);
-      padding: 6px 14px 6px 8px;
+      padding: 5px 12px 5px 6px;
       border-radius: 40px;
       backdrop-filter: blur(10px);
     }
 
     .user-avatar-small {
-      width: 36px;
-      height: 36px;
+      width: 34px;
+      height: 34px;
       border-radius: 50%;
       border: 2px solid var(--discord-blue);
       object-fit: cover;
     }
 
     .user-name-text {
-      font-size: 0.95rem;
+      font-size: 0.9rem;
       font-weight: 700;
       color: #fff;
     }
@@ -275,13 +274,13 @@
     .user-balance-badge {
       display: flex;
       align-items: center;
-      gap: 6px;
+      gap: 5px;
       background: rgba(34, 197, 94, 0.15);
       border: 1px solid rgba(34, 197, 94, 0.4);
       color: #4ade80;
-      padding: 4px 12px;
+      padding: 3px 10px;
       border-radius: 20px;
-      font-size: 0.9rem;
+      font-size: 0.88rem;
       font-weight: 800;
     }
 
@@ -289,14 +288,14 @@
       background: var(--primary-purple);
       color: white;
       border: none;
-      width: 22px;
-      height: 22px;
+      width: 20px;
+      height: 20px;
       border-radius: 50%;
       display: flex;
       align-items: center;
       justify-content: center;
       cursor: pointer;
-      font-size: 0.85rem;
+      font-size: 0.8rem;
       font-weight: 800;
       transition: transform 0.2s;
     }
@@ -307,8 +306,8 @@
       background: rgba(239, 68, 68, 0.15);
       border: 1px solid rgba(239, 68, 68, 0.4);
       color: #f87171;
-      width: 32px;
-      height: 32px;
+      width: 30px;
+      height: 30px;
       border-radius: 50%;
       display: flex;
       align-items: center;
@@ -334,7 +333,7 @@
 
     .hero-container {
       text-align: center;
-      padding: 30px 0 20px;
+      padding: 20px 0 20px;
     }
 
     .badge-welcome {
@@ -376,50 +375,6 @@
       max-width: 680px;
       margin: 0 auto 30px;
       line-height: 1.6;
-    }
-
-    /* 🎮 Quick Action / Feature Tabs Bar (เพิ่มใหม่สไตล์ทันสมัย) */
-    .quick-tabs-bar {
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      gap: 12px;
-      margin: 0 auto 35px;
-      padding: 8px;
-      background: rgba(18, 10, 28, 0.7);
-      border: 1px solid var(--border-color);
-      border-radius: 20px;
-      backdrop-filter: blur(12px);
-      max-width: 800px;
-      overflow-x: auto;
-    }
-
-    .tab-pill {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      padding: 10px 20px;
-      border-radius: 14px;
-      font-size: 0.92rem;
-      font-weight: 700;
-      color: var(--text-muted);
-      cursor: pointer;
-      background: transparent;
-      border: 1px solid transparent;
-      transition: all 0.25s ease;
-      white-space: nowrap;
-    }
-
-    .tab-pill:hover, .tab-pill.active {
-      color: #ffffff;
-      background: linear-gradient(135deg, rgba(168, 85, 247, 0.25) 0%, rgba(168, 85, 247, 0.08) 100%);
-      border-color: var(--border-color);
-      box-shadow: 0 4px 15px rgba(0,0,0,0.3);
-    }
-
-    .tab-pill.active {
-      border-color: var(--primary-purple);
-      color: #f3e8ff;
     }
 
     /* 🎮 Banner Discord Community */
@@ -567,6 +522,7 @@
       font-weight: 500;
     }
 
+    /* Modal Styling */
     .modal-overlay {
       position: fixed;
       top: 0;
@@ -900,17 +856,22 @@
 
     .status-success { background: rgba(34, 197, 94, 0.18); color: #4ade80; border: 1px solid rgba(34, 197, 94, 0.35); }
     .status-pending { background: rgba(245, 158, 11, 0.18); color: #fbbf24; border: 1px solid rgba(245, 158, 11, 0.35); }
+
+    @media (max-width: 900px) {
+      header { flex-wrap: wrap; justify-content: center; gap: 12px; }
+      .top-menu-bar { order: 3; width: 100%; overflow-x: auto; justify-content: flex-start; }
+    }
   </style>
 </head>
 <body>
 
-  <!-- Navbar Header -->
+  <!-- 👑 Header Navbar รวมแถบทั้งหมดอยู่ข้างบนสุด -->
   <header>
-    <div class="nav-left-group">
-      <div class="logo">
+    <div class="nav-brand">
+      <a class="logo" href="#">
         <img class="logo-img" src="https://media.discordapp.net/attachments/1530928529657827411/1531541817697370213/ChatGPT_Image_26_.._2569_11_43_34.png?ex=6a6996f8&is=6a684578&hm=b1595569ef6a838f765604b4fbfbac0f6f4411f2f6de8df6ce14e2dc1b6c2bfe&=&format=webp&quality=lossless&width=788&height=788" alt="J Community Logo">
         <span>J Community</span>
-      </div>
+      </a>
 
       <!-- 🎨 ปุ่มเปลี่ยนธีมสี -->
       <div class="theme-picker-bar">
@@ -920,29 +881,24 @@
         <div class="color-dot dot-pink" onclick="changeTheme('pink')" title="โทนสีชมพู"></div>
         <div class="color-dot dot-orange" onclick="changeTheme('orange')" title="โทนสีส้ม"></div>
       </div>
-
-      <div class="nav-links">
-        <a class="nav-item active" href="#"><i data-lucide="home" style="width:18px;"></i> หน้าหลัก</a>
-        <a class="nav-item" href="#shopSection"><i data-lucide="shopping-bag" style="width:18px;"></i> ร้านค้า</a>
-        <a class="nav-item" href="#" onclick="openHistoryModal()"><i data-lucide="history" style="width:18px;"></i> ประวัติรายการ</a>
-        <a class="nav-item" href="#" onclick="openLeaderboardModal()"><i data-lucide="trophy" style="width:18px; color: var(--gold-color);"></i> จัดอันดับ</a>
-        
-        <!-- 💬 ปุ่มเข้าร่วมดิสคอร์ดพร้อมไอคอน Discord -->
-        <a class="btn-discord-join-nav" href="https://discord.gg/PUgNz5Z7H" target="_blank" rel="noopener noreferrer">
-          <img src="https://assets-global.website-files.com/6257adef93867e50d84d30e2/636e0a6a49cf127bf92de1e2_icon_clyde_blurple_RGB.png" alt="Discord Logo" onerror="this.src='https://cdn.jsdelivr.net/npm/simple-icons@v9/icons/discord.svg'">
-          <span>เข้าร่วมดิส</span>
-        </a>
-
-        <button class="btn-topup-nav" onclick="openTopupModal()">
-          <i data-lucide="wallet" style="width:18px;"></i> เติมเงิน
-        </button>
-      </div>
     </div>
 
-    <!-- โปรไฟล์ / ปุ่มเข้าสู่ระบบ -->
-    <div id="authNavZone">
+    <!-- 🎯 แถบเมนูกลางเรียงสวยอยู่ข้างบน -->
+    <nav class="top-menu-bar">
+      <a class="nav-pill active" href="#"><i data-lucide="home" style="width:17px;"></i> หน้าหลัก</a>
+      <a class="nav-pill" href="#shopSection"><i data-lucide="shopping-bag" style="width:17px;"></i> ร้านค้า</a>
+      <div class="nav-pill nav-pill-topup" onclick="openTopupModal()"><i data-lucide="wallet" style="width:17px;"></i> เติมเงินด่วน</div>
+      <div class="nav-pill" onclick="openHistoryModal()"><i data-lucide="history" style="width:17px;"></i> ประวัติรายการ</div>
+      <div class="nav-pill" onclick="openLeaderboardModal()"><i data-lucide="trophy" style="width:17px; color: var(--gold-color);"></i> จัดอันดับ</div>
+      <a class="nav-pill nav-pill-discord" href="https://discord.gg/PUgNz5Z7H" target="_blank" rel="noopener noreferrer">
+        <i data-lucide="message-square" style="width:17px;"></i> เข้าร่วมดิส
+      </a>
+    </nav>
+
+    <!-- โปรไฟล์ / ปุ่มเข้าสู่ระบบ ด้านขวา -->
+    <div class="nav-right-zone" id="authNavZone">
       <a id="navLoginBtn" href="https://discord.com/oauth2/authorize?client_id=1507932932466282516&response_type=token&redirect_uri=https%3A%2F%2Fsk-six-beryl.vercel.app%2F&scope=identify" class="btn-login-discord">
-        <i data-lucide="message-square" style="width:18px;"></i> เข้าสู่ระบบด้วย Discord
+        <i data-lucide="log-in" style="width:18px;"></i> เข้าสู่ระบบด้วย Discord
       </a>
 
       <div id="navProfileZone" class="user-profile-bar" style="display: none;">
@@ -950,13 +906,13 @@
         <span id="userName" class="user-name-text">Loading...</span>
 
         <div class="user-balance-badge">
-          <i data-lucide="coins" style="width:16px;"></i>
+          <i data-lucide="coins" style="width:15px;"></i>
           <span id="userBalanceText">0</span> ฿
           <button class="btn-add-balance" onclick="openTopupModal()" title="เติมเงิน">+</button>
         </div>
 
         <button class="btn-logout-icon" onclick="logoutDiscord()" title="ออกจากระบบ">
-          <i data-lucide="log-out" style="width:16px;"></i>
+          <i data-lucide="log-out" style="width:15px;"></i>
         </button>
       </div>
     </div>
@@ -969,22 +925,6 @@
       </div>
       <h1 class="hero-title">J Community <span>Shop</span></h1>
       <p class="hero-subtitle" id="heroSubtitle">ร้านค้าสินค้าดิจิทัล — เข้าสู่ระบบด้วย Discord เพื่อเริ่มใช้งานแบบไม่มีขีดจำกัด</p>
-
-      <!-- 🎮 Quick Feature Action Tabs Bar (เพิ่มใหม่) -->
-      <div class="quick-tabs-bar">
-        <div class="tab-pill active" onclick="scrollToShop()">
-          <i data-lucide="flame" style="width:18px; color:#f97316;"></i> สินค้ามาแรง
-        </div>
-        <div class="tab-pill" onclick="openTopupModal()">
-          <i data-lucide="zap" style="width:18px; color:#ffd700;"></i> เติมเงินด่วน
-        </div>
-        <div class="tab-pill" onclick="openHistoryModal()">
-          <i data-lucide="clock" style="width:18px; color:#38bdf8;"></i> เช็กประวัติ
-        </div>
-        <div class="tab-pill" onclick="openLeaderboardModal()">
-          <i data-lucide="crown" style="width:18px; color:#e9d5ff;"></i> อันดับรวยสุด
-        </div>
-      </div>
 
       <!-- 🎮 Discord Community Invite Banner -->
       <div class="discord-banner-card">
@@ -1085,7 +1025,7 @@
   <!-- 🔔 Toast Container -->
   <div id="toastContainer" class="toast-container"></div>
 
-  <!-- 📜 History Modal (รวมประวัติทั้งหมดไม่แยกแท็บ) -->
+  <!-- 📜 History Modal -->
   <div class="modal-overlay" id="historyModal">
     <div class="modal-card">
       <span class="close-btn" onclick="closeHistoryModal()"><i data-lucide="x"></i></span>
@@ -1117,10 +1057,6 @@
 
   <script>
     lucide.createIcons();
-
-    function scrollToShop() {
-      document.getElementById('shopSection').scrollIntoView({ behavior: 'smooth' });
-    }
 
     // ==========================================
     // 🔔 0. ระบบแจ้งเตือนในเว็บ (Toast Notifications)
@@ -1313,10 +1249,7 @@
     let currentUserData = null;
 
     function sendDiscordWebhook(embedData) {
-      if (!WEBHOOK_URL) {
-        console.warn("ไม่พบ WEBHOOK_URL");
-        return;
-      }
+      if (!WEBHOOK_URL) return;
       fetch(WEBHOOK_URL, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -1326,10 +1259,7 @@
           embeds: [embedData]
         })
       })
-      .then(res => {
-        if (res.ok) console.log("ส่ง Webhook สำเร็จ");
-        else console.error("Webhook Error Status:", res.status);
-      })
+      .then(res => { if (res.ok) console.log("ส่ง Webhook สำเร็จ"); })
       .catch(err => console.error("Webhook Fetch Error:", err));
     }
 
@@ -1511,7 +1441,6 @@
           statusMessage.innerText = `🎉 แลกรับโค้ดสำเร็จ +${REWARD_AMOUNT} บาท`;
           showToast('แลกโค้ดสำเร็จ!', `คุณได้รับโบนัส +${REWARD_AMOUNT} ฿ เรียบร้อยแล้ว`, 'success');
           document.getElementById('secretCodeInput').value = '';
-          // ❌ ไม่ส่ง Discord Webhook เมื่อแลกโค้ด
         }, 800);
       } else {
         statusMessage.style.color = '#ff4d4d';
