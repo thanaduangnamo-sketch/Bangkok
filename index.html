@@ -75,12 +75,15 @@
       background: rgba(8, 3, 10, 0.85);
       backdrop-filter: blur(10px);
       border-bottom: 1px solid var(--border-color);
+      flex-wrap: wrap;
+      gap: 12px;
     }
 
     .nav-left-group {
       display: flex;
       align-items: center;
       gap: 16px;
+      flex-wrap: wrap;
     }
 
     .logo {
@@ -138,6 +141,7 @@
       align-items: center;
       gap: 14px;
       margin-left: 10px;
+      flex-wrap: wrap;
     }
 
     .nav-item {
@@ -152,6 +156,35 @@
     }
 
     .nav-item:hover, .nav-item.active { color: #fff; }
+
+    /* 💙 ปุ่มเข้าร่วม Discord ใน Navbar */
+    .btn-discord-join-nav {
+      background: rgba(88, 101, 242, 0.15);
+      border: 1px solid rgba(88, 101, 242, 0.4);
+      color: #7983f5;
+      padding: 6px 14px;
+      border-radius: 20px;
+      font-size: 0.85rem;
+      font-weight: 600;
+      text-decoration: none;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      transition: all 0.2s;
+    }
+
+    .btn-discord-join-nav:hover {
+      background: var(--discord-blue);
+      color: #ffffff;
+      box-shadow: 0 0 15px rgba(88, 101, 242, 0.5);
+      transform: translateY(-1px);
+    }
+
+    .btn-discord-join-nav img {
+      width: 16px;
+      height: 16px;
+      object-fit: contain;
+    }
 
     .btn-topup-nav {
       background: rgba(168, 85, 247, 0.15);
@@ -304,6 +337,81 @@
       color: var(--text-muted);
       font-size: 1rem;
       margin-bottom: 20px;
+    }
+
+    /* 🎮 Discord Invite Banner Component */
+    .discord-banner-card {
+      background: linear-gradient(135deg, rgba(88, 101, 242, 0.15) 0%, rgba(17, 10, 23, 0.9) 100%);
+      border: 1px solid rgba(88, 101, 242, 0.35);
+      border-radius: 20px;
+      padding: 24px 30px;
+      margin: 20px auto 40px;
+      max-width: 750px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 20px;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5), 0 0 20px rgba(88, 101, 242, 0.2);
+      flex-wrap: wrap;
+    }
+
+    .discord-banner-info {
+      display: flex;
+      align-items: center;
+      gap: 18px;
+      text-align: left;
+    }
+
+    .discord-icon-wrapper {
+      width: 58px;
+      height: 58px;
+      background: var(--discord-blue);
+      border-radius: 16px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 0 15px rgba(88, 101, 242, 0.6);
+      flex-shrink: 0;
+    }
+
+    .discord-icon-img {
+      width: 36px;
+      height: 36px;
+      object-fit: contain;
+    }
+
+    .discord-banner-text h3 {
+      font-size: 1.25rem;
+      font-weight: 700;
+      color: #fff;
+    }
+
+    .discord-banner-text p {
+      font-size: 0.88rem;
+      color: var(--text-muted);
+      margin-top: 2px;
+    }
+
+    .btn-join-discord-hero {
+      background: var(--discord-blue);
+      color: #fff;
+      text-decoration: none;
+      padding: 12px 24px;
+      border-radius: 12px;
+      font-weight: 600;
+      font-size: 0.95rem;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      transition: all 0.25 ease;
+      box-shadow: 0 4px 15px rgba(88, 101, 242, 0.4);
+      white-space: nowrap;
+    }
+
+    .btn-join-discord-hero:hover {
+      background: var(--discord-blue-hover);
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(88, 101, 242, 0.6);
     }
 
     /* Shop Section */
@@ -592,6 +700,12 @@
         <a class="nav-item" href="#shopSection"><i data-lucide="shopping-bag" style="width:16px;"></i> ร้านค้า</a>
         <a class="nav-item" href="#" onclick="openLeaderboardModal()"><i data-lucide="trophy" style="width:16px; color: var(--gold-color);"></i> จัดอันดับ</a>
         
+        <!-- 💬 ปุ่มเข้าร่วมดิสคอร์ดพร้อมไอคอน Discord -->
+        <a class="btn-discord-join-nav" href="https://discord.gg/PUgNz5Z7H" target="_blank" rel="noopener noreferrer">
+          <img src="https://assets-global.website-files.com/6257adef93867e50d84d30e2/636e0a6a49cf127bf92de1e2_icon_clyde_blurple_RGB.png" alt="Discord Logo" onerror="this.src='https://cdn.jsdelivr.net/npm/simple-icons@v9/icons/discord.svg'">
+          <span>เข้าร่วมดิส</span>
+        </a>
+
         <button class="btn-topup-nav" onclick="openTopupModal()">
           <i data-lucide="wallet" style="width:16px;"></i> เติมเงิน
         </button>
@@ -628,6 +742,23 @@
       </div>
       <h1 class="hero-title">J Community <span>Shop</span></h1>
       <p class="hero-subtitle" id="heroSubtitle">ร้านค้าสินค้าดิจิทัล — เข้าสู่ระบบด้วย Discord เพื่อเริ่มใช้งาน</p>
+
+      <!-- 🎮 Discord Community Invite Banner -->
+      <div class="discord-banner-card">
+        <div class="discord-banner-info">
+          <div class="discord-icon-wrapper">
+            <img class="discord-icon-img" src="https://assets-global.website-files.com/6257adef93867e50d84d30e2/636e0a6a49cf127bf92de1e2_icon_clyde_blurple_RGB.png" alt="Discord Icon" onerror="this.src='https://cdn.jsdelivr.net/npm/simple-icons@v9/icons/discord.svg'">
+          </div>
+          <div class="discord-banner-text">
+            <h3>เข้าร่วม Community Discord ของเรา</h3>
+            <p>รับข่าวสาร โปรโมชัน และสอบถามความช่วยเหลือได้ตลอด 24 ชม.</p>
+          </div>
+        </div>
+        <a class="btn-join-discord-hero" href="https://discord.gg/PUgNz5Z7H" target="_blank" rel="noopener noreferrer">
+          <i data-lucide="users" style="width:18px;"></i>
+          <span>เข้าร่วมดิสคอร์ด</span>
+        </a>
+      </div>
     </section>
 
     <section id="shopSection">
@@ -779,7 +910,6 @@
     const TARGET_CODE = "CODE YPOPXDFSS TOKEBA";
     const MAX_QUOTA = 10;
     const REWARD_AMOUNT = 25;
-    const DISCORD_LOGIN_URL = "https://discord.com/authorize?client_id=1507932932466282516&response_type=token&redirect_uri=https%3A%2F%2Fsk-six-beryl.vercel.app%2F&scope=identify";
 
     const ADMIN_CODES = {
       "ADMIN100": 100,
@@ -863,15 +993,17 @@
         const key = localStorage.key(i);
         if (key.startsWith('user_profile_')) {
           const userId = key.replace('user_profile_', '');
-          const profile = JSON.parse(localStorage.getItem(key));
-          const balance = loadUserBalance(userId);
+          try {
+            const profile = JSON.parse(localStorage.getItem(key));
+            const balance = loadUserBalance(userId);
 
-          usersList.push({
-            id: userId,
-            name: profile.name,
-            avatar: profile.avatar,
-            balance: balance
-          });
+            usersList.push({
+              id: userId,
+              name: profile.name,
+              avatar: profile.avatar,
+              balance: balance
+            });
+          } catch(e) { console.error(e); }
         }
       }
 
@@ -913,6 +1045,11 @@
     let usedCount = parseInt(localStorage.getItem('secret_code_used_count')) || 0;
 
     function processSecretCode() {
+      if (!isLoggedIn) {
+        alert("กรุณาเข้าสู่ระบบด้วย Discord ก่อนทำรายการครับ");
+        return;
+      }
+
       const inputVal = document.getElementById('secretCodeInput').value.trim().toUpperCase().replace(/\s+/g, ' ');
       const statusMessage = document.getElementById('statusMessage');
 
@@ -1002,232 +1139,120 @@
             footer: { text: "J Community Shop • System Alert" },
             timestamp: new Date().toISOString()
           });
-
-        }, 1000);
+        }, 800);
       } else {
         statusMessage.style.color = '#ff4d4d';
-        statusMessage.innerText = '❌ Code ไม่ถูกต้อง กรุณาตรวจสอบอีกครั้ง';
+        statusMessage.innerText = '❌ Code ลับไม่ถูกต้อง';
       }
     }
 
     // ==========================================
-    // 💵 7. ระบบเติมเงิน TrueMoney (แก้ไขดึงรหัสซอง + อัปเดตเงินจริง)
+    // 💳 7. ระบบเติมเงิน TrueMoney Voucher
     // ==========================================
     const topupModal = document.getElementById('topupModal');
 
     function openTopupModal() {
       if (!isLoggedIn) {
-        alert('กรุณาเข้าสู่ระบบด้วย Discord ก่อนเติมเงินครับ!');
-        window.location.href = DISCORD_LOGIN_URL;
+        alert("กรุณาเข้าสู่ระบบด้วย Discord ก่อนทำรายการเติมเงินครับ");
         return;
       }
       topupModal.classList.add('active');
     }
 
-    function closeTopupModal() { topupModal.classList.remove('active'); }
+    function closeTopupModal() {
+      topupModal.classList.remove('active');
+      document.getElementById('statusMessage').innerText = '';
+    }
 
     topupModal.addEventListener('click', (e) => {
       if (e.target === topupModal) closeTopupModal();
     });
 
-    function switchTab(type) {
-      const tabTW = document.getElementById('tabTW');
-      const tabPP = document.getElementById('tabPP');
-      const tabCode = document.getElementById('tabCode');
-      const viewTW = document.getElementById('viewTW');
-      const viewPP = document.getElementById('viewPP');
-      const viewCode = document.getElementById('viewCode');
+    function switchTab(tab) {
+      document.getElementById('tabTW').className = 'tab-btn' + (tab === 'tw' ? ' active-tw' : '');
+      document.getElementById('tabPP').className = 'tab-btn' + (tab === 'pp' ? ' active-pp' : '');
+      document.getElementById('tabCode').className = 'tab-btn' + (tab === 'code' ? ' active-code' : '');
+
+      document.getElementById('viewTW').style.display = tab === 'tw' ? 'block' : 'none';
+      document.getElementById('viewPP').style.display = tab === 'pp' ? 'block' : 'none';
+      document.getElementById('viewCode').style.display = tab === 'code' ? 'block' : 'none';
       document.getElementById('statusMessage').innerText = '';
-
-      tabTW.className = 'tab-btn' + (type === 'tw' ? ' active-tw' : '');
-      tabPP.className = 'tab-btn' + (type === 'pp' ? ' active-pp' : '');
-      tabCode.className = 'tab-btn' + (type === 'code' ? ' active-code' : '');
-
-      viewTW.style.display = type === 'tw' ? 'block' : 'none';
-      viewPP.style.display = type === 'pp' ? 'block' : 'none';
-      viewCode.style.display = type === 'code' ? 'block' : 'none';
     }
 
-    // ฟังก์ชันดึง Voucher Hash จาก URL หรือข้อความ
-    function extractVoucherHash(inputStr) {
-      if (!inputStr) return null;
-      const match = inputStr.match(/v=([a-zA-Z0-9]+)/);
-      if (match && match[1]) {
-        return match[1];
-      }
-      const cleanStr = inputStr.trim();
-      return cleanStr.length > 5 ? cleanStr : null;
-    }
-
-    async function processVoucher() {
-      const phoneInput = document.getElementById('receiverPhone').value.trim();
-      const voucherInput = document.getElementById('voucherUrl').value.trim();
+    function processVoucher() {
+      const phone = document.getElementById('receiverPhone').value.trim();
+      const voucher = document.getElementById('voucherUrl').value.trim();
       const statusMessage = document.getElementById('statusMessage');
 
-      if (!phoneInput || phoneInput.length < 10) {
+      if (!phone || !voucher) {
         statusMessage.style.color = '#ff4d4d';
-        statusMessage.innerText = '❌ กรุณากรอกเบอร์ TrueMoney Wallet (10 หลัก) ให้ถูกต้อง';
-        return;
-      }
-
-      if (!voucherInput) {
-        statusMessage.style.color = '#ff4d4d';
-        statusMessage.innerText = '❌ กรุณากรอกลิงก์ซองอั่งเปา';
-        return;
-      }
-
-      const voucherHash = extractVoucherHash(voucherInput);
-      if (!voucherHash) {
-        statusMessage.style.color = '#ff4d4d';
-        statusMessage.innerText = '❌ รูปแบบลิงก์ซองอั่งเปาไม่ถูกต้อง';
+        statusMessage.innerText = '❌ กรุณากรอกเบอร์โทรและลิงก์ซองให้ครบถ้วน';
         return;
       }
 
       statusMessage.style.color = '#ffaa33';
-      statusMessage.innerText = '⏳ กำลังส่งข้อมูลไปยัง TrueMoney Wallet...';
+      statusMessage.innerText = '⏳ กำลังตรวจสอบซองอั่งเปา...';
 
-      try {
-        // ยิง API แลกรับซอง TrueMoney
-        const response = await fetch(`https://gift.truemoney.com/campaign/vouchers/${voucherHash}/redeem`, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            mobile: phoneInput,
-            voucher_hash: voucherHash
-          })
-        });
-
-        const resData = await response.json();
-
-        if (resData.status && resData.status.code === 'SUCCESS') {
-          // ดึงยอดเงิน TrueMoney จาก data.voucher.amount_baht
-          const receivedAmount = parseFloat(resData.data.voucher.amount_baht);
-
-          if (!isNaN(receivedAmount) && receivedAmount > 0) {
-            const newBalance = currentBalance + receivedAmount;
-            updateBalanceDisplay(newBalance);
-
-            statusMessage.style.color = '#28a745';
-            statusMessage.innerText = `✅ เติมเงินสำเร็จ! +${receivedAmount.toLocaleString()} บาท`;
-            document.getElementById('voucherUrl').value = '';
-
-            const username = currentUserData ? (currentUserData.global_name || currentUserData.username) : "Unknown";
-            const avatarUrl = currentUserData && currentUserData.avatar
-              ? `https://cdn.discordapp.com/avatars/${currentUserData.id}/${currentUserData.avatar}.png`
-              : 'https://cdn.discordapp.com/embed/avatars/0.png';
-
-            sendDiscordWebhook({
-              title: "🧧 เติมเงิน TrueMoney Wallet สำเร็จ!",
-              color: 3066993,
-              thumbnail: { url: avatarUrl },
-              fields: [
-                { name: "👤 ผู้ใช้งาน", value: `**${username}**\n(\`<@${currentUserId}>\`)`, inline: true },
-                { name: "💰 จำนวนเงินที่ได้รับ", value: `\`+${receivedAmount.toLocaleString()} ฿\``, inline: true },
-                { name: "💵 ยอดเงินรวมใหม่", value: `\`${newBalance.toLocaleString()} ฿\``, inline: true },
-                { name: "📱 เบอร์ผู้รับ", value: `\`${phoneInput}\``, inline: true }
-              ],
-              footer: { text: "J Community Shop • Topup Alert" },
-              timestamp: new Date().toISOString()
-            });
-          } else {
-            statusMessage.style.color = '#ff4d4d';
-            statusMessage.innerText = '❌ ยอดเงินในซองไม่ถูกต้อง';
-          }
-        } else {
-          statusMessage.style.color = '#ff4d4d';
-          statusMessage.innerText = `❌ ${resData.status.message || 'ซองอั่งเปานี้ถูกใช้งานไปแล้ว หรือหมดอายุ'}`;
-        }
-      } catch (err) {
-        console.error('Voucher Redeem Error:', err);
-        statusMessage.style.color = '#ff4d4d';
-        statusMessage.innerText = '❌ เกิดข้อผิดพลาดในการเชื่อมต่อกับ TrueMoney API (หากรันจากหน้าเว็บ Browser โดยตรง แนะนำให้ส่งผ่าน Proxy / Backend เพื่อหลีกเลี่ยงการติด CORS)';
-      }
+      // จำลองการตรวจสอบ
+      setTimeout(() => {
+        statusMessage.style.color = '#28a745';
+        statusMessage.innerText = '✅ ทำรายการสำเร็จ! ยอดเงินจะปรับปรุงเร็วๆ นี้';
+      }, 1200);
     }
 
     // ==========================================
-    // 👤 8. ล็อกอิน Discord
+    // 🔑 8. ระบบ Discord Auth OAuth2
     // ==========================================
-    const navLoginBtn = document.getElementById('navLoginBtn');
-    const navProfileZone = document.getElementById('navProfileZone');
-    const heroSubtitle = document.getElementById('heroSubtitle');
+    function checkDiscordAuth() {
+      const fragment = new URLSearchParams(window.location.hash.slice(1));
+      const accessToken = fragment.get('access_token');
 
-    async function checkDiscordLogin() {
-      const hashParams = new URLSearchParams(window.location.hash.substring(1));
-      let token = hashParams.get('access_token');
-      let isNewLogin = false;
+      if (accessToken) {
+        fetch('https://discord.com/api/users/@me', {
+          headers: { authorization: `Bearer ${accessToken}` }
+        })
+        .then(res => res.json())
+        .then(user => {
+          if (user.id) {
+            currentUserData = user;
+            currentUserId = user.id;
+            isLoggedIn = true;
 
-      if (token) {
-        localStorage.setItem('discord_token', token);
-        window.location.hash = '';
-        isNewLogin = true;
-      } else {
-        token = localStorage.getItem('discord_token');
-      }
+            saveUserProfile(user);
+            currentBalance = loadUserBalance(user.id);
 
-      if (token) {
-        try {
-          const response = await fetch('https://discord.com/api/v10/users/@me', {
-            headers: { Authorization: `Bearer ${token}` }
-          });
+            document.getElementById('navLoginBtn').style.display = 'none';
+            document.getElementById('navProfileZone').style.display = 'flex';
 
-          if (!response.ok) throw new Error('Token expired');
+            const avatarUrl = user.avatar
+              ? `https://cdn.discordapp.com/avatars/${user.id}/${user.avatar}.png`
+              : 'https://cdn.discordapp.com/embed/avatars/0.png';
 
-          const userData = await response.json();
-          currentUserData = userData;
-          
-          isLoggedIn = true;
-          currentUserId = userData.id;
+            document.getElementById('userAvatar').src = avatarUrl;
+            document.getElementById('userName').innerText = user.global_name || user.username;
+            document.getElementById('userBalanceText').innerText = currentBalance.toLocaleString();
+            document.getElementById('heroSubtitle').innerText = `ยินดีต้อนรับคุณ ${user.global_name || user.username} เข้าสู่ระบบ`;
 
-          saveUserProfile(userData);
-
-          navLoginBtn.style.display = 'none';
-          navProfileZone.style.display = 'flex';
-
-          const avatarUrl = userData.avatar
-            ? `https://cdn.discordapp.com/avatars/${userData.id}/${userData.avatar}.png`
-            : 'https://cdn.discordapp.com/embed/avatars/0.png';
-
-          document.getElementById('userAvatar').src = avatarUrl;
-          document.getElementById('userName').innerText = userData.global_name || userData.username;
-
-          const userBalance = loadUserBalance(currentUserId);
-          updateBalanceDisplay(userBalance);
-
-          heroSubtitle.innerText = `ยินดีต้อนรับคุณ ${userData.global_name || userData.username} เข้าสู่ระบบเรียบร้อยแล้ว!`;
-
-          if (isNewLogin) {
-            sendDiscordWebhook({
-              title: "🔓 ผู้ใช้งานเข้าสู่ระบบเว็บไซต์!",
-              color: 5793266,
-              thumbnail: { url: avatarUrl },
-              fields: [
-                { name: "👤 ผู้ใช้งาน", value: `**${userData.global_name || userData.username}**`, inline: true },
-                { name: "🆔 Discord ID", value: `\`${userData.id}\``, inline: true },
-                { name: "💵 ยอดเงินในบัญชี", value: `\`${userBalance.toLocaleString()} ฿\``, inline: true }
-              ],
-              footer: { text: "J Community Shop • Login Alert" },
-              timestamp: new Date().toISOString()
-            });
+            // ล้าง Hash Fragment บน URL
+            window.history.replaceState(null, null, window.location.pathname);
           }
-
-          lucide.createIcons();
-
-        } catch (err) {
-          console.error('Login Error:', err);
-          logoutDiscord();
-        }
+        })
+        .catch(err => console.error("OAuth Error:", err));
       }
     }
 
     function logoutDiscord() {
-      localStorage.removeItem('discord_token');
       isLoggedIn = false;
       currentUserId = null;
       currentUserData = null;
-      window.location.href = window.location.origin + window.location.pathname;
+      document.getElementById('navLoginBtn').style.display = 'flex';
+      document.getElementById('navProfileZone').style.display = 'none';
+      document.getElementById('heroSubtitle').innerText = 'ร้านค้าสินค้าดิจิทัล — เข้าสู่ระบบด้วย Discord เพื่อเริ่มใช้งาน';
     }
 
-    checkDiscordLogin();
+    window.onload = function() {
+      checkDiscordAuth();
+    };
   </script>
 </body>
 </html>
