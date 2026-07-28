@@ -1,367 +1,575 @@
 <!DOCTYPE html>
 <html lang="th">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>J Community</title>
-    <!-- Google Fonts (Kanit) -->
-    <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;600&display=swap" rel="stylesheet">
-    
-    <!-- โหลด Google Identity Services API -->
-    <script src="https://accounts.google.com/gsi/client" async defer></script>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>J Community Shop</title>
+  <!-- Google Fonts: Prompt -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <!-- Lucide Icons -->
+  <script src="https://unpkg.com/lucide@latest"></script>
 
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: 'Kanit', sans-serif;
-        }
+  <style>
+    :root {
+      --bg-dark: #0a0304;
+      --card-bg: #140a0c;
+      --input-bg: #221215;
+      --primary-red: #ff2a4b;
+      --primary-red-hover: #e01f3e;
+      --discord-blue: #5865f2;
+      --discord-blue-hover: #4752c4;
+      --text-main: #ffffff;
+      --text-muted: #99888c;
+      --border-color: #2a181c;
+    }
 
-        body {
-            background-color: #1a1d20;
-            background-image: radial-gradient(circle at 50% 0%, #2a2e33 0%, #1a1d20 75%);
-            color: #f1f5f9;
-            min-height: 100vh;
-        }
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: 'Prompt', sans-serif;
+    }
 
-        /* แถบบน (OS Top Bar) */
-        .os-navbar {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            height: 65px;
-            padding: 0 2rem;
-            background: rgba(33, 37, 41, 0.75);
-            backdrop-filter: blur(16px);
-            -webkit-backdrop-filter: blur(16px);
-            border-bottom: 1px solid rgba(255, 255, 255, 0.08);
-            position: sticky;
-            top: 0;
-            z-index: 1000;
-        }
+    body {
+      background-color: var(--bg-dark);
+      color: var(--text-main);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      overflow-x: hidden;
+      position: relative;
+    }
 
-        .brand-logo {
-            font-size: 1.3rem;
-            font-weight: 600;
-            color: #38bdf8;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            cursor: pointer;
-            text-shadow: 0 0 10px rgba(56, 189, 248, 0.4);
-        }
+    /* Ambient Radial Glow Background */
+    body::before {
+      content: '';
+      position: absolute;
+      top: 20%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 600px;
+      height: 600px;
+      background: radial-gradient(circle, rgba(255, 42, 75, 0.15) 0%, rgba(0, 0, 0, 0) 70%);
+      pointer-events: none;
+      z-index: 0;
+    }
 
-        .brand-logo::before {
-            content: '';
-            display: inline-block;
-            width: 10px;
-            height: 10px;
-            background-color: #38bdf8;
-            border-radius: 50%;
-            box-shadow: 0 0 10px #38bdf8;
-        }
+    /* Navbar */
+    header {
+      position: relative;
+      z-index: 10;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 18px 5%;
+      background: rgba(10, 3, 4, 0.8);
+      backdrop-filter: blur(10px);
+    }
 
-        .nav-links {
-            display: flex;
-            list-style: none;
-            gap: 1rem;
-            align-items: center;
-        }
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-weight: 700;
+      font-size: 1.2rem;
+    }
 
-        .nav-btn {
-            background: transparent;
-            border: none;
-            color: #94a3b8;
-            font-size: 0.95rem;
-            padding: 0.5rem 1rem;
-            border-radius: 8px;
-            cursor: pointer;
-            transition: all 0.2s ease-in-out;
-        }
+    .logo-icon {
+      width: 35px;
+      height: 35px;
+      background: linear-gradient(135deg, #ff2a4b, #800015);
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: bold;
+      box-shadow: 0 0 12px rgba(255, 42, 75, 0.4);
+    }
 
-        .nav-btn:hover {
-            color: #ffffff;
-            background: rgba(255, 255, 255, 0.08);
-        }
+    .nav-links {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      color: var(--text-muted);
+      font-size: 0.95rem;
+      cursor: pointer;
+    }
 
-        .btn-register {
-            border: 1px solid #38bdf8;
-            color: #38bdf8;
-            background: rgba(56, 189, 248, 0.05);
-        }
+    .nav-buttons {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
 
-        .btn-register:hover {
-            background: rgba(56, 189, 248, 0.15);
-            color: #ffffff;
-            box-shadow: 0 0 12px rgba(56, 189, 248, 0.3);
-        }
+    .btn-login-nav {
+      background: #1c0d10;
+      color: var(--text-main);
+      border: 1px solid var(--border-color);
+      padding: 8px 16px;
+      border-radius: 8px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 0.9rem;
+      transition: all 0.2s;
+    }
 
-        .btn-login {
-            background: linear-gradient(135deg, #0284c7, #2563eb);
-            color: #ffffff;
-            font-weight: 500;
-            box-shadow: 0 4px 12px rgba(37, 99, 235, 0.3);
-        }
+    .btn-login-nav:hover {
+      background: #281317;
+    }
 
-        .btn-login:hover {
-            background: linear-gradient(135deg, #0369a1, #1d4ed8);
-            transform: translateY(-1px);
-        }
+    .btn-register-nav {
+      background: var(--primary-red);
+      color: white;
+      border: none;
+      padding: 8px 16px;
+      border-radius: 8px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 0.9rem;
+      font-weight: 500;
+      box-shadow: 0 0 15px rgba(255, 42, 75, 0.4);
+      transition: all 0.2s;
+    }
 
-        .main-container {
-            max-width: 1200px;
-            margin: 2rem auto;
-            padding: 0 1rem;
-        }
+    .btn-register-nav:hover {
+      background: var(--primary-red-hover);
+      box-shadow: 0 0 20px rgba(255, 42, 75, 0.6);
+    }
 
-        .page-section {
-            display: none;
-            animation: fadeIn 0.3s ease-in-out;
-        }
+    /* Main Content (Landing View) */
+    .hero-container {
+      position: relative;
+      z-index: 1;
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding: 40px 20px;
+    }
 
-        .page-section.active {
-            display: block;
-        }
+    .badge {
+      background: rgba(255, 42, 75, 0.1);
+      border: 1px solid rgba(255, 42, 75, 0.2);
+      color: var(--primary-red);
+      padding: 4px 16px;
+      border-radius: 20px;
+      font-size: 0.85rem;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      margin-bottom: 20px;
+    }
 
-        .auth-card {
-            max-width: 420px;
-            margin: 2rem auto;
-            background: rgba(33, 37, 41, 0.85);
-            backdrop-filter: blur(12px);
-            border: 1px solid rgba(255, 255, 255, 0.08);
-            border-radius: 16px;
-            padding: 2.5rem 2rem;
-            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.4);
-        }
+    .hero-title {
+      font-size: 3.5rem;
+      font-weight: 800;
+      margin-bottom: 10px;
+      letter-spacing: -0.5px;
+    }
 
-        .auth-card h2 {
-            margin-bottom: 0.5rem;
-            text-align: center;
-            color: #ffffff;
-            font-size: 1.6rem;
-        }
+    .hero-title span {
+      color: var(--primary-red);
+    }
 
-        .auth-card p.subtitle {
-            text-align: center;
-            color: #94a3b8;
-            font-size: 0.9rem;
-            margin-bottom: 1.5rem;
-        }
+    .hero-subtitle {
+      color: var(--text-muted);
+      font-size: 1.1rem;
+      margin-bottom: 35px;
+    }
 
-        /* สไตล์ปุ่ม Google */
-        .google-btn-wrapper {
-            display: flex;
-            justify-content: center;
-            margin-bottom: 1.5rem;
-            width: 100%;
-        }
+    .btn-main-cta {
+      background: var(--primary-red);
+      color: white;
+      border: none;
+      padding: 14px 32px;
+      border-radius: 12px;
+      font-size: 1.1rem;
+      font-weight: 600;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      box-shadow: 0 0 35px rgba(255, 42, 75, 0.5);
+      transition: all 0.3s ease;
+    }
 
-        .divider {
-            display: flex;
-            align-items: center;
-            text-align: center;
-            color: #64748b;
-            font-size: 0.85rem;
-            margin-bottom: 1.5rem;
-        }
+    .btn-main-cta:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 0 45px rgba(255, 42, 75, 0.7);
+    }
 
-        .divider::before, .divider::after {
-            content: '';
-            flex: 1;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-        }
+    /* Modal Overlay */
+    .modal-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.75);
+      backdrop-filter: blur(8px);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 100;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.3s ease;
+    }
 
-        .divider span {
-            padding: 0 12px;
-        }
+    .modal-overlay.active {
+      opacity: 1;
+      pointer-events: all;
+    }
 
-        .form-group {
-            margin-bottom: 1.2rem;
-        }
+    /* Auth Card Window */
+    .auth-card {
+      background: var(--card-bg);
+      border: 1px solid var(--border-color);
+      width: 100%;
+      max-width: 440px;
+      border-radius: 20px;
+      padding: 30px 28px;
+      box-shadow: 0 0 50px rgba(0, 0, 0, 0.8), 0 0 30px rgba(255, 42, 75, 0.08);
+      position: relative;
+      transform: scale(0.95);
+      transition: transform 0.3s ease;
+    }
 
-        .form-group label {
-            display: block;
-            margin-bottom: 0.5rem;
-            font-size: 0.9rem;
-            color: #cbd5e1;
-        }
+    .modal-overlay.active .auth-card {
+      transform: scale(1);
+    }
 
-        .form-group input {
-            width: 100%;
-            padding: 0.8rem 1rem;
-            border-radius: 10px;
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            background: #121417;
-            color: #fff;
-            outline: none;
-        }
+    .close-btn {
+      position: absolute;
+      top: 18px;
+      right: 20px;
+      color: var(--text-muted);
+      cursor: pointer;
+    }
 
-        .form-group input:focus {
-            border-color: #38bdf8;
-            box-shadow: 0 0 0 3px rgba(56, 189, 248, 0.2);
-        }
+    .card-header {
+      text-align: center;
+      margin-bottom: 25px;
+    }
 
-        .submit-btn {
-            width: 100%;
-            padding: 0.8rem;
-            background: linear-gradient(135deg, #0284c7, #2563eb);
-            color: white;
-            border: none;
-            border-radius: 10px;
-            font-size: 1rem;
-            font-weight: 500;
-            cursor: pointer;
-            margin-top: 0.5rem;
-        }
+    .card-logo-icon {
+      width: 55px;
+      height: 55px;
+      background: linear-gradient(135deg, #ff2a4b, #99001a);
+      border-radius: 16px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.5rem;
+      font-weight: 800;
+      margin: 0 auto 12px;
+      box-shadow: 0 0 25px rgba(255, 42, 75, 0.5);
+    }
 
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(8px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-    </style>
+    .card-title {
+      font-size: 1.5rem;
+      font-weight: 700;
+    }
+
+    /* Tab Switcher */
+    .tab-container {
+      display: flex;
+      background: #0f0708;
+      border-radius: 12px;
+      padding: 4px;
+      margin-bottom: 20px;
+      border: 1px solid var(--border-color);
+    }
+
+    .tab-btn {
+      flex: 1;
+      padding: 10px;
+      text-align: center;
+      border: none;
+      background: transparent;
+      color: var(--text-muted);
+      border-radius: 8px;
+      font-weight: 500;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      transition: all 0.2s;
+    }
+
+    .tab-btn.active {
+      background: var(--primary-red);
+      color: white;
+      box-shadow: 0 0 15px rgba(255, 42, 75, 0.4);
+    }
+
+    /* Form Fields */
+    .form-group {
+      margin-bottom: 18px;
+      text-align: left;
+    }
+
+    .form-group label {
+      display: block;
+      font-size: 0.9rem;
+      font-weight: 600;
+      margin-bottom: 8px;
+    }
+
+    .input-wrapper {
+      position: relative;
+      display: flex;
+      align-items: center;
+    }
+
+    .input-icon {
+      position: absolute;
+      left: 14px;
+      color: var(--text-muted);
+      width: 18px;
+      height: 18px;
+    }
+
+    .form-input {
+      width: 100%;
+      background: var(--input-bg);
+      border: 1px solid var(--border-color);
+      padding: 12px 14px 12px 42px;
+      border-radius: 10px;
+      color: white;
+      font-size: 0.95rem;
+      outline: none;
+      transition: border-color 0.2s;
+    }
+
+    .form-input:focus {
+      border-color: var(--primary-red);
+    }
+
+    .form-input::placeholder {
+      color: #665558;
+    }
+
+    /* Submit Button */
+    .btn-submit {
+      width: 100%;
+      background: var(--primary-red);
+      color: white;
+      border: none;
+      padding: 12px;
+      border-radius: 10px;
+      font-size: 1rem;
+      font-weight: 600;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      box-shadow: 0 0 20px rgba(255, 42, 75, 0.4);
+      margin-top: 5px;
+      transition: background 0.2s;
+    }
+
+    .btn-submit:hover {
+      background: var(--primary-red-hover);
+    }
+
+    .divider {
+      display: flex;
+      align-items: center;
+      text-align: center;
+      color: var(--text-muted);
+      font-size: 0.8rem;
+      margin: 20px 0;
+    }
+
+    .divider::before, .divider::after {
+      content: '';
+      flex: 1;
+      border-bottom: 1px solid var(--border-color);
+    }
+
+    .divider span {
+      padding: 0 10px;
+    }
+
+    /* Discord Button */
+    .btn-discord {
+      width: 100%;
+      background: var(--discord-blue);
+      color: white;
+      border: none;
+      padding: 12px;
+      border-radius: 10px;
+      font-size: 0.95rem;
+      font-weight: 600;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      transition: background 0.2s;
+    }
+
+    .btn-discord:hover {
+      background: var(--discord-blue-hover);
+    }
+
+    .card-footer {
+      text-align: center;
+      margin-top: 20px;
+      font-size: 0.85rem;
+      color: var(--text-muted);
+    }
+
+    .card-footer a {
+      color: var(--primary-red);
+      text-decoration: none;
+      font-weight: 600;
+    }
+
+    .card-footer a:hover {
+      text-decoration: underline;
+    }
+  </style>
 </head>
 <body>
 
-    <!-- OS Top Navbar -->
-    <nav class="os-navbar">
-        <div class="brand-logo" onclick="switchPage('home')">
-            𝗝 𝗖𝗼𝗺𝗺𝘂𝗻𝗶𝘁𝘆
-        </div>
-        
-        <div class="nav-links">
-            <button class="nav-btn" onclick="switchPage('home')">หน้าแรก</button>
-            <button class="nav-btn" onclick="switchPage('shop')">ร้านค้า</button>
-            <button class="nav-btn" onclick="switchPage('topup')">เติมเงิน</button>
-            <button class="nav-btn btn-register" onclick="switchPage('register')">สร้างบัญชี</button>
-            <button class="nav-btn btn-login" onclick="switchPage('login')">เข้าสู่ระบบ</button>
-        </div>
-    </nav>
-
-    <!-- Main Container -->
-    <div class="main-container">
-        
-        <!-- หน้าแรก -->
-        <div id="home" class="page-section active">
-            <h1 style="font-size: 2rem;">🖥️ ยินดีต้อนรับสู่ 𝗝 𝗖𝗼𝗺𝗺𝘂𝗻𝗶𝘁𝘆</h1>
-            <p style="color: #94a3b8; margin-top: 10px;">เลือกสมัครสมาชิกหรือเข้าสู่ระบบได้เลยครับ</p>
-        </div>
-
-        <!-- หน้าร้านค้า -->
-        <div id="shop" class="page-section">
-            <h1>🛒 ร้านค้า</h1>
-            <p style="color: #94a3b8; margin-top: 10px;">รายการสินค้าทั้งหมดจะแสดงที่นี่</p>
-        </div>
-
-        <!-- หน้าเติมเงิน -->
-        <div id="topup" class="page-section">
-            <h1>💳 เติมเงิน</h1>
-            <p style="color: #94a3b8; margin-top: 10px;">เลือกช่องทางการเติมเงินของคุณ</p>
-        </div>
-
-        <!-- หน้าสร้างบัญชี (Register) -->
-        <div id="register" class="page-section">
-            <div class="auth-card">
-                <h2>✨ สมัครสมาชิก</h2>
-                <p class="subtitle">เริ่มต้นใช้งานและเข้าร่วมชุมชน J Community</p>
-                
-                <!-- ปุ่ม Google จริงจาก Google API -->
-                <div class="google-btn-wrapper">
-                    <div id="g_id_onload"
-                        data-client_id="YOUR_GOOGLE_CLIENT_ID.apps.googleusercontent.com"
-                        data-context="signup"
-                        data-ux_mode="popup"
-                        data-callback="handleCredentialResponse"
-                        data-auto_prompt="false">
-                    </div>
-
-                    <div class="g_id_signin"
-                        data-type="standard"
-                        data-shape="rectangular"
-                        data-theme="outline"
-                        data-text="signup_with"
-                        data-size="large"
-                        data-logo_alignment="left"
-                        data-width="350">
-                    </div>
-                </div>
-
-                <div class="divider"><span>หรือ สมัครด้วยอีเมล</span></div>
-
-                <form onsubmit="event.preventDefault(); alert('สมัครสมาชิกด้วยอีเมลสำเร็จ!');">
-                    <div class="form-group">
-                        <label>ชื่อผู้ใช้ (Username)</label>
-                        <input type="text" placeholder="ตั้งชื่อผู้ใช้..." required>
-                    </div>
-                    <div class="form-group">
-                        <label>อีเมล (Email)</label>
-                        <input type="email" placeholder="example@email.com" required>
-                    </div>
-                    <div class="form-group">
-                        <label>รหัสผ่าน (Password)</label>
-                        <input type="password" placeholder="อย่างน้อย 6 ตัวอักษร" required>
-                    </div>
-                    <button type="submit" class="submit-btn">ยืนยันการสมัครสมาชิก</button>
-                </form>
-            </div>
-        </div>
-
-        <!-- หน้าเข้าสู่ระบบ (Login) -->
-        <div id="login" class="page-section">
-            <div class="auth-card">
-                <h2>🔑 เข้าสู่ระบบ</h2>
-                <p class="subtitle">กรอกข้อมูลเพื่อเข้าสู่ระบบของคุณ</p>
-                
-                <!-- ปุ่ม Google Login -->
-                <div class="google-btn-wrapper">
-                    <div class="g_id_signin"
-                        data-type="standard"
-                        data-shape="rectangular"
-                        data-theme="outline"
-                        data-text="signin_with"
-                        data-size="large"
-                        data-logo_alignment="left"
-                        data-width="350">
-                    </div>
-                </div>
-
-                <div class="divider"><span>หรือ เข้าสู่ระบบด้วยอีเมล</span></div>
-
-                <form onsubmit="event.preventDefault(); alert('เข้าสู่ระบบสำเร็จ!');">
-                    <div class="form-group">
-                        <label>ชื่อผู้ใช้ / อีเมล</label>
-                        <input type="text" placeholder="กรอกชื่อผู้ใช้ หรือ อีเมล" required>
-                    </div>
-                    <div class="form-group">
-                        <label>รหัสผ่าน</label>
-                        <input type="password" placeholder="กรอกรหัสผ่าน" required>
-                    </div>
-                    <button type="submit" class="submit-btn">เข้าสู่ระบบ</button>
-                </form>
-            </div>
-        </div>
-
+  <!-- Navbar -->
+  <header>
+    <div class="logo">
+      <div class="logo-icon">J</div>
+      <span>J Community</span>
     </div>
+    <div class="nav-links">
+      <i data-lucide="home" style="width:16px; height:16px;"></i> หน้าหลัก
+    </div>
+    <div class="nav-buttons">
+      <button class="btn-login-nav" onclick="openModal('login')">
+        <i data-lucide="log-in" style="width:16px; height:16px;"></i> เข้าสู่ระบบ
+      </button>
+      <button class="btn-register-nav" onclick="openModal('register')">
+        <i data-lucide="user-plus" style="width:16px; height:16px;"></i> สมัคร
+      </button>
+    </div>
+  </header>
 
-    <script>
-        function switchPage(pageId) {
-            const sections = document.querySelectorAll('.page-section');
-            sections.forEach(section => {
-                section.classList.remove('active');
-            });
+  <!-- Hero / Landing Section -->
+  <main class="hero-container">
+    <div class="badge">
+      <i data-lucide="sparkles" style="width:14px; height:14px;"></i> ยินดีต้อนรับ
+    </div>
+    <h1 class="hero-title">J Community <span>Shop</span></h1>
+    <p class="hero-subtitle">ร้านของเรา — เข้าสู่ระบบเพื่อเริ่มใช้งาน</p>
+    <button class="btn-main-cta" onclick="openModal('login')">
+      <i data-lucide="shopping-bag" style="width:20px; height:20px;"></i> เข้าสู่ระบบ / สมัครสมาชิก
+    </button>
+  </main>
 
-            const targetPage = document.getElementById(pageId);
-            if (targetPage) {
-                targetPage.classList.add('active');
-            }
-        }
+  <!-- Login/Register Modal Pop-up -->
+  <div class="modal-overlay" id="authModal">
+    <div class="auth-card">
+      <span class="close-btn" onclick="closeModal()"><i data-lucide="x"></i></span>
 
-        // ฟังก์ชันรับข้อมูลเมื่อผู้ใช้ล็อกอินผ่าน Google สำเร็จ
-        function handleCredentialResponse(response) {
-            console.log("Encoded JWT ID token: " + response.credential);
-            alert("เข้าสู่ระบบด้วย Google สำเร็จเรียบร้อยแล้ว!");
-        }
-    </script>
+      <div class="card-header">
+        <div class="card-logo-icon">J</div>
+        <div class="card-title">J Community</div>
+      </div>
 
+      <!-- Tab Switcher -->
+      <div class="tab-container">
+        <button class="tab-btn active" id="tabLoginBtn" onclick="switchTab('login')">
+          <i data-lucide="log-in" style="width:16px; height:16px;"></i> เข้าสู่ระบบ
+        </button>
+        <button class="tab-btn" id="tabRegisterBtn" onclick="switchTab('register')">
+          <i data-lucide="user-plus" style="width:16px; height:16px;"></i> สมัครสมาชิก
+        </button>
+      </div>
+
+      <!-- Form Content -->
+      <form id="authForm" onsubmit="event.preventDefault();">
+        <div class="form-group">
+          <label>อีเมล</label>
+          <div class="input-wrapper">
+            <i data-lucide="mail" class="input-icon"></i>
+            <input type="email" class="form-input" placeholder="you@example.com" required>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label>รหัสผ่าน</label>
+          <div class="input-wrapper">
+            <i data-lucide="lock" class="input-icon"></i>
+            <input type="password" class="form-input" placeholder="อย่างน้อย 6 ตัวอักษร" required>
+          </div>
+        </div>
+
+        <button type="submit" class="btn-submit" id="submitBtn">
+          <i data-lucide="log-in" style="width:18px; height:18px;"></i> เข้าสู่ระบบ
+        </button>
+      </form>
+
+      <div class="divider">
+        <span>หรือ</span>
+      </div>
+
+      <button class="btn-discord">
+        <i data-lucide="message-square" style="width:18px; height:18px;"></i> เข้าสู่ระบบด้วย Discord
+      </button>
+
+      <div class="card-footer" id="cardFooter">
+        ยังไม่มีบัญชี? <a href="#" onclick="switchTab('register')">สมัครสมาชิก</a>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // Initialize Lucide Icons
+    lucide.createIcons();
+
+    const modal = document.getElementById('authModal');
+    const tabLoginBtn = document.getElementById('tabLoginBtn');
+    const tabRegisterBtn = document.getElementById('tabRegisterBtn');
+    const submitBtn = document.getElementById('submitBtn');
+    const cardFooter = document.getElementById('cardFooter');
+
+    function openModal(mode = 'login') {
+      modal.classList.add('active');
+      switchTab(mode);
+    }
+
+    function closeModal() {
+      modal.classList.remove('active');
+    }
+
+    // Close when clicking outside card
+    modal.addEventListener('click', (e) => {
+      if (e.target === modal) closeModal();
+    });
+
+    function switchTab(mode) {
+      if (mode === 'login') {
+        tabLoginBtn.classList.add('active');
+        tabRegisterBtn.classList.remove('active');
+        submitBtn.innerHTML = `<i data-lucide="log-in" style="width:18px; height:18px;"></i> เข้าสู่ระบบ`;
+        cardFooter.innerHTML = `ยังไม่มีบัญชี? <a href="#" onclick="switchTab('register')">สมัครสมาชิก</a>`;
+      } else {
+        tabRegisterBtn.classList.add('active');
+        tabLoginBtn.classList.remove('active');
+        submitBtn.innerHTML = `<i data-lucide="user-plus" style="width:18px; height:18px;"></i> สมัครสมาชิก`;
+        cardFooter.innerHTML = `มีบัญชีอยู่แล้ว? <a href="#" onclick="switchTab('login')">เข้าสู่ระบบ</a>`;
+      }
+      lucide.createIcons(); // Refresh icons
+    }
+  </script>
 </body>
 </html>
