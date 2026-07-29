@@ -184,6 +184,175 @@
       border-color: #22c55e;
     }
 
+    /* 🎁 ปุ่มแจกของฟรี & 🐷 Save ตัง */
+    .nav-pill-free {
+      background: rgba(236, 72, 153, 0.2);
+      border-color: rgba(236, 72, 153, 0.4);
+      color: #f472b6;
+      animation: pulseGlow 2s infinite alternate;
+    }
+
+    .nav-pill-free:hover {
+      background: #ec4899;
+      color: #ffffff;
+      box-shadow: 0 4px 18px rgba(236, 72, 153, 0.6);
+      border-color: #ec4899;
+    }
+
+    .nav-pill-savings {
+      background: rgba(234, 179, 8, 0.2);
+      border-color: rgba(234, 179, 8, 0.4);
+      color: #facc15;
+    }
+
+    .nav-pill-savings:hover {
+      background: #eab308;
+      color: #ffffff;
+      box-shadow: 0 4px 18px rgba(234, 179, 8, 0.6);
+      border-color: #eab308;
+    }
+
+    @keyframes pulseGlow {
+      0% { box-shadow: 0 0 5px rgba(236, 72, 153, 0.3); }
+      100% { box-shadow: 0 0 15px rgba(236, 72, 153, 0.8); }
+    }
+
+    .savings-display-box {
+      background: rgba(234, 179, 8, 0.1);
+      border: 1px dashed rgba(234, 179, 8, 0.4);
+      border-radius: 16px;
+      padding: 16px;
+      text-align: center;
+      margin-bottom: 20px;
+    }
+
+    /* 🛒 Product Grid & Cards Styling */
+    .products-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+      gap: 22px;
+      margin-top: 20px;
+    }
+
+    .product-card {
+      background: var(--card-bg);
+      border: 1px solid var(--border-color);
+      border-radius: 20px;
+      padding: 18px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      position: relative;
+      overflow: hidden;
+      backdrop-filter: blur(12px);
+    }
+
+    .product-card:hover {
+      transform: translateY(-6px);
+      border-color: var(--primary-purple);
+      box-shadow: 0 12px 30px rgba(0, 0, 0, 0.6), 0 0 25px var(--purple-glow);
+    }
+
+    .product-thumb-box {
+      width: 100%;
+      height: 160px;
+      border-radius: 14px;
+      overflow: hidden;
+      position: relative;
+      margin-bottom: 14px;
+      background: var(--card-inner);
+    }
+
+    .product-thumb {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transition: transform 0.4s ease;
+    }
+
+    .product-card:hover .product-thumb {
+      transform: scale(1.08);
+    }
+
+    .product-stock-badge {
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      padding: 4px 10px;
+      border-radius: 20px;
+      font-size: 0.75rem;
+      font-weight: 800;
+      backdrop-filter: blur(8px);
+    }
+
+    .stock-available { background: rgba(34, 197, 94, 0.85); color: #fff; }
+    .stock-empty { background: rgba(239, 68, 68, 0.85); color: #fff; }
+
+    .product-info-title {
+      font-size: 1.1rem;
+      font-weight: 800;
+      color: #fff;
+      margin-bottom: 6px;
+      line-height: 1.3;
+    }
+
+    .product-info-desc {
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      margin-bottom: 16px;
+      line-height: 1.4;
+      flex-grow: 1;
+    }
+
+    .product-card-footer {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      margin-top: auto;
+      padding-top: 12px;
+      border-top: 1px solid rgba(255, 255, 255, 0.08);
+    }
+
+    .product-price-tag {
+      font-size: 1.25rem;
+      font-weight: 900;
+      color: #4ade80;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    .btn-buy-product {
+      background: linear-gradient(135deg, var(--primary-purple) 0%, var(--primary-purple-hover) 100%);
+      color: white;
+      border: none;
+      padding: 10px 18px;
+      border-radius: 12px;
+      font-weight: 800;
+      font-size: 0.9rem;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      transition: all 0.25s ease;
+      box-shadow: 0 4px 12px var(--purple-glow);
+    }
+
+    .btn-buy-product:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 18px var(--purple-glow-bright);
+    }
+
+    .btn-buy-product:disabled {
+      background: rgba(255, 255, 255, 0.1);
+      color: rgba(255, 255, 255, 0.4);
+      cursor: not-allowed;
+      box-shadow: none;
+      transform: none;
+    }
+
     /* 🎨 สีธีม */
     .theme-picker-bar {
       display: flex;
@@ -971,6 +1140,9 @@
     <nav class="top-menu-bar">
       <a class="nav-pill active" href="#"><i data-lucide="home" style="width:17px;"></i> หน้าหลัก</a>
       <a class="nav-pill" href="#shopSection"><i data-lucide="shopping-bag" style="width:17px;"></i> ร้านค้า</a>
+      <div class="nav-pill" onclick="openInventoryModal()"><i data-lucide="package" style="width:17px; color: #38bdf8;"></i> คลังของฉัน</div>
+      <div class="nav-pill nav-pill-free" onclick="openFreeRewardsModal()"><i data-lucide="gift" style="width:17px;"></i> แจกของฟรี</div>
+      <div class="nav-pill nav-pill-savings" onclick="openSavingsModal()"><i data-lucide="piggy-bank" style="width:17px;"></i> Save ตัง (กระปุกออม)</div>
       <div class="nav-pill nav-pill-topup" onclick="openTopupModal()"><i data-lucide="wallet" style="width:17px;"></i> เติมเงินด่วน</div>
       <div class="nav-pill" onclick="openHistoryModal()"><i data-lucide="history" style="width:17px;"></i> ประวัติรายการ</div>
       <div class="nav-pill" onclick="openLeaderboardModal()"><i data-lucide="trophy" style="width:17px; color: var(--gold-color);"></i> จัดอันดับ</div>
@@ -1030,15 +1202,11 @@
 
     <section id="shopSection">
       <div class="shop-section-title">
-        <i data-lucide="shopping-bag" style="color: var(--primary-purple);"></i> คลังสินค้าดิจิทัล
+        <i data-lucide="shopping-bag" style="color: var(--primary-purple);"></i> คลังสินค้าดิจิทัลพร้อมส่ง
       </div>
 
-      <div class="empty-stock-card">
-        <div class="empty-icon-box">
-          <i data-lucide="package-x" style="width: 42px; height: 42px;"></i>
-        </div>
-        <div class="empty-title">สินค้ายังไม่ลงสต็อก</div>
-        <div class="empty-desc">ขณะนี้ยังไม่มีรายการสินค้าจำหน่าย กรุณากลับมาเช็กใหม่อีกครั้งในภายหลังครับ</div>
+      <div class="products-grid" id="productsContainer">
+        <!-- โหลดการ์ดสินค้าอัตโนมัติผ่าน JS -->
       </div>
     </section>
   </div>
@@ -1109,6 +1277,71 @@
   <!-- 🔔 Toast Container -->
   <div id="toastContainer" class="toast-container"></div>
 
+  <!-- 🎁 Free Rewards Modal (แจกของฟรีประจำวัน) -->
+  <div class="modal-overlay" id="freeRewardsModal">
+    <div class="modal-card" style="text-align: center;">
+      <span class="close-btn" onclick="closeFreeRewardsModal()"><i data-lucide="x"></i></span>
+
+      <div class="modal-header">
+        <div class="modal-title" style="color: #f472b6;">
+          <i data-lucide="gift"></i> รับของขวัญแจกฟรีประจำวัน!
+        </div>
+      </div>
+
+      <div style="margin: 20px 0;">
+        <div style="font-size: 3.5rem; margin-bottom: 10px;">🎁</div>
+        <p style="color: var(--text-muted); font-size: 0.95rem; font-weight: 500;">
+          กดปุ่มด้านล่างเพื่อรับเงินสุ่มโบนัสฟรี (10 - 50 ฿) เข้าบัญชีของคุณได้วันละ 1 ครั้ง!
+        </p>
+      </div>
+
+      <div id="freeRewardStatus" style="margin-bottom: 15px; font-weight: 700; font-size: 0.9rem;"></div>
+
+      <button id="btnClaimFree" class="btn-submit-topup" style="background: linear-gradient(135deg, #ec4899 0%, #db2777 100%); box-shadow: 0 4px 15px rgba(236, 72, 153, 0.4);" onclick="claimDailyReward()">
+        <i data-lucide="sparkles" style="width:20px;"></i> กดรับเงินฟรีทันที
+      </button>
+    </div>
+  </div>
+
+  <!-- 🐷 Save ตัง / กระปุกออมเงิน Modal -->
+  <div class="modal-overlay" id="savingsModal">
+    <div class="modal-card">
+      <span class="close-btn" onclick="closeSavingsModal()"><i data-lucide="x"></i></span>
+
+      <div class="modal-header">
+        <div class="modal-title" style="color: #facc15;">
+          <i data-lucide="piggy-bank"></i> ระบบ Save ตัง (กระปุกออมเงินส่วนตัว)
+        </div>
+      </div>
+
+      <div class="savings-display-box">
+        <div style="font-size: 0.85rem; color: var(--text-muted); font-weight: 600;">ยอดเงินในกระปุกออมเงิน (Savings)</div>
+        <div style="font-size: 2rem; font-weight: 900; color: #facc15; margin-top: 4px;">
+          <span id="savingsBalanceText">0</span> ฿
+        </div>
+        <div style="font-size: 0.75rem; color: #4ade80; margin-top: 6px;">
+          🔒 ระบบบันทึกข้อมูลและ Save เงินอัตโนมัติ 100%
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">จำนวนเงินที่ต้องการทำรายการ (฿):</label>
+        <input type="number" id="savingsAmountInput" class="input-field" placeholder="กรอกจำนวนเงิน..." min="1" />
+      </div>
+
+      <div style="display: flex; gap: 10px;">
+        <button class="btn-submit-topup" style="background: linear-gradient(135deg, #eab308 0%, #ca8a04 100%); flex: 1;" onclick="depositToSavings()">
+          <i data-lucide="arrow-down-circle" style="width:18px;"></i> ฝากเข้ากระปุก
+        </button>
+        <button class="btn-submit-topup" style="background: rgba(255,255,255,0.1); border: 1px solid var(--border-color); flex: 1; color: #fff;" onclick="withdrawFromSavings()">
+          <i data-lucide="arrow-up-circle" style="width:18px;"></i> ถอนออก
+        </button>
+      </div>
+
+      <div id="savingsStatusMsg" style="margin-top: 14px; font-size: 0.88rem; font-weight: 600; text-align: center;"></div>
+    </div>
+  </div>
+
   <!-- 📜 History Modal -->
   <div class="modal-overlay" id="historyModal">
     <div class="modal-card">
@@ -1121,6 +1354,45 @@
       </div>
 
       <div class="history-list" id="historyContainer"></div>
+    </div>
+  </div>
+
+  <!-- 🛒 Purchase Confirmation Modal -->
+  <div class="modal-overlay" id="purchaseModal">
+    <div class="modal-card" style="text-align: center;">
+      <span class="close-btn" onclick="closePurchaseModal()"><i data-lucide="x"></i></span>
+
+      <div class="modal-header">
+        <div class="modal-title" style="color: var(--primary-purple);">
+          <i data-lucide="shopping-cart"></i> ยืนยันการสั่งซื้อสินค้า
+        </div>
+      </div>
+
+      <div id="purchaseDetailsContent" style="margin: 20px 0;"></div>
+
+      <div style="display: flex; gap: 12px; margin-top: 20px;">
+        <button class="btn-submit-topup" style="background: rgba(255,255,255,0.1); border: 1px solid var(--border-color); color: #fff;" onclick="closePurchaseModal()">
+          ยกเลิก
+        </button>
+        <button id="btnConfirmBuy" class="btn-submit-topup" onclick="confirmPurchase()">
+          <i data-lucide="check-circle" style="width:18px;"></i> ยืนยันการซื้อ
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 📦 My Inventory Modal (คลังสินค้าส่วนตัว) -->
+  <div class="modal-overlay" id="inventoryModal">
+    <div class="modal-card">
+      <span class="close-btn" onclick="closeInventoryModal()"><i data-lucide="x"></i></span>
+
+      <div class="modal-header">
+        <div class="modal-title" style="color: #38bdf8;">
+          <i data-lucide="package"></i> คลังสินค้าดิจิทัลของฉัน (My Inventory)
+        </div>
+      </div>
+
+      <div class="history-list" id="inventoryContainer"></div>
     </div>
   </div>
 
@@ -1185,6 +1457,258 @@
 
   <script>
     lucide.createIcons();
+
+    // ==========================================
+    // 🛒 0.2 รายการสินค้าดิจิทัล & ระบบสั่งซื้อ
+    // ==========================================
+    const productsData = [
+      {
+        id: "p1",
+        title: "Discord Nitro Boost (1 เดือน)",
+        desc: "เพิ่มยศเซิร์ฟเวอร์ + ป้ายโปรไฟล์สุดเท่ บูสต์ 2 เซิร์ฟเวอร์ 1 เดือนเต็ม",
+        price: 150,
+        stock: 5,
+        image: "https://images.alphacoders.com/128/1284562.png",
+        keys: ["NITRO-BOOST-8821-X9A2", "NITRO-BOOST-9912-K7L3", "NITRO-BOOST-3341-P0M9", "NITRO-BOOST-7762-L2K1", "NITRO-BOOST-4451-R8V4"]
+      },
+      {
+        id: "p2",
+        title: "Robux 1,000 R$ (ID Pass)",
+        desc: "เติม Robux เข้าบัญชี Roblox เร็ว ทันใจ ได้รับทันที 1,000 R$",
+        price: 100,
+        stock: 12,
+        image: "https://images.ctfassets.net/kft28yuj64nb/1LzF1sWlZ9I0XkS9vB8xZ2/8c34689b94cf9bd6bf11e6462744c042/Roblox_Logo.jpg",
+        keys: ["ROBUX-GIFT-99120-X1", "ROBUX-GIFT-99121-X2", "ROBUX-GIFT-99122-X3"]
+      },
+      {
+        id: "p3",
+        title: "Netflix Premium (30 วัน)",
+        desc: "รับชมความบันเทิงระดับ Ultra HD 4K จอส่วนตัว ล็อกรหัสผ่าน PIN",
+        price: 89,
+        stock: 8,
+        image: "https://assets.nflxext.com/us/ffe/siteui/common/icons/netflixgenerico.ico",
+        keys: ["NETFLIX-ACC-USER01:PASS9981", "NETFLIX-ACC-USER02:PASS7712"]
+      },
+      {
+        id: "p4",
+        title: "YouTube Premium (30 วัน)",
+        desc: "ฟังเพลงแบบไม่มีโฆษณาคั่น เล่นเพลงเบื้องหลังได้ เชิญเข้าครอบครัวทันที",
+        price: 35,
+        stock: 15,
+        image: "https://upload.wikimedia.org/wikipedia/commons/e/ef/Youtube_logo.png",
+        keys: ["YOUTUBE-INVITE-LINK-001", "YOUTUBE-INVITE-LINK-002"]
+      },
+      {
+        id: "p5",
+        title: "Steam Wallet Gift Card $5",
+        desc: "โค้ดเติมเงิน Steam Wallet มูลค่า $5 USD ใช้ซื้อเกมใน Steam ได้ทันที",
+        price: 180,
+        stock: 3,
+        image: "https://store.steampowered.com/public/shared/images/header/logo_steam.png",
+        keys: ["STEAM-W5XX-9901-L7A2", "STEAM-W5XX-4412-M0P1"]
+      }
+    ];
+
+    let selectedProductId = null;
+
+    function renderProducts() {
+      const container = document.getElementById('productsContainer');
+      if (!container) return;
+
+      let html = '';
+      productsData.forEach(item => {
+        const isOutOfStock = item.stock <= 0;
+        const stockBadge = isOutOfStock
+          ? `<span class="product-stock-badge stock-empty">หมด</span>`
+          : `<span class="product-stock-badge stock-available">เหลือ ${item.stock} ชิ้น</span>`;
+
+        html += `
+          <div class="product-card">
+            <div>
+              <div class="product-thumb-box">
+                <img class="product-thumb" src="${item.image}" alt="${item.title}" onerror="this.src='https://cdn-icons-png.flaticon.com/512/681/681494.png'">
+                ${stockBadge}
+              </div>
+              <div class="product-info-title">${item.title}</div>
+              <div class="product-info-desc">${item.desc}</div>
+            </div>
+            <div class="product-card-footer">
+              <div class="product-price-tag">${item.price.toLocaleString()} ฿</div>
+              <button class="btn-buy-product" ${isOutOfStock ? 'disabled' : ''} onclick="openPurchaseModal('${item.id}')">
+                <i data-lucide="shopping-bag" style="width:16px;"></i> ${isOutOfStock ? 'สินค้าหมด' : 'สั่งซื้อ'}
+              </button>
+            </div>
+          </div>
+        `;
+      });
+
+      container.innerHTML = html;
+      lucide.createIcons({ targets: [container] });
+    }
+
+    const purchaseModal = document.getElementById('purchaseModal');
+
+    function openPurchaseModal(productId) {
+      if (!isLoggedIn) {
+        showToast('กรุณาเข้าสู่ระบบ', 'กรุณาล็อกอินด้วย Discord ก่อนทำการสั่งซื้อสินค้าครับ', 'warning');
+        return;
+      }
+
+      const product = productsData.find(p => p.id === productId);
+      if (!product) return;
+
+      selectedProductId = productId;
+      const content = document.getElementById('purchaseDetailsContent');
+
+      content.innerHTML = `
+        <div style="background: var(--card-inner); border: 1px solid var(--border-color); padding: 18px; border-radius: 16px; text-align: left;">
+          <div style="font-size: 1.15rem; font-weight: 800; color: #fff;">${product.title}</div>
+          <div style="font-size: 0.88rem; color: var(--text-muted); margin-top: 6px;">${product.desc}</div>
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 16px; padding-top: 12px; border-top: 1px dashed var(--border-color);">
+            <span style="font-weight: 600; color: var(--text-muted);">ราคาสินค้า:</span>
+            <span style="font-size: 1.3rem; font-weight: 900; color: #4ade80;">${product.price.toLocaleString()} ฿</span>
+          </div>
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 8px;">
+            <span style="font-weight: 600; color: var(--text-muted);">ยอดเงินในบัญชีของคุณ:</span>
+            <span style="font-size: 1rem; font-weight: 800; color: ${currentBalance >= product.price ? '#38bdf8' : '#f87171'};">${currentBalance.toLocaleString()} ฿</span>
+          </div>
+        </div>
+      `;
+
+      purchaseModal.classList.add('active');
+    }
+
+    function closePurchaseModal() { purchaseModal.classList.remove('active'); }
+
+    purchaseModal.addEventListener('click', (e) => {
+      if (e.target === purchaseModal) closePurchaseModal();
+    });
+
+    function confirmPurchase() {
+      if (!selectedProductId || !isLoggedIn || !currentUserId) return;
+
+      const product = productsData.find(p => p.id === selectedProductId);
+      if (!product) return;
+
+      if (product.stock <= 0) {
+        showToast('สินค้าหมด', 'ขออภัยครับ สินค้ารายการนี้หมดสต็อกแล้ว', 'error');
+        closePurchaseModal();
+        return;
+      }
+
+      if (currentBalance < product.price) {
+        showToast('เงินไม่พอ', 'ยอดเงินคงเหลือในบัญชีของคุณไม่เพียงพอ กรุณาเติมเงินก่อนสั่งซื้อครับ', 'error');
+        closePurchaseModal();
+        openTopupModal();
+        return;
+      }
+
+      // หักเงิน & สต็อก
+      const newBalance = currentBalance - product.price;
+      updateBalanceDisplay(newBalance);
+      product.stock -= 1;
+
+      // ดึงรหัสสินค้า
+      const deliveredKey = product.keys.pop() || `KEY-DIGITAL-${Date.now().toString().slice(-6)}`;
+
+      // บันทึกเข้า Inventory & History
+      savePurchasedItem(currentUserId, product.title, deliveredKey, product.price);
+      addHistoryItem(currentUserId, 'buy', `ซื้อ ${product.title}`, product.price, `รหัส: ${deliveredKey}`);
+
+      renderProducts();
+      closePurchaseModal();
+
+      showToast('ซื้อสินค้าสำเร็จ!', `คุณได้รับ ${product.title} เรียบร้อยแล้ว`, 'success');
+
+      sendDiscordWebhook({
+        title: "🛒 มีการสั่งซื้อสินค้าดิจิทัลสำเร็จ!",
+        color: 3066993,
+        fields: [
+          { name: "👤 ผู้ซื้อ", value: `**${currentUserData?.global_name || currentUserData?.username}** (\`<@${currentUserId}>\`)`, inline: true },
+          { name: "📦 สินค้า", value: `\`${product.title}\``, inline: true },
+          { name: "💵 ราคา", value: `\`${product.price} ฿\``, inline: true },
+          { name: "🔑 รหัสสินค้า", value: `\`\`\`${deliveredKey}\`\`\``, inline: false }
+        ],
+        footer: { text: "J Community Shop • Purchase System" },
+        timestamp: new Date().toISOString()
+      });
+
+      // เปิดดูคลังทันที
+      openInventoryModal();
+    }
+
+    // ==========================================
+    // 📦 0.3 ระบบคลังสินค้าดิจิทัลส่วนตัว (My Inventory)
+    // ==========================================
+    const inventoryModal = document.getElementById('inventoryModal');
+
+    function savePurchasedItem(userId, title, key, price) {
+      if (!userId) return;
+      const invKey = `user_inventory_${userId}`;
+      const inventory = JSON.parse(localStorage.getItem(invKey) || '[]');
+
+      inventory.unshift({
+        id: 'INV' + Date.now().toString().slice(-6),
+        title: title,
+        key: key,
+        price: price,
+        time: new Date().toLocaleString('th-TH', { year: 'numeric', month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' })
+      });
+
+      localStorage.setItem(invKey, JSON.stringify(inventory));
+    }
+
+    function openInventoryModal() {
+      if (!isLoggedIn) {
+        showToast('กรุณาเข้าสู่ระบบ', 'กรุณาล็อกอินด้วย Discord ก่อนเปิดคลังสินค้าครับ', 'warning');
+        return;
+      }
+      renderInventory();
+      inventoryModal.classList.add('active');
+    }
+
+    function closeInventoryModal() { inventoryModal.classList.remove('active'); }
+
+    inventoryModal.addEventListener('click', (e) => {
+      if (e.target === inventoryModal) closeInventoryModal();
+    });
+
+    function renderInventory() {
+      const container = document.getElementById('inventoryContainer');
+      if (!currentUserId) return;
+
+      const invKey = `user_inventory_${currentUserId}`;
+      const inventory = JSON.parse(localStorage.getItem(invKey) || '[]');
+
+      if (inventory.length === 0) {
+        container.innerHTML = `
+          <div style="text-align: center; color: var(--text-muted); padding: 30px 20px;">
+            <i data-lucide="package-open" style="width: 40px; height: 40px; margin-bottom: 8px; opacity: 0.5;"></i>
+            <div>คุณยังไม่มีสินค้าในคลังส่วนตัว</div>
+          </div>
+        `;
+        lucide.createIcons({ targets: [container] });
+        return;
+      }
+
+      let html = '';
+      inventory.forEach(item => {
+        html += `
+          <div class="history-item" style="flex-direction: column; align-items: flex-start; gap: 8px;">
+            <div style="display: flex; justify-content: space-between; width: 100%; align-items: center;">
+              <span class="history-title-text">${item.title}</span>
+              <span style="font-size: 0.8rem; color: var(--text-muted);">${item.time}</span>
+            </div>
+            <div style="width: 100%; background: rgba(0,0,0,0.4); border: 1px dashed var(--border-color); padding: 10px; border-radius: 10px; font-family: monospace; color: #4ade80; font-size: 0.95rem; font-weight: 700; word-break: break-all;">
+              🔑 ${item.key}
+            </div>
+          </div>
+        `;
+      });
+
+      container.innerHTML = html;
+      lucide.createIcons({ targets: [container] });
+    }
 
     // ==========================================
     // 🔔 0. ระบบแจ้งเตือนในเว็บ (Toast Notifications)
@@ -1403,6 +1927,188 @@
     function saveUserBalance(userId, amount) {
       if (!userId) return;
       localStorage.setItem(`user_balance_${userId}`, amount);
+    }
+
+    // ==========================================
+    // 🎁 4.1 ระบบแจกของฟรีประจำวัน (Daily Free Rewards)
+    // ==========================================
+    const freeRewardsModal = document.getElementById('freeRewardsModal');
+
+    function openFreeRewardsModal() {
+      if (!isLoggedIn) {
+        showToast('กรุณาเข้าสู่ระบบ', 'กรุณาล็อกอินด้วย Discord ก่อนกดรับของฟรีครับ', 'warning');
+        return;
+      }
+
+      checkDailyRewardStatus();
+      freeRewardsModal.classList.add('active');
+    }
+
+    function closeFreeRewardsModal() { freeRewardsModal.classList.remove('active'); }
+
+    freeRewardsModal.addEventListener('click', (e) => {
+      if (e.target === freeRewardsModal) closeFreeRewardsModal();
+    });
+
+    function checkDailyRewardStatus() {
+      if (!currentUserId) return;
+      const lastClaim = localStorage.getItem(`daily_claim_${currentUserId}`);
+      const btn = document.getElementById('btnClaimFree');
+      const status = document.getElementById('freeRewardStatus');
+
+      if (lastClaim) {
+        const lastTime = parseInt(lastClaim);
+        const now = Date.now();
+        const diffHours = (now - lastTime) / (1000 * 60 * 60);
+
+        if (diffHours < 24) {
+          const remainingHours = Math.ceil(24 - diffHours);
+          status.style.color = '#fbbf24';
+          status.innerText = `⏳ คุณรับโบนัสไปแล้ว กรุณารออีกประมาณ ${remainingHours} ชั่วโมง`;
+          btn.disabled = true;
+          btn.style.opacity = '0.5';
+          btn.style.cursor = 'not-allowed';
+          return;
+        }
+      }
+
+      status.style.color = '#4ade80';
+      status.innerText = '✨ คุณมีสิทธิ์รับของขวัญฟรีสำหรับวันนี้!';
+      btn.disabled = false;
+      btn.style.opacity = '1';
+      btn.style.cursor = 'pointer';
+    }
+
+    function claimDailyReward() {
+      if (!isLoggedIn || !currentUserId) return;
+
+      const lastClaim = localStorage.getItem(`daily_claim_${currentUserId}`);
+      if (lastClaim) {
+        const diffHours = (Date.now() - parseInt(lastClaim)) / (1000 * 60 * 60);
+        if (diffHours < 24) {
+          showToast('รับไปแล้ว', 'วันนี้คุณรับสิทธิ์ไปแล้วครับ กรุณากลับมาใหม่พรุ่งนี้', 'warning');
+          return;
+        }
+      }
+
+      // สุ่มเงินฟรี 10 - 50 บาท
+      const randomReward = Math.floor(Math.random() * 41) + 10;
+      const newBalance = currentBalance + randomReward;
+      updateBalanceDisplay(newBalance);
+
+      localStorage.setItem(`daily_claim_${currentUserId}`, Date.now().toString());
+      addHistoryItem(currentUserId, 'free', 'รับของแจกฟรีประจำวัน', randomReward, 'รับโบนัสฟรีสุ่มประจำวัน');
+
+      showToast('🎉 ยินดีด้วย!', `คุณได้รับเงินฟรี +${randomReward} ฿ เรียบร้อยแล้ว`, 'success');
+      sendDiscordWebhook({
+        title: "🎁 มีผู้ใช้งานกดรับของขวัญแจกฟรี!",
+        color: 15498934,
+        fields: [
+          { name: "👤 ผู้ใช้งาน", value: `**${currentUserData?.global_name || currentUserData?.username}** (\`<@${currentUserId}>\`)`, inline: true },
+          { name: "💵 สุ่มได้เงิน", value: `\`+${randomReward} ฿\``, inline: true }
+        ],
+        footer: { text: "J Community Shop • Free Reward System" },
+        timestamp: new Date().toISOString()
+      });
+
+      checkDailyRewardStatus();
+    }
+
+    // ==========================================
+    // 🐷 4.2 ระบบ Save ตัง / กระปุกออมเงิน (Savings Vault)
+    // ==========================================
+    const savingsModal = document.getElementById('savingsModal');
+
+    function loadUserSavings(userId) {
+      if (!userId) return 0;
+      const saved = localStorage.getItem(`user_savings_${userId}`);
+      return saved !== null ? parseFloat(saved) : 0;
+    }
+
+    function saveUserSavings(userId, amount) {
+      if (!userId) return;
+      localStorage.setItem(`user_savings_${userId}`, amount);
+    }
+
+    function openSavingsModal() {
+      if (!isLoggedIn) {
+        showToast('กรุณาเข้าสู่ระบบ', 'กรุณาล็อกอินด้วย Discord ก่อนใช้งานระบบ Save ตังครับ', 'warning');
+        return;
+      }
+      updateSavingsDisplay();
+      savingsModal.classList.add('active');
+    }
+
+    function closeSavingsModal() { savingsModal.classList.remove('active'); }
+
+    savingsModal.addEventListener('click', (e) => {
+      if (e.target === savingsModal) closeSavingsModal();
+    });
+
+    function updateSavingsDisplay() {
+      if (!currentUserId) return;
+      const savings = loadUserSavings(currentUserId);
+      document.getElementById('savingsBalanceText').innerText = savings.toLocaleString();
+      document.getElementById('savingsAmountInput').value = '';
+      document.getElementById('savingsStatusMsg').innerText = '';
+    }
+
+    function depositToSavings() {
+      const input = document.getElementById('savingsAmountInput');
+      const amount = parseFloat(input.value);
+      const statusMsg = document.getElementById('savingsStatusMsg');
+
+      if (!amount || amount <= 0) {
+        statusMsg.style.color = '#f87171';
+        statusMsg.innerText = '❌ กรุณากรอกจำนวนเงินที่ถูกต้อง';
+        return;
+      }
+
+      if (amount > currentBalance) {
+        statusMsg.style.color = '#f87171';
+        statusMsg.innerText = '❌ ยอดเงินในบัญชีหลักไม่เพียงพอ';
+        showToast('เงินไม่พอ', 'ยอดเงินหลักของคุณมีไม่พอสำหรับฝากเข้ากระปุกครับ', 'error');
+        return;
+      }
+
+      const currentSavings = loadUserSavings(currentUserId);
+      const newSavings = currentSavings + amount;
+      const newMainBalance = currentBalance - amount;
+
+      saveUserSavings(currentUserId, newSavings);
+      updateBalanceDisplay(newMainBalance);
+      updateSavingsDisplay();
+
+      showToast('Save ตังสำเร็จ!', `ฝากเงินเข้ากระปุกออมเงิน +${amount.toLocaleString()} ฿ เรียบร้อยแล้ว`, 'success');
+    }
+
+    function withdrawFromSavings() {
+      const input = document.getElementById('savingsAmountInput');
+      const amount = parseFloat(input.value);
+      const statusMsg = document.getElementById('savingsStatusMsg');
+
+      if (!amount || amount <= 0) {
+        statusMsg.style.color = '#f87171';
+        statusMsg.innerText = '❌ กรุณากรอกจำนวนเงินที่ถูกต้อง';
+        return;
+      }
+
+      const currentSavings = loadUserSavings(currentUserId);
+      if (amount > currentSavings) {
+        statusMsg.style.color = '#f87171';
+        statusMsg.innerText = '❌ ยอดเงินในกระปุกออมเงินไม่เพียงพอ';
+        showToast('ยอดออมไม่พอ', 'ยอดเงินในกระปุกออมมีไม่พอสำหรับถอนครับ', 'error');
+        return;
+      }
+
+      const newSavings = currentSavings - amount;
+      const newMainBalance = currentBalance + amount;
+
+      saveUserSavings(currentUserId, newSavings);
+      updateBalanceDisplay(newMainBalance);
+      updateSavingsDisplay();
+
+      showToast('ถอนเงินสำเร็จ!', `ถอนเงินจากกระปุกออมเข้าบัญชีหลัก +${amount.toLocaleString()} ฿ เรียบร้อยแล้ว`, 'success');
     }
 
     function saveUserProfile(user) {
@@ -1807,6 +2513,7 @@
 
     window.onload = function() {
       checkDiscordAuth();
+      renderProducts();
     };
   </script>
 </body>
