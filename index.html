@@ -1,2520 +1,308 @@
 <!DOCTYPE html>
 <html lang="th">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>J Community Shop - ร้านค้าดิจิทัลสุดทันสมัย</title>
-  <!-- Google Fonts: Prompt -->
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
-  <!-- Lucide Icons -->
-  <script src="https://unpkg.com/lucide@latest"></script>
-
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Modern Web Platform</title>
   <style>
-    :root {
-      /* 💜 โทนสีหลัก (Default: Neon Purple) */
-      --bg-dark: #06020a;
-      --card-bg: rgba(18, 10, 28, 0.85);
-      --card-inner: rgba(26, 15, 40, 0.9);
-      --primary-purple: #a855f7;
-      --primary-purple-hover: #9333ea;
-      --purple-glow: rgba(168, 85, 247, 0.45);
-      --purple-glow-bright: rgba(168, 85, 247, 0.8);
-      --discord-blue: #5865f2;
-      --discord-blue-hover: #4752c4;
-      --text-main: #ffffff;
-      --text-muted: #b4a8ca;
-      --border-color: rgba(168, 85, 247, 0.22);
-      --truemoney-color: #ff8c00;
-      --green-accent: #22c55e;
-      --gold-color: #ffd700;
-    }
-
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-      font-family: 'Prompt', sans-serif;
-      user-select: none;
-      -webkit-user-select: none;
-    }
-
-    body {
-      background-color: var(--bg-dark);
-      color: var(--text-main);
-      min-height: 100vh;
-      display: flex;
-      flex-direction: column;
-      overflow-x: hidden;
-      position: relative;
-      transition: background-color 0.35s ease;
-      background-image: 
-        radial-gradient(circle at 15% 20%, var(--purple-glow) 0%, transparent 45%),
-        radial-gradient(circle at 85% 75%, rgba(88, 101, 242, 0.25) 0%, transparent 50%);
-      background-attachment: fixed;
-    }
-
-    /* Custom Scrollbar */
-    ::-webkit-scrollbar { width: 8px; }
-    ::-webkit-scrollbar-track { background: var(--bg-dark); }
-    ::-webkit-scrollbar-thumb {
-      background: var(--border-color);
-      border-radius: 10px;
-    }
-    ::-webkit-scrollbar-thumb:hover { background: var(--primary-purple); }
-
-    /* 👑 Header ดีไซน์ใหม่ สไตล์ Top Navbar รวมแถบทั้งหมดอยู่ข้างบน */
-    header {
-      position: sticky;
-      top: 0;
-      z-index: 100;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      padding: 12px 3%;
-      background: rgba(10, 4, 18, 0.88);
-      backdrop-filter: blur(20px);
-      border-bottom: 1px solid var(--border-color);
-      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.7);
-      gap: 16px;
-    }
-
-    .nav-brand {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      flex-shrink: 0;
-    }
-
-    .logo {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      font-weight: 900;
-      font-size: 1.3rem;
-      letter-spacing: -0.02em;
-      text-transform: uppercase;
-      background: linear-gradient(135deg, #ffffff 30%, var(--primary-purple) 100%);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      filter: drop-shadow(0 2px 8px var(--purple-glow));
-      text-decoration: none;
-    }
-
-    .logo-img {
-      width: 42px;
-      height: 42px;
-      border-radius: 12px;
-      object-fit: cover;
-      box-shadow: 0 0 16px var(--purple-glow);
-      border: 2px solid var(--primary-purple);
-      transition: transform 0.3s ease;
-    }
-
-    .logo-img:hover {
-      transform: rotate(5deg) scale(1.08);
-    }
-
-    /* 🎯 แถบเมนูกลาง (Top Navigation Center Pill Bar) */
-    .top-menu-bar {
-      display: flex;
-      align-items: center;
-      gap: 6px;
-      background: rgba(255, 255, 255, 0.04);
-      border: 1px solid var(--border-color);
-      padding: 6px 10px;
-      border-radius: 30px;
-      backdrop-filter: blur(12px);
-      box-shadow: inset 0 0 12px rgba(255, 255, 255, 0.02);
-    }
-
-    .nav-pill {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      padding: 8px 16px;
-      border-radius: 20px;
-      font-size: 0.92rem;
-      font-weight: 700;
-      color: var(--text-muted);
-      cursor: pointer;
-      text-decoration: none;
-      border: 1px solid transparent;
-      transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
-      white-space: nowrap;
-    }
-
-    .nav-pill:hover {
-      color: #ffffff;
-      background: rgba(168, 85, 247, 0.15);
-      border-color: rgba(168, 85, 247, 0.3);
-      transform: translateY(-1px);
-    }
-
-    .nav-pill.active {
-      color: #ffffff;
-      background: linear-gradient(135deg, var(--primary-purple) 0%, var(--primary-purple-hover) 100%);
-      border-color: var(--primary-purple);
-      box-shadow: 0 4px 15px var(--purple-glow);
-    }
-
-    .nav-pill-discord {
-      background: rgba(88, 101, 242, 0.2);
-      border-color: rgba(88, 101, 242, 0.4);
-      color: #ffffff;
-    }
-
-    .nav-pill-discord:hover {
-      background: var(--discord-blue);
-      box-shadow: 0 4px 18px rgba(88, 101, 242, 0.6);
-      border-color: var(--discord-blue);
-    }
-
-    .nav-pill-topup {
-      background: rgba(34, 197, 94, 0.18);
-      border-color: rgba(34, 197, 94, 0.4);
-      color: #4ade80;
-    }
-
-    .nav-pill-topup:hover {
-      background: #22c55e;
-      color: #ffffff;
-      box-shadow: 0 4px 18px rgba(34, 197, 94, 0.6);
-      border-color: #22c55e;
-    }
-
-    /* 🎁 ปุ่มแจกของฟรี & 🐷 Save ตัง */
-    .nav-pill-free {
-      background: rgba(236, 72, 153, 0.2);
-      border-color: rgba(236, 72, 153, 0.4);
-      color: #f472b6;
-      animation: pulseGlow 2s infinite alternate;
-    }
-
-    .nav-pill-free:hover {
-      background: #ec4899;
-      color: #ffffff;
-      box-shadow: 0 4px 18px rgba(236, 72, 153, 0.6);
-      border-color: #ec4899;
-    }
-
-    .nav-pill-savings {
-      background: rgba(234, 179, 8, 0.2);
-      border-color: rgba(234, 179, 8, 0.4);
-      color: #facc15;
-    }
-
-    .nav-pill-savings:hover {
-      background: #eab308;
-      color: #ffffff;
-      box-shadow: 0 4px 18px rgba(234, 179, 8, 0.6);
-      border-color: #eab308;
-    }
-
-    @keyframes pulseGlow {
-      0% { box-shadow: 0 0 5px rgba(236, 72, 153, 0.3); }
-      100% { box-shadow: 0 0 15px rgba(236, 72, 153, 0.8); }
-    }
-
-    .savings-display-box {
-      background: rgba(234, 179, 8, 0.1);
-      border: 1px dashed rgba(234, 179, 8, 0.4);
-      border-radius: 16px;
-      padding: 16px;
-      text-align: center;
-      margin-bottom: 20px;
-    }
-
-    /* 🛒 Product Grid & Cards Styling */
-    .products-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
-      gap: 22px;
-      margin-top: 20px;
-    }
-
-    .product-card {
-      background: var(--card-bg);
-      border: 1px solid var(--border-color);
-      border-radius: 20px;
-      padding: 18px;
-      display: flex;
-      flex-direction: column;
-      justify-content: space-between;
-      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-      position: relative;
-      overflow: hidden;
-      backdrop-filter: blur(12px);
-    }
-
-    .product-card:hover {
-      transform: translateY(-6px);
-      border-color: var(--primary-purple);
-      box-shadow: 0 12px 30px rgba(0, 0, 0, 0.6), 0 0 25px var(--purple-glow);
-    }
-
-    .product-thumb-box {
-      width: 100%;
-      height: 160px;
-      border-radius: 14px;
-      overflow: hidden;
-      position: relative;
-      margin-bottom: 14px;
-      background: var(--card-inner);
-    }
-
-    .product-thumb {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-      transition: transform 0.4s ease;
-    }
-
-    .product-card:hover .product-thumb {
-      transform: scale(1.08);
-    }
-
-    .product-stock-badge {
-      position: absolute;
-      top: 10px;
-      right: 10px;
-      padding: 4px 10px;
-      border-radius: 20px;
-      font-size: 0.75rem;
-      font-weight: 800;
-      backdrop-filter: blur(8px);
-    }
-
-    .stock-available { background: rgba(34, 197, 94, 0.85); color: #fff; }
-    .stock-empty { background: rgba(239, 68, 68, 0.85); color: #fff; }
-
-    .product-info-title {
-      font-size: 1.1rem;
-      font-weight: 800;
-      color: #fff;
-      margin-bottom: 6px;
-      line-height: 1.3;
-    }
-
-    .product-info-desc {
-      font-size: 0.85rem;
-      color: var(--text-muted);
-      margin-bottom: 16px;
-      line-height: 1.4;
-      flex-grow: 1;
-    }
-
-    .product-card-footer {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 10px;
-      margin-top: auto;
-      padding-top: 12px;
-      border-top: 1px solid rgba(255, 255, 255, 0.08);
-    }
-
-    .product-price-tag {
-      font-size: 1.25rem;
-      font-weight: 900;
-      color: #4ade80;
-      display: flex;
-      align-items: center;
-      gap: 4px;
-    }
-
-    .btn-buy-product {
-      background: linear-gradient(135deg, var(--primary-purple) 0%, var(--primary-purple-hover) 100%);
-      color: white;
-      border: none;
-      padding: 10px 18px;
-      border-radius: 12px;
-      font-weight: 800;
-      font-size: 0.9rem;
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      gap: 6px;
-      transition: all 0.25s ease;
-      box-shadow: 0 4px 12px var(--purple-glow);
-    }
-
-    .btn-buy-product:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 6px 18px var(--purple-glow-bright);
-    }
-
-    .btn-buy-product:disabled {
-      background: rgba(255, 255, 255, 0.1);
-      color: rgba(255, 255, 255, 0.4);
-      cursor: not-allowed;
-      box-shadow: none;
-      transform: none;
-    }
-
-    /* 🎨 สีธีม */
-    .theme-picker-bar {
-      display: flex;
-      align-items: center;
-      gap: 6px;
-      background: rgba(0, 0, 0, 0.3);
-      border: 1px solid var(--border-color);
-      padding: 5px 8px;
-      border-radius: 30px;
-    }
-
-    .color-dot {
-      width: 16px;
-      height: 16px;
-      border-radius: 50%;
-      cursor: pointer;
-      border: 2px solid transparent;
-      transition: all 0.25s ease;
-    }
-
-    .color-dot:hover { transform: scale(1.25); }
-    .color-dot.active {
-      border-color: #ffffff;
-      box-shadow: 0 0 10px currentColor;
-      transform: scale(1.15);
-    }
-
-    .dot-purple { background-color: #a855f7; color: #a855f7; }
-    .dot-blue   { background-color: #00b4d8; color: #00b4d8; }
-    .dot-green  { background-color: #10b981; color: #10b981; }
-    .dot-pink   { background-color: #ec4899; color: #ec4899; }
-    .dot-orange { background-color: #f97316; color: #f97316; }
-
-    /* Right Auth Section */
-    .nav-right-zone {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      flex-shrink: 0;
-    }
-
-    .btn-login-discord {
-      background: var(--discord-blue);
-      color: var(--text-main);
-      text-decoration: none;
-      padding: 8px 18px;
-      border-radius: 30px;
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      font-size: 0.9rem;
-      font-weight: 800;
-      box-shadow: 0 4px 15px rgba(88, 101, 242, 0.4);
-      transition: all 0.3s ease;
-    }
-
-    .btn-login-discord:hover {
-      background: var(--discord-blue-hover);
-      transform: translateY(-2px);
-      box-shadow: 0 6px 20px rgba(88, 101, 242, 0.6);
-    }
-
-    .user-profile-bar {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      background: var(--card-bg);
-      border: 1px solid var(--border-color);
-      padding: 5px 12px 5px 6px;
-      border-radius: 40px;
-      backdrop-filter: blur(10px);
-    }
-
-    .user-avatar-small {
-      width: 34px;
-      height: 34px;
-      border-radius: 50%;
-      border: 2px solid var(--discord-blue);
-      object-fit: cover;
-    }
-
-    .user-name-text {
-      font-size: 0.9rem;
-      font-weight: 700;
-      color: #fff;
-    }
-
-    .user-balance-badge {
-      display: flex;
-      align-items: center;
-      gap: 5px;
-      background: rgba(34, 197, 94, 0.15);
-      border: 1px solid rgba(34, 197, 94, 0.4);
-      color: #4ade80;
-      padding: 3px 10px;
-      border-radius: 20px;
-      font-size: 0.88rem;
-      font-weight: 800;
-    }
-
-    .btn-add-balance {
-      background: var(--primary-purple);
-      color: white;
-      border: none;
-      width: 20px;
-      height: 20px;
-      border-radius: 50%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      cursor: pointer;
-      font-size: 0.8rem;
-      font-weight: 800;
-      transition: transform 0.2s;
-    }
-
-    .btn-add-balance:hover { transform: scale(1.2); }
-
-    .btn-logout-icon {
-      background: rgba(239, 68, 68, 0.15);
-      border: 1px solid rgba(239, 68, 68, 0.4);
-      color: #f87171;
-      width: 30px;
-      height: 30px;
-      border-radius: 50%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      cursor: pointer;
-      transition: all 0.25s ease;
-    }
-
-    .btn-logout-icon:hover {
-      background: #ef4444;
-      color: white;
-      transform: scale(1.08);
-    }
-
-    .container {
-      position: relative;
-      z-index: 1;
-      max-width: 1240px;
-      margin: 0 auto;
-      padding: 30px 20px 60px;
-      width: 100%;
-    }
-
-    .hero-container {
-      text-align: center;
-      padding: 20px 0 20px;
-    }
-
-    .badge-welcome {
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-      background: rgba(168, 85, 247, 0.15);
-      border: 1px solid var(--purple-glow-bright);
-      color: #e9d5ff;
-      padding: 6px 20px;
-      border-radius: 30px;
-      font-size: 0.9rem;
-      font-weight: 700;
-      letter-spacing: 0.05em;
-      margin-bottom: 22px;
-      box-shadow: 0 0 20px var(--purple-glow);
-    }
-
-    .hero-title {
-      font-size: 3.5rem;
-      font-weight: 900;
-      line-height: 1.15;
-      letter-spacing: -0.03em;
-      margin-bottom: 14px;
-      text-transform: uppercase;
-    }
-
-    .hero-title span {
-      background: linear-gradient(135deg, #c084fc 0%, var(--primary-purple) 50%, #7e22ce 100%);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      filter: drop-shadow(0 0 25px var(--purple-glow));
-    }
-
-    .hero-subtitle {
-      color: var(--text-muted);
-      font-size: 1.1rem;
-      font-weight: 500;
-      max-width: 680px;
-      margin: 0 auto 30px;
-      line-height: 1.6;
-    }
-
-    /* 🎮 Banner Discord Community */
-    .discord-banner-card {
-      background: linear-gradient(135deg, rgba(88, 101, 242, 0.2) 0%, rgba(18, 10, 28, 0.95) 100%);
-      border: 1px solid rgba(88, 101, 242, 0.45);
-      border-radius: 24px;
-      padding: 28px 36px;
-      margin: 0 auto 40px;
-      max-width: 850px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 24px;
-      box-shadow: 0 15px 35px rgba(0, 0, 0, 0.6), 0 0 30px rgba(88, 101, 242, 0.25);
-      flex-wrap: wrap;
-      position: relative;
-      overflow: hidden;
-    }
-
-    .discord-banner-card::before {
-      content: '';
-      position: absolute;
-      top: -50%;
-      left: -50%;
-      width: 200%;
-      height: 200%;
-      background: radial-gradient(circle, rgba(88, 101, 242, 0.15) 0%, transparent 60%);
-      pointer-events: none;
-    }
-
-    .discord-banner-info {
-      display: flex;
-      align-items: center;
-      gap: 20px;
-      text-align: left;
-      position: relative;
-      z-index: 1;
-    }
-
-    .discord-icon-wrapper {
-      width: 64px;
-      height: 64px;
-      background: var(--discord-blue);
-      border-radius: 20px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      box-shadow: 0 0 20px rgba(88, 101, 242, 0.8);
-      flex-shrink: 0;
-    }
-
-    .discord-icon-img {
-      width: 40px;
-      height: 40px;
-      object-fit: contain;
-    }
-
-    .discord-banner-text h3 {
-      font-size: 1.35rem;
-      font-weight: 800;
-      color: #fff;
-    }
-
-    .discord-banner-text p {
-      font-size: 0.92rem;
-      color: var(--text-muted);
-      margin-top: 4px;
-      font-weight: 500;
-    }
-
-    .btn-join-discord-hero {
-      background: var(--discord-blue);
-      color: #fff;
-      text-decoration: none;
-      padding: 14px 28px;
-      border-radius: 14px;
-      font-weight: 800;
-      font-size: 1rem;
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      transition: all 0.3s ease;
-      box-shadow: 0 6px 20px rgba(88, 101, 242, 0.5);
-      white-space: nowrap;
-      position: relative;
-      z-index: 1;
-    }
-
-    .btn-join-discord-hero:hover {
-      background: var(--discord-blue-hover);
-      transform: translateY(-3px) scale(1.02);
-      box-shadow: 0 8px 25px rgba(88, 101, 242, 0.7);
-    }
-
-    .shop-section-title {
-      font-size: 1.6rem;
-      font-weight: 800;
-      margin-bottom: 24px;
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      border-bottom: 2px solid var(--border-color);
-      padding-bottom: 12px;
-      letter-spacing: -0.01em;
-    }
-
-    .empty-stock-card {
-      background: var(--card-bg);
-      border: 2px dashed var(--border-color);
-      border-radius: 24px;
-      padding: 70px 20px;
-      text-align: center;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      margin-top: 15px;
-      backdrop-filter: blur(12px);
-    }
-
-    .empty-icon-box {
-      width: 80px;
-      height: 80px;
-      background: rgba(168, 85, 247, 0.12);
-      border-radius: 50%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      color: var(--primary-purple);
-      margin-bottom: 20px;
-      box-shadow: 0 0 25px var(--purple-glow);
-    }
-
-    .empty-title {
-      font-size: 1.45rem;
-      font-weight: 800;
-      color: #fff;
-      margin-bottom: 10px;
-    }
-
-    .empty-desc {
-      font-size: 1rem;
-      color: var(--text-muted);
-      font-weight: 500;
-    }
-
-    /* Modal Styling */
-    .modal-overlay {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background: rgba(0, 0, 0, 0.85);
-      backdrop-filter: blur(10px);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      z-index: 1000;
-      opacity: 0;
-      pointer-events: none;
-      transition: opacity 0.3s ease;
-    }
-
-    .modal-overlay.active { opacity: 1; pointer-events: all; }
-
-    .modal-card {
-      background: var(--card-bg);
-      border: 1px solid var(--border-color);
-      width: 100%;
-      max-width: 480px;
-      border-radius: 24px;
-      padding: 32px;
-      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.9), 0 0 40px var(--purple-glow);
-      position: relative;
-      transform: scale(0.95);
-      transition: transform 0.3s ease;
-    }
-
-    .modal-overlay.active .modal-card { transform: scale(1); }
-
-    .close-btn {
-      position: absolute;
-      top: 20px;
-      right: 22px;
-      color: var(--text-muted);
-      cursor: pointer;
-      transition: color 0.2s;
-    }
-
-    .close-btn:hover { color: #fff; }
-
-    .modal-header { text-align: center; margin-bottom: 24px; }
-
-    .modal-title {
-      font-size: 1.5rem;
-      font-weight: 800;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 10px;
-    }
-
-    .payment-tabs { display: flex; gap: 10px; margin-bottom: 24px; }
-
-    .tab-btn {
-      flex: 1;
-      padding: 12px 8px;
-      background: var(--card-inner);
-      border: 1px solid var(--border-color);
-      color: var(--text-muted);
-      border-radius: 12px;
-      font-weight: 700;
-      font-size: 0.85rem;
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 6px;
-      transition: all 0.25s ease;
-    }
-
-    .tab-btn.active-tw {
-      background: rgba(255, 140, 0, 0.2);
-      border-color: var(--truemoney-color);
-      color: #ffaa33;
-    }
-
-    .tab-btn.active-pp {
-      background: rgba(0, 114, 206, 0.25);
-      border-color: #0072ce;
-      color: #38bdf8;
-    }
-
-    .tab-btn.active-code {
-      background: rgba(168, 85, 247, 0.25);
-      border-color: var(--primary-purple);
-      color: #c084fc;
-    }
-
-    .form-group { margin-bottom: 20px; }
-
-    .form-label {
-      display: block;
-      font-size: 0.9rem;
-      font-weight: 600;
-      color: var(--text-muted);
-      margin-bottom: 8px;
-    }
-
-    .input-field {
-      width: 100%;
-      background: var(--card-inner);
-      border: 1px solid var(--border-color);
-      border-radius: 12px;
-      padding: 14px 16px;
-      color: white;
-      font-size: 1rem;
-      font-weight: 600;
+    :root { 
+      --primary: #6366f1; 
+      --discord-blurple: #5865F2; 
+      --bg-color: #ffffff; 
+      --text-main: #111827; 
+      --text-muted: #4b5563; 
+      --border-color: #e5e7eb; 
+    }
+    
+    body { 
+      background-color: var(--bg-color); 
+      color: var(--text-main); 
+      font-family: 'Inter', sans-serif; 
+      margin: 0; 
+      display: flex; 
+      flex-direction: column; 
+      align-items: center; 
+      min-height: 100vh; 
+    }
+    
+    /* แถบบน Floating Navbar */
+    .navbar { 
+      display: flex; 
+      justify-content: center; 
+      gap: 8px; 
+      background: rgba(255, 255, 255, 0.85); 
+      backdrop-filter: blur(12px); 
+      border: 1px solid var(--border-color); 
+      padding: 8px 16px; 
+      margin-top: 24px; 
+      border-radius: 99px; 
+      box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.05); 
+      position: sticky; 
+      top: 20px; 
+      z-index: 1000; 
+    }
+    
+    .navbar a { 
+      color: var(--text-muted); 
+      padding: 8px 18px; 
+      text-decoration: none; 
+      font-size: 14px; 
+      font-weight: 500; 
+      border-radius: 99px; 
+      cursor: pointer; 
+      transition: 0.25s; 
+    }
+    
+    .navbar a:hover, .navbar a.active { 
+      background: var(--primary); 
+      color: white; 
+    }
+    
+    .container { 
+      width: 100%; 
+      max-width: 500px; 
+      padding: 40px 20px; 
+      box-sizing: border-box; 
+    }
+    
+    .card { 
+      background: #ffffff; 
+      border: 1px solid var(--border-color); 
+      padding: 30px; 
+      border-radius: 20px; 
+      box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.05); 
+      text-align: center; 
+    }
+    
+    #register, #login { 
+      max-width: 400px; 
+      margin: 0 auto; 
+    }
+    
+    /* กล่องแสดงโปรไฟล์ผู้ใช้ */
+    .user-badge { 
+      display: flex; 
+      align-items: center; 
+      gap: 12px; 
+      background: #f8fafc; 
+      border: 1px solid var(--border-color); 
+      padding: 12px 16px; 
+      border-radius: 14px; 
+      margin-bottom: 20px; 
+      text-align: left; 
+    }
+    
+    .user-avatar { 
+      width: 42px; 
+      height: 42px; 
+      border-radius: 50%; 
+      object-fit: cover; 
+      border: 2px solid var(--primary); 
+    }
+    
+    .user-info .name { 
+      font-weight: 600; 
+      font-size: 14px; 
+      color: var(--text-main); 
+      margin: 0; 
+    }
+    
+    .user-info .sub { 
+      font-size: 12px; 
+      color: var(--text-muted); 
+      margin: 0; 
+    }
+
+    input, select { 
+      width: 100%; 
+      padding: 10px; 
+      margin-bottom: 12px; 
+      border: 1px solid var(--border-color); 
+      border-radius: 10px; 
+      box-sizing: border-box; 
+      font-size: 14px; 
       outline: none;
-      transition: border-color 0.2s;
+    }
+    
+    input:focus, select:focus {
+      border-color: var(--primary);
+      box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1);
+    }
+    
+    button { 
+      width: 100%; 
+      padding: 12px; 
+      background: var(--primary); 
+      color: white; 
+      border: none; 
+      border-radius: 10px; 
+      font-weight: 600; 
+      cursor: pointer; 
+      margin-bottom: 10px; 
+      transition: background 0.2s;
     }
 
-    .input-field:focus { border-color: var(--primary-purple); }
-
-    .btn-submit-topup {
-      width: 100%;
-      background: linear-gradient(135deg, var(--primary-purple) 0%, var(--primary-purple-hover) 100%);
+    button:hover {
+      background: #4f46e5;
+    }
+    
+    .btn-discord { 
+      background: var(--discord-blurple); 
+      display: flex; 
+      align-items: center; 
+      justify-content: center; 
+      gap: 8px; 
+      text-decoration: none;
       color: white;
-      border: none;
-      padding: 14px;
-      border-radius: 12px;
-      font-weight: 800;
-      font-size: 1.05rem;
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 8px;
-      transition: all 0.25s ease;
-      box-shadow: 0 4px 15px var(--purple-glow);
+      border-radius: 10px;
+      padding: 12px;
+      font-weight: 600;
+      font-size: 14px;
+      box-sizing: border-box;
+      transition: background 0.2s;
+    }
+    
+    .btn-discord:hover { 
+      background: #4752c4; 
     }
 
-    .btn-submit-topup:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 6px 20px var(--purple-glow-bright);
+    .hidden { 
+      display: none !important; 
+    }
+    
+    h1 { 
+      font-size: 22px; 
+      margin-bottom: 15px; 
+    }
+    
+    .divider { 
+      font-size: 12px; 
+      color: var(--text-muted); 
+      margin: 10px 0; 
     }
 
-    .qr-box {
-      text-align: center;
-      background: white;
-      padding: 18px;
-      border-radius: 16px;
-      width: 190px;
-      margin: 0 auto 16px;
-      box-shadow: 0 0 20px rgba(255,255,255,0.1);
-    }
-
-    .qr-box img { width: 100%; display: block; }
-
-    #statusMessage { margin-top: 14px; font-size: 0.9rem; font-weight: 600; text-align: center; }
-
-    .leaderboard-list {
-      display: flex;
-      flex-direction: column;
-      gap: 12px;
-      max-height: 360px;
-      overflow-y: auto;
-      padding-right: 6px;
-    }
-
-    .leaderboard-item {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      background: var(--card-inner);
-      border: 1px solid var(--border-color);
-      padding: 12px 16px;
-      border-radius: 14px;
-      transition: all 0.25s ease;
-    }
-
-    .leaderboard-item:hover {
-      border-color: var(--primary-purple);
-      transform: translateX(4px);
-    }
-
-    .rank-user-info {
-      display: flex;
-      align-items: center;
-      gap: 14px;
-    }
-
-    .rank-number {
-      font-weight: 900;
-      font-size: 1.2rem;
-      width: 30px;
-      text-align: center;
-    }
-
-    .rank-1 { color: #ffd700; text-shadow: 0 0 10px rgba(255,215,0,0.5); }
-    .rank-2 { color: #e2e8f0; text-shadow: 0 0 10px rgba(226,232,240,0.5); }
-    .rank-3 { color: #f97316; text-shadow: 0 0 10px rgba(249,115,22,0.5); }
-
-    .rank-avatar {
-      width: 42px;
-      height: 42px;
-      border-radius: 50%;
-      object-fit: cover;
-      border: 2px solid var(--border-color);
-    }
-
-    .rank-user-details { display: flex; flex-direction: column; }
-    .rank-username { font-size: 1rem; font-weight: 700; color: #fff; }
-    .rank-user-id { font-size: 0.8rem; color: var(--text-muted); font-weight: 500; }
-
-    .rank-balance {
-      font-weight: 800;
-      font-size: 1rem;
-      color: #4ade80;
-      background: rgba(34, 197, 94, 0.15);
-      border: 1px solid rgba(34, 197, 94, 0.3);
-      padding: 6px 14px;
-      border-radius: 20px;
-    }
-
-    /* 🔔 Toast Notification System */
-    .toast-container {
-      position: fixed;
-      top: 24px;
-      right: 24px;
-      z-index: 9999;
-      display: flex;
-      flex-direction: column;
-      gap: 12px;
-      max-width: 400px;
-      width: calc(100% - 48px);
-      pointer-events: none;
-    }
-
-    .toast-card {
-      background: var(--card-bg);
-      border: 1px solid var(--border-color);
-      padding: 16px 20px;
-      border-radius: 16px;
-      box-shadow: 0 15px 35px rgba(0, 0, 0, 0.6), 0 0 25px var(--purple-glow);
-      display: flex;
-      align-items: flex-start;
-      gap: 14px;
-      pointer-events: auto;
-      animation: slideInRight 0.35s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
-      backdrop-filter: blur(16px);
-      transition: all 0.3s ease;
-    }
-
-    .toast-card.toast-hiding {
-      opacity: 0;
-      transform: translateX(100%);
-    }
-
-    @keyframes slideInRight {
-      from { opacity: 0; transform: translateX(100%); }
-      to { opacity: 1; transform: translateX(0); }
-    }
-
-    .toast-icon {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      padding: 8px;
-      border-radius: 12px;
-      flex-shrink: 0;
-    }
-
-    .toast-success .toast-icon { background: rgba(34, 197, 94, 0.2); color: #4ade80; }
-    .toast-error .toast-icon   { background: rgba(239, 68, 68, 0.2); color: #f87171; }
-    .toast-warning .toast-icon { background: rgba(245, 158, 11, 0.2); color: #fbbf24; }
-    .toast-info .toast-icon    { background: rgba(14, 165, 233, 0.2); color: #38bdf8; }
-
-    .toast-content { flex: 1; }
-    .toast-title { font-weight: 800; font-size: 1rem; color: #fff; margin-bottom: 3px; }
-    .toast-msg { font-size: 0.88rem; color: var(--text-muted); line-height: 1.4; font-weight: 500; }
-
-    /* 📜 History Modal & List */
-    .history-list {
-      display: flex;
-      flex-direction: column;
-      gap: 12px;
-      max-height: 380px;
-      overflow-y: auto;
-      padding-right: 6px;
-    }
-
-    .history-item {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      background: var(--card-inner);
-      border: 1px solid var(--border-color);
-      padding: 14px 18px;
-      border-radius: 14px;
-      transition: all 0.25s ease;
-    }
-
-    .history-item:hover { border-color: var(--primary-purple); }
-
-    .history-left {
-      display: flex;
-      align-items: center;
-      gap: 14px;
-    }
-
-    .history-icon-box {
-      width: 42px;
-      height: 42px;
-      border-radius: 12px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      background: rgba(168, 85, 247, 0.18);
-      color: var(--primary-purple);
-      flex-shrink: 0;
-    }
-
-    .history-title-text { font-weight: 700; font-size: 0.98rem; color: #fff; }
-    .history-time-text { font-size: 0.8rem; color: var(--text-muted); margin-top: 3px; font-weight: 500; }
-
-    .history-right { text-align: right; }
-    .history-amount-plus { font-weight: 800; color: #4ade80; font-size: 1rem; }
-    .history-status-badge {
-      font-size: 0.75rem;
-      padding: 3px 10px;
-      border-radius: 12px;
-      display: inline-block;
-      margin-top: 4px;
-      font-weight: 700;
-    }
-
-    .status-success { background: rgba(34, 197, 94, 0.18); color: #4ade80; border: 1px solid rgba(34, 197, 94, 0.35); }
-    .status-pending { background: rgba(245, 158, 11, 0.18); color: #fbbf24; border: 1px solid rgba(245, 158, 11, 0.35); }
-
-    /* 🌐 Footer Styling */
-    footer {
-      margin-top: auto;
-      background: rgba(10, 4, 18, 0.95);
-      border-top: 1px solid var(--border-color);
-      padding: 20px 3%;
-      backdrop-filter: blur(15px);
-      box-shadow: 0 -10px 30px rgba(0, 0, 0, 0.5);
-    }
-
-    .footer-container {
-      max-width: 1240px;
-      margin: 0 auto;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      flex-wrap: wrap;
-      gap: 16px;
-      font-size: 0.88rem;
+    .switch-auth {
+      font-size: 13px;
       color: var(--text-muted);
+      margin-top: 15px;
     }
 
-    .footer-left {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      flex-wrap: wrap;
+    .switch-auth span {
+      color: var(--primary);
+      font-weight: 600;
+      cursor: pointer;
+      text-decoration: underline;
     }
 
-    .status-indicator {
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-      background: rgba(34, 197, 94, 0.12);
-      border: 1px solid rgba(34, 197, 94, 0.35);
-      color: #4ade80;
-      padding: 6px 14px;
-      border-radius: 20px;
-      font-weight: 700;
-      font-size: 0.82rem;
-    }
-
-    .ping-dot {
-      width: 8px;
-      height: 8px;
-      background-color: #22c55e;
-      border-radius: 50%;
-      position: relative;
-      box-shadow: 0 0 10px #22c55e;
-    }
-
-    .ping-dot::after {
-      content: '';
-      position: absolute;
-      top: -2px; left: -2px;
-      width: 12px; height: 12px;
-      border-radius: 50%;
-      border: 2px solid #22c55e;
-      animation: pulsePing 1.8s infinite ease-in-out;
-    }
-
-    @keyframes pulsePing {
-      0% { transform: scale(0.8); opacity: 1; }
-      100% { transform: scale(2.2); opacity: 0; }
-    }
-
-    .version-badge {
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-      background: rgba(168, 85, 247, 0.15);
-      border: 1px solid var(--border-color);
-      color: var(--text-main);
-      padding: 6px 14px;
-      border-radius: 20px;
-      font-weight: 700;
-      font-size: 0.82rem;
-    }
-
-    .footer-right strong {
-      color: var(--primary-purple);
-    }
-
-    @media (max-width: 900px) {
-      header { flex-wrap: wrap; justify-content: center; gap: 12px; }
-      .top-menu-bar { order: 3; width: 100%; overflow-x: auto; justify-content: flex-start; }
-      .footer-container { flex-direction: column; text-align: center; justify-content: center; }
+    .switch-auth span:hover {
+      color: #4f46e5;
     }
   </style>
 </head>
 <body>
 
-  <!-- 👑 Header Navbar รวมแถบทั้งหมดอยู่ข้างบนสุด -->
-  <header>
-    <div class="nav-brand">
-      <a class="logo" href="#">
-        <img class="logo-img" src="https://media.discordapp.net/attachments/1530928529657827411/1531541817697370213/ChatGPT_Image_26_.._2569_11_43_34.png?ex=6a6996f8&is=6a684578&hm=b1595569ef6a838f765604b4fbfbac0f6f4411f2f6de8df6ce14e2dc1b6c2bfe&=&format=webp&quality=lossless&width=788&height=788" alt="J Community Logo">
-        <span>J Community</span>
-      </a>
-
-      <!-- 🎨 ปุ่มเปลี่ยนธีมสี -->
-      <div class="theme-picker-bar">
-        <div class="color-dot dot-purple active" onclick="changeTheme('purple')" title="โทนสีม่วง"></div>
-        <div class="color-dot dot-blue" onclick="changeTheme('blue')" title="โทนสีฟ้า"></div>
-        <div class="color-dot dot-green" onclick="changeTheme('green')" title="โทนสีเขียว"></div>
-        <div class="color-dot dot-pink" onclick="changeTheme('pink')" title="โทนสีชมพู"></div>
-        <div class="color-dot dot-orange" onclick="changeTheme('orange')" title="โทนสีส้ม"></div>
-      </div>
-    </div>
-
-    <!-- 🎯 แถบเมนูกลางเรียงสวยอยู่ข้างบน -->
-    <nav class="top-menu-bar">
-      <a class="nav-pill active" href="#"><i data-lucide="home" style="width:17px;"></i> หน้าหลัก</a>
-      <a class="nav-pill" href="#shopSection"><i data-lucide="shopping-bag" style="width:17px;"></i> ร้านค้า</a>
-      <div class="nav-pill" onclick="openInventoryModal()"><i data-lucide="package" style="width:17px; color: #38bdf8;"></i> คลังของฉัน</div>
-      <div class="nav-pill nav-pill-free" onclick="openFreeRewardsModal()"><i data-lucide="gift" style="width:17px;"></i> แจกของฟรี</div>
-      <div class="nav-pill nav-pill-savings" onclick="openSavingsModal()"><i data-lucide="piggy-bank" style="width:17px;"></i> Save ตัง (กระปุกออม)</div>
-      <div class="nav-pill nav-pill-topup" onclick="openTopupModal()"><i data-lucide="wallet" style="width:17px;"></i> เติมเงินด่วน</div>
-      <div class="nav-pill" onclick="openHistoryModal()"><i data-lucide="history" style="width:17px;"></i> ประวัติรายการ</div>
-      <div class="nav-pill" onclick="openLeaderboardModal()"><i data-lucide="trophy" style="width:17px; color: var(--gold-color);"></i> จัดอันดับ</div>
-      <a class="nav-pill nav-pill-discord" href="https://discord.gg/PUgNz5Z7H" target="_blank" rel="noopener noreferrer">
-        <i data-lucide="message-square" style="width:17px;"></i> เข้าร่วมดิส
-      </a>
-    </nav>
-
-    <!-- โปรไฟล์ / ปุ่มเข้าสู่ระบบ ด้านขวา -->
-    <div class="nav-right-zone" id="authNavZone">
-      <a id="navLoginBtn" href="https://discord.com/oauth2/authorize?client_id=1507932932466282516&response_type=token&redirect_uri=https%3A%2F%2Fsk-six-beryl.vercel.app%2F&scope=identify" class="btn-login-discord">
-        <i data-lucide="log-in" style="width:18px;"></i> เข้าสู่ระบบด้วย Discord
-      </a>
-
-      <div id="navProfileZone" class="user-profile-bar" style="display: none;">
-        <img id="userAvatar" class="user-avatar-small" src="" alt="Avatar">
-        <span id="userName" class="user-name-text">Loading...</span>
-
-        <div class="user-balance-badge">
-          <i data-lucide="coins" style="width:15px;"></i>
-          <span id="userBalanceText">0</span> ฿
-          <button class="btn-add-balance" onclick="openTopupModal()" title="เติมเงิน">+</button>
-        </div>
-
-        <button class="btn-logout-icon" onclick="openLogoutModal()" title="ออกจากระบบ">
-          <i data-lucide="log-out" style="width:15px;"></i>
-        </button>
-      </div>
-    </div>
-  </header>
+  <!-- แถบบน -->
+  <div class="navbar">
+    <a onclick="showPage('home', this)" class="active">หน้าหลัก</a>
+    <a onclick="alert('หน้าซื้อของยังใช้งานไม่ได้')">หน้าซื้อของ</a>
+    <a onclick="showPage('register', this)">สมัครบัญชี</a>
+    <a onclick="showPage('login', this)">ล็อกอิน</a>
+  </div>
 
   <div class="container">
-    <section class="hero-container">
-      <div class="badge-welcome">
-        <i data-lucide="sparkles" style="width:16px;"></i> ยินดีต้อนรับสู่ J Community
-      </div>
-      <h1 class="hero-title">J Community <span>Shop</span></h1>
-      <p class="hero-subtitle" id="heroSubtitle">ร้านค้าสินค้าดิจิทัล — เข้าสู่ระบบด้วย Discord เพื่อเริ่มใช้งานแบบไม่มีขีดจำกัด</p>
-
-      <!-- 🎮 Discord Community Invite Banner -->
-      <div class="discord-banner-card">
-        <div class="discord-banner-info">
-          <div class="discord-icon-wrapper">
-            <img class="discord-icon-img" src="https://assets-global.website-files.com/6257adef93867e50d84d30e2/636e0a6a49cf127bf92de1e2_icon_clyde_blurple_RGB.png" alt="Discord Icon" onerror="this.src='https://cdn.jsdelivr.net/npm/simple-icons@v9/icons/discord.svg'">
-          </div>
-          <div class="discord-banner-text">
-            <h3>เข้าร่วม Community Discord ของเรา</h3>
-            <p>รับข่าวสาร โปรโมชัน และสอบถามความช่วยเหลือได้ตลอด 24 ชม.</p>
-          </div>
-        </div>
-        <a class="btn-join-discord-hero" href="https://discord.gg/PUgNz5Z7H" target="_blank" rel="noopener noreferrer">
-          <i data-lucide="users" style="width:20px;"></i>
-          <span>เข้าร่วมดิสคอร์ด</span>
-        </a>
-      </div>
-    </section>
-
-    <section id="shopSection">
-      <div class="shop-section-title">
-        <i data-lucide="shopping-bag" style="color: var(--primary-purple);"></i> คลังสินค้าดิจิทัลพร้อมส่ง
-      </div>
-
-      <div class="products-grid" id="productsContainer">
-        <!-- โหลดการ์ดสินค้าอัตโนมัติผ่าน JS -->
-      </div>
-    </section>
-  </div>
-
-  <!-- Topup Modal -->
-  <div class="modal-overlay" id="topupModal">
-    <div class="modal-card">
-      <span class="close-btn" onclick="closeTopupModal()"><i data-lucide="x"></i></span>
-
-      <div class="modal-header">
-        <div class="modal-title">
-          <i data-lucide="credit-card" style="color: var(--primary-purple);"></i> เติมเงินเข้าระบบ
+    <!-- หน้าหลัก -->
+    <div id="home" class="card">
+      <div id="user-display" class="user-badge hidden">
+        <img id="user-avatar-img" class="user-avatar" src="" alt="Avatar">
+        <div class="user-info">
+          <p class="name" id="display-name">ชื่อผู้ใช้</p>
+          <p class="sub" id="display-sub">อีเมล</p>
         </div>
       </div>
-
-      <div class="payment-tabs">
-        <button class="tab-btn active-tw" id="tabTW" onclick="switchTab('tw')">
-          <i data-lucide="gift" style="width:16px;"></i> ซอง TrueMoney
-        </button>
-        <button class="tab-btn" id="tabPP" onclick="switchTab('pp')">
-          <i data-lucide="qr-code" style="width:16px;"></i> PromptPay
-        </button>
-        <button class="tab-btn" id="tabCode" onclick="switchTab('code')">
-          <i data-lucide="key-round" style="width:16px;"></i> Code ลับ
-        </button>
-      </div>
-
-      <!-- แท็บ TrueMoney -->
-      <div id="viewTW">
-        <div class="form-group">
-          <label class="form-label">กรอกเบอร์ TrueMoney Wallet (เบอร์ผู้รับเงิน):</label>
-          <input type="text" id="receiverPhone" class="input-field" placeholder="08xxxxxxxx" maxlength="10" />
-        </div>
-        <div class="form-group">
-          <label class="form-label">กรอกลิงก์ซองอั่งเปา TrueMoney Wallet:</label>
-          <input type="text" id="voucherUrl" class="input-field" placeholder="https://gift.truemoney.com/v2/verify?v=..." />
-        </div>
-        <button class="btn-submit-topup" onclick="processVoucher()">
-          <i data-lucide="check-circle" style="width:20px;"></i> ยืนยันการเติมเงิน
-        </button>
-      </div>
-
-      <!-- แท็บ PromptPay -->
-      <div id="viewPP" style="display: none;">
-        <div class="qr-box">
-          <img src="https://api.qrserver.com/v1/create-qr-code/?size=180x180&data=PROMPTPAY_EXAMPLE" alt="PromptPay QR">
-        </div>
-        <p style="text-align: center; font-size: 0.9rem; color: var(--text-muted); font-weight: 500;">
-          สแกน QR Code ด้วยแอปธนาคารเพื่อทำรายการ
-        </p>
-      </div>
-
-      <!-- แท็บ Code ลับ -->
-      <div id="viewCode" style="display: none;">
-        <div class="form-group">
-          <label class="form-label">กรอก Code ลับเพื่อรับเงินเพิ่ม:</label>
-          <input type="text" id="secretCodeInput" class="input-field" placeholder="กรอก Code ลับที่นี่..." style="text-transform: uppercase;" />
-        </div>
-        <button class="btn-submit-topup" onclick="processSecretCode()">
-          <i data-lucide="sparkles" style="width:20px;"></i> แลก Code ลับ
-        </button>
-      </div>
-
-      <div id="statusMessage"></div>
+      <h1>ยินดีต้อนรับ</h1>
+      <p style="font-size: 14px; color: var(--text-muted);">ระบบเว็บแอปพลิเคชันที่มีความเร็วสูง ปลอดภัย และทันสมัย (GitHub Pages)</p>
     </div>
-  </div>
+    
+    <!-- หน้าสมัครสมาชิก -->
+    <div id="register" class="card hidden">
+      <h1>สมัครสมาชิก</h1>
+      <input type="text" id="reg-fullname" placeholder="ชื่อ-นามสกุล">
+      <input type="text" id="reg-username" placeholder="ชื่อผู้ใช้งาน">
+      <input type="email" id="reg-email" placeholder="อีเมล">
+      <input type="tel" id="reg-phone" placeholder="เบอร์โทรศัพท์">
+      <select id="reg-gender">
+        <option value="">เลือกเพศ</option>
+        <option value="Male">ชาย</option>
+        <option value="Female">หญิง</option>
+        <option value="Other">อื่นๆ</option>
+      </select>
+      <button onclick="registerUser()">ยืนยันการสมัคร</button>
 
-  <!-- 🔔 Toast Container -->
-  <div id="toastContainer" class="toast-container"></div>
-
-  <!-- 🎁 Free Rewards Modal (แจกของฟรีประจำวัน) -->
-  <div class="modal-overlay" id="freeRewardsModal">
-    <div class="modal-card" style="text-align: center;">
-      <span class="close-btn" onclick="closeFreeRewardsModal()"><i data-lucide="x"></i></span>
-
-      <div class="modal-header">
-        <div class="modal-title" style="color: #f472b6;">
-          <i data-lucide="gift"></i> รับของขวัญแจกฟรีประจำวัน!
-        </div>
-      </div>
-
-      <div style="margin: 20px 0;">
-        <div style="font-size: 3.5rem; margin-bottom: 10px;">🎁</div>
-        <p style="color: var(--text-muted); font-size: 0.95rem; font-weight: 500;">
-          กดปุ่มด้านล่างเพื่อรับเงินสุ่มโบนัสฟรี (10 - 50 ฿) เข้าบัญชีของคุณได้วันละ 1 ครั้ง!
-        </p>
-      </div>
-
-      <div id="freeRewardStatus" style="margin-bottom: 15px; font-weight: 700; font-size: 0.9rem;"></div>
-
-      <button id="btnClaimFree" class="btn-submit-topup" style="background: linear-gradient(135deg, #ec4899 0%, #db2777 100%); box-shadow: 0 4px 15px rgba(236, 72, 153, 0.4);" onclick="claimDailyReward()">
-        <i data-lucide="sparkles" style="width:20px;"></i> กดรับเงินฟรีทันที
-      </button>
-    </div>
-  </div>
-
-  <!-- 🐷 Save ตัง / กระปุกออมเงิน Modal -->
-  <div class="modal-overlay" id="savingsModal">
-    <div class="modal-card">
-      <span class="close-btn" onclick="closeSavingsModal()"><i data-lucide="x"></i></span>
-
-      <div class="modal-header">
-        <div class="modal-title" style="color: #facc15;">
-          <i data-lucide="piggy-bank"></i> ระบบ Save ตัง (กระปุกออมเงินส่วนตัว)
-        </div>
-      </div>
-
-      <div class="savings-display-box">
-        <div style="font-size: 0.85rem; color: var(--text-muted); font-weight: 600;">ยอดเงินในกระปุกออมเงิน (Savings)</div>
-        <div style="font-size: 2rem; font-weight: 900; color: #facc15; margin-top: 4px;">
-          <span id="savingsBalanceText">0</span> ฿
-        </div>
-        <div style="font-size: 0.75rem; color: #4ade80; margin-top: 6px;">
-          🔒 ระบบบันทึกข้อมูลและ Save เงินอัตโนมัติ 100%
-        </div>
-      </div>
-
-      <div class="form-group">
-        <label class="form-label">จำนวนเงินที่ต้องการทำรายการ (฿):</label>
-        <input type="number" id="savingsAmountInput" class="input-field" placeholder="กรอกจำนวนเงิน..." min="1" />
-      </div>
-
-      <div style="display: flex; gap: 10px;">
-        <button class="btn-submit-topup" style="background: linear-gradient(135deg, #eab308 0%, #ca8a04 100%); flex: 1;" onclick="depositToSavings()">
-          <i data-lucide="arrow-down-circle" style="width:18px;"></i> ฝากเข้ากระปุก
-        </button>
-        <button class="btn-submit-topup" style="background: rgba(255,255,255,0.1); border: 1px solid var(--border-color); flex: 1; color: #fff;" onclick="withdrawFromSavings()">
-          <i data-lucide="arrow-up-circle" style="width:18px;"></i> ถอนออก
-        </button>
-      </div>
-
-      <div id="savingsStatusMsg" style="margin-top: 14px; font-size: 0.88rem; font-weight: 600; text-align: center;"></div>
-    </div>
-  </div>
-
-  <!-- 📜 History Modal -->
-  <div class="modal-overlay" id="historyModal">
-    <div class="modal-card">
-      <span class="close-btn" onclick="closeHistoryModal()"><i data-lucide="x"></i></span>
-
-      <div class="modal-header">
-        <div class="modal-title">
-          <i data-lucide="history" style="color: var(--primary-purple);"></i> ประวัติการทำรายการทั้งหมด
-        </div>
-      </div>
-
-      <div class="history-list" id="historyContainer"></div>
-    </div>
-  </div>
-
-  <!-- 🛒 Purchase Confirmation Modal -->
-  <div class="modal-overlay" id="purchaseModal">
-    <div class="modal-card" style="text-align: center;">
-      <span class="close-btn" onclick="closePurchaseModal()"><i data-lucide="x"></i></span>
-
-      <div class="modal-header">
-        <div class="modal-title" style="color: var(--primary-purple);">
-          <i data-lucide="shopping-cart"></i> ยืนยันการสั่งซื้อสินค้า
-        </div>
-      </div>
-
-      <div id="purchaseDetailsContent" style="margin: 20px 0;"></div>
-
-      <div style="display: flex; gap: 12px; margin-top: 20px;">
-        <button class="btn-submit-topup" style="background: rgba(255,255,255,0.1); border: 1px solid var(--border-color); color: #fff;" onclick="closePurchaseModal()">
-          ยกเลิก
-        </button>
-        <button id="btnConfirmBuy" class="btn-submit-topup" onclick="confirmPurchase()">
-          <i data-lucide="check-circle" style="width:18px;"></i> ยืนยันการซื้อ
-        </button>
+      <div class="switch-auth">
+        มีบัญชีแล้วหรอ? <span onclick="switchToLogin()">กดตรงนี้</span>
       </div>
     </div>
-  </div>
 
-  <!-- 📦 My Inventory Modal (คลังสินค้าส่วนตัว) -->
-  <div class="modal-overlay" id="inventoryModal">
-    <div class="modal-card">
-      <span class="close-btn" onclick="closeInventoryModal()"><i data-lucide="x"></i></span>
-
-      <div class="modal-header">
-        <div class="modal-title" style="color: #38bdf8;">
-          <i data-lucide="package"></i> คลังสินค้าดิจิทัลของฉัน (My Inventory)
-        </div>
-      </div>
-
-      <div class="history-list" id="inventoryContainer"></div>
+    <!-- หน้าล็อกอิน -->
+    <div id="login" class="card hidden">
+      <h1>เข้าสู่ระบบ</h1>
+      <input type="text" placeholder="ชื่อผู้ใช้หรืออีเมล">
+      <input type="password" placeholder="รหัสผ่าน">
+      <button onclick="alert('ระบบล็อกอินปกติยังไม่เปิดใช้งาน')">เข้าสู่ระบบ</button>
+      
+      <div class="divider">หรือ</div>
+      
+      <!-- ปุ่มล็อกอินผ่าน Discord (แก้ไข redirect_uri เป็น GitHub URL ของคุณภายหลังได้) -->
+      <a class="btn-discord" href="https://discord.com/oauth2/authorize?client_id=1532644387639660627&response_type=code&redirect_uri=https%3A%2F%2Fusername.github.io%2Frepo-name%2F&scope=identify">
+        <svg width="20" height="20" fill="white" viewBox="0 0 24 24"><path d="M20.317 4.37a19.791 19.791 0 0 0-4.885-1.515.074.074 0 0 0-.079.037c-.21.375-.444.864-.608 1.25a18.27 18.27 0 0 0-5.487 0 12.64 12.64 0 0 0-.617-1.25.077.077 0 0 0-.079-.037A19.736 19.736 0 0 0 3.677 4.37a.07.07 0 0 0-.032.027C.533 9.046-.32 13.58.099 18.057a.082.082 0 0 0 .031.057 19.9 19.9 0 0 0 5.993 3.03.078.078 0 0 0 .084-.028c.462-.63.874-1.295 1.226-1.994.021-.041.001-.09-.041-.106a13.107 13.107 0 0 1-1.872-.892.077.077 0 0 1-.008-.128 10.2 10.2 0 0 0 .372-.292.074.074 0 0 1 .077-.01c3.927 1.793 8.18 1.793 12.061 0a.074.074 0 0 1 .078.01c.12.098.246.198.373.292a.077.077 0 0 1-.006.127 12.299 12.299 0 0 1-1.873.892.077.077 0 0 0-.041.107c.36.698.772 1.362 1.225 1.993a.076.076 0 0 0 .084.028 19.839 19.839 0 0 0 6.002-3.03.077.077 0 0 0 .032-.054c.5-5.177-.838-9.674-3.549-13.66a.061.061 0 0 0-.031-.028zM8.02 15.33c-1.183 0-2.157-1.085-2.157-2.419 0-1.333.956-2.419 2.157-2.419 1.21 0 2.176 1.096 2.157 2.42 0 1.333-.956 2.418-2.157 2.418zm7.975 0c-1.183 0-2.157-1.085-2.157-2.419 0-1.333.955-2.419 2.157-2.419 1.21 0 2.176 1.096 2.157 2.42 0 1.333-.946 2.418-2.157 2.418z"/></svg>
+        ล็อกอินผ่าน Discord
+      </a>
     </div>
   </div>
-
-  <!-- Leaderboard Modal -->
-  <div class="modal-overlay" id="leaderboardModal">
-    <div class="modal-card">
-      <span class="close-btn" onclick="closeLeaderboardModal()"><i data-lucide="x"></i></span>
-
-      <div class="modal-header">
-        <div class="modal-title" style="color: var(--gold-color);">
-          <i data-lucide="trophy"></i> อันดับผู้ถือครองเงินสูงสุด
-        </div>
-      </div>
-
-      <div class="leaderboard-list" id="leaderboardContainer"></div>
-    </div>
-  </div>
-
-  <!-- 🚪 Logout Confirmation Modal -->
-  <div class="modal-overlay" id="logoutModal">
-    <div class="modal-card" style="max-width: 400px; text-align: center;">
-      <span class="close-btn" onclick="closeLogoutModal()"><i data-lucide="x"></i></span>
-
-      <div class="modal-header">
-        <div class="modal-title" style="color: #f87171;">
-          <i data-lucide="log-out"></i> ยืนยันการออกจากระบบ
-        </div>
-      </div>
-
-      <p style="color: var(--text-muted); margin-bottom: 24px; font-weight: 500;">
-        คุณแน่ใจหรือไม่ว่าต้องการออกจากระบบบัญชี <strong id="logoutTargetName" style="color: #fff;"></strong> ?
-      </p>
-
-      <div style="display: flex; gap: 12px;">
-        <button class="btn-submit-topup" style="background: rgba(255, 255, 255, 0.1); border: 1px solid var(--border-color); color: #fff;" onclick="closeLogoutModal()">
-          ไม่ออก
-        </button>
-        <button class="btn-submit-topup" style="background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%); box-shadow: 0 4px 15px rgba(239, 68, 68, 0.4);" onclick="confirmLogout()">
-          ออก
-        </button>
-      </div>
-    </div>
-  </div>
-
-  <!-- 🌐 Footer ส่วนล่างสุดของเว็บ -->
-  <footer>
-    <div class="footer-container">
-      <div class="footer-left">
-        <span class="status-indicator">
-          <span class="ping-dot"></span>
-          🟢 ระบบพร้อมใช้งาน 24/7 (ออนไลน์)
-        </span>
-        <span class="version-badge">
-          <i data-lucide="sparkles" style="width:14px; color: var(--gold-color);"></i> v2026.1 (เวอร์ชันอัปเดตใหม่ล่าสุด)
-        </span>
-      </div>
-      <div class="footer-right">
-        &copy; 2026 <strong>J Community Shop</strong>. All rights reserved.
-      </div>
-    </div>
-  </footer>
 
   <script>
-    lucide.createIcons();
-
-    // ==========================================
-    // 🛒 0.2 รายการสินค้าดิจิทัล & ระบบสั่งซื้อ
-    // ==========================================
-    const productsData = [
-      {
-        id: "p1",
-        title: "Discord Nitro Boost (1 เดือน)",
-        desc: "เพิ่มยศเซิร์ฟเวอร์ + ป้ายโปรไฟล์สุดเท่ บูสต์ 2 เซิร์ฟเวอร์ 1 เดือนเต็ม",
-        price: 150,
-        stock: 5,
-        image: "https://images.alphacoders.com/128/1284562.png",
-        keys: ["NITRO-BOOST-8821-X9A2", "NITRO-BOOST-9912-K7L3", "NITRO-BOOST-3341-P0M9", "NITRO-BOOST-7762-L2K1", "NITRO-BOOST-4451-R8V4"]
-      },
-      {
-        id: "p2",
-        title: "Robux 1,000 R$ (ID Pass)",
-        desc: "เติม Robux เข้าบัญชี Roblox เร็ว ทันใจ ได้รับทันที 1,000 R$",
-        price: 100,
-        stock: 12,
-        image: "https://images.ctfassets.net/kft28yuj64nb/1LzF1sWlZ9I0XkS9vB8xZ2/8c34689b94cf9bd6bf11e6462744c042/Roblox_Logo.jpg",
-        keys: ["ROBUX-GIFT-99120-X1", "ROBUX-GIFT-99121-X2", "ROBUX-GIFT-99122-X3"]
-      },
-      {
-        id: "p3",
-        title: "Netflix Premium (30 วัน)",
-        desc: "รับชมความบันเทิงระดับ Ultra HD 4K จอส่วนตัว ล็อกรหัสผ่าน PIN",
-        price: 89,
-        stock: 8,
-        image: "https://assets.nflxext.com/us/ffe/siteui/common/icons/netflixgenerico.ico",
-        keys: ["NETFLIX-ACC-USER01:PASS9981", "NETFLIX-ACC-USER02:PASS7712"]
-      },
-      {
-        id: "p4",
-        title: "YouTube Premium (30 วัน)",
-        desc: "ฟังเพลงแบบไม่มีโฆษณาคั่น เล่นเพลงเบื้องหลังได้ เชิญเข้าครอบครัวทันที",
-        price: 35,
-        stock: 15,
-        image: "https://upload.wikimedia.org/wikipedia/commons/e/ef/Youtube_logo.png",
-        keys: ["YOUTUBE-INVITE-LINK-001", "YOUTUBE-INVITE-LINK-002"]
-      },
-      {
-        id: "p5",
-        title: "Steam Wallet Gift Card $5",
-        desc: "โค้ดเติมเงิน Steam Wallet มูลค่า $5 USD ใช้ซื้อเกมใน Steam ได้ทันที",
-        price: 180,
-        stock: 3,
-        image: "https://store.steampowered.com/public/shared/images/header/logo_steam.png",
-        keys: ["STEAM-W5XX-9901-L7A2", "STEAM-W5XX-4412-M0P1"]
-      }
-    ];
-
-    let selectedProductId = null;
-
-    function renderProducts() {
-      const container = document.getElementById('productsContainer');
-      if (!container) return;
-
-      let html = '';
-      productsData.forEach(item => {
-        const isOutOfStock = item.stock <= 0;
-        const stockBadge = isOutOfStock
-          ? `<span class="product-stock-badge stock-empty">หมด</span>`
-          : `<span class="product-stock-badge stock-available">เหลือ ${item.stock} ชิ้น</span>`;
-
-        html += `
-          <div class="product-card">
-            <div>
-              <div class="product-thumb-box">
-                <img class="product-thumb" src="${item.image}" alt="${item.title}" onerror="this.src='https://cdn-icons-png.flaticon.com/512/681/681494.png'">
-                ${stockBadge}
-              </div>
-              <div class="product-info-title">${item.title}</div>
-              <div class="product-info-desc">${item.desc}</div>
-            </div>
-            <div class="product-card-footer">
-              <div class="product-price-tag">${item.price.toLocaleString()} ฿</div>
-              <button class="btn-buy-product" ${isOutOfStock ? 'disabled' : ''} onclick="openPurchaseModal('${item.id}')">
-                <i data-lucide="shopping-bag" style="width:16px;"></i> ${isOutOfStock ? 'สินค้าหมด' : 'สั่งซื้อ'}
-              </button>
-            </div>
-          </div>
-        `;
-      });
-
-      container.innerHTML = html;
-      lucide.createIcons({ targets: [container] });
+    function showPage(pageId, element) {
+      document.getElementById('home').classList.add('hidden');
+      document.getElementById('register').classList.add('hidden');
+      document.getElementById('login').classList.add('hidden');
+      document.getElementById(pageId).classList.remove('hidden');
+      document.querySelectorAll('.navbar a').forEach(a => a.classList.remove('active'));
+      if(element) element.classList.add('active');
     }
 
-    const purchaseModal = document.getElementById('purchaseModal');
-
-    function openPurchaseModal(productId) {
-      if (!isLoggedIn) {
-        showToast('กรุณาเข้าสู่ระบบ', 'กรุณาล็อกอินด้วย Discord ก่อนทำการสั่งซื้อสินค้าครับ', 'warning');
-        return;
-      }
-
-      const product = productsData.find(p => p.id === productId);
-      if (!product) return;
-
-      selectedProductId = productId;
-      const content = document.getElementById('purchaseDetailsContent');
-
-      content.innerHTML = `
-        <div style="background: var(--card-inner); border: 1px solid var(--border-color); padding: 18px; border-radius: 16px; text-align: left;">
-          <div style="font-size: 1.15rem; font-weight: 800; color: #fff;">${product.title}</div>
-          <div style="font-size: 0.88rem; color: var(--text-muted); margin-top: 6px;">${product.desc}</div>
-          <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 16px; padding-top: 12px; border-top: 1px dashed var(--border-color);">
-            <span style="font-weight: 600; color: var(--text-muted);">ราคาสินค้า:</span>
-            <span style="font-size: 1.3rem; font-weight: 900; color: #4ade80;">${product.price.toLocaleString()} ฿</span>
-          </div>
-          <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 8px;">
-            <span style="font-weight: 600; color: var(--text-muted);">ยอดเงินในบัญชีของคุณ:</span>
-            <span style="font-size: 1rem; font-weight: 800; color: ${currentBalance >= product.price ? '#38bdf8' : '#f87171'};">${currentBalance.toLocaleString()} ฿</span>
-          </div>
-        </div>
-      `;
-
-      purchaseModal.classList.add('active');
+    function switchToLogin() {
+      let loginNavbarBtn = document.querySelectorAll('.navbar a')[3]; 
+      showPage('login', loginNavbarBtn);
     }
 
-    function closePurchaseModal() { purchaseModal.classList.remove('active'); }
-
-    purchaseModal.addEventListener('click', (e) => {
-      if (e.target === purchaseModal) closePurchaseModal();
-    });
-
-    function confirmPurchase() {
-      if (!selectedProductId || !isLoggedIn || !currentUserId) return;
-
-      const product = productsData.find(p => p.id === selectedProductId);
-      if (!product) return;
-
-      if (product.stock <= 0) {
-        showToast('สินค้าหมด', 'ขออภัยครับ สินค้ารายการนี้หมดสต็อกแล้ว', 'error');
-        closePurchaseModal();
-        return;
-      }
-
-      if (currentBalance < product.price) {
-        showToast('เงินไม่พอ', 'ยอดเงินคงเหลือในบัญชีของคุณไม่เพียงพอ กรุณาเติมเงินก่อนสั่งซื้อครับ', 'error');
-        closePurchaseModal();
-        openTopupModal();
-        return;
-      }
-
-      // หักเงิน & สต็อก
-      const newBalance = currentBalance - product.price;
-      updateBalanceDisplay(newBalance);
-      product.stock -= 1;
-
-      // ดึงรหัสสินค้า
-      const deliveredKey = product.keys.pop() || `KEY-DIGITAL-${Date.now().toString().slice(-6)}`;
-
-      // บันทึกเข้า Inventory & History
-      savePurchasedItem(currentUserId, product.title, deliveredKey, product.price);
-      addHistoryItem(currentUserId, 'buy', `ซื้อ ${product.title}`, product.price, `รหัส: ${deliveredKey}`);
-
-      renderProducts();
-      closePurchaseModal();
-
-      showToast('ซื้อสินค้าสำเร็จ!', `คุณได้รับ ${product.title} เรียบร้อยแล้ว`, 'success');
-
-      sendDiscordWebhook({
-        title: "🛒 มีการสั่งซื้อสินค้าดิจิทัลสำเร็จ!",
-        color: 3066993,
-        fields: [
-          { name: "👤 ผู้ซื้อ", value: `**${currentUserData?.global_name || currentUserData?.username}** (\`<@${currentUserId}>\`)`, inline: true },
-          { name: "📦 สินค้า", value: `\`${product.title}\``, inline: true },
-          { name: "💵 ราคา", value: `\`${product.price} ฿\``, inline: true },
-          { name: "🔑 รหัสสินค้า", value: `\`\`\`${deliveredKey}\`\`\``, inline: false }
-        ],
-        footer: { text: "J Community Shop • Purchase System" },
-        timestamp: new Date().toISOString()
-      });
-
-      // เปิดดูคลังทันที
-      openInventoryModal();
+    function maskEmail(email) {
+      if (!email) return "";
+      let parts = email.split('@');
+      return parts[0].substring(0, 2) + '*****@' + parts[1];
     }
 
-    // ==========================================
-    // 📦 0.3 ระบบคลังสินค้าดิจิทัลส่วนตัว (My Inventory)
-    // ==========================================
-    const inventoryModal = document.getElementById('inventoryModal');
-
-    function savePurchasedItem(userId, title, key, price) {
-      if (!userId) return;
-      const invKey = `user_inventory_${userId}`;
-      const inventory = JSON.parse(localStorage.getItem(invKey) || '[]');
-
-      inventory.unshift({
-        id: 'INV' + Date.now().toString().slice(-6),
-        title: title,
-        key: key,
-        price: price,
-        time: new Date().toLocaleString('th-TH', { year: 'numeric', month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' })
-      });
-
-      localStorage.setItem(invKey, JSON.stringify(inventory));
-    }
-
-    function openInventoryModal() {
-      if (!isLoggedIn) {
-        showToast('กรุณาเข้าสู่ระบบ', 'กรุณาล็อกอินด้วย Discord ก่อนเปิดคลังสินค้าครับ', 'warning');
-        return;
-      }
-      renderInventory();
-      inventoryModal.classList.add('active');
-    }
-
-    function closeInventoryModal() { inventoryModal.classList.remove('active'); }
-
-    inventoryModal.addEventListener('click', (e) => {
-      if (e.target === inventoryModal) closeInventoryModal();
-    });
-
-    function renderInventory() {
-      const container = document.getElementById('inventoryContainer');
-      if (!currentUserId) return;
-
-      const invKey = `user_inventory_${currentUserId}`;
-      const inventory = JSON.parse(localStorage.getItem(invKey) || '[]');
-
-      if (inventory.length === 0) {
-        container.innerHTML = `
-          <div style="text-align: center; color: var(--text-muted); padding: 30px 20px;">
-            <i data-lucide="package-open" style="width: 40px; height: 40px; margin-bottom: 8px; opacity: 0.5;"></i>
-            <div>คุณยังไม่มีสินค้าในคลังส่วนตัว</div>
-          </div>
-        `;
-        lucide.createIcons({ targets: [container] });
-        return;
-      }
-
-      let html = '';
-      inventory.forEach(item => {
-        html += `
-          <div class="history-item" style="flex-direction: column; align-items: flex-start; gap: 8px;">
-            <div style="display: flex; justify-content: space-between; width: 100%; align-items: center;">
-              <span class="history-title-text">${item.title}</span>
-              <span style="font-size: 0.8rem; color: var(--text-muted);">${item.time}</span>
-            </div>
-            <div style="width: 100%; background: rgba(0,0,0,0.4); border: 1px dashed var(--border-color); padding: 10px; border-radius: 10px; font-family: monospace; color: #4ade80; font-size: 0.95rem; font-weight: 700; word-break: break-all;">
-              🔑 ${item.key}
-            </div>
-          </div>
-        `;
-      });
-
-      container.innerHTML = html;
-      lucide.createIcons({ targets: [container] });
-    }
-
-    // ==========================================
-    // 🔔 0. ระบบแจ้งเตือนในเว็บ (Toast Notifications)
-    // ==========================================
-    function showToast(title, message, type = 'info', duration = 3500) {
-      const container = document.getElementById('toastContainer');
-      if (!container) return;
-
-      const toast = document.createElement('div');
-      toast.className = `toast-card toast-${type}`;
-
-      let iconName = 'info';
-      if (type === 'success') iconName = 'check-circle';
-      else if (type === 'error') iconName = 'alert-circle';
-      else if (type === 'warning') iconName = 'alert-triangle';
-
-      toast.innerHTML = `
-        <div class="toast-icon">
-          <i data-lucide="${iconName}" style="width:22px; height:22px;"></i>
-        </div>
-        <div class="toast-content">
-          <div class="toast-title">${title}</div>
-          <div class="toast-msg">${message}</div>
-        </div>
-      `;
-
-      container.appendChild(toast);
-      lucide.createIcons({ targets: [toast] });
-
-      setTimeout(() => {
-        toast.classList.add('toast-hiding');
-        setTimeout(() => toast.remove(), 350);
-      }, duration);
-    }
-
-    // ==========================================
-    // 📜 0.1 ระบบบันทึก & แสดงประวัติรวมทั้งหมด
-    // ==========================================
-    const historyModal = document.getElementById('historyModal');
-
-    function addHistoryItem(userId, type, title, amount, detail, status = 'success') {
-      if (!userId) return;
-      const historyKey = `user_history_${userId}`;
-      const historyData = JSON.parse(localStorage.getItem(historyKey) || '[]');
-
-      const newItem = {
-        id: 'TX' + Date.now().toString().slice(-6),
-        type: type,
-        title: title,
-        amount: amount,
-        detail: detail,
-        status: status,
-        timestamp: new Date().toLocaleString('th-TH', {
-          year: 'numeric', month: 'short', day: 'numeric',
-          hour: '2-digit', minute: '2-digit'
-        })
+    function registerUser() {
+      let data = {
+        fullname: document.getElementById('reg-fullname').value,
+        username: document.getElementById('reg-username').value,
+        email: document.getElementById('reg-email').value,
+        phone: document.getElementById('reg-phone').value,
+        gender: document.getElementById('reg-gender').value
       };
 
-      historyData.unshift(newItem);
-      localStorage.setItem(historyKey, JSON.stringify(historyData));
-    }
-
-    function openHistoryModal() {
-      if (!isLoggedIn) {
-        showToast('กรุณาเข้าสู่ระบบ', 'กรุณาล็อกอินด้วย Discord ก่อนดูประวัติรายการครับ', 'warning');
-        return;
-      }
-      renderHistory();
-      historyModal.classList.add('active');
-    }
-
-    function closeHistoryModal() { historyModal.classList.remove('active'); }
-
-    historyModal.addEventListener('click', (e) => {
-      if (e.target === historyModal) closeHistoryModal();
-    });
-
-    function renderHistory() {
-      const container = document.getElementById('historyContainer');
-      if (!currentUserId) {
-        container.innerHTML = `<div style="text-align: center; color: var(--text-muted); padding: 20px;">ไม่พบข้อมูลผู้ใช้</div>`;
+      if(!data.fullname || !data.username || !data.email) {
+        alert('กรุณากรอกข้อมูลที่จำเป็นให้ครบถ้วน');
         return;
       }
 
-      const historyKey = `user_history_${currentUserId}`;
-      let historyData = JSON.parse(localStorage.getItem(historyKey) || '[]');
-
-      if (historyData.length === 0) {
-        container.innerHTML = `
-          <div style="text-align: center; color: var(--text-muted); padding: 30px 20px;">
-            <i data-lucide="file-x" style="width: 36px; height: 36px; margin-bottom: 8px; opacity: 0.5;"></i>
-            <div>ยังไม่มีประวัติการทำรายการ</div>
-          </div>
-        `;
-        lucide.createIcons({ targets: [container] });
-        return;
-      }
-
-      let html = '';
-      historyData.forEach(item => {
-        const isCode = item.type === 'code';
-        const iconName = isCode ? 'key-round' : 'wallet';
-        const statusText = item.status === 'success' ? 'สำเร็จ' : 'กำลังตรวจสอบ';
-        const statusClass = item.status === 'success' ? 'status-success' : 'status-pending';
-
-        html += `
-          <div class="history-item">
-            <div class="history-left">
-              <div class="history-icon-box">
-                <i data-lucide="${iconName}" style="width:20px; height:20px;"></i>
-              </div>
-              <div>
-                <div class="history-title-text">${item.title}</div>
-                <div class="history-time-text">${item.timestamp} • ${item.detail}</div>
-              </div>
-            </div>
-            <div class="history-right">
-              <div class="history-amount-plus">+${item.amount.toLocaleString()} ฿</div>
-              <span class="history-status-badge ${statusClass}">${statusText}</span>
-            </div>
-          </div>
-        `;
-      });
-
-      container.innerHTML = html;
-      lucide.createIcons({ targets: [container] });
+      // จำลองการสมัครสำเร็จบน GitHub (เนื่องจาก GitHub Pages รันฝั่ง Client เท่านั้น ไม่มี Server บันทึก Sheets อัตโนมัติเหมือน Apps Script เว้นแต่ต่อ API ภายนอก)
+      alert('สมัครสมาชิกสำเร็จ!');
+      document.getElementById('display-name').innerText = data.username;
+      document.getElementById('display-sub').innerText = maskEmail(data.email);
+      document.getElementById('user-avatar-img').src = "https://cdn.jsdelivr.net/gh/twitter/twemoji@14.0.2/assets/72x72/1f464.png";
+      document.getElementById('user-display').classList.remove('hidden');
+      showPage('home', document.querySelector('.navbar a'));
     }
-
-    // ==========================================
-    // 🎨 1. ระบบธีมสี
-    // ==========================================
-    const themePalettes = {
-      purple: { bgDark: "#06020a", cardBg: "rgba(18, 10, 28, 0.85)", cardInner: "rgba(26, 15, 40, 0.9)", primary: "#a855f7", primaryHover: "#9333ea", glow: "rgba(168, 85, 247, 0.45)", border: "rgba(168, 85, 247, 0.22)" },
-      blue:   { bgDark: "#020914", cardBg: "rgba(10, 20, 38, 0.85)", cardInner: "rgba(15, 28, 52, 0.9)", primary: "#00b4d8", primaryHover: "#0077b6", glow: "rgba(0, 180, 216, 0.45)", border: "rgba(0, 180, 216, 0.22)" },
-      green:  { bgDark: "#020f0a", cardBg: "rgba(10, 30, 20, 0.85)", cardInner: "rgba(15, 42, 28, 0.9)", primary: "#10b981", primaryHover: "#059669", glow: "rgba(16, 185, 129, 0.45)", border: "rgba(16, 185, 129, 0.22)" },
-      pink:   { bgDark: "#0f020a", cardBg: "rgba(30, 10, 22, 0.85)", cardInner: "rgba(42, 15, 30, 0.9)", primary: "#ec4899", primaryHover: "#db2777", glow: "rgba(236, 72, 153, 0.45)", border: "rgba(236, 72, 153, 0.22)" },
-      orange: { bgDark: "#0f0602", cardBg: "rgba(30, 15, 10, 0.85)", cardInner: "rgba(42, 22, 15, 0.9)", primary: "#f97316", primaryHover: "#ea580c", glow: "rgba(249, 115, 22, 0.45)", border: "rgba(249, 115, 22, 0.22)" }
-    };
-
-    function changeTheme(themeName) {
-      const palette = themePalettes[themeName];
-      if (!palette) return;
-
-      const root = document.documentElement;
-      root.style.setProperty('--bg-dark', palette.bgDark);
-      root.style.setProperty('--card-bg', palette.cardBg);
-      root.style.setProperty('--card-inner', palette.cardInner);
-      root.style.setProperty('--primary-purple', palette.primary);
-      root.style.setProperty('--primary-purple-hover', palette.primaryHover);
-      root.style.setProperty('--purple-glow', palette.glow);
-      root.style.setProperty('--border-color', palette.border);
-
-      document.querySelectorAll('.color-dot').forEach(dot => dot.classList.remove('active'));
-      const activeDot = document.querySelector(`.dot-${themeName}`);
-      if (activeDot) activeDot.classList.add('active');
-
-      localStorage.setItem('site_theme', themeName);
-    }
-
-    const savedTheme = localStorage.getItem('site_theme') || 'purple';
-    changeTheme(savedTheme);
-
-    // ==========================================
-    // 🔒 2. ป้องกัน F12 & ContextMenu
-    // ==========================================
-    document.addEventListener('contextmenu', (e) => e.preventDefault());
-    document.addEventListener('keydown', (e) => {
-      if (e.key === 'F12') { e.preventDefault(); return false; }
-      if (e.ctrlKey && e.shiftKey && (e.key === 'I' || e.key === 'i' || e.key === 'J' || e.key === 'j' || e.key === 'C' || e.key === 'c')) {
-        e.preventDefault(); return false; }
-      if (e.ctrlKey && (e.key === 'U' || e.key === 'u')) { e.preventDefault(); return false; }
-    });
-
-    // ==========================================
-    // 🔗 3. ระบบส่ง Discord Webhook
-    // ==========================================
-    const WEBHOOK_URL = "https://discord.com/api/webhooks/1531512615468273835/chb4HnQMtrJivg3dr4ySUVjTcxfjEcihmF-dzdzlnsekrB8Wsz9tHLv4sL_Ox2bo9noa";
-    const TARGET_CODE = "CODE YPOPXDFSS TOKEBA";
-    const MAX_QUOTA = 10;
-    const REWARD_AMOUNT = 25;
-
-    const ADMIN_CODES = {
-      "ADMIN100": 100,
-      "ADMIN1000": 1000
-    };
-
-    let isLoggedIn = false;
-    let currentUserId = null;
-    let currentBalance = 0;
-    let currentUserData = null;
-
-    function sendDiscordWebhook(embedData) {
-      if (!WEBHOOK_URL) return;
-      fetch(WEBHOOK_URL, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          username: "J Community Bot",
-          avatar_url: "https://media.discordapp.net/attachments/1530928529657827411/1531541817697370213/ChatGPT_Image_26_.._2569_11_43_34.png?ex=6a6996f8&is=6a684578&hm=b1595569ef6a838f765604b4fbfbac0f6f4411f2f6de8df6ce14e2dc1b6c2bfe&=&format=webp&quality=lossless&width=788&height=788",
-          embeds: [embedData]
-        })
-      })
-      .then(res => { if (res.ok) console.log("ส่ง Webhook สำเร็จ"); })
-      .catch(err => console.error("Webhook Fetch Error:", err));
-    }
-
-    // ==========================================
-    // 💳 4. ระบบจัดการโปรไฟล์ & ยอดเงิน
-    // ==========================================
-    function loadUserBalance(userId) {
-      if (!userId) return 0;
-      const savedBalance = localStorage.getItem(`user_balance_${userId}`);
-      return savedBalance !== null ? parseFloat(savedBalance) : 0;
-    }
-
-    function saveUserBalance(userId, amount) {
-      if (!userId) return;
-      localStorage.setItem(`user_balance_${userId}`, amount);
-    }
-
-    // ==========================================
-    // 🎁 4.1 ระบบแจกของฟรีประจำวัน (Daily Free Rewards)
-    // ==========================================
-    const freeRewardsModal = document.getElementById('freeRewardsModal');
-
-    function openFreeRewardsModal() {
-      if (!isLoggedIn) {
-        showToast('กรุณาเข้าสู่ระบบ', 'กรุณาล็อกอินด้วย Discord ก่อนกดรับของฟรีครับ', 'warning');
-        return;
-      }
-
-      checkDailyRewardStatus();
-      freeRewardsModal.classList.add('active');
-    }
-
-    function closeFreeRewardsModal() { freeRewardsModal.classList.remove('active'); }
-
-    freeRewardsModal.addEventListener('click', (e) => {
-      if (e.target === freeRewardsModal) closeFreeRewardsModal();
-    });
-
-    function checkDailyRewardStatus() {
-      if (!currentUserId) return;
-      const lastClaim = localStorage.getItem(`daily_claim_${currentUserId}`);
-      const btn = document.getElementById('btnClaimFree');
-      const status = document.getElementById('freeRewardStatus');
-
-      if (lastClaim) {
-        const lastTime = parseInt(lastClaim);
-        const now = Date.now();
-        const diffHours = (now - lastTime) / (1000 * 60 * 60);
-
-        if (diffHours < 24) {
-          const remainingHours = Math.ceil(24 - diffHours);
-          status.style.color = '#fbbf24';
-          status.innerText = `⏳ คุณรับโบนัสไปแล้ว กรุณารออีกประมาณ ${remainingHours} ชั่วโมง`;
-          btn.disabled = true;
-          btn.style.opacity = '0.5';
-          btn.style.cursor = 'not-allowed';
-          return;
-        }
-      }
-
-      status.style.color = '#4ade80';
-      status.innerText = '✨ คุณมีสิทธิ์รับของขวัญฟรีสำหรับวันนี้!';
-      btn.disabled = false;
-      btn.style.opacity = '1';
-      btn.style.cursor = 'pointer';
-    }
-
-    function claimDailyReward() {
-      if (!isLoggedIn || !currentUserId) return;
-
-      const lastClaim = localStorage.getItem(`daily_claim_${currentUserId}`);
-      if (lastClaim) {
-        const diffHours = (Date.now() - parseInt(lastClaim)) / (1000 * 60 * 60);
-        if (diffHours < 24) {
-          showToast('รับไปแล้ว', 'วันนี้คุณรับสิทธิ์ไปแล้วครับ กรุณากลับมาใหม่พรุ่งนี้', 'warning');
-          return;
-        }
-      }
-
-      // สุ่มเงินฟรี 10 - 50 บาท
-      const randomReward = Math.floor(Math.random() * 41) + 10;
-      const newBalance = currentBalance + randomReward;
-      updateBalanceDisplay(newBalance);
-
-      localStorage.setItem(`daily_claim_${currentUserId}`, Date.now().toString());
-      addHistoryItem(currentUserId, 'free', 'รับของแจกฟรีประจำวัน', randomReward, 'รับโบนัสฟรีสุ่มประจำวัน');
-
-      showToast('🎉 ยินดีด้วย!', `คุณได้รับเงินฟรี +${randomReward} ฿ เรียบร้อยแล้ว`, 'success');
-      sendDiscordWebhook({
-        title: "🎁 มีผู้ใช้งานกดรับของขวัญแจกฟรี!",
-        color: 15498934,
-        fields: [
-          { name: "👤 ผู้ใช้งาน", value: `**${currentUserData?.global_name || currentUserData?.username}** (\`<@${currentUserId}>\`)`, inline: true },
-          { name: "💵 สุ่มได้เงิน", value: `\`+${randomReward} ฿\``, inline: true }
-        ],
-        footer: { text: "J Community Shop • Free Reward System" },
-        timestamp: new Date().toISOString()
-      });
-
-      checkDailyRewardStatus();
-    }
-
-    // ==========================================
-    // 🐷 4.2 ระบบ Save ตัง / กระปุกออมเงิน (Savings Vault)
-    // ==========================================
-    const savingsModal = document.getElementById('savingsModal');
-
-    function loadUserSavings(userId) {
-      if (!userId) return 0;
-      const saved = localStorage.getItem(`user_savings_${userId}`);
-      return saved !== null ? parseFloat(saved) : 0;
-    }
-
-    function saveUserSavings(userId, amount) {
-      if (!userId) return;
-      localStorage.setItem(`user_savings_${userId}`, amount);
-    }
-
-    function openSavingsModal() {
-      if (!isLoggedIn) {
-        showToast('กรุณาเข้าสู่ระบบ', 'กรุณาล็อกอินด้วย Discord ก่อนใช้งานระบบ Save ตังครับ', 'warning');
-        return;
-      }
-      updateSavingsDisplay();
-      savingsModal.classList.add('active');
-    }
-
-    function closeSavingsModal() { savingsModal.classList.remove('active'); }
-
-    savingsModal.addEventListener('click', (e) => {
-      if (e.target === savingsModal) closeSavingsModal();
-    });
-
-    function updateSavingsDisplay() {
-      if (!currentUserId) return;
-      const savings = loadUserSavings(currentUserId);
-      document.getElementById('savingsBalanceText').innerText = savings.toLocaleString();
-      document.getElementById('savingsAmountInput').value = '';
-      document.getElementById('savingsStatusMsg').innerText = '';
-    }
-
-    function depositToSavings() {
-      const input = document.getElementById('savingsAmountInput');
-      const amount = parseFloat(input.value);
-      const statusMsg = document.getElementById('savingsStatusMsg');
-
-      if (!amount || amount <= 0) {
-        statusMsg.style.color = '#f87171';
-        statusMsg.innerText = '❌ กรุณากรอกจำนวนเงินที่ถูกต้อง';
-        return;
-      }
-
-      if (amount > currentBalance) {
-        statusMsg.style.color = '#f87171';
-        statusMsg.innerText = '❌ ยอดเงินในบัญชีหลักไม่เพียงพอ';
-        showToast('เงินไม่พอ', 'ยอดเงินหลักของคุณมีไม่พอสำหรับฝากเข้ากระปุกครับ', 'error');
-        return;
-      }
-
-      const currentSavings = loadUserSavings(currentUserId);
-      const newSavings = currentSavings + amount;
-      const newMainBalance = currentBalance - amount;
-
-      saveUserSavings(currentUserId, newSavings);
-      updateBalanceDisplay(newMainBalance);
-      updateSavingsDisplay();
-
-      showToast('Save ตังสำเร็จ!', `ฝากเงินเข้ากระปุกออมเงิน +${amount.toLocaleString()} ฿ เรียบร้อยแล้ว`, 'success');
-    }
-
-    function withdrawFromSavings() {
-      const input = document.getElementById('savingsAmountInput');
-      const amount = parseFloat(input.value);
-      const statusMsg = document.getElementById('savingsStatusMsg');
-
-      if (!amount || amount <= 0) {
-        statusMsg.style.color = '#f87171';
-        statusMsg.innerText = '❌ กรุณากรอกจำนวนเงินที่ถูกต้อง';
-        return;
-      }
-
-      const currentSavings = loadUserSavings(currentUserId);
-      if (amount > currentSavings) {
-        statusMsg.style.color = '#f87171';
-        statusMsg.innerText = '❌ ยอดเงินในกระปุกออมเงินไม่เพียงพอ';
-        showToast('ยอดออมไม่พอ', 'ยอดเงินในกระปุกออมมีไม่พอสำหรับถอนครับ', 'error');
-        return;
-      }
-
-      const newSavings = currentSavings - amount;
-      const newMainBalance = currentBalance + amount;
-
-      saveUserSavings(currentUserId, newSavings);
-      updateBalanceDisplay(newMainBalance);
-      updateSavingsDisplay();
-
-      showToast('ถอนเงินสำเร็จ!', `ถอนเงินจากกระปุกออมเข้าบัญชีหลัก +${amount.toLocaleString()} ฿ เรียบร้อยแล้ว`, 'success');
-    }
-
-    function saveUserProfile(user) {
-      if (!user) return;
-      const avatarUrl = user.avatar
-        ? `https://cdn.discordapp.com/avatars/${user.id}/${user.avatar}.png`
-        : 'https://cdn.discordapp.com/embed/avatars/0.png';
-
-      localStorage.setItem(`user_profile_${user.id}`, JSON.stringify({
-        id: user.id,
-        name: user.global_name || user.username,
-        avatar: avatarUrl
-      }));
-    }
-
-    function updateBalanceDisplay(amount) {
-      currentBalance = amount;
-      document.getElementById('userBalanceText').innerText = currentBalance.toLocaleString();
-      if (currentUserId) {
-        saveUserBalance(currentUserId, currentBalance);
-      }
-    }
-
-    // ==========================================
-    // 🏆 5. ระบบ Leaderboard
-    // ==========================================
-    const leaderboardModal = document.getElementById('leaderboardModal');
-
-    function openLeaderboardModal() {
-      renderLeaderboard();
-      leaderboardModal.classList.add('active');
-    }
-
-    function closeLeaderboardModal() { leaderboardModal.classList.remove('active'); }
-
-    leaderboardModal.addEventListener('click', (e) => {
-      if (e.target === leaderboardModal) closeLeaderboardModal();
-    });
-
-    function renderLeaderboard() {
-      const container = document.getElementById('leaderboardContainer');
-      const usersList = [];
-
-      for (let i = 0; i < localStorage.length; i++) {
-        const key = localStorage.key(i);
-        if (key.startsWith('user_profile_')) {
-          const userId = key.replace('user_profile_', '');
-          try {
-            const profile = JSON.parse(localStorage.getItem(key));
-            const balance = loadUserBalance(userId);
-
-            usersList.push({
-              id: userId,
-              name: profile.name,
-              avatar: profile.avatar,
-              balance: balance
-            });
-          } catch(e) { console.error(e); }
-        }
-      }
-
-      usersList.sort((a, b) => b.balance - a.balance);
-
-      if (usersList.length === 0) {
-        container.innerHTML = `<div style="text-align: center; color: var(--text-muted); padding: 20px;">ยังไม่มีข้อมูลอันดับในระบบ</div>`;
-        return;
-      }
-
-      let html = '';
-      usersList.forEach((user, index) => {
-        let rankBadge = `${index + 1}`;
-        let rankClass = '';
-        if (index === 0) { rankBadge = '🥇'; rankClass = 'rank-1'; }
-        else if (index === 1) { rankBadge = '🥈'; rankClass = 'rank-2'; }
-        else if (index === 2) { rankBadge = '🥉'; rankClass = 'rank-3'; }
-
-        html += `
-          <div class="leaderboard-item">
-            <div class="rank-user-info">
-              <span class="rank-number ${rankClass}">${rankBadge}</span>
-              <img src="${user.avatar}" class="rank-avatar" alt="Avatar">
-              <div class="rank-user-details">
-                <span class="rank-username">${user.name}</span>
-                <span class="rank-user-id">ID: ${user.id}</span>
-              </div>
-            </div>
-            <div class="rank-balance">${user.balance.toLocaleString()} ฿</div>
-          </div>
-        `;
-      });
-      container.innerHTML = html;
-    }
-
-    // ==========================================
-    // 🔑 6. ระบบ Code ลับ
-    // ==========================================
-    let usedCount = parseInt(localStorage.getItem('secret_code_used_count')) || 0;
-
-    function processSecretCode() {
-      if (!isLoggedIn) {
-        showToast("กรุณาเข้าสู่ระบบ", "กรุณาเข้าสู่ระบบด้วย Discord ก่อนทำรายการครับ", "warning");
-        return;
-      }
-
-      const inputVal = document.getElementById('secretCodeInput').value.trim().toUpperCase().replace(/\s+/g, ' ');
-      const statusMessage = document.getElementById('statusMessage');
-
-      if (!inputVal) {
-        statusMessage.style.color = '#ff4d4d';
-        statusMessage.innerText = '❌ กรุณากรอก Code ลับก่อนครับ';
-        showToast('กรอกข้อมูลไม่ครบ', 'กรุณากรอก Code ลับก่อนทำรายการ', 'error');
-        return;
-      }
-
-      if (ADMIN_CODES[inputVal] !== undefined) {
-        statusMessage.style.color = '#ffaa33';
-        statusMessage.innerText = '⏳ กำลังตรวจสอบ...';
-
-        setTimeout(() => {
-          const addedAmount = ADMIN_CODES[inputVal];
-          const newBalance = currentBalance + addedAmount;
-          updateBalanceDisplay(newBalance);
-
-          addHistoryItem(currentUserId, 'code', 'แลก Admin Code', addedAmount, `โค้ด: ${inputVal}`);
-
-          statusMessage.style.color = '#22c55e';
-          statusMessage.innerText = `🎉 แลกรับโค้ดสำเร็จ +${addedAmount} บาท`;
-          showToast('แลกโค้ดสำเร็จ!', `คุณได้รับเงินเพิ่ม +${addedAmount} ฿`, 'success');
-          document.getElementById('secretCodeInput').value = '';
-        }, 800);
-        return;
-      }
-
-      if (usedCount >= MAX_QUOTA) {
-        statusMessage.style.color = '#ff4d4d';
-        statusMessage.innerText = '❌ โค้ดนี้ไม่ถูกต้องหรือถูกใช้งานหมดแล้ว';
-        showToast('ใช้สิทธิ์ครบแล้ว', 'โค้ดนี้ถูกใช้งานสิทธิ์ครบตามจำนวนแล้วครับ', 'error');
-        return;
-      }
-
-      const isUserRedeemed = localStorage.getItem(`code_redeemed_${currentUserId}`) === 'true';
-      if (isUserRedeemed) {
-        statusMessage.style.color = '#ffaa33';
-        statusMessage.innerText = '⚠️ บัญชีนี้เคยใช้ Code ลับนี้ไปแล้วครับ';
-        showToast('ใช้โค้ดซ้ำ', 'บัญชีนี้เคยแลกรับโค้ดนี้ไปแล้วครับ', 'warning');
-        return;
-      }
-
-      if (inputVal === TARGET_CODE) {
-        statusMessage.style.color = '#ffaa33';
-        statusMessage.innerText = '⏳ กำลังตรวจสอบ...';
-
-        setTimeout(() => {
-          usedCount++;
-          localStorage.setItem('secret_code_used_count', usedCount);
-          localStorage.setItem(`code_redeemed_${currentUserId}`, 'true');
-
-          const newBalance = currentBalance + REWARD_AMOUNT;
-          updateBalanceDisplay(newBalance);
-
-          addHistoryItem(currentUserId, 'code', 'แลก Code ลับประจำวัน', REWARD_AMOUNT, 'รับโบนัสฟรี 25 บาท');
-
-          statusMessage.style.color = '#22c55e';
-          statusMessage.innerText = `🎉 แลกรับโค้ดสำเร็จ +${REWARD_AMOUNT} บาท`;
-          showToast('แลกโค้ดสำเร็จ!', `คุณได้รับโบนัส +${REWARD_AMOUNT} ฿ เรียบร้อยแล้ว`, 'success');
-          document.getElementById('secretCodeInput').value = '';
-        }, 800);
-      } else {
-        statusMessage.style.color = '#ff4d4d';
-        statusMessage.innerText = '❌ Code ลับไม่ถูกต้อง';
-        showToast('โค้ดไม่ถูกต้อง', 'กรุณาตรวจสอบ Code ลับใหม่อีกครั้ง', 'error');
-      }
-    }
-
-    // ==========================================
-    // 💳 7. ระบบเติมเงิน TrueMoney Voucher
-    // ==========================================
-    const topupModal = document.getElementById('topupModal');
-
-    function openTopupModal() {
-      if (!isLoggedIn) {
-        showToast("กรุณาเข้าสู่ระบบ", "กรุณาเข้าสู่ระบบด้วย Discord ก่อนทำรายการเติมเงินครับ", "warning");
-        return;
-      }
-      topupModal.classList.add('active');
-    }
-
-    function closeTopupModal() {
-      topupModal.classList.remove('active');
-      document.getElementById('statusMessage').innerText = '';
-    }
-
-    topupModal.addEventListener('click', (e) => {
-      if (e.target === topupModal) closeTopupModal();
-    });
-
-    function switchTab(tab) {
-      document.getElementById('tabTW').className = 'tab-btn' + (tab === 'tw' ? ' active-tw' : '');
-      document.getElementById('tabPP').className = 'tab-btn' + (tab === 'pp' ? ' active-pp' : '');
-      document.getElementById('tabCode').className = 'tab-btn' + (tab === 'code' ? ' active-code' : '');
-
-      document.getElementById('viewTW').style.display = tab === 'tw' ? 'block' : 'none';
-      document.getElementById('viewPP').style.display = tab === 'pp' ? 'block' : 'none';
-      document.getElementById('viewCode').style.display = tab === 'code' ? 'block' : 'none';
-      document.getElementById('statusMessage').innerText = '';
-    }
-
-    function processVoucher() {
-      const phone = document.getElementById('receiverPhone').value.trim();
-      const voucher = document.getElementById('voucherUrl').value.trim();
-      const statusMessage = document.getElementById('statusMessage');
-
-      if (!phone || !voucher) {
-        statusMessage.style.color = '#ff4d4d';
-        statusMessage.innerText = '❌ กรุณากรอกเบอร์โทรและลิงก์ซองให้ครบถ้วน';
-        showToast('ข้อมูลไม่ครบถ้วน', 'กรุณากรอกเบอร์โทรและลิงก์ซองอั่งเปาให้ครบถ้วน', 'error');
-        return;
-      }
-
-      statusMessage.style.color = '#ffaa33';
-      statusMessage.innerText = '⏳ กำลังส่งข้อมูลไปยังดิสคอร์ด...';
-
-      const username = currentUserData ? (currentUserData.global_name || currentUserData.username) : "Guest/Unknown";
-      const avatarUrl = currentUserData && currentUserData.avatar
-        ? `https://cdn.discordapp.com/avatars/${currentUserData.id}/${currentUserData.avatar}.png`
-        : 'https://cdn.discordapp.com/embed/avatars/0.png';
-
-      sendDiscordWebhook({
-        title: "🎟️ มีรายการแจ้งเติมเงิน TrueMoney Voucher!",
-        color: 16747520,
-        thumbnail: { url: avatarUrl },
-        fields: [
-          { name: "👤 ผู้ทำรายการ", value: `**${username}**\n(\`<@${currentUserId}>\`)`, inline: true },
-          { name: "📱 เบอร์ผู้รับเงิน", value: `\`${phone}\``, inline: true },
-          { name: "🔗 ลิงก์ซองอั่งเปา", value: `\`${voucher}\``, inline: false },
-          { name: "💵 ยอดเงินปัจจุบัน", value: `\`${currentBalance.toLocaleString()} ฿\``, inline: true }
-        ],
-        footer: { text: "J Community Shop • Topup Alert" },
-        timestamp: new Date().toISOString()
-      });
-
-      setTimeout(() => {
-        addHistoryItem(currentUserId, 'topup', 'เติมเงิน TrueMoney Voucher', 0, `เบอร์: ${phone} (รอตรวจสอบ)`, 'pending');
-
-        statusMessage.style.color = '#22c55e';
-        statusMessage.innerText = '✅ ส่งรายการสำเร็จ! ระบบได้ส่งข้อมูลไปยังผู้ดูแลเรียบร้อยแล้ว';
-        showToast('แจ้งเติมเงินสำเร็จ', 'ระบบได้ส่งข้อมูลซองอั่งเปาไปยัง Discord เรียบร้อยแล้วครับ', 'success');
-        document.getElementById('voucherUrl').value = '';
-      }, 800);
-    }
-
-    // ==========================================
-    // 🔑 8. ระบบ Discord Auth OAuth2 (Persistent Session)
-    // ==========================================
-    function checkDiscordAuth() {
-      const fragment = new URLSearchParams(window.location.hash.slice(1));
-      let accessToken = fragment.get('access_token');
-
-      if (accessToken) {
-        localStorage.setItem('discord_access_token', accessToken);
-        window.history.replaceState(null, null, window.location.pathname);
-      } else {
-        accessToken = localStorage.getItem('discord_access_token');
-      }
-
-      const savedUser = localStorage.getItem('current_discord_user');
-      if (savedUser && !accessToken) {
-        try {
-          const user = JSON.parse(savedUser);
-          applyLoggedInUser(user);
-        } catch(e) { console.error(e); }
-      }
-
-      if (accessToken) {
-        fetch('https://discord.com/api/users/@me', {
-          headers: { authorization: `Bearer ${accessToken}` }
-        })
-        .then(res => {
-          if (!res.ok) throw new Error("Token expired");
-          return res.json();
-        })
-        .then(user => {
-          if (user.id) {
-            const isFirstLogin = !isLoggedIn;
-            applyLoggedInUser(user);
-            localStorage.setItem('current_discord_user', JSON.stringify(user));
-
-            if (isFirstLogin) {
-              showToast('เข้าสู่ระบบสำเร็จ', `ยินดีต้อนรับคุณ ${user.global_name || user.username}`, 'success');
-
-              const avatarUrl = user.avatar
-                ? `https://cdn.discordapp.com/avatars/${user.id}/${user.avatar}.png`
-                : 'https://cdn.discordapp.com/embed/avatars/0.png';
-
-              sendDiscordWebhook({
-                title: "📥 มีผู้ใช้งานเข้าสู่ระบบเว็บ!",
-                color: 3066993,
-                thumbnail: { url: avatarUrl },
-                fields: [
-                  { name: "👤 ผู้ใช้งาน", value: `**${user.global_name || user.username}**\n(\`<@${user.id}>\`)`, inline: true },
-                  { name: "🆔 User ID", value: `\`${user.id}\``, inline: true },
-                  { name: "💵 ยอดเงินคงเหลือ", value: `\`${currentBalance.toLocaleString()} ฿\``, inline: true }
-                ],
-                footer: { text: "J Community Shop • Auth System" },
-                timestamp: new Date().toISOString()
-              });
-            }
-          }
-        })
-        .catch(err => {
-          console.warn("Session expired or invalid token:", err);
-          if (savedUser) {
-            try {
-              const user = JSON.parse(savedUser);
-              applyLoggedInUser(user);
-            } catch(e) {}
-          }
-        });
-      }
-    }
-
-    function applyLoggedInUser(user) {
-      currentUserData = user;
-      currentUserId = user.id;
-      isLoggedIn = true;
-
-      saveUserProfile(user);
-      currentBalance = loadUserBalance(user.id);
-
-      document.getElementById('navLoginBtn').style.display = 'none';
-      document.getElementById('navProfileZone').style.display = 'flex';
-
-      const avatarUrl = user.avatar
-        ? `https://cdn.discordapp.com/avatars/${user.id}/${user.avatar}.png`
-        : 'https://cdn.discordapp.com/embed/avatars/0.png';
-
-      document.getElementById('userAvatar').src = avatarUrl;
-      document.getElementById('userName').innerText = user.global_name || user.username;
-      document.getElementById('userBalanceText').innerText = currentBalance.toLocaleString();
-      document.getElementById('heroSubtitle').innerText = `ยินดีต้อนรับคุณ ${user.global_name || user.username} เข้าสู่ระบบเรียบร้อยแล้ว`;
-    }
-
-    // ==========================================
-    // 🚪 9. ระบบ Modal ยืนยันการออกจากระบบ (Logout Modal)
-    // ==========================================
-    const logoutModal = document.getElementById('logoutModal');
-
-    function openLogoutModal() {
-      if (!isLoggedIn) return;
-      const targetName = currentUserData ? (currentUserData.global_name || currentUserData.username) : '';
-      const logoutTargetName = document.getElementById('logoutTargetName');
-      if (logoutTargetName) logoutTargetName.innerText = targetName;
-      logoutModal.classList.add('active');
-    }
-
-    function closeLogoutModal() {
-      if (logoutModal) logoutModal.classList.remove('active');
-    }
-
-    if (logoutModal) {
-      logoutModal.addEventListener('click', (e) => {
-        if (e.target === logoutModal) closeLogoutModal();
-      });
-    }
-
-    function confirmLogout() {
-      closeLogoutModal();
-      logoutDiscord();
-    }
-
-    function logoutDiscord() {
-      if (currentUserData) {
-        const username = currentUserData.global_name || currentUserData.username;
-        const avatarUrl = currentUserData.avatar
-          ? `https://cdn.discordapp.com/avatars/${currentUserData.id}/${currentUserData.avatar}.png`
-          : 'https://cdn.discordapp.com/embed/avatars/0.png';
-
-        sendDiscordWebhook({
-          title: "📤 มีผู้ใช้งานออกจากระบบ",
-          color: 15158332,
-          thumbnail: { url: avatarUrl },
-          fields: [
-            { name: "👤 ผู้ใช้งาน", value: `**${username}**\n(\`<@${currentUserId}>\`)`, inline: true },
-            { name: "🆔 User ID", value: `\`${currentUserId}\``, inline: true }
-          ],
-          footer: { text: "J Community Shop • Auth System" },
-          timestamp: new Date().toISOString()
-        });
-      }
-
-      isLoggedIn = false;
-      currentUserId = null;
-      currentUserData = null;
-      localStorage.removeItem('discord_access_token');
-      localStorage.removeItem('current_discord_user');
-
-      document.getElementById('navLoginBtn').style.display = 'flex';
-      document.getElementById('navProfileZone').style.display = 'none';
-      document.getElementById('heroSubtitle').innerText = 'ร้านค้าสินค้าดิจิทัล — เข้าสู่ระบบด้วย Discord เพื่อเริ่มใช้งาน';
-      showToast('ออกจากระบบแล้ว', 'คุณได้ออกจากระบบเรียบร้อยแล้ว', 'info');
-    }
-
-    window.onload = function() {
-      checkDiscordAuth();
-      renderProducts();
-    };
   </script>
 </body>
 </html>
