@@ -3,105 +3,75 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>หน้าหลักร้าน - Modern Platform</title>
+  <title>หน้าหลักร้าน</title>
   <style>
-    @import url('https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;500;600;700&display=swap');
-
+    @import url('https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;600&display=swap');
     * { box-sizing: border-box; margin: 0; padding: 0; }
-    body {
-      font-family: 'Prompt', sans-serif;
-      background: linear-gradient(135deg, #0f0c29, #302b63, #24243e, #1a102f, #ff0844);
-      background-size: 400% 400%;
-      animation: gradientBG 15s ease infinite;
-      color: #ffffff;
-      min-height: 100vh;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      overflow-x: hidden;
-    }
-    @keyframes gradientBG { 0% { background-position: 0% 50%; } 50% { background-position: 100% 50%; } 100% { background-position: 0% 50%; } }
+    body { font-family: 'Prompt', sans-serif; background: #0f0c29; color: white; min-height: 100vh; display: flex; flex-direction: column; align-items: center; }
+    
+    .navbar { width: 90%; max-width: 1000px; display: flex; justify-content: space-between; padding: 20px; background: #1a1a2e; border-radius: 15px; margin-top: 20px; }
+    .nav-links { display: flex; gap: 15px; }
+    .nav-links a { color: #aaa; text-decoration: none; cursor: pointer; padding: 5px 15px; border-radius: 8px; transition: 0.3s; }
+    .nav-links a:hover, .nav-links a.active { color: #ff0844; background: rgba(255,8,68,0.1); }
 
-    .navbar {
-      width: 90%; max-width: 1150px; display: flex; justify-content: space-between; align-items: center;
-      background: rgba(18, 18, 26, 0.65); backdrop-filter: blur(20px); border: 1px solid rgba(236, 72, 153, 0.25);
-      padding: 15px 30px; border-radius: 20px; margin-top: 25px; box-shadow: 0 15px 35px rgba(0, 0, 0, 0.4);
-    }
-    .nav-brand { font-size: 18px; font-weight: 700; color: #f472b6; }
-    .nav-links { display: flex; gap: 10px; }
-    .nav-links a { 
-      color: #9ca3af; text-decoration: none; font-size: 14px; padding: 8px 18px; 
-      border-radius: 12px; cursor: pointer; transition: all 0.3s ease;
-    }
-    .nav-links a:hover, .nav-links a.active { background: rgba(236, 72, 153, 0.2); color: #f472b6; border: 1px solid rgba(236, 72, 153, 0.4); }
-
-    .container-wrapper { flex: 1; display: flex; align-items: center; justify-content: center; width: 100%; padding: 30px 0; }
+    .container { flex: 1; display: flex; align-items: center; justify-content: center; width: 100%; }
+    .card { width: 90%; max-width: 400px; background: #1a1a2e; padding: 40px; border-radius: 20px; text-align: center; border: 1px solid #333; }
+    .btn { display: block; width: 100%; padding: 12px; margin-top: 15px; border: none; border-radius: 10px; font-family: 'Prompt'; cursor: pointer; color: white; font-weight: 600; }
     .hidden { display: none !important; }
-
-    /* Main Styles */
-    .card {
-      width: 90%; max-width: 500px; background: rgba(18, 18, 26, 0.8);
-      backdrop-filter: blur(25px); border: 1px solid rgba(236, 72, 153, 0.3);
-      border-radius: 28px; padding: 40px; text-align: center; box-shadow: 0 20px 50px rgba(0,0,0,0.5);
-    }
-    .btn-action { 
-      display: block; width: 100%; padding: 14px; margin-top: 15px; border: none; border-radius: 12px;
-      font-family: 'Prompt', sans-serif; font-weight: 600; cursor: pointer; color: white;
-      background: linear-gradient(135deg, #ec4899, #be185d); transition: 0.3s;
-    }
-    .btn-discord { background: #5865F2; }
-    .user-avatar { width: 90px; height: 90px; border-radius: 50%; border: 3px solid #ec4899; margin-bottom: 15px; }
   </style>
 </head>
 <body>
 
   <nav class="navbar">
-    <div class="nav-brand">✨ ร้านค้าออนไลน์</div>
+    <div style="font-weight: 700;">MY SHOP</div>
     <div class="nav-links">
-      <a onclick="showPage('home', this)" class="active" id="nav-home">หน้าหลัก</a>
-      <a onclick="showPage('register', this)" id="nav-register">สมัครบัญชี</a>
+      <a id="nav-home" class="active" onclick="showPage('home', this)">หน้าหลัก</a>
+      <a id="nav-login" onclick="showPage('login', this)">สมัครบัญชี</a>
     </div>
   </nav>
 
-  <div class="container-wrapper">
+  <div class="container">
     <!-- หน้าหลัก -->
     <div class="card" id="home">
       <h1>ยินดีต้อนรับ</h1>
-      <p style="margin: 20px 0; color: #9ca3af;">เชิญเลือกใช้งานบริการของเราได้เลยครับ</p>
+      <p style="color: #888; margin: 20px 0;">ระบบร้านค้าพร้อมใช้งานแล้ว</p>
     </div>
 
-    <!-- หน้าสมัคร -->
-    <div class="card hidden" id="register">
+    <!-- หน้าล็อกอิน -->
+    <div class="card hidden" id="login">
       <h2>เข้าสู่ระบบ</h2>
-      <button onclick="handleDiscordLogin()" class="btn-action btn-discord">ล็อกอินผ่าน Discord</button>
+      <button onclick="window.location.href='https://discord.com/oauth2/authorize?client_id=1532644387639660627&response_type=code&redirect_uri=https%3A%2F%2Fshop-github-io-phi.vercel.app%2F&scope=email'" style="background: #5865F2;" class="btn">ล็อกอินผ่าน Discord</button>
     </div>
 
     <!-- หน้าโปรไฟล์ -->
     <div class="card hidden" id="profile">
-      <img src="https://i.pinimg.com/736x/3a/91/30/3a9130a3cc7ef75c013516c85de0efb4.jpg" class="user-avatar">
-      <h2 id="display-username">ชื่อผู้ใช้งาน</h2>
-      <button onclick="handleLogout()" class="btn-action" style="background: #ef4444;">ออกจากระบบ</button>
+      <h2>ข้อมูลสมาชิก</h2>
+      <p id="user-display" style="margin: 20px 0; color: #ff0844; font-weight: bold;"></p>
+      <button onclick="handleLogout()" style="background: #444;" class="btn">ออกจากระบบ</button>
     </div>
   </div>
 
   <script>
     function showPage(pageId, element) {
+      // ซ่อนทุกหน้า
       document.getElementById('home').classList.add('hidden');
-      document.getElementById('register').classList.add('hidden');
+      document.getElementById('login').classList.add('hidden');
       document.getElementById('profile').classList.add('hidden');
+      
+      // แสดงหน้าที่เลือก
       document.getElementById(pageId).classList.remove('hidden');
       
+      // ปรับเมนู active
       document.querySelectorAll('.nav-links a').forEach(a => a.classList.remove('active'));
       if (element) element.classList.add('active');
     }
 
-    function handleDiscordLogin() {
-      window.location.href = "https://discord.com/oauth2/authorize?client_id=1532644387639660627&response_type=code&redirect_uri=https%3A%2F%2Fshop-github-io-phi.vercel.app%2F&scope=email";
-    }
-
     function handleLogout() {
-      document.getElementById('nav-register').innerText = "สมัครบัญชี";
-      document.getElementById('nav-register').onclick = function() { showPage('register', this); };
+      // รีเซ็ตปุ่มเมนู
+      let navLogin = document.getElementById('nav-login');
+      navLogin.innerText = "สมัครบัญชี";
+      navLogin.onclick = function() { showPage('login', this); };
+      
       showPage('home', document.getElementById('nav-home'));
       window.history.replaceState({}, document.title, "/");
     }
@@ -110,14 +80,13 @@
       const urlParams = new URLSearchParams(window.location.search);
       if (urlParams.has('code')) {
         const username = "Discord User";
-        document.getElementById('display-username').innerText = username;
+        document.getElementById('user-display').innerText = username;
         
-        let navReg = document.getElementById('nav-register');
-        navReg.innerText = username;
-        // ปรับให้ปุ่มคลิกแล้วไปหน้าโปรไฟล์ได้เสมอ
-        navReg.onclick = function() { showPage('profile', this); };
+        let navLogin = document.getElementById('nav-login');
+        navLogin.innerText = username; // เปลี่ยนชื่อบนเมนู
+        navLogin.onclick = function() { showPage('profile', this); };
         
-        showPage('profile', navReg);
+        showPage('profile', navLogin);
       }
     }
   </script>
