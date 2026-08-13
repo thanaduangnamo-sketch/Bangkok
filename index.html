@@ -534,7 +534,7 @@
   </div>
 
   <script>
-    // ฟังก์ชันสร้างเสียงกดปุ่มแบบสังเคราะห์ (Web Audio API) เสียงดังทันทีไม่ต้องโหลดไฟล์
+    // ฟังก์ชันสร้างเสียงกดปุ่มแบบสังเคราะห์ (Web Audio API)
     function playSound() {
       try {
         const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
@@ -542,7 +542,7 @@
         const gainNode = audioCtx.createGain();
 
         oscillator.type = 'sine';
-        oscillator.frequency.setValueAtTime(600, audioCtx.currentTime); // ความถี่เสียง
+        oscillator.frequency.setValueAtTime(600, audioCtx.currentTime);
         oscillator.frequency.exponentialRampToValueAtTime(200, audioCtx.currentTime + 0.08);
 
         gainNode.gain.setValueAtTime(0.15, audioCtx.currentTime);
@@ -587,6 +587,20 @@
       let navReg = document.getElementById('nav-register');
       navReg.innerText = 'สมัครบัญชี';
       showPage('home', document.getElementById('nav-home'));
+    }
+
+    // ตรวจสอบ URL หากมีการ redirect กลับมาจาก Discord (จำลองการรับค่าล็อกอิน)
+    window.onload = function() {
+      const urlParams = new URLSearchParams(window.location.search);
+      if (urlParams.has('code')) {
+        // กรณีเชื่อมต่อหลังบ้านจริง โค้ดส่วนนี้จะนำ code ไปแลกข้อมูลผู้ใช้
+        document.getElementById('display-username').innerText = "Discord User";
+        showPage('profile', null);
+        let navReg = document.getElementById('nav-register');
+        navReg.innerText = "Discord User";
+        navReg.classList.add('active');
+        document.getElementById('nav-home').classList.remove('active');
+      }
     }
   </script>
 
