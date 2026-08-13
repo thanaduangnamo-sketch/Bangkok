@@ -3,76 +3,181 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>PRO SCRIPT | Bot Controller</title>
+  <title>AI Code Studio | Modern IDE</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <style>
-    @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&display=swap');
-    body { 
-      background: #0a0a0c; 
-      color: #00ff41; 
-      font-family: 'JetBrains Mono', monospace;
-      min-height: 100vh;
-      display: flex;
-      flex-direction: column;
-    }
-    .terminal {
-      background: #000;
-      border: 1px solid #333;
-      border-radius: 8px;
-      overflow: hidden;
-      box-shadow: 0 0 20px rgba(0, 255, 65, 0.1);
-    }
-    .terminal-header {
-      background: #1a1a1a;
-      padding: 8px 16px;
-      font-size: 12px;
-      color: #888;
-    }
-    .terminal-body {
-      padding: 16px;
-      height: 400px;
-      overflow-y: auto;
-      font-size: 14px;
-    }
+    @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&family=Inter:wght@300;400;600;800&display=swap');
+    body { font-family: 'Inter', sans-serif; background: #0a0a0f; color: #fff; height: 100vh; overflow: hidden; }
+    .code-font { font-family: 'JetBrains Mono', monospace; }
+    .glass { background: rgba(25, 25, 35, 0.7); backdrop-filter: blur(20px); border: 1px solid rgba(255, 255, 255, 0.08); }
+    .glow:focus { box-shadow: 0 0 20px rgba(99, 102, 241, 0.4); border-color: #6366f1; }
+    /* Custom Scrollbar */
+    ::-webkit-scrollbar { width: 6px; height: 6px; }
+    ::-webkit-scrollbar-track { background: transparent; }
+    ::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.2); border-radius: 3px; }
   </style>
 </head>
-<body class="p-8">
+<body class="flex flex-col h-screen">
 
-  <nav class="flex justify-between items-center mb-8">
-    <div class="text-2xl font-black text-white">PRO<span class="text-green-500">BOT</span> DASHBOARD</div>
-    <div class="space-x-4">
-      <button onclick="runBot()" class="bg-green-600 px-6 py-2 rounded font-bold text-black hover:bg-green-500 transition">START BOT</button>
-      <button onclick="stopBot()" class="bg-red-600 px-6 py-2 rounded font-bold text-black hover:bg-red-500 transition">STOP BOT</button>
+  <!-- Navbar -->
+  <header class="flex justify-between items-center px-6 py-4 glass border-b border-white/10 z-10">
+    <div class="flex items-center gap-3">
+      <div class="w-3 h-3 rounded-full bg-red-500 animate-pulse"></div>
+      <span class="font-extrabold text-xl tracking-tight bg-gradient-to-r from-indigo-400 to-pink-500 bg-clip-text text-transparent">AI CODE STUDIO</span>
     </div>
-  </nav>
+    <div class="text-xs text-gray-400 code-font bg-white/5 px-3 py-1.5 rounded-lg border border-white/5">
+      Status: <span class="text-emerald-400 font-bold">Ready & Connected</span>
+    </div>
+  </header>
 
-  <div class="terminal flex-grow">
-    <div class="terminal-header">C:\Windows\System32\node.exe - DiscordBotController.js</div>
-    <div id="terminal-output" class="terminal-body">
-      <div>> บอทพร้อมทำงาน... กดปุ่ม START เพื่อเริ่มต้น</div>
+  <!-- Main Workspace -->
+  <div class="flex flex-1 overflow-hidden">
+    
+    <!-- ฝั่งซ้าย: แชท AI ช่วยคิดและเขียนโค้ด -->
+    <aside class="w-full md:w-[420px] glass flex flex-col border-r border-white/10 z-0">
+      <div class="p-4 border-b border-white/10 flex items-center justify-between">
+        <h2 class="font-bold text-sm tracking-wide text-indigo-300 flex items-center gap-2">
+          <span>✨</span> AI Assistant (คู่คิดเขียนโค้ด)
+        </h2>
+        <span class="text-[10px] bg-indigo-500/20 text-indigo-300 px-2 py-0.5 rounded-full border border-indigo-500/30">GPT-Engine</span>
+      </div>
+
+      <!-- กล่องข้อความแชท -->
+      <div id="chat-messages" class="flex-1 p-4 overflow-y-auto space-y-4 text-sm">
+        <div class="bg-indigo-600/10 border border-indigo-500/20 p-3 rounded-2xl rounded-tl-sm text-gray-200">
+          สวัสดีครับ! ถ้าคิดไม่ออกหรืออยากให้ผมช่วยเขียนโค้ดอะไร พิมพ์บอกทางด้านล่างได้เลย เดี๋ยวผมจัดให้ครับ 🚀
+        </div>
+      </div>
+
+      <!-- ช่องพิมพ์ข้อความหา AI -->
+      <div class="p-4 border-t border-white/10 bg-black/20">
+        <div class="flex gap-2">
+          <input id="user-input" type="text" placeholder="เช่น ขอปุ่มกดสวยๆ หรือสคริปต์สุ่มเลข..." 
+                 class="flex-1 bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-sm focus:outline-none glow text-white placeholder-gray-500"
+                 onkeypress="if(event.key === 'Enter') sendMessage()">
+          <button onclick="sendMessage()" class="bg-indigo-600 hover:bg-indigo-500 text-white px-5 rounded-xl font-bold transition-all shadow-lg shadow-indigo-600/30 flex items-center justify-center">
+            ➤
+          </button>
+        </div>
+      </div>
+    </aside>
+
+    <!-- ฝั่งขวา: หน้าจอเขียนโค้ดและพรีวิว -->
+    <main class="flex-1 flex flex-col bg-[#07070a]">
+      <!-- Tab เมนู -->
+      <div class="flex bg-[#0f0f14] border-b border-white/10 px-4 py-2 gap-2 text-xs font-semibold">
+        <button class="px-4 py-2 bg-indigo-600/20 text-indigo-400 border border-indigo-500/30 rounded-lg">Editor.html</button>
+      </div>
+
+      <!-- พื้นที่เขียนโค้ด (Textarea) -->
+      <div class="flex-1 p-4 flex flex-col">
+        <textarea id="code-editor" class="flex-1 w-full bg-[#0c0c10] code-font text-sm text-gray-200 p-4 rounded-xl border border-white/10 focus:outline-none focus:border-indigo-500/50 resize-none leading-relaxed" placeholder="พิมพ์โค้ดเอง หรือให้ AI ช่วยเขียนใส่ตรงนี้...">&lt;div style="text-align: center; margin-top: 50px;"&gt;
+  &lt;h1 style="color: #6366f1; font-family: sans-serif;"&gt;ยินดีต้อนรับสู่ AI Code Studio&lt;/h1&gt;
+  &lt;p style="color: #888;"&gt;พิมพ์สั่ง AI ด้านซ้ายเพื่อสร้างโค้ดได้เลย!&lt;/p&gt;
+&lt;/div&gt;</textarea>
+      </div>
+
+      <!-- แถบควบคุมด้านล่าง -->
+      <div class="px-6 py-3 bg-[#0f0f14] border-t border-white/10 flex justify-between items-center">
+        <span class="text-xs text-gray-500 code-font">Live Preview Active</span>
+        <button onclick="runCode()" class="bg-emerald-600 hover:bg-emerald-500 text-white px-6 py-2 rounded-xl text-sm font-bold transition shadow-lg shadow-emerald-600/20">
+          ▶ รันโค้ดแสดงผล
+        </button>
+      </div>
+    </main>
+
+  </div>
+
+  <!-- Modal สำหรับแสดงผลพรีวิว -->
+  <div id="preview-modal" class="fixed inset-0 bg-black/80 backdrop-blur-md hidden z-50 flex flex-col p-6">
+    <div class="flex justify-between items-center mb-4 bg-white/5 p-4 rounded-xl border border-white/10">
+      <h3 class="font-bold text-lg text-emerald-400">⚡ Live Result Preview</h3>
+      <button onclick="closePreview()" class="bg-red-600 hover:bg-red-500 text-white px-4 py-1.5 rounded-lg text-sm font-bold">ปิดหน้าต่าง</button>
+    </div>
+    <div class="flex-1 bg-white rounded-2xl overflow-hidden">
+      <iframe id="preview-frame" class="w-full h-full border-0"></iframe>
     </div>
   </div>
 
+จำลองระบบตอบกลับของ AI
   <script>
-    const output = document.getElementById('terminal-output');
-
-    function log(message) {
-      const line = document.createElement('div');
-      line.innerText = `[${new Date().toLocaleTimeString()}] ${message}`;
-      output.appendChild(line);
-      output.scrollTop = output.scrollHeight;
+    function appendMessage(sender, text, codeBlock = null) {
+      const chatMessages = document.getElementById('chat-messages');
+      const msgDiv = document.createElement('div');
+      
+      if (sender === 'user') {
+        msgDiv.className = "flex justify-end";
+        msgDiv.innerHTML = `<div class="bg-indigo-600 text-white p-3 rounded-2xl rounded-tr-sm max-w-[85%]">${text}</div>`;
+      } else {
+        let codeHtml = '';
+        if (codeBlock) {
+          codeHtml = `
+            <div class="mt-2 bg-black/40 border border-white/10 rounded-lg p-2 text-xs code-font overflow-x-auto text-emerald-300">
+              <code>${escapeHtml(codeBlock)}</code>
+            </div>
+            <button onclick="injectCode(\`${escapeQuotes(codeBlock)}\`)" class="mt-2 w-full bg-indigo-600/30 hover:bg-indigo-600/50 text-indigo-300 border border-indigo-500/30 py-1.5 rounded-lg text-xs font-bold transition">
+              📥 นำโค้ดนี้ใส่ใน Editor
+            </button>
+          `;
+        }
+        msgDiv.className = "flex justify-start";
+        msgDiv.innerHTML = `<div class="bg-white/5 border border-white/10 p-3 rounded-2xl rounded-tl-sm max-w-[85%] text-gray-200">${text} ${codeHtml}</div>`;
+      }
+      
+      chatMessages.appendChild(msgDiv);
+      chatMessages.scrollTop = chatMessages.scrollHeight;
     }
 
-    function runBot() {
-      log("กำลังเชื่อมต่อ Discord API...");
-      setTimeout(() => log("สถานะ: เชื่อมต่อสำเร็จ!"), 1000);
-      setTimeout(() => log("บอทกำลังออนไลน์ในเซิร์ฟเวอร์..."), 2000);
-      setTimeout(() => log("บอทเปิดใช้งานฟังก์ชัน: [Auto-Moderation, Music, Ticket]"), 3000);
+    function sendMessage() {
+      const input = document.getElementById('user-input');
+      const text = input.value.trim();
+      if (!text) return;
+
+      appendMessage('user', text);
+      input.value = '';
+
+      // จำลองสมอง AI คิดคำตอบตามคำสั่งเบื้องต้น
+      setTimeout(() => {
+        let aiReply = "นี่คือโค้ดที่คุณต้องการครับ สามารถกดปุ่มด้านล่างเพื่อดึงไปใส่หน้า Editor ได้เลย!";
+        let generatedCode = `<div style="background: #111; color: #fff; padding: 30px; border-radius: 12px; text-align: center; font-family: sans-serif;">\n  <h2 style="color: #ff0844;">🔥 ${text}</h2>\n  <p>สร้างขึ้นโดย AI อัตโนมัติเรียบร้อยครับ!</p>\n</div>`;
+
+        if (text.includes("ปุ่ม")) {
+          generatedCode = `<button style="background: linear-gradient(135deg, #ff0844, #ffb199); color: white; border: none; padding: 12px 24px; border-radius: 8px; font-weight: bold; cursor: pointer; font-size: 16px;">✨ ปุ่มสุดล้ำ</button>`;
+        } else if (text.includes("การ์ด") || text.includes("box")) {
+          generatedCode = `<div style="background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.2); padding: 20px; border-radius: 16px; color: white; font-family: sans-serif;">\n  <h3>การ์ดข้อมูล</h3>\n  <p>ดีไซน์โมเดิร์น สวยงาม ทันสมัย</p>\n</div>`;
+        }
+
+        appendMessage('ai', aiReply, generatedCode);
+      }, 800);
     }
 
-    function stopBot() {
-      log("กำลังหยุดการทำงานของบอท...");
-      setTimeout(() => log("บอทออฟไลน์แล้ว"), 1000);
+    function injectCode(code) {
+      document.getElementById('code-editor').value = code;
+      runCode();
+    }
+
+    function runCode() {
+      const code = document.getElementById('code-editor').value;
+      const modal = document.getElementById('preview-modal');
+      const frame = document.getElementById('preview-frame');
+      
+      modal.classList.remove('hidden');
+      const doc = frame.contentDocument || frame.contentWindow.document;
+      doc.open();
+      doc.write(code);
+      doc.close();
+    }
+
+    function closePreview() {
+      document.getElementById('preview-modal').classList.add('hidden');
+    }
+
+    function escapeHtml(text) {
+      return text.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+    }
+
+    function escapeQuotes(text) {
+      return text.replace(/`/g, "\\`").replace(/"/g, '&quot;');
     }
   </script>
 </body>
