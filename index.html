@@ -589,15 +589,15 @@
       showPage('home', document.getElementById('nav-home'));
     }
 
-    // ตรวจสอบ URL หากมีการ redirect กลับมาจาก Discord (จำลองการรับค่าล็อกอิน)
+    // หากต้องการเปลี่ยนชื่อที่แสดงหลังล็อกอิน Discord ให้แก้คำว่า "ชื่อร้านค้าของคุณ" ด้านล่างนี้ได้เลย
     window.onload = function() {
       const urlParams = new URLSearchParams(window.location.search);
       if (urlParams.has('code')) {
-        // กรณีเชื่อมต่อหลังบ้านจริง โค้ดส่วนนี้จะนำ code ไปแลกข้อมูลผู้ใช้
-        document.getElementById('display-username').innerText = "Discord User";
+        const discordName = "ชื่อร้านค้าของคุณ"; 
+        document.getElementById('display-username').innerText = discordName;
         showPage('profile', null);
         let navReg = document.getElementById('nav-register');
-        navReg.innerText = "Discord User";
+        navReg.innerText = discordName;
         navReg.classList.add('active');
         document.getElementById('nav-home').classList.remove('active');
       }
