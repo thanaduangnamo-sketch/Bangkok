@@ -3,75 +3,76 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>PRO SCRIPT | Dashboard</title>
+  <title>PRO SCRIPT | Bot Controller</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <style>
-    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;700;900&display=swap');
+    @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&display=swap');
     body { 
-      font-family: 'Inter', sans-serif; 
-      background: linear-gradient(-45deg, #0f0c29, #302b63, #24243e, #1a102f, #ff0844);
-      background-size: 400% 400%;
-      animation: gradientBG 15s ease infinite;
-      color: white; min-height: 100vh;
+      background: #0a0a0c; 
+      color: #00ff41; 
+      font-family: 'JetBrains Mono', monospace;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
     }
-    @keyframes gradientBG {
-      0% { background-position: 0% 50%; }
-      50% { background-position: 100% 50%; }
-      100% { background-position: 0% 50%; }
+    .terminal {
+      background: #000;
+      border: 1px solid #333;
+      border-radius: 8px;
+      overflow: hidden;
+      box-shadow: 0 0 20px rgba(0, 255, 65, 0.1);
     }
-    .glass { background: rgba(0, 0, 0, 0.4); backdrop-filter: blur(20px); border: 1px solid rgba(255, 255, 255, 0.1); }
+    .terminal-header {
+      background: #1a1a1a;
+      padding: 8px 16px;
+      font-size: 12px;
+      color: #888;
+    }
+    .terminal-body {
+      padding: 16px;
+      height: 400px;
+      overflow-y: auto;
+      font-size: 14px;
+    }
   </style>
 </head>
-<body>
+<body class="p-8">
 
-  <nav class="flex justify-between items-center px-10 py-6">
-    <div class="text-2xl font-black tracking-tighter italic">PRO<span class="text-[#ff0844]">SCRIPT</span></div>
-    <div class="space-x-8 font-medium">
-      <a href="#" onclick="showPage('home')" class="hover:text-pink-400 transition">หน้าหลัก</a>
-      <!-- ปุ่มโปรไฟล์ที่ชี้ในรูป -->
-      <a id="nav-btn" href="#" onclick="showPage('profile')" class="px-6 py-2 bg-white text-black rounded-full font-bold hover:bg-[#ff0844] hover:text-white transition">โปรไฟล์</a>
+  <nav class="flex justify-between items-center mb-8">
+    <div class="text-2xl font-black text-white">PRO<span class="text-green-500">BOT</span> DASHBOARD</div>
+    <div class="space-x-4">
+      <button onclick="runBot()" class="bg-green-600 px-6 py-2 rounded font-bold text-black hover:bg-green-500 transition">START BOT</button>
+      <button onclick="stopBot()" class="bg-red-600 px-6 py-2 rounded font-bold text-black hover:bg-red-500 transition">STOP BOT</button>
     </div>
   </nav>
 
-  <!-- หน้าหลัก -->
-  <main id="home-page" class="px-10 py-32 text-center">
-    <h1 class="text-6xl md:text-8xl font-black mb-6 leading-tight">ELITE SCRIPTS<br><span class="text-transparent bg-clip-text bg-gradient-to-r from-pink-500 to-red-500">FOR GAMERS</span></h1>
-    <button onclick="handleLogin()" class="px-12 py-5 bg-[#ff0844] rounded-2xl font-bold text-lg hover:scale-105 transition shadow-[0_0_30px_rgba(255,8,68,0.5)]">เข้าสู่ระบบ</button>
-  </main>
-
-  <!-- หน้าโปรไฟล์ -->
-  <div id="profile-page" class="hidden px-10 py-20 text-center">
-    <div class="glass max-w-md mx-auto p-10 rounded-3xl">
-      <div class="w-24 h-24 bg-white/10 rounded-full mx-auto mb-6 flex items-center justify-center text-3xl">👤</div>
-      <h2 id="user-display" class="text-3xl font-bold">Discord User</h2>
-      <p class="text-gray-300 mb-8">สถานะ: Premium Member</p>
-      <button onclick="handleLogout()" class="w-full py-3 bg-red-600 rounded-xl font-bold hover:bg-red-700 transition">ออกจากระบบ</button>
+  <div class="terminal flex-grow">
+    <div class="terminal-header">C:\Windows\System32\node.exe - DiscordBotController.js</div>
+    <div id="terminal-output" class="terminal-body">
+      <div>> บอทพร้อมทำงาน... กดปุ่ม START เพื่อเริ่มต้น</div>
     </div>
   </div>
 
   <script>
-    // ปรับเปลี่ยนตามที่ชี้ในรูป
-    function showPage(page) {
-      document.getElementById('home-page').classList.toggle('hidden', page !== 'home');
-      document.getElementById('profile-page').classList.toggle('hidden', page !== 'profile');
+    const output = document.getElementById('terminal-output');
+
+    function log(message) {
+      const line = document.createElement('div');
+      line.innerText = `[${new Date().toLocaleTimeString()}] ${message}`;
+      output.appendChild(line);
+      output.scrollTop = output.scrollHeight;
     }
 
-    function handleLogin() {
-      window.location.href = "https://discord.com/oauth2/authorize?client_id=1532644387639660627&response_type=code&redirect_uri=https%3A%2F%2Fshop-github-io-phi.vercel.app%2F&scope=email";
+    function runBot() {
+      log("กำลังเชื่อมต่อ Discord API...");
+      setTimeout(() => log("สถานะ: เชื่อมต่อสำเร็จ!"), 1000);
+      setTimeout(() => log("บอทกำลังออนไลน์ในเซิร์ฟเวอร์..."), 2000);
+      setTimeout(() => log("บอทเปิดใช้งานฟังก์ชัน: [Auto-Moderation, Music, Ticket]"), 3000);
     }
 
-    function handleLogout() {
-      window.location.href = "/";
-    }
-
-    // เมื่อโหลดหน้าเว็บ ให้เช็คว่าถ้ามี code ใน URL ให้โชว์หน้าโปรไฟล์ทันที
-    window.onload = function() {
-      const urlParams = new URLSearchParams(window.location.search);
-      if (urlParams.has('code')) {
-        showPage('profile');
-      } else {
-        showPage('home');
-      }
+    function stopBot() {
+      log("กำลังหยุดการทำงานของบอท...");
+      setTimeout(() => log("บอทออฟไลน์แล้ว"), 1000);
     }
   </script>
 </body>
