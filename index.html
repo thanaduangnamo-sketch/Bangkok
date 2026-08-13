@@ -7,10 +7,23 @@
   <script src="https://cdn.tailwindcss.com"></script>
   <style>
     @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;700;900&display=swap');
-    body { font-family: 'Inter', sans-serif; background: #050505; color: white; }
-    .glass { background: rgba(255, 255, 255, 0.03); backdrop-filter: blur(15px); border: 1px solid rgba(255, 255, 255, 0.1); }
-    .gradient-text { background: linear-gradient(90deg, #ff0844, #ffb199); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
-    .card-hover:hover { transform: translateY(-10px); border-color: #ff0844; transition: 0.3s; }
+    
+    /* พื้นหลังไล่สีเคลื่อนไหว */
+    body { 
+      font-family: 'Inter', sans-serif; 
+      background: linear-gradient(-45deg, #0f0c29, #302b63, #24243e, #1a102f, #ff0844);
+      background-size: 400% 400%;
+      animation: gradientBG 15s ease infinite;
+      color: white; 
+      min-height: 100vh;
+    }
+    @keyframes gradientBG {
+      0% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
+    }
+
+    .glass { background: rgba(0, 0, 0, 0.4); backdrop-filter: blur(20px); border: 1px solid rgba(255, 255, 255, 0.1); }
   </style>
 </head>
 <body>
@@ -19,41 +32,25 @@
   <nav class="flex justify-between items-center px-10 py-6">
     <div class="text-2xl font-black tracking-tighter italic">PRO<span class="text-[#ff0844]">SCRIPT</span></div>
     <div class="space-x-8 font-medium">
-      <a href="#" onclick="showPage('home')" class="hover:text-[#ff0844] transition">หน้าหลัก</a>
+      <a href="#" onclick="showPage('home')" class="hover:text-pink-400 transition">หน้าหลัก</a>
       <a id="nav-btn" href="#" onclick="handleLoginFlow()" class="px-6 py-2 bg-white text-black rounded-full font-bold hover:bg-[#ff0844] hover:text-white transition">สมัคร/ล็อกอิน</a>
     </div>
   </nav>
 
   <!-- หน้าหลัก -->
-  <main id="home-page" class="px-10 py-20 text-center">
-    <h1 class="text-6xl md:text-8xl font-black mb-6">ELITE <span class="gradient-text">SCRIPTS</span><br>FOR GAMERS</h1>
-    <p class="text-gray-400 mb-10 max-w-xl mx-auto">ยกระดับการเล่นของคุณด้วยสคริปต์คุณภาพสูง อัปเดตใหม่ทุกวัน ปลอดภัย 100%</p>
-    <button onclick="handleLoginFlow()" class="px-10 py-4 bg-[#ff0844] rounded-xl font-bold text-lg hover:scale-105 transition">เริ่มต้นใช้งาน</button>
-
-    <!-- รายการสินค้า -->
-    <div class="grid grid-cols-1 md:grid-cols-3 gap-8 mt-24">
-      <div class="glass p-8 rounded-2xl card-hover">
-        <h3 class="text-xl font-bold mb-2">Aimbot Pro</h3>
-        <p class="text-gray-500 text-sm">แม่นยำระดับเทพ</p>
-      </div>
-      <div class="glass p-8 rounded-2xl card-hover">
-        <h3 class="text-xl font-bold mb-2">ESP Hack</h3>
-        <p class="text-gray-500 text-sm">มองทะลุเห็นตำแหน่ง</p>
-      </div>
-      <div class="glass p-8 rounded-2xl card-hover">
-        <h3 class="text-xl font-bold mb-2">Speed Hack</h3>
-        <p class="text-gray-500 text-sm">เคลื่อนที่เร็วกว่าใคร</p>
-      </div>
-    </div>
+  <main id="home-page" class="px-10 py-32 text-center">
+    <h1 class="text-6xl md:text-8xl font-black mb-6 leading-tight">ELITE SCRIPTS<br><span class="text-transparent bg-clip-text bg-gradient-to-r from-pink-500 to-red-500">FOR GAMERS</span></h1>
+    <p class="text-gray-200 mb-12 max-w-xl mx-auto text-lg">ยกระดับการเล่นของคุณด้วยสคริปต์คุณภาพสูง อัปเดตใหม่ทุกวัน ปลอดภัย 100%</p>
+    <button onclick="handleLoginFlow()" class="px-12 py-5 bg-[#ff0844] rounded-2xl font-bold text-lg hover:scale-105 transition shadow-[0_0_30px_rgba(255,8,68,0.5)]">เริ่มต้นใช้งานทันที</button>
   </main>
 
   <!-- หน้าโปรไฟล์ -->
   <div id="profile-page" class="hidden px-10 py-20 text-center">
     <div class="glass max-w-md mx-auto p-10 rounded-3xl">
-      <div class="w-24 h-24 bg-gray-800 rounded-full mx-auto mb-6"></div>
+      <div class="w-24 h-24 bg-white/10 rounded-full mx-auto mb-6 flex items-center justify-center text-3xl">👤</div>
       <h2 id="user-display" class="text-3xl font-bold">Discord User</h2>
-      <p class="text-gray-400 mb-8">สถานะ: Premium Member</p>
-      <button onclick="handleLogout()" class="w-full py-3 bg-red-600 rounded-xl font-bold">ออกจากระบบ</button>
+      <p class="text-gray-300 mb-8">สถานะ: Premium Member</p>
+      <button onclick="handleLogout()" class="w-full py-3 bg-red-600 rounded-xl font-bold hover:bg-red-700 transition">ออกจากระบบ</button>
     </div>
   </div>
 
