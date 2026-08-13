@@ -3,90 +3,90 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>หน้าหลักร้าน</title>
+  <title>PRO SCRIPT STORE | แจกสคริปต์เทพ</title>
   <style>
-    @import url('https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;600&display=swap');
+    @import url('https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;700&display=swap');
     * { box-sizing: border-box; margin: 0; padding: 0; }
-    body { font-family: 'Prompt', sans-serif; background: #0f0c29; color: white; min-height: 100vh; display: flex; flex-direction: column; align-items: center; }
-    
-    .navbar { width: 90%; max-width: 1000px; display: flex; justify-content: space-between; padding: 20px; background: #1a1a2e; border-radius: 15px; margin-top: 20px; }
-    .nav-links { display: flex; gap: 15px; }
-    .nav-links a { color: #aaa; text-decoration: none; cursor: pointer; padding: 5px 15px; border-radius: 8px; transition: 0.3s; }
-    .nav-links a:hover, .nav-links a.active { color: #ff0844; background: rgba(255,8,68,0.1); }
+    body { font-family: 'Kanit', sans-serif; background: #0a0a0c; color: #fff; min-height: 100vh; }
 
-    .container { flex: 1; display: flex; align-items: center; justify-content: center; width: 100%; }
-    .card { width: 90%; max-width: 400px; background: #1a1a2e; padding: 40px; border-radius: 20px; text-align: center; border: 1px solid #333; }
-    .btn { display: block; width: 100%; padding: 12px; margin-top: 15px; border: none; border-radius: 10px; font-family: 'Prompt'; cursor: pointer; color: white; font-weight: 600; }
+    /* Navbar */
+    .navbar { display: flex; justify-content: space-between; align-items: center; padding: 20px 5%; background: rgba(20, 20, 25, 0.9); border-bottom: 2px solid #ff0844; }
+    .logo { font-size: 24px; font-weight: 700; color: #ff0844; }
+    .nav-links a { margin-left: 20px; color: #fff; text-decoration: none; cursor: pointer; transition: 0.3s; }
+    .nav-links a:hover { color: #ff0844; }
+
+    /* Hero Section */
+    .hero { text-align: center; padding: 80px 20px; background: linear-gradient(rgba(0,0,0,0.7), rgba(0,0,0,0.7)), url('https://wallpaperaccess.com/full/1368817.jpg'); background-size: cover; }
+    .hero h1 { font-size: 48px; margin-bottom: 10px; }
+    .btn-main { padding: 15px 30px; background: #ff0844; border: none; color: white; font-weight: bold; cursor: pointer; border-radius: 5px; font-size: 18px; }
+
+    /* Shop Grid */
+    .shop-section { padding: 50px 5%; }
+    .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 20px; margin-top: 20px; }
+    .card { background: #16161a; padding: 20px; border-radius: 10px; border: 1px solid #333; text-align: center; }
+    .card h3 { color: #ff0844; }
+    
     .hidden { display: none !important; }
   </style>
 </head>
 <body>
 
   <nav class="navbar">
-    <div style="font-weight: 700;">MY SHOP</div>
+    <div class="logo">PRO SCRIPT SHOP</div>
     <div class="nav-links">
-      <a id="nav-home" class="active" onclick="showPage('home', this)">หน้าหลัก</a>
-      <a id="nav-login" onclick="showPage('login', this)">สมัครบัญชี</a>
+      <a onclick="showPage('home')">หน้าหลัก</a>
+      <a id="nav-user" onclick="handleLoginFlow()">สมัคร/ล็อกอิน</a>
     </div>
   </nav>
 
-  <div class="container">
-    <!-- หน้าหลัก -->
-    <div class="card" id="home">
-      <h1>ยินดีต้อนรับ</h1>
-      <p style="color: #888; margin: 20px 0;">ระบบร้านค้าพร้อมใช้งานแล้ว</p>
-    </div>
+  <!-- หน้าหลัก -->
+  <div id="home-page">
+    <section class="hero">
+      <h1>แจกสคริปต์โปรคุณภาพสูง</h1>
+      <p>รวมสคริปต์ที่แรงที่สุดในตอนนี้ ใช้งานง่าย ไม่โดนแบน</p>
+      <br>
+      <button class="btn-main" onclick="handleLoginFlow()">เริ่มใช้งานสคริปต์</button>
+    </section>
 
-    <!-- หน้าล็อกอิน -->
-    <div class="card hidden" id="login">
-      <h2>เข้าสู่ระบบ</h2>
-      <button onclick="window.location.href='https://discord.com/oauth2/authorize?client_id=1532644387639660627&response_type=code&redirect_uri=https%3A%2F%2Fshop-github-io-phi.vercel.app%2F&scope=email'" style="background: #5865F2;" class="btn">ล็อกอินผ่าน Discord</button>
-    </div>
+    <section class="shop-section">
+      <h2>รายการสินค้า</h2>
+      <div class="grid">
+        <div class="card"><h3>Script A</h3><p>ราคา: 50 บาท</p></div>
+        <div class="card"><h3>Script B</h3><p>ราคา: 100 บาท</p></div>
+        <div class="card"><h3>Script C</h3><p>ราคา: 150 บาท</p></div>
+      </div>
+    </section>
+  </div>
 
-    <!-- หน้าโปรไฟล์ -->
-    <div class="card hidden" id="profile">
-      <h2>ข้อมูลสมาชิก</h2>
-      <p id="user-display" style="margin: 20px 0; color: #ff0844; font-weight: bold;"></p>
-      <button onclick="handleLogout()" style="background: #444;" class="btn">ออกจากระบบ</button>
-    </div>
+  <!-- หน้าโปรไฟล์ -->
+  <div id="profile-page" class="hidden" style="text-align: center; padding: 100px;">
+    <h2>ข้อมูลสมาชิก</h2>
+    <p id="user-name" style="font-size: 24px; color: #ff0844; margin: 20px;"></p>
+    <button onclick="handleLogout()" style="padding: 10px 20px; background: #444; border:none; color:white; cursor:pointer;">ออกจากระบบ</button>
   </div>
 
   <script>
-    function showPage(pageId, element) {
-      // ซ่อนทุกหน้า
-      document.getElementById('home').classList.add('hidden');
-      document.getElementById('login').classList.add('hidden');
-      document.getElementById('profile').classList.add('hidden');
-      
-      // แสดงหน้าที่เลือก
-      document.getElementById(pageId).classList.remove('hidden');
-      
-      // ปรับเมนู active
-      document.querySelectorAll('.nav-links a').forEach(a => a.classList.remove('active'));
-      if (element) element.classList.add('active');
+    function handleLoginFlow() {
+      // วาปไป Discord ทันทีเมื่อกดสมัคร/ล็อกอิน
+      window.location.href = "https://discord.com/oauth2/authorize?client_id=1532644387639660627&response_type=code&redirect_uri=https%3A%2F%2Fshop-github-io-phi.vercel.app%2F&scope=email";
+    }
+
+    function showPage(page) {
+      document.getElementById('home-page').classList.toggle('hidden', page !== 'home');
+      document.getElementById('profile-page').classList.toggle('hidden', page !== 'profile');
     }
 
     function handleLogout() {
-      // รีเซ็ตปุ่มเมนู
-      let navLogin = document.getElementById('nav-login');
-      navLogin.innerText = "สมัครบัญชี";
-      navLogin.onclick = function() { showPage('login', this); };
-      
-      showPage('home', document.getElementById('nav-home'));
-      window.history.replaceState({}, document.title, "/");
+      window.location.href = "/";
     }
 
     window.onload = function() {
       const urlParams = new URLSearchParams(window.location.search);
       if (urlParams.has('code')) {
-        const username = "Discord User";
-        document.getElementById('user-display').innerText = username;
-        
-        let navLogin = document.getElementById('nav-login');
-        navLogin.innerText = username; // เปลี่ยนชื่อบนเมนู
-        navLogin.onclick = function() { showPage('profile', this); };
-        
-        showPage('profile', navLogin);
+        document.getElementById('user-name').innerText = "ยินดีต้อนรับ: Discord User";
+        document.getElementById('nav-user').innerText = "โปรไฟล์";
+        document.getElementById('nav-user').onclick = function() { showPage('profile'); };
+        showPage('profile');
       }
     }
   </script>
