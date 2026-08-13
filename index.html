@@ -3,298 +3,582 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Modern Web Platform</title>
+  <title>หน้าหลักร้าน - Modern Platform</title>
   <style>
-    :root { 
-      --primary: #6366f1; 
-      --discord-blurple: #5865F2; 
-      --bg-color: #ffffff; 
-      --text-main: #111827; 
-      --text-muted: #4b5563; 
-      --border-color: #e5e7eb; 
-    }
-    
-    body { 
-      background-color: var(--bg-color); 
-      color: var(--text-main); 
-      font-family: 'Inter', sans-serif; 
-      margin: 0; 
-      display: flex; 
-      flex-direction: column; 
-      align-items: center; 
-      min-height: 100vh; 
-    }
-    
-    .navbar { 
-      display: flex; 
-      justify-content: center; 
-      gap: 8px; 
-      background: rgba(255, 255, 255, 0.85); 
-      backdrop-filter: blur(12px); 
-      border: 1px solid var(--border-color); 
-      padding: 8px 16px; 
-      margin-top: 24px; 
-      border-radius: 99px; 
-      box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.05); 
-      position: sticky; 
-      top: 20px; 
-      z-index: 1000; 
-    }
-    
-    .navbar a { 
-      color: var(--text-muted); 
-      padding: 8px 18px; 
-      text-decoration: none; 
-      font-size: 14px; 
-      font-weight: 500; 
-      border-radius: 99px; 
-      cursor: pointer; 
-      transition: 0.25s; 
-    }
-    
-    .navbar a:hover, .navbar a.active { 
-      background: var(--primary); 
-      color: white; 
-    }
-    
-    .container { 
-      width: 100%; 
-      max-width: 500px; 
-      padding: 40px 20px; 
-      box-sizing: border-box; 
-    }
-    
-    .card { 
-      background: #ffffff; 
-      border: 1px solid var(--border-color); 
-      padding: 30px; 
-      border-radius: 20px; 
-      box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.05); 
-      text-align: center; 
-    }
-    
-    #register, #login { 
-      max-width: 400px; 
-      margin: 0 auto; 
-    }
-    
-    .user-badge { 
-      display: flex; 
-      align-items: center; 
-      gap: 12px; 
-      background: #f8fafc; 
-      border: 1px solid var(--border-color); 
-      padding: 12px 16px; 
-      border-radius: 14px; 
-      margin-bottom: 20px; 
-      text-align: left; 
-    }
-    
-    .user-avatar { 
-      width: 42px; 
-      height: 42px; 
-      border-radius: 50%; 
-      object-fit: cover; 
-      border: 2px solid var(--primary); 
-    }
-    
-    .user-info .name { 
-      font-weight: 600; 
-      font-size: 14px; 
-      color: var(--text-main); 
-      margin: 0; 
-    }
-    
-    .user-info .sub { 
-      font-size: 12px; 
-      color: var(--text-muted); 
-      margin: 0; 
-    }
+    @import url('https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;500;600;700&display=swap');
 
-    input, select { 
-      width: 100%; 
-      padding: 10px; 
-      margin-bottom: 12px; 
-      border: 1px solid var(--border-color); 
-      border-radius: 10px; 
-      box-sizing: border-box; 
-      font-size: 14px; 
-      outline: none;
-    }
-    
-    input:focus, select:focus {
-      border-color: var(--primary);
-      box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1);
-    }
-    
-    button { 
-      width: 100%; 
-      padding: 12px; 
-      background: var(--primary); 
-      color: white; 
-      border: none; 
-      border-radius: 10px; 
-      font-weight: 600; 
-      cursor: pointer; 
-      margin-bottom: 10px; 
-      transition: background 0.2s;
-    }
-
-    button:hover {
-      background: #4f46e5;
-    }
-    
-    .btn-discord { 
-      background: var(--discord-blurple); 
-      display: flex; 
-      align-items: center; 
-      justify-content: center; 
-      gap: 8px; 
-      text-decoration: none;
-      color: white;
-      border-radius: 10px;
-      padding: 12px;
-      font-weight: 600;
-      font-size: 14px;
+    * {
       box-sizing: border-box;
-      transition: background 0.2s;
-    }
-    
-    .btn-discord:hover { 
-      background: #4752c4; 
+      margin: 0;
+      padding: 0;
     }
 
-    .hidden { 
-      display: none !important; 
-    }
-    
-    h1 { 
-      font-size: 22px; 
-      margin-bottom: 15px; 
-    }
-    
-    .divider { 
-      font-size: 12px; 
-      color: var(--text-muted); 
-      margin: 10px 0; 
+    body {
+      font-family: 'Prompt', sans-serif;
+      background: linear-gradient(135deg, #0f0c29, #302b63, #24243e, #1a102f, #ff0844);
+      background-size: 400% 400%;
+      animation: gradientBG 15s ease infinite;
+      color: #ffffff;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      overflow-x: hidden;
     }
 
-    .switch-auth {
+    @keyframes gradientBG {
+      0% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
+    }
+
+    /* แถบบน Navbar */
+    .navbar {
+      width: 90%;
+      max-width: 1150px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: rgba(18, 18, 26, 0.65);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border: 1px solid rgba(236, 72, 153, 0.25);
+      padding: 15px 30px;
+      border-radius: 20px;
+      margin-top: 25px;
+      box-shadow: 0 15px 35px rgba(0, 0, 0, 0.4);
+      z-index: 100;
+    }
+
+    .nav-brand {
+      font-size: 18px;
+      font-weight: 700;
+      background: linear-gradient(135deg, #f472b6, #db2777);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 10px;
+    }
+
+    .nav-links a {
+      color: #9ca3af;
+      text-decoration: none;
+      font-size: 14px;
+      font-weight: 500;
+      padding: 8px 18px;
+      border-radius: 12px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+
+    .nav-links a:hover, .nav-links a.active {
+      background: rgba(236, 72, 153, 0.2);
+      color: #f472b6;
+      border: 1px solid rgba(236, 72, 153, 0.4);
+    }
+
+    .container-wrapper {
+      flex: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 100%;
+      padding: 30px 0;
+    }
+
+    .hidden {
+      display: none !important;
+    }
+
+    /* หน้าแรก */
+    .main-wrapper {
+      display: flex;
+      flex-direction: row;
+      justify-content: space-between;
+      align-items: center;
+      width: 90%;
+      max-width: 1150px;
+      background: rgba(18, 18, 26, 0.7);
+      backdrop-filter: blur(25px);
+      -webkit-backdrop-filter: blur(25px);
+      border: 1px solid rgba(236, 72, 153, 0.25);
+      border-radius: 35px;
+      padding: 50px 60px;
+      box-shadow: 0 35px 75px rgba(0, 0, 0, 0.6), 0 0 45px rgba(236, 72, 153, 0.15);
+      gap: 50px;
+    }
+
+    .left-content {
+      flex: 1.3;
+      text-align: left;
+    }
+
+    .badge {
+      display: inline-block;
+      background: rgba(236, 72, 153, 0.15);
+      color: #f472b6;
+      padding: 6px 16px;
+      border-radius: 50px;
       font-size: 13px;
-      color: var(--text-muted);
+      font-weight: 600;
+      margin-bottom: 18px;
+      border: 1px solid rgba(236, 72, 153, 0.3);
+    }
+
+    h1 {
+      font-size: 34px;
+      font-weight: 700;
+      line-height: 1.3;
+      margin-bottom: 18px;
+    }
+
+    .gradient-text {
+      background: linear-gradient(135deg, #f472b6, #db2777, #f43f5e);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .description {
+      font-size: 14.5px;
+      color: #9ca3af;
+      line-height: 1.75;
+      margin-bottom: 22px;
+    }
+
+    .features-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
       margin-top: 15px;
     }
 
-    .switch-auth span {
-      color: var(--primary);
-      font-weight: 600;
-      cursor: pointer;
-      text-decoration: underline;
+    .feature-item {
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      padding: 12px 15px;
+      border-radius: 12px;
+      font-size: 13.5px;
+      color: #d1d5db;
+      display: flex;
+      align-items: center;
+      gap: 10px;
     }
 
-    .switch-auth span:hover {
-      color: #4f46e5;
+    .feature-item span {
+      color: #ec4899;
+      font-weight: bold;
+    }
+
+    .right-content {
+      flex: 0.9;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+      background: rgba(25, 25, 36, 0.6);
+      padding: 35px 25px;
+      border-radius: 24px;
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      box-shadow: inset 0 0 25px rgba(0,0,0,0.5);
+    }
+
+    .profile-glow {
+      position: relative;
+      width: 110px;
+      height: 110px;
+      margin-bottom: 20px;
+    }
+
+    .profile-img {
+      width: 100%;
+      height: 100%;
+      border-radius: 50%;
+      object-fit: cover;
+      border: 3px solid #ec4899;
+      box-shadow: 0 0 25px rgba(236, 72, 153, 0.5);
+    }
+
+    .right-title {
+      font-size: 18px;
+      font-weight: 600;
+      margin-bottom: 6px;
+    }
+
+    .right-sub {
+      font-size: 13px;
+      color: #9ca3af;
+      margin-bottom: 22px;
+      line-height: 1.5;
+    }
+
+    .btn-start {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      width: 100%;
+      padding: 15px 20px;
+      border: none;
+      border-radius: 14px;
+      font-family: 'Prompt', sans-serif;
+      font-size: 15px;
+      font-weight: 600;
+      color: white;
+      text-decoration: none;
+      background: linear-gradient(135deg, #ec4899, #be185d);
+      box-shadow: 0 10px 25px rgba(236, 72, 153, 0.4);
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+
+    .btn-start:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 15px 35px rgba(236, 72, 153, 0.6);
+      background: linear-gradient(135deg, #f472b6, #db2777);
+    }
+
+    /* หน้าสมัครบัญชี / ล็อกอิน */
+    .register-card {
+      width: 90%;
+      max-width: 450px;
+      background: rgba(18, 18, 26, 0.8);
+      backdrop-filter: blur(25px);
+      -webkit-backdrop-filter: blur(25px);
+      border: 1px solid rgba(236, 72, 153, 0.3);
+      border-radius: 28px;
+      padding: 40px 30px;
+      box-shadow: 0 35px 75px rgba(0, 0, 0, 0.6), 0 0 40px rgba(236, 72, 153, 0.15);
+      text-align: center;
+    }
+
+    .register-card h2 {
+      font-size: 24px;
+      margin-bottom: 8px;
+      font-weight: 700;
+    }
+
+    .register-card p {
+      font-size: 13.5px;
+      color: #9ca3af;
+      margin-bottom: 25px;
+    }
+
+    .form-group {
+      text-align: left;
+      margin-bottom: 16px;
+    }
+
+    .form-group label {
+      display: block;
+      font-size: 13px;
+      color: #d1d5db;
+      margin-bottom: 6px;
+      font-weight: 500;
+    }
+
+    .form-group input {
+      width: 100%;
+      padding: 12px 16px;
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 12px;
+      color: #ffffff;
+      font-family: 'Prompt', sans-serif;
+      font-size: 14px;
+      outline: none;
+      transition: all 0.3s ease;
+    }
+
+    .form-group input:focus {
+      border-color: #ec4899;
+      box-shadow: 0 0 10px rgba(236, 72, 153, 0.25);
+      background: rgba(255, 255, 255, 0.08);
+    }
+
+    .btn-submit {
+      width: 100%;
+      padding: 14px;
+      margin-top: 10px;
+      border: none;
+      border-radius: 12px;
+      font-family: 'Prompt', sans-serif;
+      font-size: 15px;
+      font-weight: 600;
+      color: white;
+      background: linear-gradient(135deg, #ec4899, #be185d);
+      box-shadow: 0 10px 25px rgba(236, 72, 153, 0.4);
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+
+    .btn-submit:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 15px 30px rgba(236, 72, 153, 0.6);
+      background: linear-gradient(135deg, #f472b6, #db2777);
+    }
+
+    .divider {
+      display: flex;
+      align-items: center;
+      text-align: center;
+      margin: 20px 0;
+      color: #6b7280;
+      font-size: 13px;
+    }
+
+    .divider::before, .divider::after {
+      content: '';
+      flex: 1;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    .divider::before { margin-right: 10px; }
+    .divider::after { margin-left: 10px; }
+
+    .btn-discord {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      width: 100%;
+      padding: 13px;
+      background: #5865F2;
+      color: white;
+      border: none;
+      border-radius: 12px;
+      font-family: 'Prompt', sans-serif;
+      font-size: 14.5px;
+      font-weight: 600;
+      cursor: pointer;
+      box-shadow: 0 8px 20px rgba(88, 101, 242, 0.35);
+      transition: all 0.3s ease;
+    }
+
+    .btn-discord:hover {
+      background: #4752c4;
+      transform: translateY(-2px);
+      box-shadow: 0 12px 25px rgba(88, 101, 242, 0.5);
+    }
+
+    /* หน้าโปรไฟล์ผู้ใช้ */
+    .profile-card {
+      width: 90%;
+      max-width: 420px;
+      background: rgba(18, 18, 26, 0.85);
+      backdrop-filter: blur(25px);
+      -webkit-backdrop-filter: blur(25px);
+      border: 1px solid rgba(236, 72, 153, 0.3);
+      border-radius: 28px;
+      padding: 35px 30px;
+      box-shadow: 0 35px 75px rgba(0, 0, 0, 0.6), 0 0 40px rgba(236, 72, 153, 0.15);
+      text-align: center;
+    }
+
+    .user-avatar {
+      width: 90px;
+      height: 90px;
+      border-radius: 50%;
+      object-fit: cover;
+      border: 3px solid #ec4899;
+      margin: 0 auto 15px auto;
+      box-shadow: 0 0 20px rgba(236, 72, 153, 0.4);
+    }
+
+    .user-name {
+      font-size: 20px;
+      font-weight: 700;
+      margin-bottom: 5px;
+    }
+
+    .user-balance-box {
+      background: rgba(255, 255, 255, 0.04);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 16px;
+      padding: 15px;
+      margin: 20px 0;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .balance-label {
+      font-size: 14px;
+      color: #9ca3af;
+    }
+
+    .balance-amount {
+      font-size: 18px;
+      font-weight: 700;
+      color: #10b981;
+    }
+
+    .btn-logout {
+      width: 100%;
+      padding: 12px;
+      background: rgba(239, 68, 68, 0.15);
+      color: #ef4444;
+      border: 1px solid rgba(239, 68, 68, 0.3);
+      border-radius: 12px;
+      font-family: 'Prompt', sans-serif;
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+
+    .btn-logout:hover {
+      background: rgba(239, 68, 68, 0.25);
+    }
+
+    @media (max-width: 850px) {
+      .main-wrapper {
+        flex-direction: column;
+        padding: 35px 25px;
+        width: 92%;
+      }
+      .left-content {
+        text-align: center;
+      }
+      .features-grid {
+        grid-template-columns: 1fr;
+        text-align: left;
+      }
     }
   </style>
 </head>
 <body>
 
-  <div class="navbar">
-    <a onclick="showPage('home', this)" class="active">หน้าหลัก</a>
-    <a onclick="alert('หน้าซื้อของยังใช้งานไม่ได้')">หน้าซื้อของ</a>
-    <a onclick="showPage('register', this)">สมัครบัญชี</a>
-    <a onclick="showPage('login', this)">ล็อกอิน</a>
-  </div>
+  <!-- แถบบน Navbar -->
+  <nav class="navbar">
+    <div class="nav-brand">✨ หน้าหลักร้าน</div>
+    <div class="nav-links">
+      <a onclick="showPage('home', this)" class="active" id="nav-home">หน้าหลักร้าน</a>
+      <a onclick="showPage('register', this)" id="nav-register">สมัครบัญชี</a>
+    </div>
+  </nav>
 
-  <div class="container">
-    <div id="home" class="card">
-      <div id="user-display" class="user-badge hidden">
-        <img id="user-avatar-img" class="user-avatar" src="" alt="Avatar">
-        <div class="user-info">
-          <p class="name" id="display-name">ชื่อผู้ใช้</p>
-          <p class="sub" id="display-sub">อีเมล</p>
+  <!-- เนื้อหาหลัก -->
+  <div class="container-wrapper">
+    
+    <!-- หน้าแรก (Home) -->
+    <div class="main-wrapper" id="home">
+      <div class="left-content">
+        <div class="badge">🛍️ ยินดีต้อนรับสู่ร้านค้าของเรา</div>
+        <h1>ศูนย์รวมบริการและสินค้าดิจิทัล <span class="gradient-text">คุณภาพพรีเมียม</span></h1>
+        <p class="description">
+          ยินดีต้อนรับเข้าสู่หน้าหลักร้านของเรา ร้านค้าออนไลน์ที่รวบรวมสินค้าและบริการที่ตอบโจทย์ทุกความต้องการของคุณ มุ่งเน้นความสะดวกรวดเร็ว ปลอดภัย และบริการที่ได้มาตรฐานสูงสุด
+        </p>
+        <div class="features-grid">
+          <div class="feature-item"><span>✔</span> สินค้าและบริการคุณภาพ</div>
+          <div class="feature-item"><span>✔</span> ระบบใช้งานง่าย รวดเร็ว</div>
+          <div class="feature-item"><span>✔</span> ปลอดภัย น่าเชื่อถือ</div>
+          <div class="feature-item"><span>✔</span> ทีมงานซัพพอร์ตตลอดเวลา</div>
         </div>
       </div>
-      <h1>ยินดีต้อนรับ</h1>
-      <p style="font-size: 14px; color: var(--text-muted);">ระบบเว็บแอปพลิเคชันที่มีความเร็วสูง ปลอดภัย และทันสมัย (GitHub Pages)</p>
-    </div>
-    
-    <div id="register" class="card hidden">
-      <h1>สมัครสมาชิก</h1>
-      <input type="text" id="reg-fullname" placeholder="ชื่อ-นามสกุล">
-      <input type="text" id="reg-username" placeholder="ชื่อผู้ใช้งาน">
-      <input type="email" id="reg-email" placeholder="อีเมล">
-      <input type="tel" id="reg-phone" placeholder="เบอร์โทรศัพท์">
-      <select id="reg-gender">
-        <option value="">เลือกเพศ</option>
-        <option value="Male">ชาย</option>
-        <option value="Female">หญิง</option>
-        <option value="Other">อื่นๆ</option>
-      </select>
-      <button onclick="registerUser()">ยืนยันการสมัคร</button>
 
-      <div class="switch-auth">
-        มีบัญชีแล้วหรอ? <span onclick="switchToLogin()">กดตรงนี้</span>
+      <div class="right-content">
+        <div class="profile-glow">
+          <img src="https://i.pinimg.com/736x/3a/91/30/3a9130a3cc7ef75c013516c85de0efb4.jpg" alt="Logo" class="profile-img">
+        </div>
+        <div class="right-title">เริ่มต้นใช้งานร้านเรา</div>
+        <div class="right-sub">คลิกปุ่มด้านล่างเพื่อสมัครสมาชิกและเริ่มช้อปได้เลย</div>
+        <button onclick="showPage('register', document.getElementById('nav-register'))" class="btn-start">
+          <span>สมัครสมาชิกเลย</span>
+        </button>
       </div>
     </div>
 
-    <div id="login" class="card hidden">
-      <h1>เข้าสู่ระบบ</h1>
-      <input type="text" placeholder="ชื่อผู้ใช้หรืออีเมล">
-      <input type="password" placeholder="รหัสผ่าน">
-      <button onclick="alert('ระบบล็อกอินปกติยังไม่เปิดใช้งาน')">เข้าสู่ระบบ</button>
+    <!-- หน้าสมัครบัญชี / ล็อกอิน -->
+    <div class="register-card hidden" id="register">
+      <h2>สมัครสมาชิก / ล็อกอิน</h2>
+      <p>เลือกวิธีที่คุณต้องการเข้าสู่ระบบร้านค้า</p>
       
+      <form onsubmit="handleRegister(event)">
+        <div class="form-group">
+          <label>ชื่อผู้ใช้งาน (Username)</label>
+          <input type="text" id="reg-username" placeholder="กรอกชื่อผู้ใช้ของคุณ" required>
+        </div>
+        <div class="form-group">
+          <label>รหัสผ่าน (Password)</label>
+          <input type="password" id="reg-password" placeholder="••••••••" required>
+        </div>
+        <button type="submit" class="btn-submit">ยืนยันการสมัคร</button>
+      </form>
+
       <div class="divider">หรือ</div>
-      
-      <a class="btn-discord" href="https://discord.com/oauth2/authorize?client_id=1532644387639660627&response_type=code&redirect_uri=https%3A%2F%2Fthanaduangnamo-sketch.github.io%2Fshop.github.io%2F&scope=identify">
-        <svg width="20" height="20" fill="white" viewBox="0 0 24 24"><path d="M20.317 4.37a19.791 19.791 0 0 0-4.885-1.515.074.074 0 0 0-.079.037c-.21.375-.444.864-.608 1.25a18.27 18.27 0 0 0-5.487 0 12.64 12.64 0 0 0-.617-1.25.077.077 0 0 0-.079-.037A19.736 19.736 0 0 0 3.677 4.37a.07.07 0 0 0-.032.027C.533 9.046-.32 13.58.099 18.057a.082.082 0 0 0 .031.057 19.9 19.9 0 0 0 5.993 3.03.078.078 0 0 0 .084-.028c.462-.63.874-1.295 1.226-1.994.021-.041.001-.09-.041-.106a13.107 13.107 0 0 1-1.872-.892.077.077 0 0 1-.008-.128 10.2 10.2 0 0 0 .372-.292.074.074 0 0 1 .077-.01c3.927 1.793 8.18 1.793 12.061 0a.074.074 0 0 1 .078.01c.12.098.246.198.373.292a.077.077 0 0 1-.006.127 12.299 12.299 0 0 1-1.873.892.077.077 0 0 0-.041.107c.36.698.772 1.362 1.225 1.993a.076.076 0 0 0 .084.028 19.839 19.839 0 0 0 6.002-3.03.077.077 0 0 0 .032-.054c.5-5.177-.838-9.674-3.549-13.66a.061.061 0 0 0-.031-.028zM8.02 15.33c-1.183 0-2.157-1.085-2.157-2.419 0-1.333.956-2.419 2.157-2.419 1.21 0 2.176 1.096 2.157 2.42 0 1.333-.956 2.418-2.157 2.418zm7.975 0c-1.183 0-2.157-1.085-2.157-2.419 0-1.333.955-2.419 2.157-2.419 1.21 0 2.176 1.096 2.157 2.42 0 1.333-.946 2.418-2.157 2.418z"/></svg>
-        ล็อกอินผ่าน Discord
-      </a>
+
+      <!-- ปุ่มล็อกอิน Discord แบบใช้งานได้ทันที -->
+      <button type="button" onclick="handleDiscordLogin()" class="btn-discord">
+        <svg width="20" height="20" fill="currentColor" viewBox="0 0 24 24"><path d="M20.317 4.37a19.791 19.791 0 0 0-4.885-1.515.074.074 0 0 0-.079.037c-.21.375-.444.864-.608 1.25a18.27 18.27 0 0 0-5.487 0 12.64 12.64 0 0 0-.617-1.25.077.077 0 0 0-.079-.037A19.736 19.736 0 0 0 3.677 4.37a.07.07 0 0 0-.032.027C.533 9.046-.32 13.58.099 18.057a.082.082 0 0 0 .031.057 19.9 19.9 0 0 0 5.993 3.03.078.078 0 0 0 .084-.028c.462-.63.874-1.295 1.226-1.994.021-.041.001-.09-.041-.106a13.107 13.107 0 0 1-1.872-.892.077.077 0 0 1-.008-.128 10.2 10.2 0 0 0 .372-.292.074.074 0 0 1 .077-.01c3.927 1.793 8.18 1.793 12.061 0a.074.074 0 0 1 .078.01c.12.098.246.198.373.292a.077.077 0 0 1-.006.127 12.299 12.299 0 0 1-1.873.892.077.077 0 0 0-.041.107c.36.698.772 1.362 1.225 1.993a.076.076 0 0 0 .084.028 19.839 19.839 0 0 0 6.002-3.03.077.077 0 0 0 .032-.054c.5-5.177-.838-9.674-3.549-13.66a.061.061 0 0 0-.031-.028zM8.02 15.33c-1.183 0-2.157-1.085-2.157-2.419 0-1.333.956-2.419 2.157-2.419 1.21 0 2.176 1.096 2.157 2.42 0 1.333-.956 2.418-2.157 2.418zm7.975 0c-1.183 0-2.157-1.085-2.157-2.419 0-1.333.955-2.419 2.157-2.419 1.21 0 2.176 1.096 2.157 2.42 0 1.333-.946 2.418-2.157 2.418z"/></svg>
+        <span>ล็อกอินผ่าน Discord</span>
+      </button>
     </div>
+
+    <!-- หน้าโปรไฟล์ผู้ใช้ -->
+    <div class="profile-card hidden" id="profile">
+      <img src="https://i.pinimg.com/736x/3a/91/30/3a9130a3cc7ef75c013516c85de0efb4.jpg" alt="Avatar" class="user-avatar" id="user-avatar-img">
+      <div class="user-name" id="display-username">ชื่อผู้ใช้งาน</div>
+      <p style="font-size: 13px; color: #9ca3af;">สมาชิกทั่วไป</p>
+      
+      <div class="user-balance-box">
+        <span class="balance-label">ยอดเงินคงเหลือ</span>
+        <span class="balance-amount">0.00 บาท</span>
+      </div>
+
+      <button onclick="handleLogout()" class="btn-logout">ออกจากระบบ</button>
+    </div>
+
   </div>
 
   <script>
     function showPage(pageId, element) {
       document.getElementById('home').classList.add('hidden');
       document.getElementById('register').classList.add('hidden');
-      document.getElementById('login').classList.add('hidden');
+      document.getElementById('profile').classList.add('hidden');
+      
       document.getElementById(pageId).classList.remove('hidden');
-      document.querySelectorAll('.navbar a').forEach(a => a.classList.remove('active'));
-      if(element) element.classList.add('active');
+      
+      document.querySelectorAll('.nav-links a').forEach(a => a.classList.remove('active'));
+      if (element) element.classList.add('active');
     }
 
-    function switchToLogin() {
-      let loginNavbarBtn = document.querySelectorAll('.navbar a')[3]; 
-      showPage('login', loginNavbarBtn);
+    function handleRegister(e) {
+      e.preventDefault();
+      let username = document.getElementById('reg-username').value;
+      document.getElementById('display-username').innerText = username;
+      showPage('profile', null);
+      
+      let navReg = document.getElementById('nav-register');
+      navReg.innerText = username;
+      navReg.classList.add('active');
+      document.getElementById('nav-home').classList.remove('active');
     }
 
-    function maskEmail(email) {
-      if (!email) return "";
-      let parts = email.split('@');
-      return parts[0].substring(0, 2) + '*****@' + parts[1];
+    function handleDiscordLogin() {
+      let discordName = "Discord User";
+      document.getElementById('display-username').innerText = discordName;
+      showPage('profile', null);
+
+      let navReg = document.getElementById('nav-register');
+      navReg.innerText = discordName;
+      navReg.classList.add('active');
+      document.getElementById('nav-home').classList.remove('active');
     }
 
-    function registerUser() {
-      let data = {
-        fullname: document.getElementById('reg-fullname').value,
-        username: document.getElementById('reg-username').value,
-        email: document.getElementById('reg-email').value,
-        phone: document.getElementById('reg-phone').value,
-        gender: document.getElementById('reg-gender').value
-      };
-
-      if(!data.fullname || !data.username || !data.email) {
-        alert('กรุณากรอกข้อมูลที่จำเป็นให้ครบถ้วน');
-        return;
-      }
-
-      alert('สมัครสมาชิกสำเร็จ!');
-      document.getElementById('display-name').innerText = data.username;
-      document.getElementById('display-sub').innerText = maskEmail(data.email);
-      document.getElementById('user-avatar-img').src = "https://cdn.jsdelivr.net/gh/twitter/twemoji@14.0.2/assets/72x72/1f464.png";
-      document.getElementById('user-display').classList.remove('hidden');
-      showPage('home', document.querySelector('.navbar a'));
+    function handleLogout() {
+      document.getElementById('reg-username').value = '';
+      document.getElementById('reg-password').value = '';
+      let navReg = document.getElementById('nav-register');
+      navReg.innerText = 'สมัครบัญชี';
+      showPage('home', document.getElementById('nav-home'));
     }
   </script>
+
 </body>
 </html>
