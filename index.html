@@ -266,11 +266,9 @@
 </head>
 <body>
 
-    <!-- หน้าต่างเข้าสู่ระบบ (Modal กำหนดชื่อดิสคอร์ดของคุณเอง) -->
+    <!-- หน้าต่างเข้าสู่ระบบ -->
     <div class="auth-modal-overlay" id="authModal" style="display: none;">
         <div class="auth-split-card">
-            <div style="position: absolute; top: 20px; right: 20px; cursor: pointer; font-size: 18px; color: var(--text-muted);" onclick="closeAuthModal()">✕</div>
-            
             <div style="text-align: center; margin-bottom: 24px;">
                 <h3 style="font-size: 20px; font-weight: 700; margin-bottom: 6px;">เชื่อมต่อบัญชี Discord</h3>
                 <p style="font-size: 13px; color: var(--text-muted);">กรอกชื่อดิสคอร์ดของคุณเพื่อใช้งานระบบ</p>
@@ -432,7 +430,6 @@
             document.getElementById('page-' + pageName).classList.add('active');
         }
 
-        // ระบบจัดการยอดเงิน (บันทึกใน localStorage ถาวร ไม่หายแน่นอน)
         let balance = parseFloat(localStorage.getItem('dhaf_balance')) || 0.00;
 
         function updateBalanceUI() {
@@ -450,14 +447,13 @@
                 alert('กรุณากรอกลิงก์ซองอังเปา TrueMoney ให้ถูกต้อง');
                 return;
             }
-            balance += 50; // เติมเงินจำลองเพิ่ม 50 บาท
+            balance += 50; 
             updateBalanceUI();
             inputField.value = '';
             alert('เติมเงินสำเร็จ! ได้รับ 50 บาท');
             switchPage('home');
         }
 
-        // ฟังก์ชันเข้าสู่ระบบด้วยชื่อของคุณเอง
         function loginWithDiscordCustom() {
             const nameInput = document.getElementById('inputDiscordName').value.trim();
             let avatarInput = document.getElementById('inputDiscordAvatar').value.trim();
@@ -481,7 +477,6 @@
             location.reload();
         }
 
-        // ฟังก์ชันออกจากระบบ (Log Out)
         function handleLogout() {
             if (confirm('คุณต้องการออกจากระบบใช่หรือไม่?')) {
                 localStorage.removeItem('dhaf_discord_user');
@@ -489,12 +484,15 @@
             }
         }
 
-        // ตรวจสอบข้อมูลเมื่อโหลดหน้าเว็บ
         window.addEventListener('DOMContentLoaded', () => {
             const savedUser = localStorage.getItem('dhaf_discord_user');
-            if (savedUser) {
+            
+            // ล้างค่าเก่าที่เป็น "Discord Member" ทิ้งอัตโนมัติ
+            if (savedUser && savedUser.includes("Discord Member")) {
+                localStorage.removeItem('dhaf_discord_user');
+                openAuthModal(); // เปิดหน้าต่างให้กรอกใหม่ทันที
+            } else if (savedUser) {
                 const userData = JSON.parse(savedUser);
-                
                 const navRight = document.getElementById('navRight');
                 if (navRight) {
                     navRight.innerHTML = `
@@ -517,6 +515,8 @@
                 if (quickAuthBtn) {
                     quickAuthBtn.style.display = 'none';
                 }
+            } else {
+                openAuthModal(); // ถ้ายังไม่เคยล็อกอิน ให้เด้งหน้าต่างกรอกชื่อขึ้นมาทันที
             }
 
             updateBalanceUI();
