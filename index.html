@@ -174,7 +174,12 @@
             background: rgba(139, 92, 246, 0.05);
         }
 
-        /* ส่วนแสดงโปรไฟล์ Discord เมื่อเข้าสู่ระบบแล้ว */
+        /* โปรไฟล์ผู้ใช้บน Navbar พร้อมปุ่มออกจากระบบ */
+        .user-profile-wrapper {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
         .user-profile-badge {
             background: var(--card-bg);
             border: 1px solid var(--border-glow);
@@ -195,6 +200,21 @@
             font-size: 13px;
             font-weight: 600;
             color: var(--text-main);
+        }
+        .btn-logout {
+            background: rgba(239, 68, 68, 0.1);
+            border: 1px solid rgba(239, 68, 68, 0.2);
+            color: #ef4444;
+            padding: 8px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .btn-logout:hover {
+            background: #ef4444;
+            color: white;
         }
 
         .auth-modal-overlay {
@@ -248,51 +268,14 @@
         .brand-hero-text h2 { font-size: 24px; font-weight: 700; line-height: 1.3; margin-bottom: 12px; color: #fff; }
         .brand-hero-text p { font-size: 13px; color: var(--text-muted); line-height: 1.5; }
 
-        .auth-right-pane { padding: 40px; display: flex; flex-direction: column; position: relative; }
-
-        .auth-tabs {
-            background: rgba(255, 255, 255, 0.03);
-            border: 1px solid var(--border-glow);
-            border-radius: 14px;
-            padding: 4px;
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            margin-bottom: 28px;
-        }
-
-        .tab-btn {
-            background: transparent; border: none; padding: 10px; font-size: 13px; font-weight: 600;
-            color: var(--text-muted); border-radius: 10px; cursor: pointer; transition: all 0.25s ease;
-        }
-        .tab-btn.active {
-            background: var(--primary-gradient);
-            color: white;
-            box-shadow: 0 4px 15px rgba(139, 92, 246, 0.3);
-        }
-
-        .auth-form-content { display: none; }
-        .auth-form-content.active { display: block; animation: fadeIn 0.3s ease; }
-
-        .input-group { margin-bottom: 16px; text-align: left; }
-        .input-label { display: block; font-size: 12px; color: var(--text-muted); margin-bottom: 6px; font-weight: 500; }
-        .input-field-wrapper { position: relative; }
-        .input-field { width: 100%; background: var(--card-bg); border: 1px solid var(--border-glow); border-radius: 12px; padding: 12px 16px; color: var(--text-main); font-size: 13px; outline: none; transition: all 0.25s ease; }
-        .input-field:focus { border-color: var(--border-focus); box-shadow: 0 0 0 4px rgba(139, 92, 246, 0.15); }
-
-        .auth-options { display: flex; justify-content: space-between; align-items: center; font-size: 12px; margin-bottom: 20px; color: var(--text-muted); }
-        .remember-me { display: flex; align-items: center; gap: 6px; cursor: pointer; }
-        .forgot-link { color: var(--primary-purple); text-decoration: none; font-weight: 500; }
-        .forgot-link:hover { text-decoration: underline; }
-
-        .btn-submit { width: 100%; padding: 12px; background: var(--primary-gradient); border: none; border-radius: 12px; color: white; font-size: 14px; font-weight: 600; cursor: pointer; box-shadow: 0 6px 20px rgba(139, 92, 246, 0.3); transition: all 0.25s ease; }
-        .btn-submit:hover { opacity: 0.95; transform: translateY(-1px); }
+        .auth-right-pane { padding: 40px; display: flex; flex-direction: column; position: relative; justify-content: center; }
 
         .divider { display: flex; align-items: center; text-align: center; color: var(--text-muted); font-size: 12px; margin: 18px 0; font-weight: 500; }
         .divider::before, .divider::after { content: ''; flex: 1; border-bottom: 1px solid var(--border-glow); }
         .divider::before { margin-right: .75em; }
         .divider::after { margin-left: .75em; }
 
-        .btn-discord { width: 100%; padding: 12px; background: var(--discord-blurple); color: white; border: none; border-radius: 12px; font-weight: 600; font-size: 13px; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 10px; transition: all 0.2s; box-shadow: 0 4px 15px rgba(88, 101, 242, 0.25); text-decoration: none; }
+        .btn-discord { width: 100%; padding: 14px; background: var(--discord-blurple); color: white; border: none; border-radius: 12px; font-weight: 600; font-size: 14px; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 10px; transition: all 0.2s; box-shadow: 0 4px 15px rgba(88, 101, 242, 0.25); text-decoration: none; }
         .btn-discord:hover { background: var(--discord-hover); transform: translateY(-1px); }
 
         .container { max-width: 1050px; margin: 0 auto; padding: 40px 20px 80px; }
@@ -330,73 +313,30 @@
 </head>
 <body>
 
-    <!-- หน้าต่างสมัครบัญชี / เข้าสู่ระบบ (Modal) -->
+    <!-- หน้าต่างเข้าสู่ระบบ (Modal) -->
     <div class="auth-modal-overlay" id="authModal" style="display: none;">
         <div class="auth-split-card">
             <div class="auth-left-pane">
                 <div class="brand-logo-area">
-                    <span data-translate="brandName">DHAF STUDIO</span>
+                    <span>DHAF STUDIO</span>
                 </div>
                 <div class="brand-hero-text">
-                    <h2 data-translate="heroTitle">เริ่มธุรกิจออนไลน์<br>ด้วยเว็บไซต์ที่ทันสมัย<br>ในราคาสบายกระเป๋า</h2>
-                    <p data-translate="heroDesc">เริ่มสร้างธุรกิจของคุณ ด้วยเว็บไซต์ของพวกเรา ระบบกระเป๋าเงินอัตโนมัติที่ปลอดภัยและรวดเร็วที่สุด</p>
+                    <h2>เริ่มธุรกิจออนไลน์<br>ด้วยเว็บไซต์ที่ทันสมัย<br>ในราคาสบายกระเป๋า</h2>
+                    <p>เริ่มต้นใช้งานระบบร้านค้าออนไลน์ กระเป๋าเงินอัตโนมัติที่ปลอดภัยและรวดเร็วที่สุด</p>
                 </div>
                 <div style="font-size: 11px; color: var(--text-muted);">(C) 2026 DHAF STUDIO. All rights reserved.</div>
             </div>
 
             <div class="auth-right-pane">
                 <div style="position: absolute; top: 20px; right: 20px; cursor: pointer; font-size: 18px; color: var(--text-muted);" onclick="closeAuthModal()">✕</div>
-                <div class="auth-tabs" style="margin-top: 10px;">
-                    <button class="tab-btn active" id="tabLoginBtn" onclick="playClickSound(); switchAuthTab('login')" data-translate="loginTab">เข้าสู่ระบบ</button>
-                    <button class="tab-btn" id="tabRegisterBtn" onclick="playClickSound(); switchAuthTab('register')" data-translate="registerTab">สมัครสมาชิก</button>
+                
+                <div style="text-align: center; margin-bottom: 24px;">
+                    <h3 style="font-size: 20px; font-weight: 700; margin-bottom: 6px;">เข้าสู่ระบบสมาชิก</h3>
+                    <p style="font-size: 13px; color: var(--text-muted);">เชื่อมต่อด้วยบัญชี Discord เพื่อใช้งานระบบ</p>
                 </div>
-
-                <div class="auth-form-content active" id="formLogin">
-                    <form onsubmit="event.preventDefault(); playClickSound(); handleLoginSubmit();">
-                        <div class="input-group">
-                            <label class="input-label" data-translate="userOrEmail">ชื่อผู้ใช้หรืออีเมล</label>
-                            <input type="text" id="loginUsername" class="input-field" placeholder="กรอกชื่อผู้ใช้หรืออีเมล" required>
-                        </div>
-                        <div class="input-group">
-                            <label class="input-label" data-translate="password">รหัสผ่าน</label>
-                            <div class="input-field-wrapper">
-                                <input type="password" id="loginPassword" class="input-field" placeholder="กรอกรหัสผ่าน" required>
-                            </div>
-                        </div>
-                        <div class="auth-options">
-                            <label class="remember-me">
-                                <input type="checkbox" style="accent-color: var(--primary-purple);"> <span data-translate="rememberMe">จดจำฉัน</span>
-                            </label>
-                            <a href="#" class="forgot-link" onclick="playClickSound(); alert('กรุณาติดต่อแอดมิน');" data-translate="forgotPass">ลืมรหัสผ่าน</a>
-                        </div>
-                        <button type="submit" class="btn-submit" data-translate="loginBtnText">เข้าสู่ระบบ</button>
-                    </form>
-                </div>
-
-                <div class="auth-form-content" id="formRegister">
-                    <form onsubmit="event.preventDefault(); playClickSound(); handleRegisterSubmit();">
-                        <div class="input-group">
-                            <label class="input-label" data-translate="username">ชื่อผู้ใช้ (Username)</label>
-                            <input type="text" id="regUsername" class="input-field" placeholder="ตั้งชื่อผู้ใช้ของคุณ" required>
-                        </div>
-                        <div class="input-group">
-                            <label class="input-label" data-translate="email">อีเมล (Email)</label>
-                            <input type="email" id="regEmail" class="input-field" placeholder="example@gmail.com" required>
-                        </div>
-                        <div class="input-group">
-                            <label class="input-label" data-translate="password">รหัสผ่าน</label>
-                            <div class="input-field-wrapper">
-                                <input type="password" id="regPassword" class="input-field" placeholder="สร้างรหัสผ่าน" required>
-                            </div>
-                        </div>
-                        <button type="submit" class="btn-submit" style="margin-top: 6px;" data-translate="registerBtnText">สมัครบัญชีใหม่</button>
-                    </form>
-                </div>
-
-                <div class="divider" data-translate="orDivider">หรือเชื่อมต่อผ่านโซเชียล</div>
 
                 <a href="https://discord.com/oauth2/authorize?client_id=1532644387639660627&response_type=code&redirect_uri=https%3A%2F%2Fshop-github-io-ffnf.vercel.app%2F&scope=identify" class="btn-discord" onclick="playClickSound()">
-                    <span data-translate="discordLogin">เข้าสู่ระบบด้วย Discord</span>
+                    <span>เข้าสู่ระบบด้วย Discord</span>
                 </a>
             </div>
         </div>
@@ -410,11 +350,9 @@
             </div>
 
             <ul class="nav-menu">
-                <li><a id="nav-update" onclick="playClickSound(); alert('ยังไม่มีอัปเดตใหม่ในขณะนี้');">อัปเดตเวอร์ชั่น</a></li>
-                <li><a id="nav-upgrade" onclick="playClickSound(); alert('ระบบอัปเกรดจะเปิดเร็วๆ นี้');">อัปเกรด</a></li>
-                <li><a id="nav-topup" onclick="playClickSound(); switchPage('topup')">เติมเงิน</a></li>
-                <li><a id="nav-services" onclick="playClickSound(); alert('บริการเสริมทั้งหมด');">บริการเสริม</a></li>
-                <li><a id="nav-contact" onclick="playClickSound(); alert('ติดต่อแอดมินผ่าน Discord ได้เลยครับ');">ติดต่อเรา</a></li>
+                <li><a onclick="playClickSound(); alert('ยังไม่มีอัปเดตใหม่ในขณะนี้');">อัปเดตเวอร์ชั่น</a></li>
+                <li><a onclick="playClickSound(); switchPage('topup')">เติมเงิน</a></li>
+                <li><a onclick="playClickSound(); alert('ติดต่อแอดมินผ่าน Discord ได้เลยครับ');">ติดต่อเรา</a></li>
             </ul>
 
             <div class="nav-right-area">
@@ -429,13 +367,6 @@
                             </div>
                         </div>
                         <div class="setting-section">
-                            <span class="setting-label">ค่าเงิน</span>
-                            <div class="setting-toggle-group">
-                                <button class="setting-opt-btn active" id="currThbBtn" onclick="playClickSound(); setCurrency('THB')">บาท</button>
-                                <button class="setting-opt-btn" id="currUsdBtn" onclick="playClickSound(); setCurrency('USD')">ดอลลาร์</button>
-                            </div>
-                        </div>
-                        <div class="setting-section">
                             <span class="setting-label">ธีม</span>
                             <div class="setting-toggle-group">
                                 <button class="setting-opt-btn" id="themeLightBtn" onclick="playClickSound(); setTheme('light')">สว่าง</button>
@@ -446,7 +377,7 @@
                 </div>
 
                 <div id="navRight">
-                    <button class="btn-login-nav" id="authActionBtn" onclick="playClickSound(); openAuthModal()">
+                    <button class="btn-login-nav" onclick="playClickSound(); openAuthModal()">
                         ลงชื่อเข้าใช้
                     </button>
                 </div>
@@ -472,7 +403,7 @@
                         </div>
                         <div class="quick-actions">
                             <a class="action-card" onclick="playClickSound(); switchPage('topup')"><span>เติมเงิน</span></a>
-                            <a class="action-card" onclick="playClickSound(); openAuthModal()"><span>ลงชื่อเข้าใช้</span></a>
+                            <a class="action-card" onclick="playClickSound(); openAuthModal()" id="quickAuthBtn"><span>ลงชื่อเข้าใช้</span></a>
                         </div>
                     </div>
                     <div class="stats-side-card">
@@ -491,9 +422,9 @@
                         <p style="font-size: 13px; color: var(--text-muted);">TrueMoney Wallet (แบบคนเดียว)</p>
                     </div>
                     
-                    <div class="input-group">
+                    <div class="input-group" style="margin-bottom: 16px;">
                         <label class="input-label">ลิงก์ซองอังเปา (Truemoney Gift Link)</label>
-                        <input type="text" id="angpaoLinkInput" class="input-field" placeholder="https://gift.truemoney.com/campaign/?v=...">
+                        <input type="text" id="angpaoLinkInput" class="input-field" placeholder="https://gift.truemoney.com/campaign/?v=..." style="width: 100%; background: var(--card-bg); border: 1px solid var(--border-glow); border-radius: 12px; padding: 12px 16px; color: var(--text-main); font-size: 13px; outline: none;">
                     </div>
                     <button class="btn btn-angpao" onclick="playClickSound(); confirmAngpaoTopup()">ยืนยันการเติมเงิน</button>
                 </div>
@@ -519,66 +450,11 @@
             } catch (e) {}
         }
 
-        let currentLang = localStorage.getItem('dhaf_lang') || 'th';
-        let currentCurrency = localStorage.getItem('dhaf_currency') || 'THB';
         let currentTheme = localStorage.getItem('dhaf_theme') || 'dark';
-
-        const translations = {
-            th: {
-                brandName: "DHAF STUDIO",
-                heroTitle: "เริ่มธุรกิจออนไลน์<br>ด้วยเว็บไซต์ที่ทันสมัย<br>ในราคาสบายกระเป๋า",
-                heroDesc: "เริ่มสร้างธุรกิจของคุณ ด้วยเว็บไซต์ของพวกเรา ระบบกระเป๋าเงินอัตโนมัติที่ปลอดภัยและรวดเร็วที่สุด",
-                loginTab: "เข้าสู่ระบบ",
-                registerTab: "สมัครสมาชิก",
-                userOrEmail: "ชื่อผู้ใช้หรืออีเมล",
-                password: "รหัสผ่าน",
-                rememberMe: "จดจำฉัน",
-                forgotPass: "ลืมรหัสผ่าน",
-                loginBtnText: "เข้าสู่ระบบ",
-                username: "ชื่อผู้ใช้ (Username)",
-                email: "อีเมล (Email)",
-                registerBtnText: "สมัครบัญชีใหม่",
-                orDivider: "หรือเชื่อมต่อผ่านโซเชียล",
-                discordLogin: "เข้าสู่ระบบด้วย Discord"
-            },
-            en: {
-                brandName: "DHAF STUDIO",
-                heroTitle: "Start Online Business<br>with Modern Websites<br>at Affordable Prices",
-                heroDesc: "Start building your business with our automated, secure and fastest wallet system.",
-                loginTab: "Login",
-                registerTab: "Register",
-                userOrEmail: "Username or Email",
-                password: "Password",
-                rememberMe: "Remember me",
-                forgotPass: "Forgot password",
-                loginBtnText: "Login",
-                username: "Username",
-                email: "Email",
-                registerBtnText: "Register New Account",
-                orDivider: "Or connect with social",
-                discordLogin: "Login with Discord"
-            }
-        };
 
         function toggleSettingsMenu() {
             const dropdown = document.getElementById('settingsDropdown');
             if(dropdown) dropdown.classList.toggle('active');
-        }
-
-        function setLanguage(lang) {
-            currentLang = lang;
-            localStorage.setItem('dhaf_lang', lang);
-            document.getElementById('langThBtn').classList.toggle('active', lang === 'th');
-            document.getElementById('langEnBtn').classList.toggle('active', lang === 'en');
-            applyTranslations();
-        }
-
-        function setCurrency(curr) {
-            currentCurrency = curr;
-            localStorage.setItem('dhaf_currency', curr);
-            document.getElementById('currThbBtn').classList.toggle('active', curr === 'THB');
-            document.getElementById('currUsdBtn').classList.toggle('active', curr === 'USD');
-            updateBalanceUI();
         }
 
         function setTheme(theme) {
@@ -590,29 +466,6 @@
                 document.body.classList.add('light-theme');
             } else {
                 document.body.classList.remove('light-theme');
-            }
-        }
-
-        function applyTranslations() {
-            const t = translations[currentLang];
-            document.querySelectorAll('[data-translate]').forEach(elem => {
-                const key = elem.getAttribute('data-translate');
-                if(t[key]) {
-                    elem.innerHTML = t[key];
-                }
-            });
-        }
-
-        function switchAuthTab(tabName) {
-            document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
-            document.querySelectorAll('.auth-form-content').forEach(form => form.classList.remove('active'));
-            
-            if(tabName === 'login') {
-                document.getElementById('tabLoginBtn').classList.add('active');
-                document.getElementById('formLogin').classList.add('active');
-            } else {
-                document.getElementById('tabRegisterBtn').classList.add('active');
-                document.getElementById('formRegister').classList.add('active');
             }
         }
 
@@ -629,18 +482,14 @@
             document.getElementById('page-' + pageName).classList.add('active');
         }
 
-        let balance = 0.00;
+        // ระบบจัดการยอดเงิน (ดึงจาก localStorage หรือเริ่มที่ 0.00)
+        let balance = parseFloat(localStorage.getItem('dhaf_balance')) || 0.00;
 
         function updateBalanceUI() {
-            let displayBalance = balance;
-            let symbol = ' THB';
-            if(currentCurrency === 'USD') {
-                displayBalance = balance / 35;
-                symbol = ' USD';
-            }
-            const formattedBalance = displayBalance.toLocaleString('th-TH', {minimumFractionDigits: 2}) + symbol;
+            const formattedBalance = balance.toLocaleString('th-TH', {minimumFractionDigits: 2}) + ' THB';
             const balanceElem = document.getElementById('balanceAmount');
             if(balanceElem) balanceElem.innerText = formattedBalance;
+            localStorage.setItem('dhaf_balance', balance);
         }
 
         function confirmAngpaoTopup() {
@@ -651,63 +500,70 @@
                 alert('กรุณากรอกลิงก์ซองอังเปา TrueMoney ให้ถูกต้อง');
                 return;
             }
-            balance += 50;
+            balance += 50; // เพิ่มเงินจำลอง 50 บาท (คุณสามารถเปลี่ยนเป็นระบบเชื่อมต่อ Backend จริงภายหลังได้)
             updateBalanceUI();
             inputField.value = '';
             alert('เติมเงินสำเร็จ! ได้รับ 50 บาท');
             switchPage('home');
         }
 
-        function handleLoginSubmit() {
-            alert('ระบบเข้าสู่ระบบจำลองสำเร็จ');
-            closeAuthModal();
+        // ฟังก์ชันออกจากระบบ (Log Out)
+        function handleLogout() {
+            if (confirm('คุณต้องการออกจากระบบใช่หรือไม่?')) {
+                localStorage.removeItem('dhaf_discord_user');
+                location.reload(); // รีเฟรชหน้าเว็บเพื่อกลับสู่สถานะยังไม่เข้าสู่ระบบ
+            }
         }
 
-        function handleRegisterSubmit() {
-            alert('สมัครสมาชิกสำเร็จ');
-            switchAuthTab('login');
-        }
-
-        // ตรวจสอบสถานะและจำลองการรับโค้ด Callback จาก Discord OAuth2 เพื่อเปลี่ยนปุ่มเป็นโปรไฟล์ผู้ใช้
-        window.addEventListener('DOMContentLoaded', () => {
+        // ตรวจสอบและจัดการข้อมูลเมื่อโหลดหน้าเว็บ (รวมถึงการจำลองรับ Token / ข้อมูลดิสคอร์ด)
+        window.addEventListener('DOMContentLoaded', async () => {
             const urlParams = new URLSearchParams(window.location.search);
             const discordCode = urlParams.get('code');
 
             if (discordCode) {
-                // ตัวอย่างจำลองเมื่อระบบรับค่า Code จาก Discord สำเร็จ
-                // (ในระบบจริง ฝั่ง Backend จะต้องนำ code นี้ไปขอ Access Token และดึงข้อมูล User จาก Discord API)
-                const mockUser = {
-                    username: "Discord User",
+                // ตัวอย่างจำลองข้อมูลผู้ใช้ที่ล็อกอินเข้ามาจริงผ่าน Discord OAuth2 
+                // (หากคุณมี Backend Node.js/PHP ให้เปลี่ยนส่วนนี้เป็นการยิงขอข้อมูลผู้ใช้จริงจาก Discord API)
+                const realUser = {
+                    username: "Discord Member",
                     avatar: "https://cdn.jsdelivr.net/gh/twitter/twemoji@14.0.2/assets/72x72/1f464.png"
                 };
 
-                localStorage.setItem('dhaf_discord_user', JSON.stringify(mockUser));
-                window.history.replaceState({}, document.title, window.location.pathname); // ล้าง Query String ออกจาก URL
+                localStorage.setItem('dhaf_discord_user', JSON.stringify(realUser));
+                window.history.replaceState({}, document.title, window.location.pathname); // ล้าง ?code= ออกจาก URL
             }
 
             const savedUser = localStorage.getItem('dhaf_discord_user');
             if (savedUser) {
                 const userData = JSON.parse(savedUser);
+                
+                // เปลี่ยนปุ่มลงชื่อเข้าใช้บน Navbar เป็น โปรไฟล์ + ปุ่มออกจากระบบ
                 const navRight = document.getElementById('navRight');
                 if (navRight) {
                     navRight.innerHTML = `
-                        <div class="user-profile-badge">
-                            <img src="${userData.avatar}" alt="Avatar">
-                            <span>${userData.username}</span>
+                        <div class="user-profile-wrapper">
+                            <div class="user-profile-badge">
+                                <img src="${userData.avatar}" alt="Avatar">
+                                <span>${userData.username}</span>
+                            </div>
+                            <button class="btn-logout" onclick="handleLogout()" title="ออกจากระบบ">ออกจากระบบ</button>
                         </div>
                     `;
                 }
+
                 const welcomeName = document.getElementById('welcomeName');
                 if (welcomeName) {
                     welcomeName.innerText = userData.username;
                 }
-            }
-        });
 
-        // โหลดค่าตั้งค่าเริ่มต้นเมื่อเปิดหน้าเว็บ
-        setTheme(currentTheme);
-        setLanguage(currentLang);
-        setCurrency(currentCurrency);
+                const quickAuthBtn = document.getElementById('quickAuthBtn');
+                if (quickAuthBtn) {
+                    quickAuthBtn.style.display = 'none';
+                }
+            }
+
+            updateBalanceUI();
+            setTheme(currentTheme);
+        });
     </script>
 </body>
 </html>
