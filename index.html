@@ -3,679 +3,123 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>DHAF SHOP | System</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <title>DHAF SHOP - หน้าแรก</title>
+    <!-- Favicon -->
+    <link rel="icon" type="image/x-icon" href="/favicon.ico" />
     <style>
         :root {
-            --bg-base: #060911;
-            --card-bg: #0c101d;
-            --border-glow: rgba(255, 255, 255, 0.08);
-            --border-focus: rgba(147, 51, 234, 0.6);
-            --text-main: #f8fafc;
-            --text-muted: #94a3b8;
-            --primary-purple: #8b5cf6;
-            --primary-gradient: linear-gradient(135deg, #8b5cf6 0%, #6366f1 100%);
-            --discord-blurple: #5865F2;
-            --discord-hover: #4752c4;
-            --truemoney-red: #ff5722;
-            --success: #10b981;
-            --danger: #ef4444;
+            --primary-purple: #6c5ce7;
+            --secondary-purple: #a29bfe;
+            --bg-dark: #0f0c1b;
+            --card-bg: #1e1b2e;
+            --text-color: #ffffff;
         }
-
-        body.light-theme {
-            --bg-base: #f1f5f9;
-            --card-bg: #ffffff;
-            --border-glow: rgba(0, 0, 0, 0.08);
-            --text-main: #0f172a;
-            --text-muted: #64748b;
-        }
-
-        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Plus Jakarta Sans', sans-serif; scroll-behavior: smooth; }
 
         body {
-            background-color: var(--bg-base);
-            color: var(--text-main);
-            min-height: 100vh;
-            background-image: 
-                radial-gradient(circle at 10% 20%, rgba(139, 92, 246, 0.1) 0%, transparent 40%),
-                radial-gradient(circle at 90% 80%, rgba(99, 102, 241, 0.08) 0%, transparent 40%);
-            transition: background 0.3s, color 0.3s;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--bg-dark);
+            color: var(--text-color);
         }
 
-        /* Navbar ตามเรฟเป๊ะๆ */
-        .navbar { 
-            background: var(--card-bg); 
-            border-bottom: 1px solid var(--border-glow); 
-            padding: 12px 4%; 
-            display: flex; 
-            align-items: center; 
-            justify-content: space-between; 
-            position: sticky; 
-            top: 0; 
-            z-index: 100; 
-            box-shadow: 0 4px 20px rgba(0,0,0,0.1); 
-        }
-        
-        .nav-logo { 
-            font-size: 18px; 
-            font-weight: 700; 
-            background: var(--primary-gradient); 
-            -webkit-background-clip: text; 
-            -webkit-text-fill-color: transparent; 
-            cursor: pointer; 
-            display: flex; 
-            align-items: center; 
-            gap: 8px; 
-        }
-
-        .nav-menu { 
-            list-style: none; 
-            display: flex; 
-            gap: 16px; 
-            align-items: center; 
-        }
-
-        .nav-menu li a { 
-            color: var(--text-muted); 
-            text-decoration: none; 
-            font-size: 14px; 
-            font-weight: 500; 
-            transition: color 0.2s; 
-            cursor: pointer; 
-            display: flex;
-            align-items: center;
-            gap: 6px;
-            padding: 6px 12px;
-            border-radius: 10px;
-        }
-
-        .nav-menu li a:hover, .nav-menu li a.active { 
-            color: var(--text-main); 
-            background: rgba(255, 255, 255, 0.04);
-            font-weight: 600; 
-        }
-
-        .nav-right-area { display: flex; align-items: center; gap: 12px; }
-
-        /* ปุ่มตั้งค่าฟันเฟือง */
-        .settings-btn { 
-            background: transparent; 
-            border: none; 
-            color: var(--text-muted); 
-            width: 38px; 
-            height: 38px; 
-            border-radius: 50%; 
-            display: flex; 
-            align-items: center; 
-            justify-content: center; 
-            cursor: pointer; 
-            font-size: 18px; 
-            transition: all 0.2s; 
-        }
-        .settings-btn:hover { color: var(--text-main); background: rgba(255, 255, 255, 0.05); }
-
-        /* กล่องเมนูตั้งค่า Popup */
-        .settings-dropdown-wrapper { position: relative; }
-        .settings-popup-card {
-            position: absolute; top: 130%; right: 0;
-            background: var(--card-bg);
-            border: 1px solid var(--border-glow);
-            border-radius: 20px;
-            width: 260px;
-            padding: 16px;
-            box-shadow: 0 15px 40px rgba(0,0,0,0.4);
-            opacity: 0; visibility: hidden; transform: translateY(-10px);
-            transition: all 0.25s ease;
-            z-index: 120;
-        }
-        .settings-dropdown-wrapper.active .settings-popup-card { opacity: 1; visibility: visible; transform: translateY(0); }
-
-        .setting-section { margin-bottom: 16px; }
-        .setting-section:last-child { margin-bottom: 0; }
-        .setting-label { font-size: 12px; font-weight: 600; color: var(--text-muted); margin-bottom: 8px; display: block; }
-
-        .setting-toggle-group {
-            background: rgba(0,0,0,0.15);
-            border: 1px solid var(--border-glow);
-            border-radius: 12px;
-            padding: 4px;
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 4px;
-        }
-        body.light-theme .setting-toggle-group { background: rgba(0,0,0,0.04); }
-
-        .setting-opt-btn {
-            background: transparent; border: none; padding: 8px; font-size: 12px; font-weight: 600;
-            color: var(--text-muted); border-radius: 9px; cursor: pointer; transition: all 0.2s; text-align: center;
-        }
-        .setting-opt-btn.active {
-            background: var(--primary-purple);
-            color: white;
-            box-shadow: 0 4px 12px rgba(139, 92, 246, 0.3);
-        }
-
-        /* ปุ่มลงชื่อเข้าใช้ตามเรฟ */
-        .btn-login-nav {
-            background: var(--card-bg);
-            border: 1px solid var(--border-glow);
-            color: var(--text-main);
-            padding: 8px 20px;
-            border-radius: 30px;
-            font-size: 14px;
-            font-weight: 600;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            transition: all 0.2s;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.2);
-        }
-        .btn-login-nav:hover {
-            border-color: var(--primary-purple);
-            color: var(--primary-purple);
-            background: rgba(139, 92, 246, 0.05);
-        }
-
-        /* Modal / Auth Layout */
-        .auth-modal-overlay {
-            position: fixed;
-            top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(6, 9, 17, 0.85);
-            backdrop-filter: blur(20px);
-            -webkit-backdrop-filter: blur(20px);
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            z-index: 9999;
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
             padding: 20px;
         }
 
-        .auth-split-card {
-            background: var(--card-bg);
-            border: 1px solid var(--border-glow);
-            border-radius: 28px;
-            width: 100%;
-            max-width: 780px;
-            display: grid;
-            grid-template-columns: 1fr 1.1fr;
-            overflow: hidden;
-            box-shadow: 0 30px 70px rgba(0, 0, 0, 0.6);
-            animation: modalPop 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards;
-        }
-
-        @media (max-width: 768px) {
-            .auth-split-card { grid-template-columns: 1fr; max-width: 440px; }
-            .auth-left-pane { display: none; }
-            .nav-menu { display: none; }
-        }
-
-        @keyframes modalPop {
-            from { opacity: 0; transform: translateY(20px) scale(0.96); }
-            to { opacity: 1; transform: translateY(0) scale(1); }
-        }
-
-        .auth-left-pane {
-            background: linear-gradient(135deg, #17112c 0%, #0d0b18 100%);
-            padding: 40px;
+        /* Hero Banner Section */
+        .hero-banner {
             display: flex;
-            flex-direction: column;
+            align-items: center;
             justify-content: space-between;
-            border-right: 1px solid var(--border-glow);
+            background: linear-gradient(135deg, #2d1b4e, #1e1b2e);
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            margin-top: 20px;
+            flex-wrap: wrap;
+            gap: 20px;
         }
 
-        .brand-logo-area { display: flex; align-items: center; gap: 10px; font-weight: 700; font-size: 18px; color: #fff; }
-        .brand-logo-icon { width: 32px; height: 32px; background: var(--primary-gradient); border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 16px; }
-
-        .brand-hero-text h2 { font-size: 24px; font-weight: 700; line-height: 1.3; margin-bottom: 12px; color: #fff; }
-        .brand-hero-text p { font-size: 13px; color: var(--text-muted); line-height: 1.5; }
-
-        .auth-right-pane { padding: 40px; display: flex; flex-direction: column; position: relative; }
-
-        .auth-tabs {
-            background: rgba(255, 255, 255, 0.03);
-            border: 1px solid var(--border-glow);
-            border-radius: 14px;
-            padding: 4px;
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            margin-bottom: 28px;
+        .hero-content {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            flex: 1;
+            min-width: 280px;
         }
 
-        .tab-btn {
-            background: transparent; border: none; padding: 10px; font-size: 13px; font-weight: 600;
-            color: var(--text-muted); border-radius: 10px; cursor: pointer; transition: all 0.25s ease;
+        .hero-image {
+            width: 120px;
+            height: 120px;
+            border-radius: 15px;
+            object-fit: cover;
+            border: 2px solid var(--secondary-purple);
+            box-shadow: 0 4px 15px rgba(108, 92, 231, 0.4);
         }
-        .tab-btn.active {
-            background: var(--primary-gradient);
+
+        .hero-text h1 {
+            margin: 0 0 10px 0;
+            font-size: 24px;
+        }
+
+        .hero-text h1 span {
+            color: var(--secondary-purple);
+        }
+
+        .hero-text p {
+            margin: 0;
+            color: #b2bec3;
+            font-size: 14px;
+        }
+
+        .btn {
+            background-color: var(--primary-purple);
             color: white;
-            box-shadow: 0 4px 15px rgba(139, 92, 246, 0.3);
+            border: none;
+            padding: 12px 24px;
+            border-radius: 10px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(108, 92, 231, 0.4);
         }
 
-        .auth-form-content { display: none; }
-        .auth-form-content.active { display: block; animation: fadeIn 0.3s ease; }
-
-        .input-group { margin-bottom: 16px; text-align: left; }
-        .input-label { display: block; font-size: 12px; color: var(--text-muted); margin-bottom: 6px; font-weight: 500; }
-        .input-field-wrapper { position: relative; }
-        .input-field { width: 100%; background: var(--card-bg); border: 1px solid var(--border-glow); border-radius: 12px; padding: 12px 16px; color: var(--text-main); font-size: 13px; outline: none; transition: all 0.25s ease; }
-        .input-field:focus { border-color: var(--border-focus); box-shadow: 0 0 0 4px rgba(139, 92, 246, 0.15); }
-
-        .auth-options { display: flex; justify-content: space-between; align-items: center; font-size: 12px; margin-bottom: 20px; color: var(--text-muted); }
-        .remember-me { display: flex; align-items: center; gap: 6px; cursor: pointer; }
-        .forgot-link { color: var(--primary-purple); text-decoration: none; font-weight: 500; }
-        .forgot-link:hover { text-decoration: underline; }
-
-        .btn-submit { width: 100%; padding: 12px; background: var(--primary-gradient); border: none; border-radius: 12px; color: white; font-size: 14px; font-weight: 600; cursor: pointer; box-shadow: 0 6px 20px rgba(139, 92, 246, 0.3); transition: all 0.25s ease; }
-        .btn-submit:hover { opacity: 0.95; transform: translateY(-1px); }
-
-        .divider { display: flex; align-items: center; text-align: center; color: var(--text-muted); font-size: 12px; margin: 18px 0; font-weight: 500; }
-        .divider::before, .divider::after { content: ''; flex: 1; border-bottom: 1px solid var(--border-glow); }
-        .divider::before { margin-right: .75em; }
-        .divider::after { margin-left: .75em; }
-
-        .btn-discord { width: 100%; padding: 12px; background: var(--discord-blurple); color: white; border: none; border-radius: 12px; font-weight: 600; font-size: 13px; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 10px; transition: all 0.2s; box-shadow: 0 4px 15px rgba(88, 101, 242, 0.25); }
-        .btn-discord:hover { background: var(--discord-hover); transform: translateY(-1px); }
-
-        /* Container & Pages */
-        .container { max-width: 1050px; margin: 0 auto; padding: 40px 20px 80px; }
-        .page { display: none; animation: fadeIn 0.4s ease; }
-        .page.active { display: block; }
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
-
-        .hero-banner { background: var(--primary-gradient); border-radius: 24px; padding: 40px; color: white; display: flex; justify-content: space-between; align-items: center; margin-bottom: 28px; box-shadow: 0 12px 30px rgba(139, 92, 246, 0.2); }
-        .hero-text h1 { font-size: 28px; font-weight: 700; margin-bottom: 6px; }
-        .hero-text p { font-size: 15px; opacity: 0.9; }
-
-        .dashboard-grid { display: grid; grid-template-columns: 2fr 1fr; gap: 24px; margin-bottom: 28px; }
-        @media (max-width: 768px) { .dashboard-grid { grid-template-columns: 1fr; } }
-
-        .balance-card-modern { background: var(--card-bg); border: 1px solid var(--border-glow); border-radius: 24px; padding: 32px; box-shadow: 0 4px 20px rgba(0,0,0,0.1); display: flex; flex-direction: column; justify-content: space-between; }
-        .balance-title { font-size: 14px; font-weight: 500; color: var(--text-muted); margin-bottom: 10px; }
-        .balance-value { font-size: 42px; font-weight: 700; color: var(--text-main); margin-bottom: 20px; }
-        
-        .quick-actions { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; }
-        .action-card { background: var(--card-bg); border: 1px solid var(--border-glow); border-radius: 16px; padding: 18px 10px; text-align: center; cursor: pointer; transition: all 0.2s; text-decoration: none; color: var(--text-main); font-weight: 600; font-size: 14px; }
-        .action-card:hover { border-color: var(--primary-purple); transform: translateY(-2px); color: var(--primary-purple); }
-
-        .stats-side-card { background: var(--card-bg); border: 1px solid var(--border-glow); border-radius: 24px; padding: 28px; box-shadow: 0 4px 20px rgba(0,0,0,0.1); display: flex; flex-direction: column; gap: 20px; }
-        .stat-item { display: flex; align-items: center; gap: 15px; }
-        .stat-info span { font-size: 12px; color: var(--text-muted); display: block; }
-        .stat-info strong { font-size: 15px; color: var(--text-main); font-weight: 600; }
-
-        .card-title { font-size: 18px; font-weight: 600; color: var(--text-main); }
-        .topup-box { max-width: 500px; margin: 0 auto; background: var(--card-bg); border: 1px solid var(--border-glow); border-radius: 24px; padding: 36px; box-shadow: 0 10px 30px rgba(0,0,0,0.1); }
-        
-        .btn { padding: 12px 20px; border: none; border-radius: 12px; font-size: 14px; font-weight: 600; cursor: pointer; display: inline-flex; align-items: center; gap: 8px; transition: all 0.2s; text-decoration: none; }
-        .btn-angpao { background: linear-gradient(135deg, #ff5722 0%, #e64a19 100%); color: white; width: 100%; justify-content: center; box-shadow: 0 4px 12px rgba(255, 87, 34, 0.25); }
-        .btn-angpao:hover { opacity: 0.95; transform: translateY(-1px); }
+        .btn:hover {
+            background-color: #5b4be2;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(108, 92, 231, 0.6);
+        }
     </style>
 </head>
 <body>
 
-    <!-- หน้าต่างสมัครบัญชี / เข้าสู่ระบบ (Modal) -->
-    <div class="auth-modal-overlay" id="authModal" style="display: none;">
-        <div class="auth-split-card">
-            <div class="auth-left-pane">
-                <div class="brand-logo-area">
-                    <span data-translate="brandName">DHAF STUDIO</span>
-                </div>
-                <div class="brand-hero-text">
-                    <h2 data-translate="heroTitle">เริ่มธุรกิจออนไลน์<br>ด้วยเว็บไซต์ที่ทันสมัย<br>ในราคาสบายกระเป๋า</h2>
-                    <p data-translate="heroDesc">เริ่มสร้างธุรกิจของคุณ ด้วยเว็บไซต์ของพวกเรา ระบบกระเป๋าเงินอัตโนมัติที่ปลอดภัยและรวดเร็วที่สุด</p>
-                </div>
-                <div style="font-size: 11px; color: var(--text-muted);">(C) 2026 DHAF STUDIO. All rights reserved.</div>
-            </div>
-
-            <div class="auth-right-pane">
-                <div style="position: absolute; top: 20px; right: 20px; cursor: pointer; font-size: 18px; color: var(--text-muted);" onclick="closeAuthModal()">✕</div>
-                <div class="auth-tabs" style="margin-top: 10px;">
-                    <button class="tab-btn active" id="tabLoginBtn" onclick="playClickSound(); switchAuthTab('login')" data-translate="loginTab">เข้าสู่ระบบ</button>
-                    <button class="tab-btn" id="tabRegisterBtn" onclick="playClickSound(); switchAuthTab('register')" data-translate="registerTab">สมัครสมาชิก</button>
-                </div>
-
-                <div class="auth-form-content active" id="formLogin">
-                    <form onsubmit="event.preventDefault(); playClickSound(); handleLoginSubmit();">
-                        <div class="input-group">
-                            <label class="input-label" data-translate="userOrEmail">ชื่อผู้ใช้หรืออีเมล</label>
-                            <input type="text" id="loginUsername" class="input-field" placeholder="กรอกชื่อผู้ใช้หรืออีเมล" required>
-                        </div>
-                        <div class="input-group">
-                            <label class="input-label" data-translate="password">รหัสผ่าน</label>
-                            <div class="input-field-wrapper">
-                                <input type="password" id="loginPassword" class="input-field" placeholder="กรอกรหัสผ่าน" required>
-                            </div>
-                        </div>
-                        <div class="auth-options">
-                            <label class="remember-me">
-                                <input type="checkbox" style="accent-color: var(--primary-purple);"> <span data-translate="rememberMe">จดจำฉัน</span>
-                            </label>
-                            <a href="#" class="forgot-link" onclick="playClickSound(); alert('กรุณาติดต่อแอดมิน');" data-translate="forgotPass">ลืมรหัสผ่าน</a>
-                        </div>
-                        <button type="submit" class="btn-submit" data-translate="loginBtnText">เข้าสู่ระบบ</button>
-                    </form>
-                </div>
-
-                <div class="auth-form-content" id="formRegister">
-                    <form onsubmit="event.preventDefault(); playClickSound(); handleRegisterSubmit();">
-                        <div class="input-group">
-                            <label class="input-label" data-translate="username">ชื่อผู้ใช้ (Username)</label>
-                            <input type="text" id="regUsername" class="input-field" placeholder="ตั้งชื่อผู้ใช้ของคุณ" required>
-                        </div>
-                        <div class="input-group">
-                            <label class="input-label" data-translate="email">อีเมล (Email)</label>
-                            <input type="email" id="regEmail" class="input-field" placeholder="example@gmail.com" required>
-                        </div>
-                        <div class="input-group">
-                            <label class="input-label" data-translate="password">รหัสผ่าน</label>
-                            <div class="input-field-wrapper">
-                                <input type="password" id="regPassword" class="input-field" placeholder="สร้างรหัสผ่าน" required>
-                            </div>
-                        </div>
-                        <button type="submit" class="btn-submit" style="margin-top: 6px;" data-translate="registerBtnText">สมัครบัญชีใหม่</button>
-                    </form>
-                </div>
-
-                <div class="divider" data-translate="orDivider">หรือเชื่อมต่อผ่านโซเชียล</div>
-
-                <button class="btn-discord" onclick="playClickSound(); loginDiscord()">
-                    <span data-translate="discordLogin">เข้าสู่ระบบด้วย Discord</span>
-                </button>
-            </div>
-        </div>
-    </div>
-
-    <!-- โครงสร้างหน้าเว็บหลัก -->
-    <div id="mainContent">
-        <nav class="navbar">
-            <div class="nav-logo" onclick="playClickSound(); switchPage('home')">
-                DHAF SHOP
-            </div>
-
-            <!-- เมนูหลักตามเรฟเป๊ะๆ -->
-            <ul class="nav-menu">
-                <li><a id="nav-update" onclick="playClickSound(); alert('ยังไม่มีอัปเดตใหม่ในขณะนี้');">อัปเดตเวอร์ชั่น</a></li>
-                <li><a id="nav-upgrade" onclick="playClickSound(); alert('ระบบอัปเกรดจะเปิดเร็วๆ นี้');">อัปเกรด</a></li>
-                <li><a id="nav-topup" onclick="playClickSound(); switchPage('topup')">เติมเงิน</a></li>
-                <li><a id="nav-services" onclick="playClickSound(); alert('บริการเสริมทั้งหมด');">บริการเสริม</a></li>
-                <li><a id="nav-contact" onclick="playClickSound(); alert('ติดต่อแอดมินผ่าน Discord ได้เลยครับ');">ติดต่อเรา</a></li>
-            </ul>
-
-            <div class="nav-right-area">
-                <!-- ปุ่มตั้งค่า -->
-                <div class="settings-dropdown-wrapper" id="settingsDropdown">
-                    <button class="settings-btn" onclick="playClickSound(); toggleSettingsMenu()" title="ตั้งค่าระบบ">⚙</button>
-                    <div class="settings-popup-card">
-                        <div class="setting-section">
-                            <span class="setting-label">ภาษา</span>
-                            <div class="setting-toggle-group">
-                                <button class="setting-opt-btn active" id="langThBtn" onclick="playClickSound(); setLanguage('th')">ไทย</button>
-                                <button class="setting-opt-btn" id="langEnBtn" onclick="playClickSound(); setLanguage('en')">English</button>
-                            </div>
-                        </div>
-                        <div class="setting-section">
-                            <span class="setting-label">ค่าเงิน</span>
-                            <div class="setting-toggle-group">
-                                <button class="setting-opt-btn active" id="currThbBtn" onclick="playClickSound(); setCurrency('THB')">บาท</button>
-                                <button class="setting-opt-btn" id="currUsdBtn" onclick="playClickSound(); setCurrency('USD')">ดอลลาร์</button>
-                            </div>
-                        </div>
-                        <div class="setting-section">
-                            <span class="setting-label">ธีม</span>
-                            <div class="setting-toggle-group">
-                                <button class="setting-opt-btn" id="themeLightBtn" onclick="playClickSound(); setTheme('light')">สว่าง</button>
-                                <button class="setting-opt-btn active" id="themeDarkBtn" onclick="playClickSound(); setTheme('dark')">มืด</button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- ปุ่มลงชื่อเข้าใช้ -->
-                <div id="navRight">
-                    <button class="btn-login-nav" onclick="playClickSound(); openAuthModal()">
-                        ลงชื่อเข้าใช้
-                    </button>
+    <div class="container">
+        <!-- Hero Banner พร้อมรูปภาพที่รวมเข้ามา -->
+        <div class="hero-banner">
+            <div class="hero-content">
+                <!-- รูปภาพจาก Discord ที่คุณต้องการ -->
+                <img src="https://media.discordapp.net/attachments/1537832458282860578/1537837948517617774/Gemini_Generated_Image_texhlatexhlatexh.jfif?ex=6a812772&is=6a7fd5f2&hm=c63cb2358c2e783451f7146b4f172ca0a6031fbdb32d7804c40051323bb2cc67&=&format=webp&width=1024&height=558" 
+                     alt="DHAF SHOP Logo" 
+                     class="hero-image">
+                <div class="hero-text">
+                    <h1>ยินดีต้อนรับสู่ <span id="welcomeName">DHAF SHOP</span></h1>
+                    <p>ร้านค้าออนไลน์และบริการต่างๆ ยินดีต้อนรับทุกท่านครับ</p>
                 </div>
             </div>
-        </nav>
-
-        <div class="container">
-            <!-- หน้าหลัก -->
-            <div id="page-home" class="page active">
-                <div class="hero-banner">
-                    <div class="hero-text">
-                        <h1>ยินดีต้อนรับ, <span id="welcomeName">ผู้เยี่ยมชม</span></h1>
-                        <p>เลือกใช้งานเมนูด้านบนเพื่อเริ่มต้นใช้งานระบบ</p>
-                    </div>
-                    <button class="btn" style="background: white; color: var(--primary-purple);" onclick="playClickSound(); switchPage('topup')">เติมเงินซองอังเปา</button>
-                </div>
-
-                <div class="dashboard-grid">
-                    <div class="balance-card-modern">
-                        <div>
-                            <div class="balance-title">ยอดเงินคงเหลือในระบบ</div>
-                            <div class="balance-value" id="balanceAmount">0.00 THB</div>
-                        </div>
-                        <div class="quick-actions">
-                            <a class="action-card" onclick="playClickSound(); switchPage('topup')"><span>เติมเงิน</span></a>
-                            <a class="action-card" onclick="playClickSound(); openAuthModal()"><span>ลงชื่อเข้าใช้</span></a>
-                        </div>
-                    </div>
-                    <div class="stats-side-card">
-                        <div class="stat-item">
-                            <div class="stat-info"><span>สถานะระบบ</span><strong>พร้อมให้บริการ 100%</strong></div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- หน้าเติมเงิน -->
-            <div id="page-topup" class="page">
-                <div class="topup-box">
-                    <div style="margin-bottom: 24px;">
-                        <h2 class="card-title" style="margin-bottom: 2px;">เติมเงินด้วยซองอังเปา</h2>
-                        <p style="font-size: 13px; color: var(--text-muted);">TrueMoney Wallet (แบบคนเดียว)</p>
-                    </div>
-                    
-                    <div class="input-group">
-                        <label class="input-label">ลิงก์ซองอังเปา (Truemoney Gift Link)</label>
-                        <input type="text" id="angpaoLinkInput" class="input-field" placeholder="https://gift.truemoney.com/campaign/?v=...">
-                    </div>
-                    <button class="btn btn-angpao" onclick="playClickSound(); confirmAngpaoTopup()">ยืนยันการเติมเงิน</button>
-                </div>
-            </div>
+            <button class="btn" onclick="switchPage('topup')">เติมเงินซองอังเปา</button>
         </div>
     </div>
 
     <script>
-        function playClickSound() {
-            try {
-                const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-                const osc = audioCtx.createOscillator();
-                const gainNode = audioCtx.createGain();
-                osc.type = 'sine';
-                osc.frequency.setValueAtTime(587.33, audioCtx.currentTime); 
-                osc.frequency.exponentialRampToValueAtTime(880, audioCtx.currentTime + 0.08); 
-                gainNode.gain.setValueAtTime(0.12, audioCtx.currentTime);
-                gainNode.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.12);
-                osc.connect(gainNode);
-                gainNode.connect(audioCtx.destination);
-                osc.start();
-                osc.stop(audioCtx.currentTime + 0.12);
-            } catch (e) {}
-        }
-
-        let currentLang = localStorage.getItem('dhaf_lang') || 'th';
-        let currentCurrency = localStorage.getItem('dhaf_currency') || 'THB';
-        let currentTheme = localStorage.getItem('dhaf_theme') || 'dark';
-
-        const translations = {
-            th: {
-                brandName: "DHAF STUDIO",
-                heroTitle: "เริ่มธุรกิจออนไลน์<br>ด้วยเว็บไซต์ที่ทันสมัย<br>ในราคาสบายกระเป๋า",
-                heroDesc: "เริ่มสร้างธุรกิจของคุณ ด้วยเว็บไซต์ของพวกเรา ระบบกระเป๋าเงินอัตโนมัติที่ปลอดภัยและรวดเร็วที่สุด",
-                loginTab: "เข้าสู่ระบบ",
-                registerTab: "สมัครสมาชิก",
-                userOrEmail: "ชื่อผู้ใช้หรืออีเมล",
-                password: "รหัสผ่าน",
-                rememberMe: "จดจำฉัน",
-                forgotPass: "ลืมรหัสผ่าน",
-                loginBtnText: "เข้าสู่ระบบ",
-                username: "ชื่อผู้ใช้ (Username)",
-                email: "อีเมล (Email)",
-                registerBtnText: "สมัครบัญชีใหม่",
-                orDivider: "หรือเชื่อมต่อผ่านโซเชียล",
-                discordLogin: "เข้าสู่ระบบด้วย Discord"
-            },
-            en: {
-                brandName: "DHAF STUDIO",
-                heroTitle: "Start Online Business<br>with Modern Websites<br>at Affordable Prices",
-                heroDesc: "Start building your business with our automated, secure and fastest wallet system.",
-                loginTab: "Login",
-                registerTab: "Register",
-                userOrEmail: "Username or Email",
-                password: "Password",
-                rememberMe: "Remember me",
-                forgotPass: "Forgot password",
-                loginBtnText: "Login",
-                username: "Username",
-                email: "Email",
-                registerBtnText: "Register New Account",
-                orDivider: "Or connect with social",
-                discordLogin: "Login with Discord"
-            }
-        };
-
-        function toggleSettingsMenu() {
-            const dropdown = document.getElementById('settingsDropdown');
-            if(dropdown) dropdown.classList.toggle('active');
-        }
-
-        function setLanguage(lang) {
-            currentLang = lang;
-            localStorage.setItem('dhaf_lang', lang);
-            document.getElementById('langThBtn').classList.toggle('active', lang === 'th');
-            document.getElementById('langEnBtn').classList.toggle('active', lang === 'en');
-            applyTranslations();
-        }
-
-        function setCurrency(curr) {
-            currentCurrency = curr;
-            localStorage.setItem('dhaf_currency', curr);
-            document.getElementById('currThbBtn').classList.toggle('active', curr === 'THB');
-            document.getElementById('currUsdBtn').classList.toggle('active', curr === 'USD');
-            updateBalanceUI();
-        }
-
-        function setTheme(theme) {
-            currentTheme = theme;
-            localStorage.setItem('dhaf_theme', theme);
-            document.getElementById('themeLightBtn').classList.toggle('active', theme === 'light');
-            document.getElementById('themeDarkBtn').classList.toggle('active', theme === 'dark');
-            if(theme === 'light') {
-                document.body.classList.add('light-theme');
-            } else {
-                document.body.classList.remove('light-theme');
-            }
-        }
-
-        function applyTranslations() {
-            const t = translations[currentLang];
-            document.querySelectorAll('[data-translate]').forEach(elem => {
-                const key = elem.getAttribute('data-translate');
-                if(t[key]) {
-                    elem.innerHTML = t[key];
-                }
-            });
-        }
-
-        function switchAuthTab(tabName) {
-            document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
-            document.querySelectorAll('.auth-form-content').forEach(form => form.classList.remove('active'));
-            
-            if(tabName === 'login') {
-                document.getElementById('tabLoginBtn').classList.add('active');
-                document.getElementById('formLogin').classList.add('active');
-            } else {
-                document.getElementById('tabRegisterBtn').classList.add('active');
-                document.getElementById('formRegister').classList.add('active');
-            }
-        }
-
-        function openAuthModal() {
-            document.getElementById('authModal').style.display = 'flex';
-        }
-
-        function closeAuthModal() {
-            document.getElementById('authModal').style.display = 'none';
-        }
-
-        function switchPage(pageName) {
-            document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
-            document.getElementById('page-' + pageName).classList.add('active');
-        }
-
-        let balance = 0.00;
-
-        function updateBalanceUI() {
-            let displayBalance = balance;
-            let symbol = ' THB';
-            if(currentCurrency === 'USD') {
-                displayBalance = balance / 35;
-                symbol = ' USD';
-            }
-            const formattedBalance = displayBalance.toLocaleString('th-TH', {minimumFractionDigits: 2}) + symbol;
-            const balanceElem = document.getElementById('balanceAmount');
-            if(balanceElem) balanceElem.innerText = formattedBalance;
-        }
-
-        function confirmAngpaoTopup() {
-            const inputField = document.getElementById('angpaoLinkInput');
-            if (!inputField) return;
-            const link = inputField.value.trim();
-            if (!link || !link.includes('gift.truemoney.com')) {
-                alert('กรุณากรอกลิงก์ซองอังเปา TrueMoney ให้ถูกต้อง');
-                return;
-            }
-            balance += 50;
-            updateBalanceUI();
-            inputField.value = '';
-            alert('เติมเงินสำเร็จ! ได้รับ 50 บาท');
-            switchPage('home');
-        }
-
-        const DISCORD_CLIENT_ID = "1532644387639660627";
-        const REDIRECT_URI = window.location.origin + window.location.pathname;
-        const DISCORD_OAUTH_URL = `https://discord.com/oauth2/authorize?client_id=${DISCORD_CLIENT_ID}&response_type=token&redirect_uri=${encodeURIComponent(REDIRECT_URI)}&scope=identify&prompt=consent`;
-
-        function loginDiscord() { window.location.href = DISCORD_OAUTH_URL; }
-
-        function handleLoginSubmit() {
-            const username = document.getElementById('loginUsername').value.trim();
-            if(!username) return;
-            grantAccess(username);
-        }
-
-        function handleRegisterSubmit() {
-            const username = document.getElementById('regUsername').value.trim();
-            if(!username) return;
-            grantAccess(username);
-        }
-
-        function grantAccess(name) {
-            closeAuthModal();
-            document.getElementById('welcomeName').innerText = name;
-            document.getElementById('navRight').innerHTML = `
-                <div style="background: rgba(139, 92, 246, 0.1); border: 1px solid rgba(139, 92, 246, 0.3); padding: 6px 14px; border-radius: 20px; font-size: 13px; font-weight: 700; color: #a78bfa;">${name}</div>
-            `;
-        }
-
-        window.onload = function() {
-            setLanguage(currentLang);
-            setCurrency(currentCurrency);
-            setTheme(currentTheme);
+        function switchPage(page) {
+            // ฟังก์ชันตัวอย่างสำหรับการเปลี่ยนหน้าเว็บ
+            console.log("Switching to page: " + page);
         }
     </script>
+
 </body>
 </html>
