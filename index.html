@@ -174,6 +174,29 @@
             background: rgba(139, 92, 246, 0.05);
         }
 
+        /* ส่วนแสดงโปรไฟล์ Discord เมื่อเข้าสู่ระบบแล้ว */
+        .user-profile-badge {
+            background: var(--card-bg);
+            border: 1px solid var(--border-glow);
+            padding: 4px 14px 4px 4px;
+            border-radius: 30px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+        }
+        .user-profile-badge img {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            object-fit: cover;
+        }
+        .user-profile-badge span {
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--text-main);
+        }
+
         .auth-modal-overlay {
             position: fixed;
             top: 0; left: 0; width: 100%; height: 100%;
@@ -423,7 +446,7 @@
                 </div>
 
                 <div id="navRight">
-                    <button class="btn-login-nav" onclick="playClickSound(); openAuthModal()">
+                    <button class="btn-login-nav" id="authActionBtn" onclick="playClickSound(); openAuthModal()">
                         ลงชื่อเข้าใช้
                     </button>
                 </div>
@@ -644,6 +667,42 @@
             alert('สมัครสมาชิกสำเร็จ');
             switchAuthTab('login');
         }
+
+        // ตรวจสอบสถานะและจำลองการรับโค้ด Callback จาก Discord OAuth2 เพื่อเปลี่ยนปุ่มเป็นโปรไฟล์ผู้ใช้
+        window.addEventListener('DOMContentLoaded', () => {
+            const urlParams = new URLSearchParams(window.location.search);
+            const discordCode = urlParams.get('code');
+
+            if (discordCode) {
+                // ตัวอย่างจำลองเมื่อระบบรับค่า Code จาก Discord สำเร็จ
+                // (ในระบบจริง ฝั่ง Backend จะต้องนำ code นี้ไปขอ Access Token และดึงข้อมูล User จาก Discord API)
+                const mockUser = {
+                    username: "Discord User",
+                    avatar: "https://cdn.jsdelivr.net/gh/twitter/twemoji@14.0.2/assets/72x72/1f464.png"
+                };
+
+                localStorage.setItem('dhaf_discord_user', JSON.stringify(mockUser));
+                window.history.replaceState({}, document.title, window.location.pathname); // ล้าง Query String ออกจาก URL
+            }
+
+            const savedUser = localStorage.getItem('dhaf_discord_user');
+            if (savedUser) {
+                const userData = JSON.parse(savedUser);
+                const navRight = document.getElementById('navRight');
+                if (navRight) {
+                    navRight.innerHTML = `
+                        <div class="user-profile-badge">
+                            <img src="${userData.avatar}" alt="Avatar">
+                            <span>${userData.username}</span>
+                        </div>
+                    `;
+                }
+                const welcomeName = document.getElementById('welcomeName');
+                if (welcomeName) {
+                    welcomeName.innerText = userData.username;
+                }
+            }
+        });
 
         // โหลดค่าตั้งค่าเริ่มต้นเมื่อเปิดหน้าเว็บ
         setTheme(currentTheme);
