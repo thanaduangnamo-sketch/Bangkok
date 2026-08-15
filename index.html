@@ -34,7 +34,7 @@
                 radial-gradient(circle at 80% 80%, rgba(168, 85, 247, 0.1) 0%, transparent 40%);
         }
 
-        /* หน้าต่างยืนยันตัวตน / สมัครบัญชีใหม่ */
+        /* หน้าต่างสมัครบัญชี / ยืนยันตัวตนใหม่ */
         .auth-modal-overlay {
             position: fixed;
             top: 0; left: 0; width: 100%; height: 100%;
@@ -184,7 +184,7 @@
             <p class="modal-subtitle">ระบบความปลอดภัย: ทุกบัญชีใหม่เริ่มต้นด้วยยอดเงิน 0.00 ฿</p>
             
             <div class="login-btn-group">
-                <button class="btn-auth btn-discord" onclick="loginDiscord()">
+                <button class="btn-auth btn-discord" onclick="playClickSound(); loginDiscord()">
                     <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M20.317 4.37a19.791 19.791 0 0 0-4.885-1.515.074.074 0 0 0-.079.037c-.21.375-.444.864-.608 1.25a18.27 18.27 0 0 0-5.487 0 12.64 12.64 0 0 0-.617-1.25.077.077 0 0 0-.079-.037A19.736 19.736 0 0 0 3.677 4.37a.07.07 0 0 0-.032.027C.533 9.046-.32 13.58.099 18.057a.082.082 0 0 0 .031.057 19.9 19.9 0 0 0 5.993 3.03.078.078 0 0 0 .084-.028c.462-.63.874-1.295 1.226-1.994a.076.076 0 0 0-.041-.106 13.107 13.107 0 0 1-1.872-.892.077.077 0 0 1-.008-.128 10.2 10.2 0 0 0 .372-.292.074.074 0 0 1 .077-.010c3.928 1.793 8.18 1.793 12.062 0a.074.074 0 0 1 .078.01c.12.098.246.198.373.292a.077.077 0 0 1-.006.127 12.299 12.299 0 0 1-1.873.892.077.077 0 0 0-.041.107c.36.698.772 1.362 1.225 1.993a.076.076 0 0 0 .084.028 19.839 19.839 0 0 0 6.002-3.03.077.077 0 0 0 .032-.054c.5-5.177-.838-9.674-3.549-13.66a.061.061 0 0 0-.031-.03zM8.02 15.33c-1.183 0-2.157-1.085-2.157-2.419 0-1.333.956-2.419 2.157-2.419 1.21 0 2.176 1.096 2.157 2.42 0 1.333-.956 2.418-2.157 2.418zm7.975 0c-1.183 0-2.157-1.085-2.157-2.419 0-1.333.955-2.419 2.157-2.419 1.21 0 2.176 1.096 2.157 2.42 0 1.333-.946 2.418-2.157 2.418z"/></svg>
                     สมัคร/เข้าสู่ระบบด้วย Discord
                 </button>
@@ -192,7 +192,7 @@
 
             <div class="divider">หรือสมัครด้วยอีเมล</div>
 
-            <form id="emailForm" onsubmit="event.preventDefault(); verifyEmail();">
+            <form id="emailForm" onsubmit="event.preventDefault(); playClickSound(); verifyEmail();">
                 <div class="input-group">
                     <label class="input-label">อีเมลของคุณ (Email)</label>
                     <input type="email" id="userEmailInput" class="input-field" placeholder="example@gmail.com" required>
@@ -205,14 +205,14 @@
     <!-- หน้าเว็บหลัก -->
     <div id="mainContent" style="display: none;">
         <nav class="navbar">
-            <div class="nav-logo" onclick="switchPage('home')">
+            <div class="nav-logo" onclick="playClickSound(); switchPage('home')">
                 <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg>
                 DHAF SHOP
             </div>
             <ul class="nav-menu">
-                <li><a id="nav-home" onclick="switchPage('home')" class="active">หน้าหลัก</a></li>
-                <li><a id="nav-topup" onclick="switchPage('topup')">เติมเงิน</a></li>
-                <li><a id="nav-history" onclick="switchPage('history')">ประวัติ</a></li>
+                <li><a id="nav-home" onclick="playClickSound(); switchPage('home')" class="active">หน้าหลัก</a></li>
+                <li><a id="nav-topup" onclick="playClickSound(); switchPage('topup')">เติมเงิน</a></li>
+                <li><a id="nav-history" onclick="playClickSound(); switchPage('history')">ประวัติ</a></li>
             </ul>
             <div class="nav-profile-area" id="navRight"></div>
         </nav>
@@ -225,7 +225,7 @@
                         <h1>ยินดีต้อนรับ, <span id="welcomeName">ผู้ใช้งาน</span> ✨</h1>
                         <p>บัญชีของคุณถูกสร้างเรียบร้อยแล้ว ยอดเงินเริ่มต้น 0.00 บาท</p>
                     </div>
-                    <button class="btn" style="background: white; color: var(--primary-blue);" onclick="switchPage('topup')">เติมเงินซองอังเปา</button>
+                    <button class="btn" style="background: white; color: var(--primary-blue);" onclick="playClickSound(); switchPage('topup')">เติมเงินซองอังเปา</button>
                 </div>
 
                 <div class="dashboard-grid">
@@ -235,8 +235,8 @@
                             <div class="balance-value" id="balanceAmount">0.00 ฿</div>
                         </div>
                         <div class="quick-actions">
-                            <a class="action-card" onclick="switchPage('topup')"><div class="action-icon">🧧</div>เติมเงิน</a>
-                            <a class="action-card" onclick="switchPage('history')"><div class="action-icon">📋</div>ประวัติ</a>
+                            <a class="action-card" onclick="playClickSound(); switchPage('topup')"><div class="action-icon">🧧</div>เติมเงิน</a>
+                            <a class="action-card" onclick="playClickSound(); switchPage('history')"><div class="action-icon">📋</div>ประวัติ</a>
                         </div>
                     </div>
                     <div class="stats-side-card">
@@ -263,7 +263,7 @@
                         <label class="input-label">ลิงก์ซองอังเปา (Truemoney Gift Link)</label>
                         <input type="text" id="angpaoLinkInput" class="input-field" placeholder="https://gift.truemoney.com/campaign/?v=...">
                     </div>
-                    <button class="btn btn-angpao" onclick="confirmAngpaoTopup()">ยืนยันการเติมเงิน</button>
+                    <button class="btn btn-angpao" onclick="playClickSound(); confirmAngpaoTopup()">ยืนยันการเติมเงิน</button>
                 </div>
             </div>
 
@@ -284,6 +284,31 @@
     <input type="file" id="avatarUploadInput" accept="image/*" style="display: none;" onchange="handleAvatarChange(event)">
 
     <script>
+        // ระบบเสียงฟินๆ (Web Audio API Synthesizer)
+        function playClickSound() {
+            try {
+                const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+                const osc = audioCtx.createOscillator();
+                const gainNode = audioCtx.createGain();
+
+                osc.type = 'sine';
+                // เสียงปิ๊งนุ่มๆ โทนใส ฟินๆ
+                osc.frequency.setValueAtTime(587.33, audioCtx.currentTime); // โน้ต D5
+                osc.frequency.exponentialRampToValueAtTime(880, audioCtx.currentTime + 0.08); // ขึ้นไปโน้ต A5
+
+                gainNode.gain.setValueAtTime(0.12, audioCtx.currentTime);
+                gainNode.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.12);
+
+                osc.connect(gainNode);
+                gainNode.connect(audioCtx.destination);
+
+                osc.start();
+                osc.stop(audioCtx.currentTime + 0.12);
+            } catch (e) {
+                // บราวเซอร์อาจบล็อกเสียงอัตโนมัติหากยังไม่มีการคลิกหน้าจอครั้งแรก
+            }
+        }
+
         function switchPage(pageName) {
             document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
             document.getElementById('page-' + pageName).classList.add('active');
@@ -361,7 +386,6 @@
         }
 
         function registerNewAccount(name, avatar) {
-            // ล้างค่าเก่าและกำหนดให้ยอดเงินเริ่มต้นเป็น 0.00 บาทเสมอสำหรับการสมัครใหม่
             balance = 0.00;
             transactions = [];
             localStorage.setItem('dhaf_balance', balance);
@@ -388,9 +412,9 @@
                     <div class="nav-wallet-badge">💰 <span id="navWalletAmount">0.00 ฿</span></div>
                     <div class="profile-dropdown" id="profileDropdown">
                         <div class="profile-container">
-                            <div class="profile-avatar-wrapper" onclick="toggleDropdown()" title="คลิกเพื่อจัดการโปรไฟล์">
+                            <div class="profile-avatar-wrapper" onclick="playClickSound(); toggleDropdown()" title="คลิกเพื่อจัดการโปรไฟล์">
                                 <img src="${avatar}" class="profile-avatar" id="navAvatarImg" alt="Avatar">
-                                <div class="avatar-plus-btn" onclick="event.stopPropagation(); triggerUpload();" title="เปลี่ยนรูปโปรไฟล์">+</div>
+                                <div class="avatar-plus-btn" onclick="event.stopPropagation(); playClickSound(); triggerUpload();" title="เปลี่ยนรูปโปรไฟล์">+</div>
                             </div>
                         </div>
                         <div class="dropdown-menu">
@@ -398,8 +422,8 @@
                                 <strong>${name}</strong>
                                 <span>สมาชิกใหม่ (0.00 ฿)</span>
                             </div>
-                            <button class="dropdown-item" onclick="triggerUpload()">เปลี่ยนรูปโปรไฟล์</button>
-                            <button class="dropdown-item danger" onclick="logout()">ออกจากระบบ / สมัครใหม่</button>
+                            <button class="dropdown-item" onclick="playClickSound(); triggerUpload()">เปลี่ยนรูปโปรไฟล์</button>
+                            <button class="dropdown-item danger" onclick="playClickSound(); logout()">ออกจากระบบ / สมัครใหม่</button>
                         </div>
                     </div>
                 `;
@@ -455,9 +479,6 @@
                     return;
                 }
             }
-
-            // หากกดปุ่มออกจากระบบ จะเคลียร์ Storage และบังคับเด้งกลับมาหน้าสมัครบัญชีใหม่
-            // ถ้าต้องการเทสหน้าสมัครใหม่โดยไม่ต้องรีเซ็ตเอง ให้คลิก "ออกจากระบบ / สมัครใหม่" ในเมนูปโปรไฟล์มุมขวาบน
         }
 
         async function fetchDiscordUser(token) {
