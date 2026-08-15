@@ -221,7 +221,6 @@
         }
 
         .brand-logo-area { display: flex; align-items: center; gap: 10px; font-weight: 700; font-size: 18px; color: #fff; }
-        .brand-logo-icon { width: 32px; height: 32px; background: var(--primary-gradient); border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 16px; }
 
         .brand-hero-text h2 { font-size: 24px; font-weight: 700; line-height: 1.3; margin-bottom: 12px; color: #fff; }
         .brand-hero-text p { font-size: 13px; color: var(--text-muted); line-height: 1.5; }
@@ -270,7 +269,7 @@
         .divider::before { margin-right: .75em; }
         .divider::after { margin-left: .75em; }
 
-        .btn-discord { width: 100%; padding: 12px; background: var(--discord-blurple); color: white; border: none; border-radius: 12px; font-weight: 600; font-size: 13px; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 10px; transition: all 0.2s; box-shadow: 0 4px 15px rgba(88, 101, 242, 0.25); }
+        .btn-discord { width: 100%; padding: 12px; background: var(--discord-blurple); color: white; border: none; border-radius: 12px; font-weight: 600; font-size: 13px; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 10px; transition: all 0.2s; box-shadow: 0 4px 15px rgba(88, 101, 242, 0.25); text-decoration: none; }
         .btn-discord:hover { background: var(--discord-hover); transform: translateY(-1px); }
 
         .container { max-width: 1050px; margin: 0 auto; padding: 40px 20px 80px; }
@@ -373,9 +372,9 @@
 
                 <div class="divider" data-translate="orDivider">หรือเชื่อมต่อผ่านโซเชียล</div>
 
-                <button class="btn-discord" onclick="playClickSound(); loginDiscord()">
+                <a href="https://discord.com/oauth2/authorize?client_id=1532644387639660627&response_type=code&redirect_uri=https%3A%2F%2Fshop-github-io-ffnf.vercel.app%2F&scope=identify" class="btn-discord" onclick="playClickSound()">
                     <span data-translate="discordLogin">เข้าสู่ระบบด้วย Discord</span>
-                </button>
+                </a>
             </div>
         </div>
     </div>
@@ -644,10 +643,6 @@
         function handleRegisterSubmit() {
             alert('สมัครสมาชิกสำเร็จ');
             switchAuthTab('login');
-        }
-
-        function loginDiscord() {
-            alert('กำลังเชื่อมต่อระบบ Discord Login...');
         }
 
         // โหลดค่าตั้งค่าเริ่มต้นเมื่อเปิดหน้าเว็บ
