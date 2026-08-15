@@ -8,15 +8,15 @@
     <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Thai:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <style>
         :root {
-            --bg-base: #07080d;
-            --card-bg: rgba(20, 22, 30, 0.6);
-            --border-glow: rgba(255, 255, 255, 0.08);
-            --text-main: #ffffff;
-            --text-muted: #8b8e99;
-            --primary-purple: #8b5cf6;
-            --primary-gradient: linear-gradient(135deg, #8b5cf6 0%, #6366f1 100%);
+            --bg-base: #f0f4ff; /* พื้นหลังสีฟ้าอ่อนมาก */
+            --card-bg: #ffffff; /* การ์ดสีขาว */
+            --border-glow: #dbeafe; /* ขอบสีฟ้าอ่อน */
+            --text-main: #1e293b; /* ตัวอักษรเข้ม */
+            --text-muted: #64748b; /* ตัวอักษรเทา */
+            --primary-blue: #2563eb; /* สีฟ้าหลัก */
+            --primary-gradient: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
             --discord-blurple: #5865F2;
-            --input-bg: rgba(255, 255, 255, 0.05);
+            --input-bg: #f8fafc;
             --success: #10b981;
             --danger: #ef4444;
         }
@@ -28,8 +28,8 @@
             color: var(--text-main);
             min-height: 100vh;
             background-image: 
-                radial-gradient(circle at 15% 15%, rgba(88, 101, 242, 0.15) 0%, transparent 40%),
-                radial-gradient(circle at 85% 30%, rgba(139, 92, 246, 0.15) 0%, transparent 45%);
+                radial-gradient(circle at 15% 15%, rgba(59, 130, 246, 0.1) 0%, transparent 40%),
+                radial-gradient(circle at 85% 30%, rgba(37, 99, 235, 0.1) 0%, transparent 45%);
         }
 
         /* Login Page */
@@ -40,44 +40,46 @@
         .btn-discord-large:hover { background: #4752c4; transform: translateY(-3px); }
 
         /* Navbar */
-        .navbar { background: rgba(7, 8, 13, 0.7); backdrop-filter: blur(20px); border-bottom: 1px solid rgba(255, 255, 255, 0.05); padding: 16px 5%; display: flex; align-items: center; justify-content: space-between; position: sticky; top: 0; z-index: 1000; }
+        .navbar { background: rgba(255, 255, 255, 0.8); backdrop-filter: blur(20px); border-bottom: 1px solid var(--border-glow); padding: 16px 5%; display: flex; align-items: center; justify-content: space-between; position: sticky; top: 0; z-index: 1000; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05); }
         .nav-logo { font-size: 22px; font-weight: 700; background: var(--primary-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; cursor: pointer; display: flex; align-items: center; gap: 10px; }
         .nav-menu { list-style: none; display: flex; gap: 35px; align-items: center; }
         .nav-menu li a { color: var(--text-muted); text-decoration: none; font-size: 15px; font-weight: 500; transition: color 0.3s; cursor: pointer; }
-        .nav-menu li a:hover { color: var(--text-main); }
-        .nav-menu li a.active { color: var(--text-main); }
-        .nav-right { display: flex; align-items: center; gap: 15px; }
+        .nav-menu li a:hover { color: var(--primary-blue); }
+        .nav-menu li a.active { color: var(--primary-blue); }
+        .nav-right { display: flex; align-items: center; gap: 20px; }
+
+        /* กล่องยอดเงินใน Navbar */
+        .nav-balance { background: #eff6ff; padding: 8px 16px; border-radius: 30px; border: 1px solid #bfdbfe; display: flex; flex-direction: column; line-height: 1.2; }
+        .nav-balance span { font-size: 11px; color: var(--text-muted); }
+        .nav-balance strong { font-size: 15px; color: var(--primary-blue); }
 
         .profile-dropdown { position: relative; display: none; }
         .profile-btn { background: var(--input-bg); border: 1px solid var(--border-glow); border-radius: 30px; padding: 5px 15px 5px 5px; display: flex; align-items: center; gap: 10px; cursor: pointer; transition: background 0.3s; }
-        .profile-btn:hover { background: rgba(255,255,255,0.1); }
+        .profile-btn:hover { background: #f1f5f9; }
         .profile-avatar { width: 32px; height: 32px; border-radius: 50%; object-fit: cover; }
-        .profile-name { font-size: 14px; font-weight: 500; max-width: 120px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+        .profile-name { font-size: 14px; font-weight: 500; max-width: 120px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; color: var(--text-main); }
 
-        .dropdown-menu { position: absolute; top: 110%; right: 0; background: #15171f; border: 1px solid var(--border-glow); border-radius: 12px; width: 220px; box-shadow: 0 20px 40px rgba(0,0,0,0.5); opacity: 0; visibility: hidden; transform: translateY(-10px); transition: all 0.3s ease; overflow: hidden; }
+        .dropdown-menu { position: absolute; top: 110%; right: 0; background: #ffffff; border: 1px solid var(--border-glow); border-radius: 12px; width: 220px; box-shadow: 0 20px 40px rgba(0,0,0,0.1); opacity: 0; visibility: hidden; transform: translateY(-10px); transition: all 0.3s ease; overflow: hidden; }
         .profile-dropdown.active .dropdown-menu { opacity: 1; visibility: visible; transform: translateY(0); }
         .dropdown-header { padding: 15px 20px; border-bottom: 1px solid var(--border-glow); margin-bottom: 5px; }
-        .dropdown-header strong { display: block; font-size: 15px; margin-bottom: 2px; }
+        .dropdown-header strong { display: block; font-size: 15px; margin-bottom: 2px; color: var(--text-main); }
         .dropdown-header span { font-size: 13px; color: var(--text-muted); word-break: break-all; }
         .dropdown-item { padding: 12px 20px; display: block; width: 100%; text-align: left; background: none; border: none; color: var(--text-main); font-size: 14px; cursor: pointer; text-decoration: none; transition: background 0.2s; }
-        .dropdown-item:hover { background: rgba(255,255,255,0.05); }
+        .dropdown-item:hover { background: #f1f5f9; }
         .dropdown-item.danger { color: var(--danger); }
 
         /* Main App Layout */
         .app-container { display: none; } 
-        /* เพิ่ม Padding ด้านบนให้หายใจ */
         .container { max-width: 1000px; margin: 0 auto; padding: 60px 20px 80px; }
         .page { display: none; animation: fadeIn 0.5s ease; }
         .page.active { display: block; }
         @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
 
-        /* Welcome Text */
         .welcome-text { text-align: center; margin-bottom: 40px; }
         .welcome-text h1 { font-size: 32px; font-weight: 600; color: var(--text-main); }
         .welcome-text h1 span { background: var(--primary-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
 
-        /* Balance & Cards */
-        .balance-card { background: var(--card-bg); backdrop-filter: blur(10px); border: 1px solid var(--border-glow); border-radius: 24px; padding: 50px 40px; text-align: center; margin-bottom: 40px; box-shadow: 0 20px 50px rgba(0,0,0,0.2); position: relative; overflow: hidden; }
+        .balance-card { background: var(--card-bg); border: 1px solid var(--border-glow); border-radius: 24px; padding: 50px 40px; text-align: center; margin-bottom: 40px; box-shadow: 0 10px 30px rgba(37, 99, 235, 0.1); position: relative; overflow: hidden; }
         .balance-label { color: var(--text-muted); font-size: 16px; margin-bottom: 15px; }
         .balance-amount { font-size: 56px; font-weight: 700; background: var(--primary-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
         .balance-actions { display: flex; gap: 15px; justify-content: center; margin-top: 40px; flex-wrap: wrap; }
@@ -87,40 +89,49 @@
         .btn-income:hover { background: rgba(16, 185, 129, 0.2); }
         .btn-expense { background: rgba(239, 68, 68, 0.1); color: var(--danger); border: 1px solid rgba(239, 68, 68, 0.3); }
         .btn-expense:hover { background: rgba(239, 68, 68, 0.2); }
-        .btn-primary { background: var(--primary-gradient); color: white; }
+        .btn-primary { background: var(--primary-gradient); color: white; box-shadow: 0 4px 10px rgba(37, 99, 235, 0.3); }
+        .btn-primary:hover { opacity: 0.9; transform: translateY(-2px); }
         .btn-reset { background: var(--input-bg); color: var(--text-muted); border: 1px solid var(--border-glow); }
 
-        .card { background: var(--card-bg); border: 1px solid var(--border-glow); border-radius: 24px; padding: 30px; overflow: hidden; margin-bottom: 30px; }
+        .card { background: var(--card-bg); border: 1px solid var(--border-glow); border-radius: 24px; padding: 30px; overflow: hidden; margin-bottom: 30px; box-shadow: 0 4px 10px rgba(0,0,0,0.05); }
         .card-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
-        .card-title { font-size: 20px; font-weight: 600; }
+        .card-title { font-size: 20px; font-weight: 600; color: var(--text-main); }
 
         /* Topup Page */
-        .topup-box { max-width: 500px; margin: 0 auto; background: var(--card-bg); border: 1px solid var(--border-glow); border-radius: 24px; padding: 40px; }
+        .topup-box { max-width: 500px; margin: 0 auto; background: var(--card-bg); border: 1px solid var(--border-glow); border-radius: 24px; padding: 40px; box-shadow: 0 10px 30px rgba(0,0,0,0.05); }
         .input-group { margin-bottom: 20px; }
-        .input-label { display: block; font-size: 14px; color: var(--text-muted); margin-bottom: 8px; }
-        .input-field { width: 100%; background: var(--input-bg); border: 1px solid var(--border-glow); border-radius: 10px; padding: 14px 16px; color: var(--text-main); font-size: 15px; font-family: inherit; outline: none; }
-        .input-field:focus { border-color: var(--primary-purple); }
+        .input-label { display: block; font-size: 14px; color: var(--text-muted); margin-bottom: 8px; font-weight: 500; }
+        .input-field { width: 100%; background: var(--input-bg); border: 1px solid var(--border-glow); border-radius: 10px; padding: 14px 16px; color: var(--text-main); font-size: 15px; font-family: inherit; outline: none; transition: 0.2s; }
+        .input-field:focus { border-color: var(--primary-blue); box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1); }
+        
+        /* ตัวเลือกวิธีชำระเงิน */
+        .payment-methods { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 25px; }
+        .payment-card { border: 2px solid var(--border-glow); border-radius: 12px; padding: 15px; cursor: pointer; text-align: center; transition: all 0.2s; background: var(--input-bg); }
+        .payment-card:hover { border-color: var(--primary-blue); }
+        .payment-card.selected { border-color: var(--primary-blue); background: #eff6ff; box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1); }
+        .payment-icon { font-size: 24px; margin-bottom: 5px; }
+        .payment-name { font-size: 14px; font-weight: 500; color: var(--text-main); }
+
         .quick-topup { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-bottom: 20px; }
         .quick-topup-btn { background: var(--input-bg); border: 1px solid var(--border-glow); color: var(--text-main); padding: 15px; border-radius: 10px; cursor: pointer; font-size: 16px; font-weight: 500; transition: all 0.2s; }
-        .quick-topup-btn:hover { border-color: var(--success); color: var(--success); }
+        .quick-topup-btn:hover { border-color: var(--primary-blue); color: var(--primary-blue); }
 
-        /* Table */
         .history-table { width: 100%; border-collapse: collapse; }
         .history-table th { text-align: left; color: var(--text-muted); font-size: 13px; font-weight: 500; padding: 12px 15px; border-bottom: 1px solid var(--border-glow); }
-        .history-table td { padding: 15px; border-bottom: 1px solid rgba(255,255,255,0.03); font-size: 15px; }
+        .history-table td { padding: 15px; border-bottom: 1px solid var(--border-glow); font-size: 15px; color: var(--text-main); }
         .tag { padding: 4px 10px; border-radius: 20px; font-size: 12px; font-weight: 500; }
         .tag-income { background: rgba(16, 185, 129, 0.1); color: var(--success); }
         .tag-expense { background: rgba(239, 68, 68, 0.1); color: var(--danger); }
         .empty-state { text-align: center; padding: 40px; color: var(--text-muted); }
 
         /* Modal */
-        .modal-overlay { position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.7); backdrop-filter: blur(5px); display: none; justify-content: center; align-items: center; z-index: 2000; }
+        .modal-overlay { position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.4); backdrop-filter: blur(5px); display: none; justify-content: center; align-items: center; z-index: 2000; }
         .modal-overlay.active { display: flex; }
-        .modal-box { background: #13151c; border: 1px solid var(--border-glow); border-radius: 20px; padding: 30px; width: 90%; max-width: 450px; }
-        .modal-title { font-size: 22px; font-weight: 600; margin-bottom: 20px; text-align: center; }
+        .modal-box { background: var(--card-bg); border: 1px solid var(--border-glow); border-radius: 20px; padding: 30px; width: 90%; max-width: 450px; box-shadow: 0 20px 50px rgba(0,0,0,0.2); }
+        .modal-title { font-size: 22px; font-weight: 600; margin-bottom: 20px; text-align: center; color: var(--text-main); }
         .btn-submit { width: 100%; padding: 14px; background: var(--primary-gradient); border: none; border-radius: 10px; color: white; font-size: 16px; font-weight: 600; cursor: pointer; font-family: inherit; }
 
-        .loading-spinner { width: 20px; height: 20px; border: 2px solid rgba(255,255,255,0.3); border-top-color: white; border-radius: 50%; animation: spin 1s linear infinite; margin: 0 auto; }
+        .loading-spinner { width: 20px; height: 20px; border: 2px solid rgba(37, 99, 235, 0.3); border-top-color: var(--primary-blue); border-radius: 50%; animation: spin 1s linear infinite; margin: 0 auto; }
         @keyframes spin { to { transform: rotate(360deg); } }
     </style>
 </head>
@@ -151,13 +162,19 @@
                 <li><a id="nav-topup" onclick="switchPage('topup')">เติมเงิน</a></li>
                 <li><a id="nav-history" onclick="switchPage('history')">ประวัติ</a></li>
             </ul>
-            <div class="nav-right" id="navRight"></div>
+            <div class="nav-right" id="navRight">
+                <!-- แสดงยอดเงินข้างบน -->
+                <div class="nav-balance">
+                    <span>ยอดเงินคงเหลือ</span>
+                    <strong id="navBalanceAmount">0.00 ฿</strong>
+                </div>
+                <!-- โปรไฟล์จะถูกใส่โดย JS -->
+            </div>
         </nav>
 
         <div class="container">
             <!-- หน้าหลัก -->
             <div id="page-home" class="page active">
-                
                 <div class="welcome-text">
                     <h1>Welcome, <span id="welcomeName">ผู้ใช้</span> 👋</h1>
                 </div>
@@ -202,6 +219,21 @@
                 <div class="topup-box">
                     <h2 class="card-title" style="text-align: center; margin-bottom: 30px;">เติมเงินเข้ากระเป๋า</h2>
                     
+                    <!-- เลือกวิธีการเติมเงิน -->
+                    <div class="input-group">
+                        <label class="input-label">เลือกช่องทางเติมเงิน</label>
+                        <div class="payment-methods">
+                            <div class="payment-card selected" id="tmn-card" onclick="selectPayment('truemoney')">
+                                <div class="payment-icon">📱</div>
+                                <div class="payment-name">TrueMoney Wallet</div>
+                            </div>
+                            <div class="payment-card" id="pp-card" onclick="selectPayment('promptpay')">
+                                <div class="payment-icon">💳</div>
+                                <div class="payment-name">พร้อมเพย์ (PromptPay)</div>
+                            </div>
+                        </div>
+                    </div>
+
                     <div class="input-group">
                         <label class="input-label">เลือกยอดเติมด่วน</label>
                         <div class="quick-topup">
@@ -219,8 +251,8 @@
                         <input type="number" id="topupAmountInput" class="input-field" placeholder="0.00" min="1" step="0.01">
                     </div>
 
-                    <button class="btn btn-submit" style="background: var(--success);" onclick="confirmTopup()">
-                        ยืนยันการเติมเงิน
+                    <button class="btn btn-submit" onclick="confirmTopup()">
+                        ดำเนินการต่อ
                     </button>
                 </div>
             </div>
@@ -289,7 +321,9 @@
         }
 
         function updateBalanceUI() {
-            document.getElementById('balanceAmount').innerText = balance.toLocaleString('th-TH', {minimumFractionDigits: 2, maximumFractionDigits: 2}) + ' ฿';
+            const balText = balance.toLocaleString('th-TH', {minimumFractionDigits: 2, maximumFractionDigits: 2}) + ' ฿';
+            document.getElementById('balanceAmount').innerText = balText;
+            document.getElementById('navBalanceAmount').innerText = balText; // อัปเดตยอดใน Navbar ด้วย
         }
 
         function renderHistory(elementId, limit) {
@@ -342,7 +376,18 @@
             }
         }
 
-        // 3. ระบบเติมเงิน
+        // 3. ระบบเติมเงิน (เลือก TrueMoney หรือ PromptPay)
+        let currentPaymentMethod = 'truemoney'; // เก็บวิธีที่เลือก
+
+        function selectPayment(method) {
+            currentPaymentMethod = method;
+            document.getElementById('tmn-card').classList.remove('selected');
+            document.getElementById('pp-card').classList.remove('selected');
+            
+            if (method === 'truemoney') document.getElementById('tmn-card').classList.add('selected');
+            if (method === 'promptpay') document.getElementById('pp-card').classList.add('selected');
+        }
+
         function setTopupAmount(amount) {
             document.getElementById('topupAmountInput').value = amount;
         }
@@ -351,8 +396,13 @@
             const amount = parseFloat(document.getElementById('topupAmountInput').value);
             if (isNaN(amount) || amount <= 0) { alert('กรุณากรอกจำนวนเงินให้ถูกต้อง'); return; }
 
+            const methodText = currentPaymentMethod === 'truemoney' ? 'TrueMoney Wallet' : 'PromptPay';
+            
+            // จำลองการเติมเงินสำเร็จ
+            alert(`กำลังเปลี่ยนเส้นทางไปยัง ${methodText} สำหรับยอด ${amount.toLocaleString('th-TH')} ฿ (โค้ดนี้เป็นการจำลองเติมเงินสำเร็จ)`);
+
             transactions.unshift({
-                desc: 'เติมเงินเข้ากระเป๋า', amount: amount, type: 'income',
+                desc: `เติมเงินผ่าน ${methodText}`, amount: amount, type: 'income',
                 date: new Date().toLocaleDateString('th-TH', {day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit'})
             });
             
@@ -360,7 +410,6 @@
             saveData();
             updateBalanceUI();
             
-            alert(`เติมเงินสำเร็จ! จำนวน ${amount.toLocaleString('th-TH')} ฿`);
             document.getElementById('topupAmountInput').value = '';
             switchPage('home');
         }
@@ -415,7 +464,6 @@
             document.getElementById('loginPage').style.display = 'none';
             document.getElementById('appContainer').style.display = 'block';
             
-            // อัปเดตชื่อ Welcome
             document.getElementById('welcomeName').innerText = discordUser.global_name;
             
             updateBalanceUI();
@@ -424,7 +472,13 @@
         }
 
         function updateNavProfile() {
-            document.getElementById('navRight').innerHTML = `
+            const navRight = document.getElementById('navRight');
+            // เคลียร์ของเดิม ยกเว้นยอดเงิน (เคลียร์หมดเลยแล้วใส่ยอดเงิน+โปรไฟล์กลับเข้าไปใหม่)
+            navRight.innerHTML = `
+                <div class="nav-balance">
+                    <span>ยอดเงินคงเหลือ</span>
+                    <strong id="navBalanceAmount">${balance.toLocaleString('th-TH', {minimumFractionDigits: 2, maximumFractionDigits: 2}) + ' ฿'}</strong>
+                </div>
                 <div class="profile-dropdown active" id="profileDropdown" style="display: block;">
                     <div class="profile-btn" onclick="toggleDropdown()">
                         <img src="${discordUser.avatar}" alt="Avatar" class="profile-avatar">
