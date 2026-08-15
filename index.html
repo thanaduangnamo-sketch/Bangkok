@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>DHAF SHOP | Wallet System</title>
+    <title>DHAF SHOP | System</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <style>
@@ -23,7 +23,6 @@
             --danger: #ef4444;
         }
 
-        /* ธีมสว่าง (Light Theme) */
         body.light-theme {
             --bg-base: #f1f5f9;
             --card-bg: #ffffff;
@@ -44,132 +43,79 @@
             transition: background 0.3s, color 0.3s;
         }
 
-        /* Modal / Auth Layout แบบ Split Card */
-        .auth-modal-overlay {
-            position: fixed;
-            top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(6, 9, 17, 0.85);
-            backdrop-filter: blur(20px);
-            -webkit-backdrop-filter: blur(20px);
+        /* Navbar แบบใหม่ตามเรฟ */
+        .navbar { 
+            background: var(--card-bg); 
+            border-bottom: 1px solid var(--border-glow); 
+            padding: 12px 4%; 
+            display: flex; 
+            align-items: center; 
+            justify-content: space-between; 
+            position: sticky; 
+            top: 0; 
+            z-index: 100; 
+            box-shadow: 0 4px 20px rgba(0,0,0,0.1); 
+        }
+        
+        .nav-logo { 
+            font-size: 18px; 
+            font-weight: 700; 
+            background: var(--primary-gradient); 
+            -webkit-background-clip: text; 
+            -webkit-text-fill-color: transparent; 
+            cursor: pointer; 
+            display: flex; 
+            align-items: center; 
+            gap: 8px; 
+        }
+
+        .nav-menu { 
+            list-style: none; 
+            display: flex; 
+            gap: 22px; 
+            align-items: center; 
+        }
+
+        .nav-menu li a { 
+            color: var(--text-muted); 
+            text-decoration: none; 
+            font-size: 13px; 
+            font-weight: 500; 
+            transition: color 0.2s; 
+            cursor: pointer; 
             display: flex;
-            justify-content: center;
             align-items: center;
-            z-index: 9999;
-            padding: 20px;
+            gap: 6px;
+            padding: 6px 10px;
+            border-radius: 10px;
         }
 
-        .auth-split-card {
-            background: var(--card-bg);
-            border: 1px solid var(--border-glow);
-            border-radius: 28px;
-            width: 100%;
-            max-width: 780px;
-            display: grid;
-            grid-template-columns: 1fr 1.1fr;
-            overflow: hidden;
-            box-shadow: 0 30px 70px rgba(0, 0, 0, 0.6);
-            animation: modalPop 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+        .nav-menu li a:hover, .nav-menu li a.active { 
+            color: var(--primary-purple); 
+            background: rgba(139, 92, 246, 0.08);
+            font-weight: 600; 
         }
 
-        @media (max-width: 768px) {
-            .auth-split-card { grid-template-columns: 1fr; max-width: 440px; }
-            .auth-left-pane { display: none; }
-        }
-
-        @keyframes modalPop {
-            from { opacity: 0; transform: translateY(20px) scale(0.96); }
-            to { opacity: 1; transform: translateY(0) scale(1); }
-        }
-
-        /* ฝั่งซ้าย (Brand Banner) */
-        .auth-left-pane {
-            background: linear-gradient(135deg, #17112c 0%, #0d0b18 100%);
-            padding: 40px;
-            display: flex;
-            flex-direction: column;
-            justify-content: space-between;
-            position: relative;
-            border-right: 1px solid var(--border-glow);
-            background-image: radial-gradient(circle at 50% 30%, rgba(139, 92, 246, 0.15) 0%, transparent 70%);
-        }
-
-        .brand-logo-area { display: flex; align-items: center; gap: 10px; font-weight: 700; font-size: 18px; color: #fff; }
-        .brand-logo-icon { width: 32px; height: 32px; background: var(--primary-gradient); border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 16px; }
-
-        .brand-hero-text h2 { font-size: 24px; font-weight: 700; line-height: 1.3; margin-bottom: 12px; color: #fff; }
-        .brand-hero-text p { font-size: 13px; color: var(--text-muted); line-height: 1.5; }
-
-        /* ฝั่งขวา (Form Controls) */
-        .auth-right-pane {
-            padding: 40px;
-            display: flex;
-            flex-direction: column;
-            position: relative;
-        }
-
-        /* แท็บสลับ เข้าสู่ระบบ / สมัครสมาชิก */
-        .auth-tabs {
-            background: rgba(255, 255, 255, 0.03);
-            border: 1px solid var(--border-glow);
-            border-radius: 14px;
-            padding: 4px;
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            margin-bottom: 28px;
-        }
-
-        .tab-btn {
-            background: transparent; border: none; padding: 10px; font-size: 13px; font-weight: 600;
-            color: var(--text-muted); border-radius: 10px; cursor: pointer; transition: all 0.25s ease;
-        }
-        .tab-btn.active {
-            background: var(--primary-gradient);
-            color: white;
-            box-shadow: 0 4px 15px rgba(139, 92, 246, 0.3);
-        }
-
-        .auth-form-content { display: none; }
-        .auth-form-content.active { display: block; animation: fadeIn 0.3s ease; }
-
-        .input-group { margin-bottom: 16px; text-align: left; }
-        .input-label { display: block; font-size: 12px; color: var(--text-muted); margin-bottom: 6px; font-weight: 500; }
-        .input-field-wrapper { position: relative; }
-        .input-field { width: 100%; background: var(--card-bg); border: 1px solid var(--border-glow); border-radius: 12px; padding: 12px 16px; color: var(--text-main); font-size: 13px; outline: none; transition: all 0.25s ease; }
-        .input-field:focus { border-color: var(--border-focus); box-shadow: 0 0 0 4px rgba(139, 92, 246, 0.15); }
-        
-        .input-icon-right { position: absolute; right: 14px; top: 50%; transform: translateY(-50%); color: var(--text-muted); cursor: pointer; font-size: 14px; }
-
-        .auth-options { display: flex; justify-content: space-between; align-items: center; font-size: 12px; margin-bottom: 20px; color: var(--text-muted); }
-        .remember-me { display: flex; align-items: center; gap: 6px; cursor: pointer; }
-        .forgot-link { color: var(--primary-purple); text-decoration: none; font-weight: 500; }
-        .forgot-link:hover { text-decoration: underline; }
-
-        .btn-submit { width: 100%; padding: 12px; background: var(--primary-gradient); border: none; border-radius: 12px; color: white; font-size: 14px; font-weight: 600; cursor: pointer; box-shadow: 0 6px 20px rgba(139, 92, 246, 0.3); transition: all 0.25s ease; }
-        .btn-submit:hover { opacity: 0.95; transform: translateY(-1px); box-shadow: 0 8px 22px rgba(139, 92, 246, 0.4); }
-
-        .divider { display: flex; align-items: center; text-align: center; color: var(--text-muted); font-size: 12px; margin: 18px 0; font-weight: 500; }
-        .divider::before, .divider::after { content: ''; flex: 1; border-bottom: 1px solid var(--border-glow); }
-        .divider::before { margin-right: .75em; }
-        .divider::after { margin-left: .75em; }
-
-        .btn-discord { width: 100%; padding: 12px; background: var(--discord-blurple); color: white; border: none; border-radius: 12px; font-weight: 600; font-size: 13px; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 10px; transition: all 0.2s; box-shadow: 0 4px 15px rgba(88, 101, 242, 0.25); }
-        .btn-discord:hover { background: var(--discord-hover); transform: translateY(-1px); }
-
-        /* Navbar & Main Content */
-        .navbar { background: var(--card-bg); border-bottom: 1px solid var(--border-glow); padding: 14px 5%; display: flex; align-items: center; justify-content: space-between; position: sticky; top: 0; z-index: 100; box-shadow: 0 4px 20px rgba(0,0,0,0.1); }
-        .nav-logo { font-size: 18px; font-weight: 700; background: var(--primary-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; cursor: pointer; display: flex; align-items: center; gap: 8px; }
-        .nav-menu { list-style: none; display: flex; gap: 28px; align-items: center; }
-        .nav-menu li a { color: var(--text-muted); text-decoration: none; font-size: 14px; font-weight: 500; transition: color 0.2s; cursor: pointer; }
-        .nav-menu li a:hover, .nav-menu li a.active { color: var(--primary-purple); font-weight: 600; }
-        
         .nav-right-area { display: flex; align-items: center; gap: 12px; }
-        .nav-wallet-badge { background: rgba(139, 92, 246, 0.1); border: 1px solid rgba(139, 92, 246, 0.3); padding: 6px 14px; border-radius: 20px; font-size: 14px; font-weight: 700; color: #a78bfa; display: flex; align-items: center; gap: 6px; }
 
-        /* ปุ่มเปิดเมนูตั้งค่าลอย / ใน Nav */
-        .settings-btn { background: var(--card-bg); border: 1px solid var(--border-glow); color: var(--text-main); width: 40px; height: 40px; border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer; font-size: 18px; transition: all 0.2s; }
+        /* ปุ่มตั้งค่าวงกลม */
+        .settings-btn { 
+            background: var(--card-bg); 
+            border: 1px solid var(--border-glow); 
+            color: var(--text-main); 
+            width: 38px; 
+            height: 38px; 
+            border-radius: 50%; 
+            display: flex; 
+            align-items: center; 
+            justify-content: center; 
+            cursor: pointer; 
+            font-size: 16px; 
+            transition: all 0.2s; 
+        }
         .settings-btn:hover { border-color: var(--primary-purple); color: var(--primary-purple); }
 
-        /* กล่องเมนูตั้งค่า Popup (ตามรูปภาพที่คุณส่งมา) */
+        /* กล่องเมนูตั้งค่า Popup */
         .settings-dropdown-wrapper { position: relative; }
         .settings-popup-card {
             position: absolute; top: 130%; right: 0;
@@ -210,22 +156,130 @@
             box-shadow: 0 4px 12px rgba(139, 92, 246, 0.3);
         }
 
-        .profile-container { position: relative; display: flex; align-items: center; }
-        .profile-avatar-wrapper { position: relative; width: 40px; height: 40px; cursor: pointer; }
-        .profile-avatar { width: 100%; height: 100%; border-radius: 50%; object-fit: cover; border: 2px solid var(--primary-purple); }
-        .avatar-plus-btn { position: absolute; bottom: -2px; right: -2px; background: var(--primary-purple); color: white; width: 16px; height: 16px; border-radius: 50%; font-size: 11px; display: flex; align-items: center; justify-content: center; border: 2px solid var(--bg-base); font-weight: bold; }
+        /* ปุ่มลงชื่อเข้าใช้สไตล์พรีเมียมใน Navbar */
+        .btn-login-nav {
+            background: var(--card-bg);
+            border: 1px solid var(--border-glow);
+            color: var(--text-main);
+            padding: 8px 18px;
+            border-radius: 20px;
+            font-size: 13px;
+            font-weight: 600;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            transition: all 0.2s;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+        }
+        .btn-login-nav:hover {
+            border-color: var(--primary-purple);
+            color: var(--primary-purple);
+            background: rgba(139, 92, 246, 0.05);
+        }
 
-        .profile-dropdown { position: relative; }
-        .dropdown-menu { position: absolute; top: 130%; right: 0; background: var(--card-bg); border: 1px solid var(--border-glow); border-radius: 16px; width: 220px; box-shadow: 0 15px 35px rgba(0,0,0,0.4); opacity: 0; visibility: hidden; transform: translateY(-8px); transition: all 0.25s ease; overflow: hidden; z-index: 110; }
-        .profile-dropdown.active .dropdown-menu { opacity: 1; visibility: visible; transform: translateY(0); }
-        .dropdown-header { padding: 14px 18px; border-bottom: 1px solid var(--border-glow); background: rgba(255,255,255,0.02); }
-        .dropdown-header strong { display: block; font-size: 14px; color: var(--text-main); }
-        .dropdown-header span { font-size: 12px; color: var(--text-muted); }
-        .dropdown-item { padding: 11px 18px; display: block; width: 100%; text-align: left; background: none; border: none; color: var(--text-main); font-size: 14px; cursor: pointer; text-decoration: none; transition: background 0.15s; }
-        .dropdown-item:hover { background: rgba(255,255,255,0.05); }
-        .dropdown-item.danger { color: var(--danger); }
+        /* Modal / Auth Layout */
+        .auth-modal-overlay {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(6, 9, 17, 0.85);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+            padding: 20px;
+        }
 
-        /* Container */
+        .auth-split-card {
+            background: var(--card-bg);
+            border: 1px solid var(--border-glow);
+            border-radius: 28px;
+            width: 100%;
+            max-width: 780px;
+            display: grid;
+            grid-template-columns: 1fr 1.1fr;
+            overflow: hidden;
+            box-shadow: 0 30px 70px rgba(0, 0, 0, 0.6);
+            animation: modalPop 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+        }
+
+        @media (max-width: 768px) {
+            .auth-split-card { grid-template-columns: 1fr; max-width: 440px; }
+            .auth-left-pane { display: none; }
+            .nav-menu { display: none; } /* ซ่อนเมนูย่อยบนมือถือถ้าจอแคบ */
+        }
+
+        @keyframes modalPop {
+            from { opacity: 0; transform: translateY(20px) scale(0.96); }
+            to { opacity: 1; transform: translateY(0) scale(1); }
+        }
+
+        .auth-left-pane {
+            background: linear-gradient(135deg, #17112c 0%, #0d0b18 100%);
+            padding: 40px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            border-right: 1px solid var(--border-glow);
+        }
+
+        .brand-logo-area { display: flex; align-items: center; gap: 10px; font-weight: 700; font-size: 18px; color: #fff; }
+        .brand-logo-icon { width: 32px; height: 32px; background: var(--primary-gradient); border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 16px; }
+
+        .brand-hero-text h2 { font-size: 24px; font-weight: 700; line-height: 1.3; margin-bottom: 12px; color: #fff; }
+        .brand-hero-text p { font-size: 13px; color: var(--text-muted); line-height: 1.5; }
+
+        .auth-right-pane { padding: 40px; display: flex; flex-direction: column; position: relative; }
+
+        .auth-tabs {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid var(--border-glow);
+            border-radius: 14px;
+            padding: 4px;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            margin-bottom: 28px;
+        }
+
+        .tab-btn {
+            background: transparent; border: none; padding: 10px; font-size: 13px; font-weight: 600;
+            color: var(--text-muted); border-radius: 10px; cursor: pointer; transition: all 0.25s ease;
+        }
+        .tab-btn.active {
+            background: var(--primary-gradient);
+            color: white;
+            box-shadow: 0 4px 15px rgba(139, 92, 246, 0.3);
+        }
+
+        .auth-form-content { display: none; }
+        .auth-form-content.active { display: block; animation: fadeIn 0.3s ease; }
+
+        .input-group { margin-bottom: 16px; text-align: left; }
+        .input-label { display: block; font-size: 12px; color: var(--text-muted); margin-bottom: 6px; font-weight: 500; }
+        .input-field-wrapper { position: relative; }
+        .input-field { width: 100%; background: var(--card-bg); border: 1px solid var(--border-glow); border-radius: 12px; padding: 12px 16px; color: var(--text-main); font-size: 13px; outline: none; transition: all 0.25s ease; }
+        .input-field:focus { border-color: var(--border-focus); box-shadow: 0 0 0 4px rgba(139, 92, 246, 0.15); }
+        .input-icon-right { position: absolute; right: 14px; top: 50%; transform: translateY(-50%); color: var(--text-muted); cursor: pointer; font-size: 14px; }
+
+        .auth-options { display: flex; justify-content: space-between; align-items: center; font-size: 12px; margin-bottom: 20px; color: var(--text-muted); }
+        .remember-me { display: flex; align-items: center; gap: 6px; cursor: pointer; }
+        .forgot-link { color: var(--primary-purple); text-decoration: none; font-weight: 500; }
+        .forgot-link:hover { text-decoration: underline; }
+
+        .btn-submit { width: 100%; padding: 12px; background: var(--primary-gradient); border: none; border-radius: 12px; color: white; font-size: 14px; font-weight: 600; cursor: pointer; box-shadow: 0 6px 20px rgba(139, 92, 246, 0.3); transition: all 0.25s ease; }
+        .btn-submit:hover { opacity: 0.95; transform: translateY(-1px); }
+
+        .divider { display: flex; align-items: center; text-align: center; color: var(--text-muted); font-size: 12px; margin: 18px 0; font-weight: 500; }
+        .divider::before, .divider::after { content: ''; flex: 1; border-bottom: 1px solid var(--border-glow); }
+        .divider::before { margin-right: .75em; }
+        .divider::after { margin-left: .75em; }
+
+        .btn-discord { width: 100%; padding: 12px; background: var(--discord-blurple); color: white; border: none; border-radius: 12px; font-weight: 600; font-size: 13px; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 10px; transition: all 0.2s; box-shadow: 0 4px 15px rgba(88, 101, 242, 0.25); }
+        .btn-discord:hover { background: var(--discord-hover); transform: translateY(-1px); }
+
+        /* Container & Pages */
         .container { max-width: 1050px; margin: 0 auto; padding: 40px 20px 80px; }
         .page { display: none; animation: fadeIn 0.4s ease; }
         .page.active { display: block; }
@@ -276,10 +330,9 @@
 </head>
 <body>
 
-    <!-- หน้าต่างสมัครบัญชี / เข้าสู่ระบบ (แบบ Split Card) -->
-    <div class="auth-modal-overlay" id="authModal">
+    <!-- หน้าต่างสมัครบัญชี / เข้าสู่ระบบ (Modal) -->
+    <div class="auth-modal-overlay" id="authModal" style="display: none;">
         <div class="auth-split-card">
-            <!-- ฝั่งซ้าย: โลโก้ & สโลแกน -->
             <div class="auth-left-pane">
                 <div class="brand-logo-area">
                     <div class="brand-logo-icon">⚡</div>
@@ -292,14 +345,13 @@
                 <div style="font-size: 11px; color: var(--text-muted);">© 2026 DHAF STUDIO. All rights reserved.</div>
             </div>
 
-            <!-- ฝั่งขวา: ฟอร์มเข้าสู่ระบบ / สมัครสมาชิก -->
             <div class="auth-right-pane">
-                <div class="auth-tabs">
+                <div style="position: absolute; top: 20px; right: 20px; cursor: pointer; font-size: 18px; color: var(--text-muted);" onclick="closeAuthModal()">✕</div>
+                <div class="auth-tabs" style="margin-top: 10px;">
                     <button class="tab-btn active" id="tabLoginBtn" onclick="playClickSound(); switchAuthTab('login')" data-translate="loginTab">เข้าสู่ระบบ</button>
                     <button class="tab-btn" id="tabRegisterBtn" onclick="playClickSound(); switchAuthTab('register')" data-translate="registerTab">สมัครสมาชิก</button>
                 </div>
 
-                <!-- ฟอร์มเข้าสู่ระบบ -->
                 <div class="auth-form-content active" id="formLogin">
                     <form onsubmit="event.preventDefault(); playClickSound(); handleLoginSubmit();">
                         <div class="input-group">
@@ -317,13 +369,12 @@
                             <label class="remember-me">
                                 <input type="checkbox" style="accent-color: var(--primary-purple);"> <span data-translate="rememberMe">จดจำฉัน</span>
                             </label>
-                            <a href="#" class="forgot-link" onclick="playClickSound(); alert(currentLang==='th'?'กรุณาติดต่อแอดมินเพื่อรีเซ็ตรหัสผ่าน':'Please contact admin to reset password');" data-translate="forgotPass">ลืมรหัสผ่าน</a>
+                            <a href="#" class="forgot-link" onclick="playClickSound(); alert('กรุณาติดต่อแอดมิน');" data-translate="forgotPass">ลืมรหัสผ่าน</a>
                         </div>
                         <button type="submit" class="btn-submit" data-translate="loginBtnText">เข้าสู่ระบบ</button>
                     </form>
                 </div>
 
-                <!-- ฟอร์มสมัครสมาชิก -->
                 <div class="auth-form-content" id="formRegister">
                     <form onsubmit="event.preventDefault(); playClickSound(); handleRegisterSubmit();">
                         <div class="input-group">
@@ -341,7 +392,7 @@
                                 <span class="input-icon-right" onclick="togglePasswordVisibility('regPassword', this)">👁️</span>
                             </div>
                         </div>
-                        <button type="submit" class="btn-submit" style="margin-top: 6px;" data-translate="registerBtnText">สมัครบัญชีใหม่ (เริ่มต้น 0.00)</button>
+                        <button type="submit" class="btn-submit" style="margin-top: 6px;" data-translate="registerBtnText">สมัครบัญชีใหม่</button>
                     </form>
                 </div>
 
@@ -355,25 +406,28 @@
         </div>
     </div>
 
-    <!-- หน้าเว็บหลัก -->
-    <div id="mainContent" style="display: none;">
+    <!-- โครงสร้างหน้าเว็บหลัก -->
+    <div id="mainContent">
         <nav class="navbar">
             <div class="nav-logo" onclick="playClickSound(); switchPage('home')">
                 <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg>
                 DHAF SHOP
             </div>
+
+            <!-- เมนูหลักตามรูปอ้างอิงของคุณ -->
             <ul class="nav-menu">
-                <li><a id="nav-home" onclick="playClickSound(); switchPage('home')" data-translate="navHome" class="active">หน้าหลัก</a></li>
-                <li><a id="nav-topup" onclick="playClickSound(); switchPage('topup')" data-translate="navTopup">เติมเงิน</a></li>
-                <li><a id="nav-history" onclick="playClickSound(); switchPage('history')" data-translate="navHistory">ประวัติ</a></li>
+                <li><a id="nav-update" onclick="playClickSound(); alert('ยังไม่มีอัปเดตใหม่ในขณะนี้');">🔄 อัปเดตเวอร์ชั่น</a></li>
+                <li><a id="nav-upgrade" onclick="playClickSound(); alert('ระบบอัปเกรดจะเปิดเร็วๆ นี้');">⭐ อัปเกรด</a></li>
+                <li><a id="nav-topup" onclick="playClickSound(); switchPage('topup')">💳 เติมเงิน</a></li>
+                <li><a id="nav-services" onclick="playClickSound(); alert('บริการเสริมทั้งหมด');">🧩 บริการเสริม ▾</a></li>
+                <li><a id="nav-contact" onclick="playClickSound(); alert('ติดต่อแอดมินผ่าน Discord ได้เลยครับ');">📖 ติดต่อเรา</a></li>
             </ul>
 
             <div class="nav-right-area">
-                <!-- ปุ่มตั้งค่า (ตามรูปภาพที่คุณต้องการ) -->
+                <!-- ปุ่มตั้งค่า ⚙️ -->
                 <div class="settings-dropdown-wrapper" id="settingsDropdown">
                     <button class="settings-btn" onclick="playClickSound(); toggleSettingsMenu()" title="ตั้งค่าระบบ">⚙️</button>
                     <div class="settings-popup-card">
-                        <!-- เลือกภาษา -->
                         <div class="setting-section">
                             <span class="setting-label">ภาษา</span>
                             <div class="setting-toggle-group">
@@ -381,7 +435,6 @@
                                 <button class="setting-opt-btn" id="langEnBtn" onclick="playClickSound(); setLanguage('en')">English</button>
                             </div>
                         </div>
-                        <!-- เลือกค่าเงิน -->
                         <div class="setting-section">
                             <span class="setting-label">ค่าเงิน</span>
                             <div class="setting-toggle-group">
@@ -389,7 +442,6 @@
                                 <button class="setting-opt-btn" id="currUsdBtn" onclick="playClickSound(); setCurrency('USD')">ดอลลาร์</button>
                             </div>
                         </div>
-                        <!-- เลือกธีม -->
                         <div class="setting-section">
                             <span class="setting-label">ธีม</span>
                             <div class="setting-toggle-group">
@@ -400,7 +452,12 @@
                     </div>
                 </div>
 
-                <div id="navRight"></div>
+                <!-- ปุ่มลงชื่อเข้าใช้ -->
+                <div id="navRight">
+                    <button class="btn-login-nav" onclick="playClickSound(); openAuthModal()">
+                        ✨ ลงชื่อเข้าใช้
+                    </button>
+                </div>
             </div>
         </nav>
 
@@ -409,27 +466,27 @@
             <div id="page-home" class="page active">
                 <div class="hero-banner">
                     <div class="hero-text">
-                        <h1><span data-translate="welcomeText">ยินดีต้อนรับ</span>, <span id="welcomeName">ผู้ใช้งาน</span> ✨</h1>
-                        <p data-translate="heroSub">บัญชีของคุณพร้อมใช้งานแล้ว ยอดเงินเริ่มต้น</p>
+                        <h1>ยินดีต้อนรับ, <span id="welcomeName">ผู้เยี่ยมชม</span> ✨</h1>
+                        <p>เลือกใช้งานเมนูด้านบนเพื่อเริ่มต้นใช้งานระบบ</p>
                     </div>
-                    <button class="btn" style="background: white; color: var(--primary-purple);" onclick="playClickSound(); switchPage('topup')" data-translate="topupAngpaoBtn">เติมเงินซองอังเปา</button>
+                    <button class="btn" style="background: white; color: var(--primary-purple);" onclick="playClickSound(); switchPage('topup')">เติมเงินซองอังเปา</button>
                 </div>
 
                 <div class="dashboard-grid">
                     <div class="balance-card-modern">
                         <div>
-                            <div class="balance-title" data-translate="balanceTitle">ยอดเงินคงเหลือในระบบ</div>
+                            <div class="balance-title">ยอดเงินคงเหลือในระบบ</div>
                             <div class="balance-value" id="balanceAmount">0.00 ฿</div>
                         </div>
                         <div class="quick-actions">
-                            <a class="action-card" onclick="playClickSound(); switchPage('topup')"><div class="action-icon">🧧</div><span data-translate="navTopup">เติมเงิน</span></a>
-                            <a class="action-card" onclick="playClickSound(); switchPage('history')"><div class="action-icon">📋</div><span data-translate="navHistory">ประวัติ</span></a>
+                            <a class="action-card" onclick="playClickSound(); switchPage('topup')"><div class="action-icon">🧧</div><span>เติมเงิน</span></a>
+                            <a class="action-card" onclick="playClickSound(); openAuthModal()"><div class="action-icon">📋</div><span>ลงชื่อเข้าใช้</span></a>
                         </div>
                     </div>
                     <div class="stats-side-card">
                         <div class="stat-item">
                             <div class="stat-icon" style="background: rgba(16, 185, 129, 0.15); color: var(--success);">🛡️</div>
-                            <div class="stat-info"><span data-translate="accStatus">สถานะบัญชี</span><strong data-translate="accSafe">ปลอดภัย / เชื่อมต่อแล้ว</strong></div>
+                            <div class="stat-info"><span>สถานะระบบ</span><strong>พร้อมให้บริการ 100%</strong></div>
                         </div>
                     </div>
                 </div>
@@ -441,59 +498,39 @@
                     <div class="angpao-header">
                         <div class="angpao-badge">🧧</div>
                         <div>
-                            <h2 class="card-title" style="margin-bottom: 2px;" data-translate="angpaoHeader">เติมเงินด้วยซองอังเปา</h2>
-                            <p style="font-size: 13px; color: var(--text-muted);" data-translate="angpaoSub">TrueMoney Wallet (แบบคนเดียว)</p>
+                            <h2 class="card-title" style="margin-bottom: 2px;">เติมเงินด้วยซองอังเปา</h2>
+                            <p style="font-size: 13px; color: var(--text-muted);">TrueMoney Wallet (แบบคนเดียว)</p>
                         </div>
                     </div>
                     
                     <div class="input-group">
-                        <label class="input-label" data-translate="angpaoLabel">ลิงก์ซองอังเปา (Truemoney Gift Link)</label>
+                        <label class="input-label">ลิงก์ซองอังเปา (Truemoney Gift Link)</label>
                         <input type="text" id="angpaoLinkInput" class="input-field" placeholder="https://gift.truemoney.com/campaign/?v=...">
                     </div>
-                    <button class="btn btn-angpao" onclick="playClickSound(); confirmAngpaoTopup()" data-translate="confirmTopupBtn">ยืนยันการเติมเงิน</button>
-                </div>
-            </div>
-
-            <!-- หน้าประวัติ -->
-            <div id="page-history" class="page">
-                <div class="card">
-                    <div class="card-header"><h2 class="card-title" data-translate="historyTitle">ประวัติการทำธุรกรรม</h2></div>
-                    <table class="history-table">
-                        <thead><tr><th data-translate="thDesc">รายละเอียด</th><th data-translate="thType">ประเภท</th><th data-translate="thDate">วันที่</th><th style="text-align: right;" data-translate="thAmount">จำนวนเงิน</th></tr></thead>
-                        <tbody id="fullHistoryBody"></tbody>
-                    </table>
+                    <button class="btn btn-angpao" onclick="playClickSound(); confirmAngpaoTopup()">ยืนยันการเติมเงิน</button>
                 </div>
             </div>
         </div>
     </div>
 
-    <!-- Hidden file input สำหรับอัปโหลดเปลี่ยนรูปโปรไฟล์ -->
-    <input type="file" id="avatarUploadInput" accept="image/*" style="display: none;" onchange="handleAvatarChange(event)">
-
     <script>
-        // ระบบเสียงฟินๆ (Web Audio API Synthesizer)
         function playClickSound() {
             try {
                 const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
                 const osc = audioCtx.createOscillator();
                 const gainNode = audioCtx.createGain();
-
                 osc.type = 'sine';
                 osc.frequency.setValueAtTime(587.33, audioCtx.currentTime); 
                 osc.frequency.exponentialRampToValueAtTime(880, audioCtx.currentTime + 0.08); 
-
                 gainNode.gain.setValueAtTime(0.12, audioCtx.currentTime);
                 gainNode.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.12);
-
                 osc.connect(gainNode);
                 gainNode.connect(audioCtx.destination);
-
                 osc.start();
                 osc.stop(audioCtx.currentTime + 0.12);
             } catch (e) {}
         }
 
-        // ระบบตั้งค่า (ภาษา, ค่าเงิน, ธีม)
         let currentLang = localStorage.getItem('dhaf_lang') || 'th';
         let currentCurrency = localStorage.getItem('dhaf_currency') || 'THB';
         let currentTheme = localStorage.getItem('dhaf_theme') || 'dark';
@@ -514,27 +551,7 @@
                 email: "อีเมล (Email)",
                 registerBtnText: "สมัครบัญชีใหม่",
                 orDivider: "หรือเชื่อมต่อผ่านโซเชียล",
-                discordLogin: "เข้าสู่ระบบด้วย Discord",
-                navHome: "หน้าหลัก",
-                navTopup: "เติมเงิน",
-                navHistory: "ประวัติ",
-                welcomeText: "ยินดีต้อนรับ",
-                heroSub: "บัญชีของคุณพร้อมใช้งานแล้ว ยอดเงินคงเหลือ",
-                topupAngpaoBtn: "เติมเงินซองอังเปา",
-                balanceTitle: "ยอดเงินคงเหลือในระบบ",
-                accStatus: "สถานะบัญชี",
-                accSafe: "ปลอดภัย / เชื่อมต่อแล้ว",
-                angpaoHeader: "เติมเงินด้วยซองอังเปา",
-                angpaoSub: "TrueMoney Wallet (แบบคนเดียว)",
-                angpaoLabel: "ลิงก์ซองอังเปา (Truemoney Gift Link)",
-                confirmTopupBtn: "ยืนยันการเติมเงิน",
-                historyTitle: "ประวัติการทำธุรกรรม",
-                thDesc: "รายละเอียด",
-                thType: "ประเภท",
-                thDate: "วันที่",
-                thAmount: "จำนวนเงิน",
-                incomeTag: "รายรับ",
-                expenseTag: "รายจ่าย"
+                discordLogin: "เข้าสู่ระบบด้วย Discord"
             },
             en: {
                 brandName: "DHAF STUDIO",
@@ -551,27 +568,7 @@
                 email: "Email",
                 registerBtnText: "Register New Account",
                 orDivider: "Or connect with social",
-                discordLogin: "Login with Discord",
-                navHome: "Home",
-                navTopup: "Top-up",
-                navHistory: "History",
-                welcomeText: "Welcome",
-                heroSub: "Your account is ready. Current balance",
-                topupAngpaoBtn: "Angpao Top-up",
-                balanceTitle: "Available Balance",
-                accStatus: "Account Status",
-                accSafe: "Secure / Connected",
-                angpaoHeader: "Top-up via Angpao",
-                angpaoSub: "TrueMoney Wallet (Single Voucher)",
-                angpaoLabel: "Truemoney Gift Link",
-                confirmTopupBtn: "Confirm Top-up",
-                historyTitle: "Transaction History",
-                thDesc: "Description",
-                thType: "Type",
-                thDate: "Date",
-                thAmount: "Amount",
-                incomeTag: "Income",
-                expenseTag: "Expense"
+                discordLogin: "Login with Discord"
             }
         };
 
@@ -592,9 +589,8 @@
             currentCurrency = curr;
             localStorage.setItem('dhaf_currency', curr);
             document.getElementById('currThbBtn').classList.toggle('active', curr === 'THB');
-            document.getElementById('currUsdBtn', curr === 'USD').classList.toggle('active', curr === 'USD');
+            document.getElementById('currUsdBtn').classList.toggle('active', curr === 'USD');
             updateBalanceUI();
-            renderHistory();
         }
 
         function setTheme(theme) {
@@ -632,6 +628,14 @@
             }
         }
 
+        function openAuthModal() {
+            document.getElementById('authModal').style.display = 'flex';
+        }
+
+        function closeAuthModal() {
+            document.getElementById('authModal').style.display = 'none';
+        }
+
         function togglePasswordVisibility(fieldId, iconElem) {
             playClickSound();
             const field = document.getElementById(fieldId);
@@ -647,55 +651,20 @@
         function switchPage(pageName) {
             document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
             document.getElementById('page-' + pageName).classList.add('active');
-            document.querySelectorAll('.nav-menu li a').forEach(a => a.classList.remove('active'));
-            const navMap = { home: 'nav-home', topup: 'nav-topup', history: 'nav-history' };
-            if(navMap[pageName]) document.getElementById(navMap[pageName]).classList.add('active');
-            if(pageName === 'history') renderHistory();
         }
 
-        let balance = localStorage.getItem('dhaf_balance') !== null ? parseFloat(localStorage.getItem('dhaf_balance')) : 0.00;
-        let transactions = JSON.parse(localStorage.getItem('dhaf_transactions')) || [];
+        let balance = 0.00;
 
         function updateBalanceUI() {
             let displayBalance = balance;
             let symbol = ' ฿';
             if(currentCurrency === 'USD') {
-                displayBalance = balance / 35; // สมมติอัตราแลกเปลี่ยน 1 USD = 35 THB
+                displayBalance = balance / 35;
                 symbol = ' $';
             }
             const formattedBalance = displayBalance.toLocaleString('th-TH', {minimumFractionDigits: 2}) + symbol;
             const balanceElem = document.getElementById('balanceAmount');
             if(balanceElem) balanceElem.innerText = formattedBalance;
-            const navWallet = document.getElementById('navWalletAmount');
-            if(navWallet) navWallet.innerText = formattedBalance;
-        }
-
-        function renderHistory() {
-            const tbody = document.getElementById('fullHistoryBody');
-            if (!tbody) return;
-            const t = translations[currentLang];
-            if (transactions.length === 0) {
-                tbody.innerHTML = `<tr><td colspan="4" class="empty-state">${currentLang==='th'?'ยังไม่มีรายการธุรกรรม':'No transaction history'}</td></tr>`;
-                return;
-            }
-            tbody.innerHTML = transactions.map(tr => {
-                let amt = tr.amount;
-                let sym = ' ฿';
-                if(currentCurrency === 'USD') {
-                    amt = tr.amount / 35;
-                    sym = ' $';
-                }
-                return `
-                    <tr>
-                        <td>${tr.desc}</td>
-                        <td><span class="tag ${tr.type === 'income' ? 'tag-income' : 'tag-expense'}">${tr.type === 'income' ? t.incomeTag : t.expenseTag}</span></td>
-                        <td>${tr.date}</td>
-                        <td style="text-align: right; color: ${tr.type === 'income' ? 'var(--success)' : 'var(--danger)'}; font-weight: 600;">
-                            +${amt.toLocaleString('th-TH', {minimumFractionDigits: 2})}${sym}
-                        </td>
-                    </tr>
-                `;
-            }).join('');
         }
 
         function confirmAngpaoTopup() {
@@ -703,23 +672,13 @@
             if (!inputField) return;
             const link = inputField.value.trim();
             if (!link || !link.includes('gift.truemoney.com')) {
-                alert(currentLang==='th'?'กรุณากรอกลิงก์ซองอังเปา TrueMoney ให้ถูกต้อง':'Please enter a valid TrueMoney gift link');
+                alert('กรุณากรอกลิงก์ซองอังเปา TrueMoney ให้ถูกต้อง');
                 return;
             }
-
-            const simulatedAmount = 50; 
-
-            transactions.unshift({
-                desc: 'เติมเงินผ่านซองอังเปา (TrueMoney)', amount: simulatedAmount, type: 'income',
-                date: new Date().toLocaleDateString('th-TH', {day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit'})
-            });
-            balance += simulatedAmount;
-            localStorage.setItem('dhaf_balance', balance);
-            localStorage.setItem('dhaf_transactions', JSON.stringify(transactions));
+            balance += 50;
             updateBalanceUI();
-            
             inputField.value = '';
-            alert((currentLang==='th'?'เติมเงินสำเร็จ! ได้รับเครดิต ':'Top-up successful! Received ') + simulatedAmount + (currentLang==='th'?' บาท':' THB'));
+            alert('เติมเงินสำเร็จ! ได้รับ 50 บาท');
             switchPage('home');
         }
 
@@ -732,137 +691,27 @@
         function handleLoginSubmit() {
             const username = document.getElementById('loginUsername').value.trim();
             if(!username) return;
-            registerNewAccount(username, 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/vscode/vscode-original.svg');
+            grantAccess(username);
         }
 
         function handleRegisterSubmit() {
             const username = document.getElementById('regUsername').value.trim();
             if(!username) return;
-            registerNewAccount(username, 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/vscode/vscode-original.svg');
+            grantAccess(username);
         }
 
-        function registerNewAccount(name, avatar) {
-            balance = 0.00;
-            transactions = [];
-            localStorage.setItem('dhaf_balance', balance);
-            localStorage.setItem('dhaf_transactions', JSON.stringify(transactions));
-            
-            const savedAvatar = localStorage.getItem('dhaf_user_avatar') || avatar;
-            localStorage.setItem('dhaf_user_identity', JSON.stringify({ name, avatar: savedAvatar }));
-            
-            grantAccess(name, savedAvatar);
+        function grantAccess(name) {
+            closeAuthModal();
+            document.getElementById('welcomeName').innerText = name;
+            document.getElementById('navRight').innerHTML = `
+                <div style="background: rgba(139, 92, 246, 0.1); border: 1px solid rgba(139, 92, 246, 0.3); padding: 6px 14px; border-radius: 20px; font-size: 13px; font-weight: 700; color: #a78bfa;">👤 ${name}</div>
+            `;
         }
 
-        function grantAccess(name, avatar) {
-            const authModal = document.getElementById('authModal');
-            const mainContent = document.getElementById('mainContent');
-            if(authModal) authModal.style.display = 'none';
-            if(mainContent) mainContent.style.display = 'block';
-
-            const welcomeName = document.getElementById('welcomeName');
-            if(welcomeName) welcomeName.innerText = name;
-            
-            const navRight = document.getElementById('navRight');
-            if(navRight) {
-                navRight.innerHTML = `
-                    <div class="nav-wallet-badge">💰 <span id="navWalletAmount">0.00 ฿</span></div>
-                    <div class="profile-dropdown" id="profileDropdown">
-                        <div class="profile-container">
-                            <div class="profile-avatar-wrapper" onclick="playClickSound(); toggleDropdown()" title="คลิกเพื่อจัดการโปรไฟล์">
-                                <img src="${avatar}" class="profile-avatar" id="navAvatarImg" alt="Avatar">
-                                <div class="avatar-plus-btn" onclick="event.stopPropagation(); playClickSound(); triggerUpload();" title="เปลี่ยนรูปโปรไฟล์">+</div>
-                            </div>
-                        </div>
-                        <div class="dropdown-menu">
-                            <div class="dropdown-header">
-                                <strong>${name}</strong>
-                                <span>สมาชิกใหม่</span>
-                            </div>
-                            <button class="dropdown-item" onclick="playClickSound(); triggerUpload()" data-translate="changeAvatar">เปลี่ยนรูปโปรไฟล์</button>
-                            <button class="dropdown-item danger" onclick="playClickSound(); logout()" data-translate="logout">ออกจากระบบ / สมัครใหม่</button>
-                        </div>
-                    </div>
-                `;
-            }
-            updateBalanceUI();
-            applyTranslations();
-        }
-
-        function toggleDropdown() { 
-            const dropdown = document.getElementById('profileDropdown');
-            if(dropdown) dropdown.classList.toggle('active'); 
-        }
-        
-        function triggerUpload() {
-            const uploadInput = document.getElementById('avatarUploadInput');
-            if(uploadInput) uploadInput.click();
-        }
-
-        function handleAvatarChange(event) {
-            const file = event.target.files[0];
-            if (file) {
-                const reader = new FileReader();
-                reader.onload = function(e) {
-                    const newAvatarUrl = e.target.result;
-                    localStorage.setItem('dhaf_user_avatar', newAvatarUrl);
-                    const avatarImg = document.getElementById('navAvatarImg');
-                    if(avatarImg) avatarImg.src = newAvatarUrl;
-                    
-                    let user = JSON.parse(localStorage.getItem('dhaf_user_identity')) || {};
-                    user.avatar = newAvatarUrl;
-                    localStorage.setItem('dhaf_user_identity', JSON.stringify(user));
-                    alert(currentLang==='th'?'เปลี่ยนรูปโปรไฟล์สำเร็จ!':'Avatar changed successfully!');
-                };
-                reader.readAsDataURL(file);
-            }
-        }
-
-        function logout() { 
-            localStorage.removeItem('dhaf_user_identity'); 
-            localStorage.removeItem('dhaf_user_avatar');
-            localStorage.removeItem('dhaf_balance');
-            localStorage.removeItem('dhaf_transactions');
-            window.location.reload(); 
-        }
-
-        // เริ่มต้นทำงานโหลดสถานะเดิมที่เคยตั้งค่าไว้
         window.onload = function() {
             setLanguage(currentLang);
             setCurrency(currentCurrency);
             setTheme(currentTheme);
-
-            const hash = window.location.hash.substring(1);
-            if (hash) {
-                const params = new URLSearchParams(hash);
-                const token = params.get('access_token');
-                if (token) {
-                    window.history.replaceState({}, document.title, REDIRECT_URI);
-                    fetchDiscordUser(token);
-                    return;
-                }
-            }
-
-            // เช็คว่าเคยล็อกอินค้างไว้ไหม
-            const savedUser = localStorage.getItem('dhaf_user_identity');
-            if (savedUser) {
-                const user = JSON.parse(savedUser);
-                grantAccess(user.name, user.avatar);
-            }
-        }
-
-        async function fetchDiscordUser(token) {
-            try {
-                const response = await fetch('https://discord.com/api/users/@me', {
-                    headers: { Authorization: `Bearer ${token}` }
-                });
-                const data = await response.json();
-                const avatarUrl = data.avatar 
-                    ? `https://cdn.discordapp.com/avatars/${data.id}/${data.avatar}.png`
-                    : `https://cdn.discordapp.com/embed/avatars/0.png`;
-                registerNewAccount(data.global_name || data.username, avatarUrl);
-            } catch (err) {
-                alert('เชื่อมต่อ Discord ไม่สำเร็จ');
-            }
         }
     </script>
 </body>
