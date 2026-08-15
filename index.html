@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>FinanceApp | Discord Auth Real Data</title>
+    <title>FinanceApp | Premium Dashboard</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Thai:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <style>
@@ -129,32 +129,48 @@
     </section>
 
     <script>
-        // 1. ตั้งค่า OAuth2 (ใช้ Implicit Grant เพื่อดึงข้อมูลจริงแบบ Frontend-only)
+        // ==========================================
+        // ตั้งค่า OAuth2 (แก้ไขให้ถูกต้องที่สุดแล้ว)
+        // ==========================================
         const CLIENT_ID = "1532644387639660627";
-        const REDIRECT_URI = window.location.origin + window.location.pathname; // ดึง URL ปัจจุบันเองอัตโนมัติ
-        const DISCORD_OAUTH_URL = `https://discord.com/oauth2/authorize?client_id=${CLIENT_ID}&response_type=token&redirect_uri=${encodeURIComponent(REDIRECT_URI)}&scope=identify`;
+        
+        // ลิงก์ Vercel ของคุณ ต้องตรงกับใน Discord Developer Portal แบบ 100%
+        const REDIRECT_URI = "https://shop-github-io-ffnf.vercel.app/"; 
+        
+        // เพิ่ม prompt=consent เพื่อบังคับให้ดิสถามทุกครั้ง ป้องกันบั๊กแคชข้อมูลเดิม
+        const DISCORD_OAUTH_URL = `https://discord.com/oauth2/authorize?client_id=${CLIENT_ID}&response_type=token&redirect_uri=${encodeURIComponent(REDIRECT_URI)}&scope=identify+email&prompt=consent`;
 
         let discordUser = null;
 
-        // 2. ฟังก์ชันตรวจสอบ Token ใน URL (หลังจาก Discord Redirect กลับมา)
+        // ==========================================
+        // ระบบตรวจจับ Token แบบใหม่ (แม่นยำกว่าเดิม)
+        // ==========================================
         function checkDiscordAuth() {
-            const hash = window.location.hash;
-            if (hash.includes('access_token')) {
-                // ดึง Token ออกจาก URL
-                const token = hash.match(/access_token=(.*)&/)[1];
-                // เคลียร์ URL ให้สะอาด (เพื่อความปลอดภัย)
-                history.replaceState(null, null, window.location.pathname);
+            // อ่านค่า hash ที่ดิสส่งกลับมา (เช่น #access_token=xxx&token_type=Bearer&expires_in=604800)
+            const hash = window.location.hash.substring(1);
+            if (!hash) return false;
+
+            const params = new URLSearchParams(hash);
+            const token = params.get('access_token');
+            
+            if (token) {
+                console.log("พบ Token แล้ว กำลังดึงข้อมูล...");
+                // ล้าง URL ทิ้ง เพื่อความปลอดภัย
+                window.history.replaceState({}, document.title, REDIRECT_URI);
                 
-                // เรียก API ดึงข้อมูลดิสจริง
+                // ดึงข้อมูลผู้ใช้
                 fetchDiscordUser(token);
                 return true;
+            } else {
+                console.log("ไม่พบ Token ใน URL");
             }
             return false;
         }
 
-        // 3. ฟังก์ชันเรียก API Discord เพื่อดึงชื่อและรูปจริง
+        // ==========================================
+        // ดึงข้อมูล Discord ผู้ใช้จริง
+        // ==========================================
         async function fetchDiscordUser(token) {
-            // แสดงสถานะกำลังโหลด
             document.getElementById('navRight').innerHTML = `<div style="width: 100px; display: flex; justify-content: center;"><div class="loading-spinner"></div></div>`;
 
             try {
@@ -164,29 +180,33 @@
                     }
                 });
                 
-                if (!response.ok) throw new Error('Unauthorized');
+                if (!response.ok) throw new Error('Token ไม่ถูกต้องหรือหมดอายุ');
                 
                 const data = await response.json();
+                console.log("ดึงข้อมูลสำเร็จ:", data);
                 
-                // เซฟข้อมูลจริงลงตัวแปร
+                // เก็บข้อมูลจริงลงตัวแปร
                 discordUser = {
                     id: data.id,
                     username: data.username,
                     global_name: data.global_name || data.username,
+                    email: data.email || 'ไม่มีอีเมล',
                     avatar: data.avatar 
                         ? `https://cdn.discordapp.com/avatars/${data.id}/${data.avatar}.png?size=128`
-                        : `https://cdn.discordapp.com/embed/avatars/${data.discriminator % 5}.png` // รูปดิสเริ่มต้นถ้าไม่มี
+                        : `https://cdn.discordapp.com/embed/avatars/${data.discriminator % 5}.png`
                 };
 
-                updateUI(); // อัปเดตหน้าจอให้แสดงโปรไฟล์จริง
+                updateUI(); // อัปเดตหน้าจอ
 
             } catch (error) {
-                console.error('Failed to fetch Discord user:', error);
+                console.error('เกิดข้อผิดพลาด:', error);
                 document.getElementById('navRight').innerHTML = `<button class="btn-discord" onclick="loginDiscord()">ลองใหม่อีกครั้ง</button>`;
             }
         }
 
-        // 4. ฟังก์ชันอัปเดต UI
+        // ==========================================
+        // อัปเดตหน้าจอ (UI)
+        // ==========================================
         function updateUI() {
             const navRight = document.getElementById('navRight');
             const heroActions = document.getElementById('heroActions');
@@ -194,7 +214,7 @@
             if (discordUser) {
                 // --- แสดงโปรไฟล์ดิสจริง ---
                 navRight.innerHTML = `
-                    <div class="profile-dropdown" id="profileDropdown">
+                    <div class="profile-dropdown active" id="profileDropdown" style="display: block;">
                         <div class="profile-btn" onclick="toggleDropdown()">
                             <img src="${discordUser.avatar}" alt="Avatar" class="profile-avatar">
                             <span class="profile-name">${discordUser.global_name}</span>
@@ -237,40 +257,38 @@
             }
         }
 
-        // 5. ฟังก์ชันเปิดลิงก์ Discord
+        // ==========================================
+        // ฟังก์ชันเสริม
+        // ==========================================
         function loginDiscord() {
             window.location.href = DISCORD_OAUTH_URL;
         }
 
-        // 6. ฟังก์ชันออกจากระบบ
         function handleLogout() {
             discordUser = null;
-            // ล้าง Token ทิ้ง (ถ้าเก็บไว้ใน localStorage ก็ต้องล้างด้วย)
             updateUI();
             alert('ออกจากระบบสำเร็จ');
         }
 
-        // 7. ฟังก์ชันเปิด/ปิด เมนู Dropdown
         function toggleDropdown() {
             document.getElementById('profileDropdown').classList.toggle('active');
         }
+        
         function closeDropdown() {
             document.getElementById('profileDropdown').classList.remove('active');
         }
 
-        // ปิดเมนูถ้าคลิกข้างนอก
         window.onclick = function(event) {
             if (!event.target.closest('.profile-dropdown')) {
                 closeDropdown();
             }
         }
 
-        // --- เริ่มการทำงาน ---
-        // ตรวจสอบทันทีเมื่อโหลดเว็บว่ากลับมาจาก Discord หรือไม่
+        // ==========================================
+        // เริ่มการทำงานทันทีเมื่อโหลดเว็บ
+        // ==========================================
         const isReturningFromDiscord = checkDiscordAuth();
-        
         if (!isReturningFromDiscord) {
-            // ถ้ายังไม่ได้ล็อกอิน แสดงปุ่มล็อกอิน
             updateUI();
         }
     </script>
