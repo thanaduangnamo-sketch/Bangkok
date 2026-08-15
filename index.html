@@ -1,681 +1,327 @@
 <!DOCTYPE html>
-<html lang="th">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>DHAF SHOP | System</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    <style>
-        :root {
-            --bg-base: #060911;
-            --card-bg: #0c101d;
-            --border-glow: rgba(255, 255, 255, 0.08);
-            --border-focus: rgba(147, 51, 234, 0.6);
-            --text-main: #f8fafc;
-            --text-muted: #94a3b8;
-            --primary-purple: #8b5cf6;
-            --primary-gradient: linear-gradient(135deg, #8b5cf6 0%, #6366f1 100%);
-            --discord-blurple: #5865F2;
-            --discord-hover: #4752c4;
-            --truemoney-red: #ff5722;
-            --success: #10b981;
-            --danger: #ef4444;
-        }
-
-        body.light-theme {
-            --bg-base: #f1f5f9;
-            --card-bg: #ffffff;
-            --border-glow: rgba(0, 0, 0, 0.08);
-            --text-main: #0f172a;
-            --text-muted: #64748b;
-        }
-
-        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Plus Jakarta Sans', sans-serif; scroll-behavior: smooth; }
-
-        body {
-            background-color: var(--bg-base);
-            color: var(--text-main);
-            min-height: 100vh;
-            background-image: 
-                radial-gradient(circle at 10% 20%, rgba(139, 92, 246, 0.1) 0%, transparent 40%),
-                radial-gradient(circle at 90% 80%, rgba(99, 102, 241, 0.08) 0%, transparent 40%);
-            transition: background 0.3s, color 0.3s;
-        }
-
-        /* Navbar ตามเรฟเป๊ะๆ */
-        .navbar { 
-            background: var(--card-bg); 
-            border-bottom: 1px solid var(--border-glow); 
-            padding: 12px 4%; 
-            display: flex; 
-            align-items: center; 
-            justify-content: space-between; 
-            position: sticky; 
-            top: 0; 
-            z-index: 100; 
-            box-shadow: 0 4px 20px rgba(0,0,0,0.1); 
-        }
-        
-        .nav-logo { 
-            font-size: 18px; 
-            font-weight: 700; 
-            background: var(--primary-gradient); 
-            -webkit-background-clip: text; 
-            -webkit-text-fill-color: transparent; 
-            cursor: pointer; 
-            display: flex; 
-            align-items: center; 
-            gap: 8px; 
-        }
-
-        .nav-menu { 
-            list-style: none; 
-            display: flex; 
-            gap: 16px; 
-            align-items: center; 
-        }
-
-        .nav-menu li a { 
-            color: var(--text-muted); 
-            text-decoration: none; 
-            font-size: 14px; 
-            font-weight: 500; 
-            transition: color 0.2s; 
-            cursor: pointer; 
-            display: flex;
-            align-items: center;
-            gap: 6px;
-            padding: 6px 12px;
-            border-radius: 10px;
-        }
-
-        .nav-menu li a:hover, .nav-menu li a.active { 
-            color: var(--text-main); 
-            background: rgba(255, 255, 255, 0.04);
-            font-weight: 600; 
-        }
-
-        .nav-right-area { display: flex; align-items: center; gap: 12px; }
-
-        /* ปุ่มตั้งค่าฟันเฟือง */
-        .settings-btn { 
-            background: transparent; 
-            border: none; 
-            color: var(--text-muted); 
-            width: 38px; 
-            height: 38px; 
-            border-radius: 50%; 
-            display: flex; 
-            align-items: center; 
-            justify-content: center; 
-            cursor: pointer; 
-            font-size: 18px; 
-            transition: all 0.2s; 
-        }
-        .settings-btn:hover { color: var(--text-main); background: rgba(255, 255, 255, 0.05); }
-
-        /* กล่องเมนูตั้งค่า Popup */
-        .settings-dropdown-wrapper { position: relative; }
-        .settings-popup-card {
-            position: absolute; top: 130%; right: 0;
-            background: var(--card-bg);
-            border: 1px solid var(--border-glow);
-            border-radius: 20px;
-            width: 260px;
-            padding: 16px;
-            box-shadow: 0 15px 40px rgba(0,0,0,0.4);
-            opacity: 0; visibility: hidden; transform: translateY(-10px);
-            transition: all 0.25s ease;
-            z-index: 120;
-        }
-        .settings-dropdown-wrapper.active .settings-popup-card { opacity: 1; visibility: visible; transform: translateY(0); }
-
-        .setting-section { margin-bottom: 16px; }
-        .setting-section:last-child { margin-bottom: 0; }
-        .setting-label { font-size: 12px; font-weight: 600; color: var(--text-muted); margin-bottom: 8px; display: block; }
-
-        .setting-toggle-group {
-            background: rgba(0,0,0,0.15);
-            border: 1px solid var(--border-glow);
-            border-radius: 12px;
-            padding: 4px;
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 4px;
-        }
-        body.light-theme .setting-toggle-group { background: rgba(0,0,0,0.04); }
-
-        .setting-opt-btn {
-            background: transparent; border: none; padding: 8px; font-size: 12px; font-weight: 600;
-            color: var(--text-muted); border-radius: 9px; cursor: pointer; transition: all 0.2s; text-align: center;
-        }
-        .setting-opt-btn.active {
-            background: var(--primary-purple);
-            color: white;
-            box-shadow: 0 4px 12px rgba(139, 92, 246, 0.3);
-        }
-
-        /* ปุ่มลงชื่อเข้าใช้ตามเรฟ */
-        .btn-login-nav {
-            background: var(--card-bg);
-            border: 1px solid var(--border-glow);
-            color: var(--text-main);
-            padding: 8px 20px;
-            border-radius: 30px;
-            font-size: 14px;
-            font-weight: 600;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            transition: all 0.2s;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.2);
-        }
-        .btn-login-nav:hover {
-            border-color: var(--primary-purple);
-            color: var(--primary-purple);
-            background: rgba(139, 92, 246, 0.05);
-        }
-
-        /* Modal / Auth Layout */
-        .auth-modal-overlay {
-            position: fixed;
-            top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(6, 9, 17, 0.85);
-            backdrop-filter: blur(20px);
-            -webkit-backdrop-filter: blur(20px);
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            z-index: 9999;
-            padding: 20px;
-        }
-
-        .auth-split-card {
-            background: var(--card-bg);
-            border: 1px solid var(--border-glow);
-            border-radius: 28px;
-            width: 100%;
-            max-width: 780px;
-            display: grid;
-            grid-template-columns: 1fr 1.1fr;
-            overflow: hidden;
-            box-shadow: 0 30px 70px rgba(0, 0, 0, 0.6);
-            animation: modalPop 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards;
-        }
-
-        @media (max-width: 768px) {
-            .auth-split-card { grid-template-columns: 1fr; max-width: 440px; }
-            .auth-left-pane { display: none; }
-            .nav-menu { display: none; }
-        }
-
-        @keyframes modalPop {
-            from { opacity: 0; transform: translateY(20px) scale(0.96); }
-            to { opacity: 1; transform: translateY(0) scale(1); }
-        }
-
-        .auth-left-pane {
-            background: linear-gradient(135deg, #17112c 0%, #0d0b18 100%);
-            padding: 40px;
-            display: flex;
-            flex-direction: column;
-            justify-content: space-between;
-            border-right: 1px solid var(--border-glow);
-        }
-
-        .brand-logo-area { display: flex; align-items: center; gap: 10px; font-weight: 700; font-size: 18px; color: #fff; }
-        .brand-logo-icon { width: 32px; height: 32px; background: var(--primary-gradient); border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 16px; }
-
-        .brand-hero-text h2 { font-size: 24px; font-weight: 700; line-height: 1.3; margin-bottom: 12px; color: #fff; }
-        .brand-hero-text p { font-size: 13px; color: var(--text-muted); line-height: 1.5; }
-
-        .auth-right-pane { padding: 40px; display: flex; flex-direction: column; position: relative; }
-
-        .auth-tabs {
-            background: rgba(255, 255, 255, 0.03);
-            border: 1px solid var(--border-glow);
-            border-radius: 14px;
-            padding: 4px;
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            margin-bottom: 28px;
-        }
-
-        .tab-btn {
-            background: transparent; border: none; padding: 10px; font-size: 13px; font-weight: 600;
-            color: var(--text-muted); border-radius: 10px; cursor: pointer; transition: all 0.25s ease;
-        }
-        .tab-btn.active {
-            background: var(--primary-gradient);
-            color: white;
-            box-shadow: 0 4px 15px rgba(139, 92, 246, 0.3);
-        }
-
-        .auth-form-content { display: none; }
-        .auth-form-content.active { display: block; animation: fadeIn 0.3s ease; }
-
-        .input-group { margin-bottom: 16px; text-align: left; }
-        .input-label { display: block; font-size: 12px; color: var(--text-muted); margin-bottom: 6px; font-weight: 500; }
-        .input-field-wrapper { position: relative; }
-        .input-field { width: 100%; background: var(--card-bg); border: 1px solid var(--border-glow); border-radius: 12px; padding: 12px 16px; color: var(--text-main); font-size: 13px; outline: none; transition: all 0.25s ease; }
-        .input-field:focus { border-color: var(--border-focus); box-shadow: 0 0 0 4px rgba(139, 92, 246, 0.15); }
-
-        .auth-options { display: flex; justify-content: space-between; align-items: center; font-size: 12px; margin-bottom: 20px; color: var(--text-muted); }
-        .remember-me { display: flex; align-items: center; gap: 6px; cursor: pointer; }
-        .forgot-link { color: var(--primary-purple); text-decoration: none; font-weight: 500; }
-        .forgot-link:hover { text-decoration: underline; }
-
-        .btn-submit { width: 100%; padding: 12px; background: var(--primary-gradient); border: none; border-radius: 12px; color: white; font-size: 14px; font-weight: 600; cursor: pointer; box-shadow: 0 6px 20px rgba(139, 92, 246, 0.3); transition: all 0.25s ease; }
-        .btn-submit:hover { opacity: 0.95; transform: translateY(-1px); }
-
-        .divider { display: flex; align-items: center; text-align: center; color: var(--text-muted); font-size: 12px; margin: 18px 0; font-weight: 500; }
-        .divider::before, .divider::after { content: ''; flex: 1; border-bottom: 1px solid var(--border-glow); }
-        .divider::before { margin-right: .75em; }
-        .divider::after { margin-left: .75em; }
-
-        .btn-discord { width: 100%; padding: 12px; background: var(--discord-blurple); color: white; border: none; border-radius: 12px; font-weight: 600; font-size: 13px; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 10px; transition: all 0.2s; box-shadow: 0 4px 15px rgba(88, 101, 242, 0.25); }
-        .btn-discord:hover { background: var(--discord-hover); transform: translateY(-1px); }
-
-        /* Container & Pages */
-        .container { max-width: 1050px; margin: 0 auto; padding: 40px 20px 80px; }
-        .page { display: none; animation: fadeIn 0.4s ease; }
-        .page.active { display: block; }
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
-
-        .hero-banner { background: var(--primary-gradient); border-radius: 24px; padding: 40px; color: white; display: flex; justify-content: space-between; align-items: center; margin-bottom: 28px; box-shadow: 0 12px 30px rgba(139, 92, 246, 0.2); }
-        .hero-text h1 { font-size: 28px; font-weight: 700; margin-bottom: 6px; }
-        .hero-text p { font-size: 15px; opacity: 0.9; }
-
-        .dashboard-grid { display: grid; grid-template-columns: 2fr 1fr; gap: 24px; margin-bottom: 28px; }
-        @media (max-width: 768px) { .dashboard-grid { grid-template-columns: 1fr; } }
-
-        .balance-card-modern { background: var(--card-bg); border: 1px solid var(--border-glow); border-radius: 24px; padding: 32px; box-shadow: 0 4px 20px rgba(0,0,0,0.1); display: flex; flex-direction: column; justify-content: space-between; }
-        .balance-title { font-size: 14px; font-weight: 500; color: var(--text-muted); margin-bottom: 10px; }
-        .balance-value { font-size: 42px; font-weight: 700; color: var(--text-main); margin-bottom: 20px; }
-        
-        .quick-actions { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; }
-        .action-card { background: var(--card-bg); border: 1px solid var(--border-glow); border-radius: 16px; padding: 18px 10px; text-align: center; cursor: pointer; transition: all 0.2s; text-decoration: none; color: var(--text-main); font-weight: 600; font-size: 14px; }
-        .action-card:hover { border-color: var(--primary-purple); transform: translateY(-2px); color: var(--primary-purple); }
-
-        .stats-side-card { background: var(--card-bg); border: 1px solid var(--border-glow); border-radius: 24px; padding: 28px; box-shadow: 0 4px 20px rgba(0,0,0,0.1); display: flex; flex-direction: column; gap: 20px; }
-        .stat-item { display: flex; align-items: center; gap: 15px; }
-        .stat-info span { font-size: 12px; color: var(--text-muted); display: block; }
-        .stat-info strong { font-size: 15px; color: var(--text-main); font-weight: 600; }
-
-        .card-title { font-size: 18px; font-weight: 600; color: var(--text-main); }
-        .topup-box { max-width: 500px; margin: 0 auto; background: var(--card-bg); border: 1px solid var(--border-glow); border-radius: 24px; padding: 36px; box-shadow: 0 10px 30px rgba(0,0,0,0.1); }
-        
-        .btn { padding: 12px 20px; border: none; border-radius: 12px; font-size: 14px; font-weight: 600; cursor: pointer; display: inline-flex; align-items: center; gap: 8px; transition: all 0.2s; text-decoration: none; }
-        .btn-angpao { background: linear-gradient(135deg, #ff5722 0%, #e64a19 100%); color: white; width: 100%; justify-content: center; box-shadow: 0 4px 12px rgba(255, 87, 34, 0.25); }
-        .btn-angpao:hover { opacity: 0.95; transform: translateY(-1px); }
-    </style>
-</head>
-<body>
-
-    <!-- หน้าต่างสมัครบัญชี / เข้าสู่ระบบ (Modal) -->
-    <div class="auth-modal-overlay" id="authModal" style="display: none;">
-        <div class="auth-split-card">
-            <div class="auth-left-pane">
-                <div class="brand-logo-area">
-                    <span data-translate="brandName">DHAF STUDIO</span>
-                </div>
-                <div class="brand-hero-text">
-                    <h2 data-translate="heroTitle">เริ่มธุรกิจออนไลน์<br>ด้วยเว็บไซต์ที่ทันสมัย<br>ในราคาสบายกระเป๋า</h2>
-                    <p data-translate="heroDesc">เริ่มสร้างธุรกิจของคุณ ด้วยเว็บไซต์ของพวกเรา ระบบกระเป๋าเงินอัตโนมัติที่ปลอดภัยและรวดเร็วที่สุด</p>
-                </div>
-                <div style="font-size: 11px; color: var(--text-muted);">(C) 2026 DHAF STUDIO. All rights reserved.</div>
-            </div>
-
-            <div class="auth-right-pane">
-                <div style="position: absolute; top: 20px; right: 20px; cursor: pointer; font-size: 18px; color: var(--text-muted);" onclick="closeAuthModal()">✕</div>
-                <div class="auth-tabs" style="margin-top: 10px;">
-                    <button class="tab-btn active" id="tabLoginBtn" onclick="playClickSound(); switchAuthTab('login')" data-translate="loginTab">เข้าสู่ระบบ</button>
-                    <button class="tab-btn" id="tabRegisterBtn" onclick="playClickSound(); switchAuthTab('register')" data-translate="registerTab">สมัครสมาชิก</button>
-                </div>
-
-                <div class="auth-form-content active" id="formLogin">
-                    <form onsubmit="event.preventDefault(); playClickSound(); handleLoginSubmit();">
-                        <div class="input-group">
-                            <label class="input-label" data-translate="userOrEmail">ชื่อผู้ใช้หรืออีเมล</label>
-                            <input type="text" id="loginUsername" class="input-field" placeholder="กรอกชื่อผู้ใช้หรืออีเมล" required>
-                        </div>
-                        <div class="input-group">
-                            <label class="input-label" data-translate="password">รหัสผ่าน</label>
-                            <div class="input-field-wrapper">
-                                <input type="password" id="loginPassword" class="input-field" placeholder="กรอกรหัสผ่าน" required>
-                            </div>
-                        </div>
-                        <div class="auth-options">
-                            <label class="remember-me">
-                                <input type="checkbox" style="accent-color: var(--primary-purple);"> <span data-translate="rememberMe">จดจำฉัน</span>
-                            </label>
-                            <a href="#" class="forgot-link" onclick="playClickSound(); alert('กรุณาติดต่อแอดมิน');" data-translate="forgotPass">ลืมรหัสผ่าน</a>
-                        </div>
-                        <button type="submit" class="btn-submit" data-translate="loginBtnText">เข้าสู่ระบบ</button>
-                    </form>
-                </div>
-
-                <div class="auth-form-content" id="formRegister">
-                    <form onsubmit="event.preventDefault(); playClickSound(); handleRegisterSubmit();">
-                        <div class="input-group">
-                            <label class="input-label" data-translate="username">ชื่อผู้ใช้ (Username)</label>
-                            <input type="text" id="regUsername" class="input-field" placeholder="ตั้งชื่อผู้ใช้ของคุณ" required>
-                        </div>
-                        <div class="input-group">
-                            <label class="input-label" data-translate="email">อีเมล (Email)</label>
-                            <input type="email" id="regEmail" class="input-field" placeholder="example@gmail.com" required>
-                        </div>
-                        <div class="input-group">
-                            <label class="input-label" data-translate="password">รหัสผ่าน</label>
-                            <div class="input-field-wrapper">
-                                <input type="password" id="regPassword" class="input-field" placeholder="สร้างรหัสผ่าน" required>
-                            </div>
-                        </div>
-                        <button type="submit" class="btn-submit" style="margin-top: 6px;" data-translate="registerBtnText">สมัครบัญชีใหม่</button>
-                    </form>
-                </div>
-
-                <div class="divider" data-translate="orDivider">หรือเชื่อมต่อผ่านโซเชียล</div>
-
-                <button class="btn-discord" onclick="playClickSound(); loginDiscord()">
-                    <span data-translate="discordLogin">เข้าสู่ระบบด้วย Discord</span>
-                </button>
-            </div>
-        </div>
-    </div>
-
-    <!-- โครงสร้างหน้าเว็บหลัก -->
-    <div id="mainContent">
-        <nav class="navbar">
-            <div class="nav-logo" onclick="playClickSound(); switchPage('home')">
-                DHAF SHOP
-            </div>
-
-            <!-- เมนูหลักตามเรฟเป๊ะๆ -->
-            <ul class="nav-menu">
-                <li><a id="nav-update" onclick="playClickSound(); alert('ยังไม่มีอัปเดตใหม่ในขณะนี้');">อัปเดตเวอร์ชั่น</a></li>
-                <li><a id="nav-upgrade" onclick="playClickSound(); alert('ระบบอัปเกรดจะเปิดเร็วๆ นี้');">อัปเกรด</a></li>
-                <li><a id="nav-topup" onclick="playClickSound(); switchPage('topup')">เติมเงิน</a></li>
-                <li><a id="nav-services" onclick="playClickSound(); alert('บริการเสริมทั้งหมด');">บริการเสริม</a></li>
-                <li><a id="nav-contact" onclick="playClickSound(); alert('ติดต่อแอดมินผ่าน Discord ได้เลยครับ');">ติดต่อเรา</a></li>
-            </ul>
-
-            <div class="nav-right-area">
-                <!-- ปุ่มตั้งค่า -->
-                <div class="settings-dropdown-wrapper" id="settingsDropdown">
-                    <button class="settings-btn" onclick="playClickSound(); toggleSettingsMenu()" title="ตั้งค่าระบบ">⚙</button>
-                    <div class="settings-popup-card">
-                        <div class="setting-section">
-                            <span class="setting-label">ภาษา</span>
-                            <div class="setting-toggle-group">
-                                <button class="setting-opt-btn active" id="langThBtn" onclick="playClickSound(); setLanguage('th')">ไทย</button>
-                                <button class="setting-opt-btn" id="langEnBtn" onclick="playClickSound(); setLanguage('en')">English</button>
-                            </div>
-                        </div>
-                        <div class="setting-section">
-                            <span class="setting-label">ค่าเงิน</span>
-                            <div class="setting-toggle-group">
-                                <button class="setting-opt-btn active" id="currThbBtn" onclick="playClickSound(); setCurrency('THB')">บาท</button>
-                                <button class="setting-opt-btn" id="currUsdBtn" onclick="playClickSound(); setCurrency('USD')">ดอลลาร์</button>
-                            </div>
-                        </div>
-                        <div class="setting-section">
-                            <span class="setting-label">ธีม</span>
-                            <div class="setting-toggle-group">
-                                <button class="setting-opt-btn" id="themeLightBtn" onclick="playClickSound(); setTheme('light')">สว่าง</button>
-                                <button class="setting-opt-btn active" id="themeDarkBtn" onclick="playClickSound(); setTheme('dark')">มืด</button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- ปุ่มลงชื่อเข้าใช้ -->
-                <div id="navRight">
-                    <button class="btn-login-nav" onclick="playClickSound(); openAuthModal()">
-                        ลงชื่อเข้าใช้
-                    </button>
-                </div>
-            </div>
-        </nav>
-
-        <div class="container">
-            <!-- หน้าหลัก -->
-            <div id="page-home" class="page active">
-                <div class="hero-banner">
-                    <div class="hero-text">
-                        <h1>ยินดีต้อนรับ, <span id="welcomeName">ผู้เยี่ยมชม</span></h1>
-                        <p>เลือกใช้งานเมนูด้านบนเพื่อเริ่มต้นใช้งานระบบ</p>
-                    </div>
-                    <button class="btn" style="background: white; color: var(--primary-purple);" onclick="playClickSound(); switchPage('topup')">เติมเงินซองอังเปา</button>
-                </div>
-
-                <div class="dashboard-grid">
-                    <div class="balance-card-modern">
-                        <div>
-                            <div class="balance-title">ยอดเงินคงเหลือในระบบ</div>
-                            <div class="balance-value" id="balanceAmount">0.00 THB</div>
-                        </div>
-                        <div class="quick-actions">
-                            <a class="action-card" onclick="playClickSound(); switchPage('topup')"><span>เติมเงิน</span></a>
-                            <a class="action-card" onclick="playClickSound(); openAuthModal()"><span>ลงชื่อเข้าใช้</span></a>
-                        </div>
-                    </div>
-                    <div class="stats-side-card">
-                        <div class="stat-item">
-                            <div class="stat-info"><span>สถานะระบบ</span><strong>พร้อมให้บริการ 100%</strong></div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- หน้าเติมเงิน -->
-            <div id="page-topup" class="page">
-                <div class="topup-box">
-                    <div style="margin-bottom: 24px;">
-                        <h2 class="card-title" style="margin-bottom: 2px;">เติมเงินด้วยซองอังเปา</h2>
-                        <p style="font-size: 13px; color: var(--text-muted);">TrueMoney Wallet (แบบคนเดียว)</p>
-                    </div>
-                    
-                    <div class="input-group">
-                        <label class="input-label">ลิงก์ซองอังเปา (Truemoney Gift Link)</label>
-                        <input type="text" id="angpaoLinkInput" class="input-field" placeholder="https://gift.truemoney.com/campaign/?v=...">
-                    </div>
-                    <button class="btn btn-angpao" onclick="playClickSound(); confirmAngpaoTopup()">ยืนยันการเติมเงิน</button>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <script>
-        function playClickSound() {
-            try {
-                const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-                const osc = audioCtx.createOscillator();
-                const gainNode = audioCtx.createGain();
-                osc.type = 'sine';
-                osc.frequency.setValueAtTime(587.33, audioCtx.currentTime); 
-                osc.frequency.exponentialRampToValueAtTime(880, audioCtx.currentTime + 0.08); 
-                gainNode.gain.setValueAtTime(0.12, audioCtx.currentTime);
-                gainNode.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.12);
-                osc.connect(gainNode);
-                gainNode.connect(audioCtx.destination);
-                osc.start();
-                osc.stop(audioCtx.currentTime + 0.12);
-            } catch (e) {}
-        }
-
-        let currentLang = localStorage.getItem('dhaf_lang') || 'th';
-        let currentCurrency = localStorage.getItem('dhaf_currency') || 'THB';
-        let currentTheme = localStorage.getItem('dhaf_theme') || 'dark';
-
-        const translations = {
-            th: {
-                brandName: "DHAF STUDIO",
-                heroTitle: "เริ่มธุรกิจออนไลน์<br>ด้วยเว็บไซต์ที่ทันสมัย<br>ในราคาสบายกระเป๋า",
-                heroDesc: "เริ่มสร้างธุรกิจของคุณ ด้วยเว็บไซต์ของพวกเรา ระบบกระเป๋าเงินอัตโนมัติที่ปลอดภัยและรวดเร็วที่สุด",
-                loginTab: "เข้าสู่ระบบ",
-                registerTab: "สมัครสมาชิก",
-                userOrEmail: "ชื่อผู้ใช้หรืออีเมล",
-                password: "รหัสผ่าน",
-                rememberMe: "จดจำฉัน",
-                forgotPass: "ลืมรหัสผ่าน",
-                loginBtnText: "เข้าสู่ระบบ",
-                username: "ชื่อผู้ใช้ (Username)",
-                email: "อีเมล (Email)",
-                registerBtnText: "สมัครบัญชีใหม่",
-                orDivider: "หรือเชื่อมต่อผ่านโซเชียล",
-                discordLogin: "เข้าสู่ระบบด้วย Discord"
-            },
-            en: {
-                brandName: "DHAF STUDIO",
-                heroTitle: "Start Online Business<br>with Modern Websites<br>at Affordable Prices",
-                heroDesc: "Start building your business with our automated, secure and fastest wallet system.",
-                loginTab: "Login",
-                registerTab: "Register",
-                userOrEmail: "Username or Email",
-                password: "Password",
-                rememberMe: "Remember me",
-                forgotPass: "Forgot password",
-                loginBtnText: "Login",
-                username: "Username",
-                email: "Email",
-                registerBtnText: "Register New Account",
-                orDivider: "Or connect with social",
-                discordLogin: "Login with Discord"
-            }
-        };
-
-        function toggleSettingsMenu() {
-            const dropdown = document.getElementById('settingsDropdown');
-            if(dropdown) dropdown.classList.toggle('active');
-        }
-
-        function setLanguage(lang) {
-            currentLang = lang;
-            localStorage.setItem('dhaf_lang', lang);
-            document.getElementById('langThBtn').classList.toggle('active', lang === 'th');
-            document.getElementById('langEnBtn').classList.toggle('active', lang === 'en');
-            applyTranslations();
-        }
-
-        function setCurrency(curr) {
-            currentCurrency = curr;
-            localStorage.setItem('dhaf_currency', curr);
-            document.getElementById('currThbBtn').classList.toggle('active', curr === 'THB');
-            document.getElementById('currUsdBtn').classList.toggle('active', curr === 'USD');
-            updateBalanceUI();
-        }
-
-        function setTheme(theme) {
-            currentTheme = theme;
-            localStorage.setItem('dhaf_theme', theme);
-            document.getElementById('themeLightBtn').classList.toggle('active', theme === 'light');
-            document.getElementById('themeDarkBtn').classList.toggle('active', theme === 'dark');
-            if(theme === 'light') {
-                document.body.classList.add('light-theme');
-            } else {
-                document.body.classList.remove('light-theme');
-            }
-        }
-
-        function applyTranslations() {
-            const t = translations[currentLang];
-            document.querySelectorAll('[data-translate]').forEach(elem => {
-                const key = elem.getAttribute('data-translate');
-                if(t[key]) {
-                    elem.innerHTML = t[key];
+<html lang="th" class="__className_fc5f95 __variable_fc5f95 h-full antialiased">
+    <head>
+        <meta charSet="utf-8"/>
+        <meta name="viewport" content="width=device-width, initial-scale=1"/>
+        <link rel="preload" href="https://upload-1.imgz.click/2026/07/example.rexzy.xyz/REXZY-png-1783765626-1783765625.webp" as="image"/>
+        <link rel="stylesheet" href="/_next/static/css/821b76909bbf9d02.css" data-precedence="next"/>
+        <link rel="stylesheet" href="/_next/static/css/e10b9e775f408214.css" data-precedence="next"/>
+        <link rel="preload" as="script" fetchPriority="low" href="/_next/static/chunks/webpack-10cd2636c1aeb25f.js"/>
+        <script src="/_next/static/chunks/4bd1b696-7281820e82fc5615.js" async=""></script>
+        <script src="/_next/static/chunks/93794-b87eef7d177fe7b3.js" async=""></script>
+        <script src="/_next/static/chunks/main-app-7579edf11a97c339.js" async=""></script>
+        <script src="/_next/static/chunks/18409-009df9efad2cf6f8.js" async=""></script>
+        <script src="/_next/static/chunks/99630-7d5e24ffdedea895.js" async=""></script>
+        <script src="/_next/static/chunks/49763-8fda5ff918fe4d94.js" async=""></script>
+        <script src="/_next/static/chunks/5772-25e19d58a84ee7f2.js" async=""></script>
+        <script src="/_next/static/chunks/48143-f3d09e8971aa67a2.js" async=""></script>
+        <script src="/_next/static/chunks/42743-95b98f1c962c9a68.js" async=""></script>
+        <script src="/_next/static/chunks/12900-64391babbb6e1305.js" async=""></script>
+        <script src="/_next/static/chunks/60563-d69ec8d79ac78a76.js" async=""></script>
+        <script src="/_next/static/chunks/51388-1604842fa728fab8.js" async=""></script>
+        <script src="/_next/static/chunks/20578-dd5e62b0afaecd1d.js" async=""></script>
+        <script src="/_next/static/chunks/18541-79235eee03a38f36.js" async=""></script>
+        <script src="/_next/static/chunks/68388-a9e9bf6b853ecb4a.js" async=""></script>
+        <script src="/_next/static/chunks/24963-eefb396de6f52b03.js" async=""></script>
+        <script src="/_next/static/chunks/56173-c40c8416c336c779.js" async=""></script>
+        <script src="/_next/static/chunks/28677-c29490fb6fff6f35.js" async=""></script>
+        <script src="/_next/static/chunks/app/page-93d2c363975e439e.js" async=""></script>
+        <script src="/_next/static/chunks/98500-2d1eee542b6075d7.js" async=""></script>
+        <script src="/_next/static/chunks/16157-3081c2589a5adc4b.js" async=""></script>
+        <script src="/_next/static/chunks/80077-9d4576b39340f43b.js" async=""></script>
+        <script src="/_next/static/chunks/96684-f2c7891f6af8dcf0.js" async=""></script>
+        <script src="/_next/static/chunks/44995-0872262acb956caf.js" async=""></script>
+        <script src="/_next/static/chunks/app/layout-ef1c6828ca6cc7a2.js" async=""></script>
+        <script src="/_next/static/chunks/77366-f59ca2f4d2a63a21.js" async=""></script>
+        <script src="/_next/static/chunks/21060-077daa67582690b6.js" async=""></script>
+        <script src="/_next/static/chunks/16908-ff05a182b16c0485.js" async=""></script>
+        <script src="/_next/static/chunks/18614-81925f0816d708bb.js" async=""></script>
+        <script src="/_next/static/chunks/47118-ac3c1e03e5c806c8.js" async=""></script>
+        <script src="/_next/static/chunks/app/not-found-18b801905d1acf2b.js" async=""></script>
+        <link rel="preload" href="https://kit-pro.fontawesome.com/releases/v6.7.2/css/pro.min.css" as="style"/>
+        <meta name="next-size-adjust" content=""/>
+        <meta name="theme-color" content="#7d38ff"/>
+        <link rel="preload" as="image" href="https://upload-1.imgz.click/2026/07/example.rexzy.xyz/REXZY-png-1783765626-1783765625.webp"/>
+        <link href="https://kit-pro.fontawesome.com/releases/v6.7.2/css/pro.min.css" rel="stylesheet"/>
+        <script src="/_next/static/chunks/polyfills-42372ed130431b0a.js" noModule=""></script>
+        <script id="theme-init">
+            (function() {
+                try {
+                    var k = "rexzy-theme-mode";
+                    var s = localStorage.getItem(k);
+                    var t = s === "light" || s === "dark" ? s : (window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light");
+                    document.documentElement.setAttribute("data-theme", t);
+                } catch (e) {
+                    document.documentElement.setAttribute("data-theme", "dark");
                 }
+            })();
+        </script>
+        <script id="locale-init">
+            (function() {
+                try {
+                    var k = "rexzy-ui-locale";
+                    var s = localStorage.getItem(k);
+                    if (s === "th" || s === "en")
+                        document.documentElement.lang = s;
+                } catch (e) {}
+            })();
+        </script>
+        <script id="auth-back-recovery">
+            (function() {
+                try {
+                    var k = "rexzy-external-auth-pending";
+                    var nav = performance.getEntriesByType("navigation")[0];
+                    if (nav && nav.type === "back_forward" && sessionStorage.getItem(k) === "1") {
+                        sessionStorage.removeItem(k);
+                        location.reload();
+                        return;
+                    }
+                    if (!nav || nav.type !== "back_forward") {
+                        sessionStorage.removeItem(k);
+                    }
+                } catch (e) {}
+            })();
+        </script>
+        <script id="site-logo-boot">
+            (function() {
+                try {
+                    var u = "https://upload-1.imgz.click/2026/07/example.rexzy.xyz/REXZY-png-1783765626-1783765625.webp";
+                    var k = "srx_site_logo_meta_v1:rexzy.shop";
+                    var prev = localStorage.getItem(k);
+                    var p = prev ? JSON.parse(prev) : null;
+                    if (!p || p.url !== u) {
+                        localStorage.setItem(k, JSON.stringify({
+                            url: u,
+                            updatedAt: Date.now()
+                        }));
+                    }
+                } catch (e) {}
+            })();
+        </script>
+    </head>
+    <body class="flex min-h-full flex-col bg-background text-foreground">
+        <div hidden="">
+            <!--$?-->
+            <template id="B:0"></template>
+            <!--/$-->
+        </div>
+        <header class="sticky top-0 z-[100] w-full border-b border-border-soft bg-background/50 backdrop-blur-sm">
+            <nav class="mx-auto flex w-full max-w-[1500px] items-center justify-between gap-3 px-6 py-2">
+                <div class="flex min-w-0 items-center gap-3">
+                    <button type="button" class="inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-xl border border-border-soft bg-surface-soft text-foreground md:hidden" aria-label="เปิดเมนูมือถือ">
+                        <i class="fa-solid fa-bars" aria-hidden="true"></i>
+                    </button>
+                    <img src="https://upload-1.imgz.click/2026/07/example.rexzy.xyz/REXZY-png-1783765626-1783765625.webp" alt="logo" class="hidden h-9 w-auto object-contain md:block"/>
+                </div>
+                <div class="flex items-center gap-2">
+                    <div class="hidden items-center gap-0.5 rounded-2xl px-1.5 py-0.5 md:flex">
+                        <a aria-label="หน้าหลัก" aria-current="page" class="relative inline-flex items-center gap-1.5 overflow-hidden rounded-full border px-2.5 py-1 text-sm !font-normal leading-tight text-foreground/85 ease-motion hover:text-brand [&amp;_i]:transition-[opacity,color] [&amp;_i]:duration-300 [&amp;_i]:ease-motion hover:[&amp;_i]:opacity-100 hover:[&amp;_i]:text-brand max-xl:gap-0 max-xl:px-2 border-transparent bg-transparent font-semibold !text-[var(--brand-primary)] translate-y-0 before:opacity-0 hover:before:opacity-0 transition-[color,background-color,border-color,transform,opacity,filter] duration-300 ease-motion hover:border-transparent hover:bg-transparent hover:!text-[var(--brand-primary)] hover:translate-y-0 [&amp;_i]:!text-[var(--brand-primary)] [&amp;_i]:opacity-100" href="/">
+                            <i class="fa-solid fa-house text-sm xl:text-xs" aria-hidden="true"></i>
+                            <span class="hidden xl:inline">หน้าหลัก</span>
+                        </a>
+                        <button type="button" class="relative inline-flex items-center gap-1.5 overflow-hidden rounded-full border border-transparent bg-transparent px-2.5 py-1 text-sm !font-normal leading-tight text-foreground/85 transition-[color,background-color,border-color,transform,opacity,filter] duration-300 ease-motion hover:border-transparent hover:bg-transparent hover:text-brand [&amp;_i]:opacity-80 [&amp;_i]:transition-[opacity,color] [&amp;_i]:duration-300 [&amp;_i]:ease-motion hover:[&amp;_i]:opacity-100 hover:[&amp;_i]:text-brand before:opacity-0 hover:before:opacity-0 max-xl:gap-0 max-xl:px-2" aria-label="เช่าเว็บไซต์" disabled="">
+                            <i class="fa-solid fa-cart-shopping text-sm xl:text-xs" aria-hidden="true"></i>
+                            <span class="hidden xl:inline">เช่าเว็บไซต์</span>
+                        </button>
+                        <button type="button" class="relative inline-flex items-center gap-1.5 overflow-hidden rounded-full border border-transparent bg-transparent px-2.5 py-1 text-sm !font-normal leading-tight text-foreground/85 transition-[color,background-color,border-color,transform,opacity,filter] duration-300 ease-motion hover:border-transparent hover:bg-transparent hover:text-brand [&amp;_i]:opacity-80 [&amp;_i]:transition-[opacity,color] [&amp;_i]:duration-300 [&amp;_i]:ease-motion hover:[&amp;_i]:opacity-100 hover:[&amp;_i]:text-brand before:opacity-0 hover:before:opacity-0 max-xl:gap-0 max-xl:px-2" aria-label="อัปเดตเวอร์ชั่น" disabled="">
+                            <i class="fa-solid fa-arrows-rotate text-sm xl:text-xs" aria-hidden="true"></i>
+                            <span class="hidden xl:inline">อัปเดตเวอร์ชั่น</span>
+                        </button>
+                        <button type="button" class="relative inline-flex items-center gap-1.5 overflow-hidden rounded-full border border-transparent bg-transparent px-2.5 py-1 text-sm !font-normal leading-tight text-foreground/85 transition-[color,background-color,border-color,transform,opacity,filter] duration-300 ease-motion hover:border-transparent hover:bg-transparent hover:text-brand [&amp;_i]:opacity-80 [&amp;_i]:transition-[opacity,color] [&amp;_i]:duration-300 [&amp;_i]:ease-motion hover:[&amp;_i]:opacity-100 hover:[&amp;_i]:text-brand before:opacity-0 hover:before:opacity-0 max-xl:gap-0 max-xl:px-2" aria-label="อัปเกรด" disabled="">
+                            <i class="fa-solid fa-star text-sm xl:text-xs" aria-hidden="true"></i>
+                            <span class="hidden xl:inline">อัปเกรด</span>
+                        </button>
+                        <button type="button" class="relative inline-flex items-center gap-1.5 overflow-hidden rounded-full border border-transparent bg-transparent px-2.5 py-1 text-sm !font-normal leading-tight text-foreground/85 transition-[color,background-color,border-color,transform,opacity,filter] duration-300 ease-motion hover:border-transparent hover:bg-transparent hover:text-brand [&amp;_i]:opacity-80 [&amp;_i]:transition-[opacity,color] [&amp;_i]:duration-300 [&amp;_i]:ease-motion hover:[&amp;_i]:opacity-100 hover:[&amp;_i]:text-brand before:opacity-0 hover:before:opacity-0 max-xl:gap-0 max-xl:px-2" aria-label="เติมเงิน" disabled="">
+                            <i class="fa-solid fa-wallet text-sm xl:text-xs" aria-hidden="true"></i>
+                            <span class="hidden xl:inline">เติมเงิน</span>
+                        </button>
+                        <button type="button" class="relative inline-flex items-center gap-1.5 overflow-hidden rounded-full border border-transparent bg-transparent px-2.5 py-1 text-sm !font-normal leading-tight text-foreground/85 transition-[color,background-color,border-color,transform,opacity,filter] duration-300 ease-motion hover:border-transparent hover:bg-transparent hover:text-brand [&amp;_i]:opacity-80 [&amp;_i]:transition-[opacity,color] [&amp;_i]:duration-300 [&amp;_i]:ease-motion hover:[&amp;_i]:opacity-100 hover:[&amp;_i]:text-brand before:opacity-0 hover:before:opacity-0 max-xl:gap-0 max-xl:px-2 cursor-pointer" aria-label="เปิดเมนูบริการเสริม" aria-expanded="false" aria-haspopup="menu" id="radix-_R_2cbamtb_" data-state="closed">
+                            <i class="fa-solid fa-puzzle-piece text-sm xl:text-xs" aria-hidden="true"></i>
+                            <span class="hidden xl:inline">บริการเสริม</span>
+                            <i class="fa-solid fa-chevron-down text-[10px] transition-transform duration-200" aria-hidden="true"></i>
+                        </button>
+                        <button type="button" aria-label="ติดต่อเรา" class="relative inline-flex items-center gap-1.5 overflow-hidden rounded-full border border-transparent bg-transparent px-2.5 py-1 text-sm !font-normal leading-tight text-foreground/85 transition-[color,background-color,border-color,transform,opacity,filter] duration-300 ease-motion hover:border-transparent hover:bg-transparent hover:text-brand [&amp;_i]:opacity-80 [&amp;_i]:transition-[opacity,color] [&amp;_i]:duration-300 [&amp;_i]:ease-motion hover:[&amp;_i]:opacity-100 hover:[&amp;_i]:text-brand before:opacity-0 hover:before:opacity-0 max-xl:gap-0 max-xl:px-2">
+                            <i class="fa-solid fa-address-book text-sm xl:text-xs" aria-hidden="true"></i>
+                            <span class="hidden xl:inline">ติดต่อเรา</span>
+                        </button>
+                    </div>
+                    <div class="hidden items-center gap-0.5 md:flex">
+                        <button type="button" aria-label="ภาษา / ค่าเงิน / ธีม" class="inline-flex h-9 w-9 shrink-0 cursor-pointer items-center justify-center rounded-full border-none bg-transparent text-muted outline-none transition-[transform,color] duration-200 ease-motion hover:scale-105 hover:text-foreground active:scale-95" id="radix-_R_3kbamtb_" aria-haspopup="menu" aria-expanded="false" data-state="closed">
+                            <i class="fa-solid fa-gear text-base" aria-hidden="true"></i>
+                        </button>
+                    </div>
+                    <div class="flex items-center md:hidden"></div>
+                </div>
+            </nav>
+        </header>
+        <!--$?-->
+        <template id="B:1"></template>
+        <div class="flex flex-1 items-center justify-center py-24" aria-busy="true" aria-live="polite">
+            <i class="fa-solid fa-spinner fa-spin text-2xl text-brand" aria-hidden="true"></i>
+        </div>
+        <!--/$-->
+        <footer class="mt-auto border-t border-border-soft bg-[linear-gradient(180deg,rgb(var(--brand-rgb)/0.06)_0%,var(--background)_40%)]">
+            <div class="mx-auto w-full max-w-6xl px-4 pt-12 pb-4 sm:pt-14 sm:pb-5">
+                <div class="grid gap-10 sm:grid-cols-2 lg:grid-cols-4">
+                    <div class="">
+                        <div class="translate-y-[26px] opacity-0 transition-[transform,opacity] duration-300 ease-motion will-change-[opacity,transform]" style="transition-duration:700ms">
+                            <div>
+                                <div class="flex items-center gap-2">
+                                    <img src="https://upload-1.imgz.click/2026/07/example.rexzy.xyz/REXZY-png-1783765626-1783765625.webp" alt="logo" class="h-10 w-auto object-contain"/>
+                                    <span class="text-lg font-semibold text-foreground">Rexzy Studio</span>
+                                </div>
+                                <p class="mt-4 text-sm leading-relaxed text-muted">บริการให้เช่าและผลิตเว็บไซต์</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="">
+                        <div class="translate-y-[26px] opacity-0 transition-[transform,opacity] duration-300 ease-motion will-change-[opacity,transform]" style="transition-duration:700ms">
+                            <div>
+                                <h3 class="text-sm font-semibold text-foreground">ติดต่อเรา</h3>
+                                <div class="mt-4 flex select-none flex-wrap gap-2"></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="">
+                        <div class="translate-y-[26px] opacity-0 transition-[transform,opacity] duration-300 ease-motion will-change-[opacity,transform]" style="transition-duration:700ms">
+                            <div>
+                                <h3 class="text-sm font-semibold text-foreground">ลิงก์</h3>
+                                <ul class="mt-4 space-y-2">
+                                    <li>
+                                        <a class="text-sm text-muted hover:text-brand-accent transition-[color,background-color,border-color,transform,opacity,filter] duration-300 ease-motion" href="/">หน้าหลัก</a>
+                                    </li>
+                                    <li>
+                                        <a class="text-sm text-muted hover:text-brand-accent transition-[color,background-color,border-color,transform,opacity,filter] duration-300 ease-motion" href="/rent-website">เช่าเว็บไซต์</a>
+                                    </li>
+                                    <li>
+                                        <a class="text-sm text-muted hover:text-brand-accent transition-[color,background-color,border-color,transform,opacity,filter] duration-300 ease-motion" href="/image-scale">ขนาดภาพ</a>
+                                    </li>
+                                    <li>
+                                        <a class="text-sm text-muted hover:text-brand-accent transition-[color,background-color,border-color,transform,opacity,filter] duration-300 ease-motion" href="/websites">รายชื่อเว็บไซต์</a>
+                                    </li>
+                                    <li>
+                                        <a class="text-sm text-muted hover:text-brand-accent transition-[color,background-color,border-color,transform,opacity,filter] duration-300 ease-motion" href="/updates">การอัปเดต</a>
+                                    </li>
+                                    <li>
+                                        <a class="text-sm text-muted hover:text-brand-accent transition-[color,background-color,border-color,transform,opacity,filter] duration-300 ease-motion" href="/api">การเชื่อมต่อ</a>
+                                    </li>
+                                    <li>
+                                        <a class="text-sm text-muted hover:text-brand-accent transition-[color,background-color,border-color,transform,opacity,filter] duration-300 ease-motion" href="/domain">เชื่อมโดเมน</a>
+                                    </li>
+                                    <li>
+                                        <a class="text-sm text-muted hover:text-brand-accent transition-[color,background-color,border-color,transform,opacity,filter] duration-300 ease-motion" href="/topup">เติมเงิน</a>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="">
+                        <div class="translate-y-[26px] opacity-0 transition-[transform,opacity] duration-300 ease-motion will-change-[opacity,transform]" style="transition-duration:700ms">
+                            <div>
+                                <h3 class="text-sm font-semibold text-foreground">ข้อกำหนดและนโยบาย</h3>
+                                <ul class="mt-4 space-y-2" aria-label="ลิงก์ข้อกลับภาษีและคุกกี้">
+                                    <li>
+                                        <button type="button" class="cursor-pointer bg-transparent p-0 text-left text-sm text-muted transition-[color,background-color,border-color,transform,opacity,filter] duration-300 ease-motion hover:text-brand-accent">ตั้งค่าคุกกี้</button>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="mt-8 border-t border-border-soft pt-5">
+                    <p class="m-0 text-center text-xs leading-tight text-muted">© 2024-2026 Rexzy Studio สงวนลิขสิทธิ์</p>
+                </div>
+            </div>
+        </footer>
+        <script>
+            requestAnimationFrame(function() {
+                $RT = performance.now()
             });
-        }
-
-        function switchAuthTab(tabName) {
-            document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
-            document.querySelectorAll('.auth-form-content').forEach(form => form.classList.remove('active'));
-            
-            if(tabName === 'login') {
-                document.getElementById('tabLoginBtn').classList.add('active');
-                document.getElementById('formLogin').classList.add('active');
-            } else {
-                document.getElementById('tabRegisterBtn').classList.add('active');
-                document.getElementById('formRegister').classList.add('active');
-            }
-        }
-
-        function openAuthModal() {
-            document.getElementById('authModal').style.display = 'flex';
-        }
-
-        function closeAuthModal() {
-            document.getElementById('authModal').style.display = 'none';
-        }
-
-        function switchPage(pageName) {
-            document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
-            document.getElementById('page-' + pageName).classList.add('active');
-        }
-
-        let balance = 0.00;
-
-        function updateBalanceUI() {
-            let displayBalance = balance;
-            let symbol = ' THB';
-            if(currentCurrency === 'USD') {
-                displayBalance = balance / 35;
-                symbol = ' USD';
-            }
-            const formattedBalance = displayBalance.toLocaleString('th-TH', {minimumFractionDigits: 2}) + symbol;
-            const balanceElem = document.getElementById('balanceAmount');
-            if(balanceElem) balanceElem.innerText = formattedBalance;
-        }
-
-        function confirmAngpaoTopup() {
-            const inputField = document.getElementById('angpaoLinkInput');
-            if (!inputField) return;
-            const link = inputField.value.trim();
-            if (!link || !link.includes('gift.truemoney.com')) {
-                alert('กรุณากรอกลิงก์ซองอังเปา TrueMoney ให้ถูกต้อง');
-                return;
-            }
-            balance += 50;
-            updateBalanceUI();
-            inputField.value = '';
-            alert('เติมเงินสำเร็จ! ได้รับ 50 บาท');
-            switchPage('home');
-        }
-
-        const DISCORD_CLIENT_ID = "1532644387639660627";
-        const REDIRECT_URI = window.location.origin + window.location.pathname;
-        const DISCORD_OAUTH_URL = `https://discord.com/oauth2/authorize?client_id=${DISCORD_CLIENT_ID}&response_type=token&redirect_uri=${encodeURIComponent(REDIRECT_URI)}&scope=identify&prompt=consent`;
-
-        function loginDiscord() { window.location.href = DISCORD_OAUTH_URL; }
-
-        function handleLoginSubmit() {
-            const username = document.getElementById('loginUsername').value.trim();
-            if(!username) return;
-            grantAccess(username);
-        }
-
-        function handleRegisterSubmit() {
-            const username = document.getElementById('regUsername').value.trim();
-            if(!username) return;
-            grantAccess(username);
-        }
-
-        function grantAccess(name) {
-            closeAuthModal();
-            document.getElementById('welcomeName').innerText = name;
-            document.getElementById('navRight').innerHTML = `
-                <div style="background: rgba(139, 92, 246, 0.1); border: 1px solid rgba(139, 92, 246, 0.3); padding: 6px 14px; border-radius: 20px; font-size: 13px; font-weight: 700; color: #a78bfa;">${name}</div>
-            `;
-        }
-
-        window.onload = function() {
-            setLanguage(currentLang);
-            setCurrency(currentCurrency);
-            setTheme(currentTheme);
-        }
-    </script>
-</body>
+        </script>
+        <script src="/_next/static/chunks/webpack-10cd2636c1aeb25f.js" id="_R_" async=""></script>
+        <div hidden id="S:1">
+            <main class="flex-1 bg-transparent px-0 pt-0 text-foreground">
+                <section class="relative flex flex-col justify-center px-4 py-10 sm:py-14 min-h-[calc(100dvh-var(--site-header-height))]">
+                    <div class="relative mx-auto w-full max-w-3xl text-center">
+                        <div class="">
+                            <div class="translate-y-[26px] opacity-0 transition-[transform,opacity] duration-300 ease-motion will-change-[opacity,transform]" style="transition-duration:700ms">
+                                <p class="inline-flex items-center gap-2 rounded-full border border-brand/45 bg-[color-mix(in_srgb,var(--brand-primary)_16%,transparent)] px-4 py-1.5 text-xs font-semibold uppercase tracking-[0.14em] text-brand sm:text-sm">
+                                    <i class="fa-solid fa-bolt text-sm" aria-hidden="true"></i>
+                                    ประกาศสำคัญ
+                                </p>
+                            </div>
+                        </div>
+                        <div class="">
+                            <div class="translate-y-[26px] opacity-0 transition-[transform,opacity] duration-300 ease-motion will-change-[opacity,transform]" style="transition-duration:700ms">
+                                <h1 class="mt-5 text-balance text-3xl font-semibold leading-[1.08] tracking-[-0.02em] text-foreground sm:text-5xl md:text-6xl">มีอัปเดตเว็บไซต์แล้ว</h1>
+                            </div>
+                        </div>
+                        <div class="">
+                            <div class="translate-y-[26px] opacity-0 transition-[transform,opacity] duration-300 ease-motion will-change-[opacity,transform]" style="transition-duration:700ms">
+                                <p class="mx-auto mt-4 max-w-2xl text-pretty text-sm leading-relaxed text-muted sm:text-base">ระบบใหม่พร้อมแล้ว — ลูกค้าที่มีเว็บเช่าอยู่ควรเข้าไปอัปเดตให้ครบ อย่าพลาดประกาศนี้</p>
+                            </div>
+                        </div>
+                        <div class="">
+                            <div class="translate-y-[26px] opacity-0 transition-[transform,opacity] duration-300 ease-motion will-change-[opacity,transform]" style="transition-duration:700ms">
+                                <ul class="mx-auto mt-7 grid max-w-xl gap-2.5 text-left">
+                                    <li class="flex items-start gap-3 rounded-xl border border-border-soft/70 bg-surface-soft/25 px-3.5 py-3">
+                                        <span class="grid h-8 w-8 shrink-0 place-items-center rounded-lg border border-brand/35 bg-[color-mix(in_srgb,var(--brand-primary)_12%,transparent)] text-sm font-semibold text-brand">1</span>
+                                        <p class="pt-1 text-sm text-foreground sm:text-[15px]">เข้าสู่ระบบบัญชีของคุณ</p>
+                                    </li>
+                                    <li class="flex items-start gap-3 rounded-xl border border-border-soft/70 bg-surface-soft/25 px-3.5 py-3">
+                                        <span class="grid h-8 w-8 shrink-0 place-items-center rounded-lg border border-brand/35 bg-[color-mix(in_srgb,var(--brand-primary)_12%,transparent)] text-sm font-semibold text-brand">2</span>
+                                        <p class="pt-1 text-sm text-foreground sm:text-[15px]">ไปหน้าอัปเดต แล้วเริ่มอัปเดตทีละเว็บตามคิว</p>
+                                    </li>
+                                    <li class="flex items-start gap-3 rounded-xl border border-border-soft/70 bg-surface-soft/25 px-3.5 py-3">
+                                        <span class="grid h-8 w-8 shrink-0 place-items-center rounded-lg border border-brand/35 bg-[color-mix(in_srgb,var(--brand-primary)_12%,transparent)] text-sm font-semibold text-brand">3</span>
+                                        <p class="pt-1 text-sm text-foreground sm:text-[15px]">หรือถ้ายังไม่มีเว็บ เช่าเว็บไซต์ได้เลยจากปุ่มด้านล่าง</p>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="">
+                            <div class="translate-y-[26px] opacity-0 transition-[transform,opacity] duration-300 ease-motion will-change-[opacity,transform]" style="transition-duration:700ms">
+                                <div class="mt-8 flex flex-col items-stretch justify-center gap-3 sm:flex-row sm:items-center">
+                                    <button type="button" class="relative inline-flex items-center justify-center overflow-hidden rounded-full border border-brand/65 bg-[image:var(--brand-gradient)] py-2 font-semibold text-[#f8f7ff] ease-motion hover:border-brand/90 before:pointer-events-none before:absolute before:-left-[140%] before:-top-[40%] before:h-[180%] before:w-4/5 before:rotate-[20deg] before:bg-[linear-gradient(90deg,transparent,rgba(255,255,255,0.28),transparent)] before:opacity-0 before:content-[''] before:transition-opacity before:duration-300 hover:before:animate-[landingShimmer_820ms_cubic-bezier(0.22,1,0.36,1)_forwards] hover:before:opacity-100 transition-[transform,opacity] duration-300 ease-motion hover:animate-[tryNowPulse_360ms_cubic-bezier(0.22,1,0.36,1)] active:scale-[0.98] px-8 py-3.5! text-base">
+                                        <i class="fa-solid fa-sparkles mr-2 text-sm" aria-hidden="true"></i>
+                                        ไปหน้าอัปเดต
+                                    </button>
+                                    <button type="button" class="relative inline-flex items-center justify-center overflow-hidden rounded-full border border-white/20 bg-gradient-to-b from-[rgba(36,39,50,0.95)] to-[rgba(25,27,37,0.95)] py-2 font-semibold text-[#e8e8f2] ease-motion hover:border-white/30 hover:from-[rgba(46,49,62,0.95)] hover:to-[rgba(29,31,43,0.95)] [html[data-theme=light]_&]:border-border-soft [html[data-theme=light]_&]:from-white [html[data-theme=light]_&]:to-surface-soft [html[data-theme=light]_&]:text-foreground [html[data-theme=light]_&]:hover:border-[#b8bfd0] [html[data-theme=light]_&]:hover:from-white [html[data-theme=light]_&]:hover:to-[#e4e8f0] before:pointer-events-none before:absolute before:-left-[140%] before:-top-[40%] before:h-[180%] before:w-4/5 before:rotate-[20deg] before:bg-[linear-gradient(90deg,transparent,rgba(255,255,255,0.28),transparent)] before:opacity-0 before:content-[''] before:transition-opacity before:duration-300 hover:before:animate-[landingShimmer_820ms_cubic-bezier(0.22,1,0.36,1)_forwards] hover:before:opacity-100 transition-[transform,opacity] duration-300 ease-motion hover:animate-[tryNowPulse_360ms_cubic-bezier(0.22,1,0.36,1)] active:scale-[0.98] px-8 py-3.5! text-base">
+                                        <i class="fa-solid fa-rocket mr-2 text-sm" aria-hidden="true"></i>
+                                        เช่าเว็บไซต์
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+                <section id="stats" class="py-14 sm:py-20 relative overflow-hidden select-none">
+                    <div class="mx-auto w-full max-w-6xl px-4">
+                        <div class="pointer-events-none absolute inset-x-0 top-1/2 h-105 -translate-y-1/2 bg-[radial-gradient(ellipse_70%_60%_at_50%_50%,rgb(var(--brand-rgb)/0.14),transparent_72%)]" aria-hidden="true"></div>
+                        <div class="relative">
+                            <div class="">
+                                <div class="translate-y-[26px] opacity-0 transition-[transform,opacity] duration-300 ease-motion will-change-[opacity,transform]" style="transition-duration:700ms">
+                                    <div class="mx-auto max-w-3xl text-center">
+                                        <h2 class="text-2xl font-semibold leading-tight text-foreground sm:text-3xl md:text-4xl">Rexzy Studio เปิดให้บริการมาแล้ว</h2>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="">
+                                <div class="translate-y-[26px] opacity-0 transition-[transform,opacity] duration-300 ease-motion will-change-[opacity,transform]" style="transition-duration:700ms">
+                                    <div class="group relative mx-auto mt-6 max-w-xl overflow-hidden rounded-2xl border border-border-soft bg-[linear-gradient(180deg,rgb(var(--brand-rgb)/0.1)_0%,var(--surface)_55%)] px-4 py-4 text-center transition-all duration-300 ease-motion sm:px-6 sm:py-5 hover:-translate-y-1 hover:scale-[1.01] hover:border-brand/40 hover:bg-[linear-gradient(180deg,rgb(var(--brand-rgb)/0.16)_0%,var(--surface)_55%)] active:translate-y-0 active:scale-100 select-none transform-gpu translate-y-0 before:pointer-events-none before:absolute before:-left-[140%] before:-top-[40%] before:z-[1] before:h-[180%] before:w-4/5 before:rotate-[20deg] before:bg-[linear-gradient(90deg,transparent,rgba(255,255,255,0.16),transparent)] before:opacity-0 before:content-[''] before:transition-opacity before:duration-300 hover:before:animate-[landingShimmer_820ms_cubic-bezier(0.22,1,0.36,1)_forwards] hover:before:opacity-100 [html[data-theme=light]_&]:before:bg-[linear-gradient(90deg,transparent,rgba(125,56,255,0.12),transparent)]">
+                                        <p class="text-xs font-medium uppercase tracking-wide text-muted">เปิดให้บริการเมื่อ</p>
+                                        <p class="mt-1.5 text-base font-semibold text-foreground sm:text-lg">1 มีนาคม 2567</p>
+                                        <div class="my-3 border-t border-border-soft sm:my-4"></div>
+                                        <p class="text-xs font-medium uppercase tracking-wide text-muted">เปิดมาแล้ว</p>
+                                        <p class="mt-1.5 text-2xl font-semibold text-brand-accent sm:text-3xl">2 ปี 5 เดือน 14 วัน</p>
+                                        <p class="mt-1.5 text-xs text-muted sm:text-sm">รวม 897 วัน</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+            </main>
+        </div>
+    </body>
 </html>
