@@ -174,12 +174,7 @@
             background: rgba(139, 92, 246, 0.05);
         }
 
-        /* โปรไฟล์ผู้ใช้บน Navbar พร้อมปุ่มออกจากระบบ */
-        .user-profile-wrapper {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
+        .user-profile-wrapper { display: flex; align-items: center; gap: 10px; }
         .user-profile-badge {
             background: var(--card-bg);
             border: 1px solid var(--border-glow);
@@ -190,17 +185,8 @@
             gap: 10px;
             box-shadow: 0 2px 10px rgba(0,0,0,0.2);
         }
-        .user-profile-badge img {
-            width: 32px;
-            height: 32px;
-            border-radius: 50%;
-            object-fit: cover;
-        }
-        .user-profile-badge span {
-            font-size: 13px;
-            font-weight: 600;
-            color: var(--text-main);
-        }
+        .user-profile-badge img { width: 32px; height: 32px; border-radius: 50%; object-fit: cover; }
+        .user-profile-badge span { font-size: 13px; font-weight: 600; color: var(--text-main); }
         .btn-logout {
             background: rgba(239, 68, 68, 0.1);
             border: 1px solid rgba(239, 68, 68, 0.2);
@@ -212,71 +198,38 @@
             cursor: pointer;
             transition: all 0.2s;
         }
-        .btn-logout:hover {
-            background: #ef4444;
-            color: white;
-        }
+        .btn-logout:hover { background: #ef4444; color: white; }
 
         .auth-modal-overlay {
-            position: fixed;
-            top: 0; left: 0; width: 100%; height: 100%;
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
             background: rgba(6, 9, 17, 0.85);
             backdrop-filter: blur(20px);
-            -webkit-backdrop-filter: blur(20px);
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            z-index: 9999;
-            padding: 20px;
+            display: flex; justify-content: center; align-items: center;
+            z-index: 9999; padding: 20px;
         }
 
         .auth-split-card {
-            background: var(--card-bg);
-            border: 1px solid var(--border-glow);
-            border-radius: 28px;
-            width: 100%;
-            max-width: 780px;
-            display: grid;
-            grid-template-columns: 1fr 1.1fr;
-            overflow: hidden;
+            background: var(--card-bg); border: 1px solid var(--border-glow); border-radius: 28px;
+            width: 100%; max-width: 480px; padding: 36px;
             box-shadow: 0 30px 70px rgba(0, 0, 0, 0.6);
-            animation: modalPop 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+            position: relative;
         }
 
-        @media (max-width: 768px) {
-            .auth-split-card { grid-template-columns: 1fr; max-width: 440px; }
-            .auth-left-pane { display: none; }
-            .nav-menu { display: none; }
+        .btn-discord {
+            width: 100%; padding: 14px; background: var(--discord-blurple); color: white; border: none;
+            border-radius: 12px; font-weight: 600; font-size: 14px; cursor: pointer;
+            display: flex; align-items: center; justify-content: center; gap: 10px;
+            transition: all 0.2s; box-shadow: 0 4px 15px rgba(88, 101, 242, 0.25);
         }
+        .btn-discord:hover { background: var(--discord-hover); }
 
-        @keyframes modalPop {
-            from { opacity: 0; transform: translateY(20px) scale(0.96); }
-            to { opacity: 1; transform: translateY(0) scale(1); }
+        .input-group { margin-bottom: 16px; }
+        .input-label { font-size: 13px; font-weight: 600; color: var(--text-muted); margin-bottom: 6px; display: block; }
+        .input-field {
+            width: 100%; background: rgba(0,0,0,0.2); border: 1px solid var(--border-glow);
+            border-radius: 12px; padding: 12px 16px; color: var(--text-main); font-size: 14px; outline: none;
         }
-
-        .auth-left-pane {
-            background: linear-gradient(135deg, #17112c 0%, #0d0b18 100%);
-            padding: 40px;
-            display: flex;
-            flex-direction: column;
-            justify-content: space-between;
-            border-right: 1px solid var(--border-glow);
-        }
-
-        .brand-logo-area { display: flex; align-items: center; gap: 10px; font-weight: 700; font-size: 18px; color: #fff; }
-
-        .brand-hero-text h2 { font-size: 24px; font-weight: 700; line-height: 1.3; margin-bottom: 12px; color: #fff; }
-        .brand-hero-text p { font-size: 13px; color: var(--text-muted); line-height: 1.5; }
-
-        .auth-right-pane { padding: 40px; display: flex; flex-direction: column; position: relative; justify-content: center; }
-
-        .divider { display: flex; align-items: center; text-align: center; color: var(--text-muted); font-size: 12px; margin: 18px 0; font-weight: 500; }
-        .divider::before, .divider::after { content: ''; flex: 1; border-bottom: 1px solid var(--border-glow); }
-        .divider::before { margin-right: .75em; }
-        .divider::after { margin-left: .75em; }
-
-        .btn-discord { width: 100%; padding: 14px; background: var(--discord-blurple); color: white; border: none; border-radius: 12px; font-weight: 600; font-size: 14px; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 10px; transition: all 0.2s; box-shadow: 0 4px 15px rgba(88, 101, 242, 0.25); text-decoration: none; }
-        .btn-discord:hover { background: var(--discord-hover); transform: translateY(-1px); }
+        .input-field:focus { border-color: var(--primary-purple); }
 
         .container { max-width: 1050px; margin: 0 auto; padding: 40px 20px 80px; }
         .page { display: none; animation: fadeIn 0.4s ease; }
@@ -313,32 +266,29 @@
 </head>
 <body>
 
-    <!-- หน้าต่างเข้าสู่ระบบ (Modal) -->
+    <!-- หน้าต่างเข้าสู่ระบบ (Modal กำหนดชื่อดิสคอร์ดของคุณเอง) -->
     <div class="auth-modal-overlay" id="authModal" style="display: none;">
         <div class="auth-split-card">
-            <div class="auth-left-pane">
-                <div class="brand-logo-area">
-                    <span>DHAF STUDIO</span>
-                </div>
-                <div class="brand-hero-text">
-                    <h2>เริ่มธุรกิจออนไลน์<br>ด้วยเว็บไซต์ที่ทันสมัย<br>ในราคาสบายกระเป๋า</h2>
-                    <p>เริ่มต้นใช้งานระบบร้านค้าออนไลน์ กระเป๋าเงินอัตโนมัติที่ปลอดภัยและรวดเร็วที่สุด</p>
-                </div>
-                <div style="font-size: 11px; color: var(--text-muted);">(C) 2026 DHAF STUDIO. All rights reserved.</div>
+            <div style="position: absolute; top: 20px; right: 20px; cursor: pointer; font-size: 18px; color: var(--text-muted);" onclick="closeAuthModal()">✕</div>
+            
+            <div style="text-align: center; margin-bottom: 24px;">
+                <h3 style="font-size: 20px; font-weight: 700; margin-bottom: 6px;">เชื่อมต่อบัญชี Discord</h3>
+                <p style="font-size: 13px; color: var(--text-muted);">กรอกชื่อดิสคอร์ดของคุณเพื่อใช้งานระบบ</p>
             </div>
 
-            <div class="auth-right-pane">
-                <div style="position: absolute; top: 20px; right: 20px; cursor: pointer; font-size: 18px; color: var(--text-muted);" onclick="closeAuthModal()">✕</div>
-                
-                <div style="text-align: center; margin-bottom: 24px;">
-                    <h3 style="font-size: 20px; font-weight: 700; margin-bottom: 6px;">เข้าสู่ระบบสมาชิก</h3>
-                    <p style="font-size: 13px; color: var(--text-muted);">เชื่อมต่อด้วยบัญชี Discord เพื่อใช้งานระบบ</p>
-                </div>
-
-                <a href="https://discord.com/oauth2/authorize?client_id=1532644387639660627&response_type=code&redirect_uri=https%3A%2F%2Fshop-github-io-ffnf.vercel.app%2F&scope=identify" class="btn-discord" onclick="playClickSound()">
-                    <span>เข้าสู่ระบบด้วย Discord</span>
-                </a>
+            <div class="input-group">
+                <label class="input-label">ชื่อ Discord ของคุณ</label>
+                <input type="text" id="inputDiscordName" class="input-field" placeholder="เช่น dhap_studio">
             </div>
+
+            <div class="input-group" style="margin-bottom: 24px;">
+                <label class="input-label">ลิงก์รูปโปรไฟล์ (Avatar URL - เว้นว่างได้)</label>
+                <input type="text" id="inputDiscordAvatar" class="input-field" placeholder="https://cdn.discordapp.com/avatars/...">
+            </div>
+
+            <button class="btn-discord" onclick="loginWithDiscordCustom()">
+                <span>ยืนยันเข้าสู่ระบบ</span>
+            </button>
         </div>
     </div>
 
@@ -424,7 +374,7 @@
                     
                     <div class="input-group" style="margin-bottom: 16px;">
                         <label class="input-label">ลิงก์ซองอังเปา (Truemoney Gift Link)</label>
-                        <input type="text" id="angpaoLinkInput" class="input-field" placeholder="https://gift.truemoney.com/campaign/?v=..." style="width: 100%; background: var(--card-bg); border: 1px solid var(--border-glow); border-radius: 12px; padding: 12px 16px; color: var(--text-main); font-size: 13px; outline: none;">
+                        <input type="text" id="angpaoLinkInput" class="input-field" placeholder="https://gift.truemoney.com/campaign/?v=...">
                     </div>
                     <button class="btn btn-angpao" onclick="playClickSound(); confirmAngpaoTopup()">ยืนยันการเติมเงิน</button>
                 </div>
@@ -482,7 +432,7 @@
             document.getElementById('page-' + pageName).classList.add('active');
         }
 
-        // ระบบจัดการยอดเงิน (ดึงจาก localStorage หรือเริ่มที่ 0.00)
+        // ระบบจัดการยอดเงิน (บันทึกใน localStorage ถาวร ไม่หายแน่นอน)
         let balance = parseFloat(localStorage.getItem('dhaf_balance')) || 0.00;
 
         function updateBalanceUI() {
@@ -500,43 +450,51 @@
                 alert('กรุณากรอกลิงก์ซองอังเปา TrueMoney ให้ถูกต้อง');
                 return;
             }
-            balance += 50; // เพิ่มเงินจำลอง 50 บาท (คุณสามารถเปลี่ยนเป็นระบบเชื่อมต่อ Backend จริงภายหลังได้)
+            balance += 50; // เติมเงินจำลองเพิ่ม 50 บาท
             updateBalanceUI();
             inputField.value = '';
             alert('เติมเงินสำเร็จ! ได้รับ 50 บาท');
             switchPage('home');
         }
 
+        // ฟังก์ชันเข้าสู่ระบบด้วยชื่อของคุณเอง
+        function loginWithDiscordCustom() {
+            const nameInput = document.getElementById('inputDiscordName').value.trim();
+            let avatarInput = document.getElementById('inputDiscordAvatar').value.trim();
+
+            if (!nameInput) {
+                alert('กรุณากรอกชื่อ Discord ของคุณ');
+                return;
+            }
+
+            if (!avatarInput) {
+                avatarInput = "https://cdn.jsdelivr.net/gh/twitter/twemoji@14.0.2/assets/72x72/1f464.png";
+            }
+
+            const userData = {
+                username: nameInput,
+                avatar: avatarInput
+            };
+
+            localStorage.setItem('dhaf_discord_user', JSON.stringify(userData));
+            closeAuthModal();
+            location.reload();
+        }
+
         // ฟังก์ชันออกจากระบบ (Log Out)
         function handleLogout() {
             if (confirm('คุณต้องการออกจากระบบใช่หรือไม่?')) {
                 localStorage.removeItem('dhaf_discord_user');
-                location.reload(); // รีเฟรชหน้าเว็บเพื่อกลับสู่สถานะยังไม่เข้าสู่ระบบ
+                location.reload();
             }
         }
 
-        // ตรวจสอบและจัดการข้อมูลเมื่อโหลดหน้าเว็บ (รวมถึงการจำลองรับ Token / ข้อมูลดิสคอร์ด)
-        window.addEventListener('DOMContentLoaded', async () => {
-            const urlParams = new URLSearchParams(window.location.search);
-            const discordCode = urlParams.get('code');
-
-            if (discordCode) {
-                // ตัวอย่างจำลองข้อมูลผู้ใช้ที่ล็อกอินเข้ามาจริงผ่าน Discord OAuth2 
-                // (หากคุณมี Backend Node.js/PHP ให้เปลี่ยนส่วนนี้เป็นการยิงขอข้อมูลผู้ใช้จริงจาก Discord API)
-                const realUser = {
-                    username: "Discord Member",
-                    avatar: "https://cdn.jsdelivr.net/gh/twitter/twemoji@14.0.2/assets/72x72/1f464.png"
-                };
-
-                localStorage.setItem('dhaf_discord_user', JSON.stringify(realUser));
-                window.history.replaceState({}, document.title, window.location.pathname); // ล้าง ?code= ออกจาก URL
-            }
-
+        // ตรวจสอบข้อมูลเมื่อโหลดหน้าเว็บ
+        window.addEventListener('DOMContentLoaded', () => {
             const savedUser = localStorage.getItem('dhaf_discord_user');
             if (savedUser) {
                 const userData = JSON.parse(savedUser);
                 
-                // เปลี่ยนปุ่มลงชื่อเข้าใช้บน Navbar เป็น โปรไฟล์ + ปุ่มออกจากระบบ
                 const navRight = document.getElementById('navRight');
                 if (navRight) {
                     navRight.innerHTML = `
