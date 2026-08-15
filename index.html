@@ -77,9 +77,7 @@
         .btn-discord { background: var(--discord-blurple); color: white; border: none; }
         .btn-discord:hover { background: #4752c4; }
 
-        .divider {
-            display: flex; align-items: center; text-align: center; color: var(--text-muted); font-size: 13px; margin: 20px 0;
-        }
+        .divider { display: flex; align-items: center; text-align: center; color: var(--text-muted); font-size: 13px; margin: 20px 0; }
         .divider::before, .divider::after { content: ''; flex: 1; border-bottom: 1px solid var(--border-glow); }
         .divider::before { margin-right: .75em; }
         .divider::after { margin-left: .75em; }
@@ -90,19 +88,25 @@
         .input-field:focus { border-color: var(--primary-blue); background: white; box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.08); }
         .btn-submit { width: 100%; padding: 13px; background: var(--primary-gradient); border: none; border-radius: 12px; color: white; font-size: 15px; font-weight: 600; cursor: pointer; box-shadow: 0 4px 12px rgba(37, 99, 235, 0.25); }
 
-        /* Navbar */
-        .navbar { background: rgba(255, 255, 255, 0.85); backdrop-filter: blur(16px); border-bottom: 1px solid var(--border-glow); padding: 14px 5%; display: flex; align-items: center; justify-content: space-between; position: sticky; top: 0; z-index: 100; box-shadow: 0 4px 20px rgba(0,0,0,0.02); }
+        /* Navbar & Profile Info */
+        .navbar { background: rgba(255, 255, 255, 0.85); backdrop-filter: blur(16px); border-bottom: 1px solid var(--border-glow); padding: 12px 5%; display: flex; align-items: center; justify-content: space-between; position: sticky; top: 0; z-index: 100; box-shadow: 0 4px 20px rgba(0,0,0,0.02); }
         .nav-logo { font-size: 20px; font-weight: 700; background: var(--primary-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; cursor: pointer; display: flex; align-items: center; gap: 8px; }
         .nav-menu { list-style: none; display: flex; gap: 28px; align-items: center; }
         .nav-menu li a { color: var(--text-muted); text-decoration: none; font-size: 14px; font-weight: 500; transition: color 0.2s; cursor: pointer; }
         .nav-menu li a:hover, .nav-menu li a.active { color: var(--primary-blue); font-weight: 600; }
         
-        .profile-dropdown { position: relative; }
-        .profile-btn { background: var(--input-bg); border: 1px solid var(--border-glow); border-radius: 30px; padding: 4px 14px 4px 4px; display: flex; align-items: center; gap: 10px; cursor: pointer; transition: all 0.2s; }
-        .profile-avatar { width: 34px; height: 34px; border-radius: 50%; object-fit: cover; }
-        .profile-name { font-size: 14px; font-weight: 500; color: var(--text-main); }
+        .nav-profile-area { display: flex; align-items: center; gap: 14px; }
+        .nav-wallet-badge { background: #eff6ff; border: 1px solid #dbeafe; padding: 6px 14px; border-radius: 20px; font-size: 14px; font-weight: 700; color: var(--primary-blue); display: flex; align-items: center; gap: 6px; }
 
-        .dropdown-menu { position: absolute; top: 120%; right: 0; background: #ffffff; border: 1px solid var(--border-glow); border-radius: 14px; width: 220px; box-shadow: 0 15px 35px rgba(0,0,0,0.08); opacity: 0; visibility: hidden; transform: translateY(-8px); transition: all 0.25s ease; overflow: hidden; z-index: 110; }
+        .profile-container { position: relative; display: flex; align-items: center; }
+        .profile-avatar-wrapper { position: relative; width: 40px; height: 40px; cursor: pointer; }
+        .profile-avatar { width: 100%; height: 100%; border-radius: 50%; object-fit: cover; border: 2px solid var(--primary-blue); }
+        
+        /* ปุ่ม + บนรูปโปรไฟล์ */
+        .avatar-plus-btn { position: absolute; bottom: -2px; right: -2px; background: var(--primary-blue); color: white; width: 16px; height: 16px; border-radius: 50%; font-size: 11px; display: flex; align-items: center; justify-content: center; border: 2px solid white; font-weight: bold; }
+
+        .profile-dropdown { position: relative; }
+        .dropdown-menu { position: absolute; top: 130%; right: 0; background: #ffffff; border: 1px solid var(--border-glow); border-radius: 14px; width: 220px; box-shadow: 0 15px 35px rgba(0,0,0,0.08); opacity: 0; visibility: hidden; transform: translateY(-8px); transition: all 0.25s ease; overflow: hidden; z-index: 110; }
         .profile-dropdown.active .dropdown-menu { opacity: 1; visibility: visible; transform: translateY(0); }
         .dropdown-header { padding: 14px 18px; border-bottom: 1px solid var(--border-glow); background: #fafafa; }
         .dropdown-header strong { display: block; font-size: 14px; color: var(--text-main); }
@@ -143,7 +147,6 @@
         .card-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
         .card-title { font-size: 18px; font-weight: 600; color: var(--text-main); }
 
-        /* กล่องเติมเงินซองอังเปา */
         .topup-box { max-width: 500px; margin: 0 auto; background: var(--card-bg); border: 1px solid var(--border-glow); border-radius: 24px; padding: 36px; box-shadow: 0 10px 30px rgba(0,0,0,0.02); }
         .angpao-header { display: flex; align-items: center; gap: 12px; margin-bottom: 24px; }
         .angpao-badge { background: rgba(255, 87, 34, 0.1); color: var(--truemoney-red); width: 48px; height: 48px; border-radius: 14px; display: flex; align-items: center; justify-content: center; font-size: 22px; }
@@ -201,7 +204,7 @@
                 <li><a id="nav-topup" onclick="switchPage('topup')">เติมเงิน</a></li>
                 <li><a id="nav-history" onclick="switchPage('history')">ประวัติ</a></li>
             </ul>
-            <div class="nav-right" id="navRight"></div>
+            <div class="nav-profile-area" id="navRight"></div>
         </nav>
 
         <div class="container">
@@ -267,8 +270,10 @@
         </div>
     </div>
 
+    <!-- Hidden file input สำหรับอัปโหลดเปลี่ยนรูปโปรไฟล์ -->
+    <input type="file" id="avatarUploadInput" accept="image/*" style="display: none;" onchange="handleAvatarChange(event)">
+
     <script>
-        // ระบบสลับหน้า
         function switchPage(pageName) {
             document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
             document.getElementById('page-' + pageName).classList.add('active');
@@ -282,7 +287,10 @@
         let transactions = JSON.parse(localStorage.getItem('dhaf_transactions')) || [];
 
         function updateBalanceUI() {
-            document.getElementById('balanceAmount').innerText = balance.toLocaleString('th-TH', {minimumFractionDigits: 2}) + ' ฿';
+            const formattedBalance = balance.toLocaleString('th-TH', {minimumFractionDigits: 2}) + ' ฿';
+            document.getElementById('balanceAmount').innerText = formattedBalance;
+            const navWallet = document.getElementById('navWalletAmount');
+            if(navWallet) navWallet.innerText = formattedBalance;
         }
 
         function renderHistory() {
@@ -303,7 +311,6 @@
             `).join('');
         }
 
-        // ระบบเติมเงินซองอังเปา (จำลองการตรวจสอบลิงก์)
         function confirmAngpaoTopup() {
             const link = document.getElementById('angpaoLinkInput').value.trim();
             if (!link || !link.includes('gift.truemoney.com')) {
@@ -311,9 +318,7 @@
                 return;
             }
 
-            // ในการใช้งานจริง ตรงนี้จะต้องส่งลิงก์ไปเช็คกับ Backend / API ของระบบซองอังเปา
-            // โค้ดนี้จำลองการเติมสำเร็จและสุ่มยอดเงินสมมติ (หรือปรับแก้ตามระบบหลังบ้านของคุณ)
-            const simulatedAmount = 50; // ตัวอย่างยอดเงินจากซอง
+            const simulatedAmount = 50; 
 
             transactions.unshift({
                 desc: 'เติมเงินผ่านซองอังเปา (TrueMoney)', amount: simulatedAmount, type: 'income',
@@ -329,7 +334,7 @@
             switchPage('home');
         }
 
-        // ==================== ระบบตรวจสอบการยืนยันตัวตน (มนุษย์) ====================
+        // ==================== ระบบยืนยันตัวตน + โปรไฟล์ & ปุ่ม + ====================
         const DISCORD_CLIENT_ID = "1532644387639660627";
         const REDIRECT_URI = window.location.origin + window.location.pathname;
         const DISCORD_OAUTH_URL = `https://discord.com/oauth2/authorize?client_id=${DISCORD_CLIENT_ID}&response_type=token&redirect_uri=${encodeURIComponent(REDIRECT_URI)}&scope=identify&prompt=consent`;
@@ -343,22 +348,29 @@
         }
 
         function grantAccess(name, avatar) {
-            localStorage.setItem('dhaf_user_identity', JSON.stringify({ name, avatar }));
+            const savedAvatar = localStorage.getItem('dhaf_user_avatar') || avatar;
+            localStorage.setItem('dhaf_user_identity', JSON.stringify({ name, avatar: savedAvatar }));
             document.getElementById('authModal').style.display = 'none';
             document.getElementById('mainContent').style.display = 'block';
 
             document.getElementById('welcomeName').innerText = name;
+            
+            // สร้าง Navbar ด้านขวา: แสดงยอดเงิน + รูปโปรไฟล์พร้อมเครื่องหมาย +
             document.getElementById('navRight').innerHTML = `
+                <div class="nav-wallet-badge">💰 <span id="navWalletAmount">0.00 ฿</span></div>
                 <div class="profile-dropdown" id="profileDropdown">
-                    <div class="profile-btn" onclick="toggleDropdown()">
-                        <img src="${avatar}" class="profile-avatar" alt="Avatar">
-                        <span class="profile-name">${name}</span>
+                    <div class="profile-container">
+                        <div class="profile-avatar-wrapper" onclick="toggleDropdown()" title="คลิกเพื่อจัดการโปรไฟล์">
+                            <img src="${savedAvatar}" class="profile-avatar" id="navAvatarImg" alt="Avatar">
+                            <div class="avatar-plus-btn" onclick="event.stopPropagation(); triggerUpload();" title="เปลี่ยนรูปโปรไฟล์">+</div>
+                        </div>
                     </div>
                     <div class="dropdown-menu">
                         <div class="dropdown-header">
                             <strong>${name}</strong>
                             <span>ยืนยันตัวตนแล้ว</span>
                         </div>
+                        <button class="dropdown-item" onclick="triggerUpload()">เปลี่ยนรูปโปรไฟล์</button>
                         <button class="dropdown-item danger" onclick="logout()">ออกจากระบบ</button>
                     </div>
                 </div>
@@ -367,7 +379,34 @@
         }
 
         function toggleDropdown() { document.getElementById('profileDropdown').classList.toggle('active'); }
-        function logout() { localStorage.removeItem('dhaf_user_identity'); window.location.reload(); }
+        
+        function triggerUpload() {
+            document.getElementById('avatarUploadInput').click();
+        }
+
+        function handleAvatarChange(event) {
+            const file = event.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    const newAvatarUrl = e.target.result;
+                    localStorage.setItem('dhaf_user_avatar', newAvatarUrl);
+                    document.getElementById('navAvatarImg').src = newAvatarUrl;
+                    
+                    let user = JSON.parse(localStorage.getItem('dhaf_user_identity')) || {};
+                    user.avatar = newAvatarUrl;
+                    localStorage.setItem('dhaf_user_identity', JSON.stringify(user));
+                    alert('เปลี่ยนรูปโปรไฟล์สำเร็จ!');
+                };
+                reader.readAsDataURL(file);
+            }
+        }
+
+        function logout() { 
+            localStorage.removeItem('dhaf_user_identity'); 
+            localStorage.removeItem('dhaf_user_avatar');
+            window.location.reload(); 
+        }
 
         window.onload = function() {
             const hash = window.location.hash.substring(1);
