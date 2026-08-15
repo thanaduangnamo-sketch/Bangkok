@@ -32,31 +32,15 @@
                 radial-gradient(circle at 85% 30%, rgba(139, 92, 246, 0.15) 0%, transparent 45%);
         }
 
-        /* Login Page (หน้าล็อกอินก่อนเข้าระบบ) */
-        .login-page {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            min-height: 100vh;
-            text-align: center;
-            padding: 20px;
-        }
+        /* Login Page */
+        .login-page { display: flex; justify-content: center; align-items: center; min-height: 100vh; text-align: center; padding: 20px; }
         .login-logo { font-size: 42px; font-weight: 700; background: var(--primary-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; margin-bottom: 15px; }
         .login-subtitle { color: var(--text-muted); font-size: 18px; margin-bottom: 50px; }
-        .btn-discord-large {
-            background: var(--discord-blurple); color: white; padding: 18px 40px; border-radius: 12px;
-            font-weight: 600; font-size: 18px; border: none; cursor: pointer; display: inline-flex; align-items: center;
-            gap: 12px; text-decoration: none; transition: all 0.2s; box-shadow: 0 8px 20px rgba(88, 101, 242, 0.4);
-        }
+        .btn-discord-large { background: var(--discord-blurple); color: white; padding: 18px 40px; border-radius: 12px; font-weight: 600; font-size: 18px; border: none; cursor: pointer; display: inline-flex; align-items: center; gap: 12px; text-decoration: none; transition: all 0.2s; box-shadow: 0 8px 20px rgba(88, 101, 242, 0.4); }
         .btn-discord-large:hover { background: #4752c4; transform: translateY(-3px); }
 
-        /* Navbar (หลังล็อกอินแล้ว) */
-        .navbar {
-            background: rgba(7, 8, 13, 0.7); backdrop-filter: blur(20px);
-            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
-            padding: 16px 5%; display: flex; align-items: center; justify-content: space-between;
-            position: sticky; top: 0; z-index: 1000;
-        }
+        /* Navbar */
+        .navbar { background: rgba(7, 8, 13, 0.7); backdrop-filter: blur(20px); border-bottom: 1px solid rgba(255, 255, 255, 0.05); padding: 16px 5%; display: flex; align-items: center; justify-content: space-between; position: sticky; top: 0; z-index: 1000; }
         .nav-logo { font-size: 22px; font-weight: 700; background: var(--primary-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; cursor: pointer; display: flex; align-items: center; gap: 10px; }
         .nav-menu { list-style: none; display: flex; gap: 35px; align-items: center; }
         .nav-menu li a { color: var(--text-muted); text-decoration: none; font-size: 15px; font-weight: 500; transition: color 0.3s; cursor: pointer; }
@@ -79,18 +63,24 @@
         .dropdown-item:hover { background: rgba(255,255,255,0.05); }
         .dropdown-item.danger { color: var(--danger); }
 
-        /* Main App Layout (หลังล็อกอิน) */
-        .app-container { display: none; } /* ซ่อนไว้ก่อน */
-        .container { max-width: 1000px; margin: 0 auto; padding: 60px 20px; }
+        /* Main App Layout */
+        .app-container { display: none; } 
+        /* เพิ่ม Padding ด้านบนให้หายใจ */
+        .container { max-width: 1000px; margin: 0 auto; padding: 60px 20px 80px; }
         .page { display: none; animation: fadeIn 0.5s ease; }
         .page.active { display: block; }
         @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
 
+        /* Welcome Text */
+        .welcome-text { text-align: center; margin-bottom: 40px; }
+        .welcome-text h1 { font-size: 32px; font-weight: 600; color: var(--text-main); }
+        .welcome-text h1 span { background: var(--primary-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+
         /* Balance & Cards */
-        .balance-card { background: var(--card-bg); backdrop-filter: blur(10px); border: 1px solid var(--border-glow); border-radius: 24px; padding: 40px; text-align: center; margin-bottom: 40px; box-shadow: 0 20px 50px rgba(0,0,0,0.2); position: relative; overflow: hidden; }
+        .balance-card { background: var(--card-bg); backdrop-filter: blur(10px); border: 1px solid var(--border-glow); border-radius: 24px; padding: 50px 40px; text-align: center; margin-bottom: 40px; box-shadow: 0 20px 50px rgba(0,0,0,0.2); position: relative; overflow: hidden; }
         .balance-label { color: var(--text-muted); font-size: 16px; margin-bottom: 15px; }
         .balance-amount { font-size: 56px; font-weight: 700; background: var(--primary-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
-        .balance-actions { display: flex; gap: 15px; justify-content: center; margin-top: 30px; flex-wrap: wrap; }
+        .balance-actions { display: flex; gap: 15px; justify-content: center; margin-top: 40px; flex-wrap: wrap; }
 
         .btn { padding: 12px 24px; border: none; border-radius: 10px; font-size: 15px; font-weight: 500; cursor: pointer; font-family: inherit; display: inline-flex; align-items: center; gap: 8px; transition: all 0.2s; text-decoration: none; }
         .btn-income { background: rgba(16, 185, 129, 0.1); color: var(--success); border: 1px solid rgba(16, 185, 129, 0.3); }
@@ -104,9 +94,8 @@
         .card-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
         .card-title { font-size: 20px; font-weight: 600; }
 
-        /* Topup Page Specifics */
+        /* Topup Page */
         .topup-box { max-width: 500px; margin: 0 auto; background: var(--card-bg); border: 1px solid var(--border-glow); border-radius: 24px; padding: 40px; }
-        .topup-amount-display { font-size: 48px; font-weight: 700; color: var(--success); text-align: center; margin: 20px 0; }
         .input-group { margin-bottom: 20px; }
         .input-label { display: block; font-size: 14px; color: var(--text-muted); margin-bottom: 8px; }
         .input-field { width: 100%; background: var(--input-bg); border: 1px solid var(--border-glow); border-radius: 10px; padding: 14px 16px; color: var(--text-main); font-size: 15px; font-family: inherit; outline: none; }
@@ -137,7 +126,7 @@
 </head>
 <body>
 
-    <!-- 1. หน้าล็อกอิน Discord (หน้าแรกก่อนเข้าระบบ) -->
+    <!-- 1. หน้าล็อกอิน Discord -->
     <div class="login-page" id="loginPage">
         <div>
             <div class="login-logo">DHAF SHOP</div>
@@ -150,7 +139,7 @@
         </div>
     </div>
 
-    <!-- 2. หน้าแอปหลัก (หลังล็อกอินสำเร็จ) -->
+    <!-- 2. หน้าแอปหลัก -->
     <div class="app-container" id="appContainer">
         <nav class="navbar">
             <div class="nav-logo" onclick="switchPage('home')">
@@ -166,8 +155,13 @@
         </nav>
 
         <div class="container">
-            <!-- หน้าหลัก (บัญชีหลัก) -->
+            <!-- หน้าหลัก -->
             <div id="page-home" class="page active">
+                
+                <div class="welcome-text">
+                    <h1>Welcome, <span id="welcomeName">ผู้ใช้</span> 👋</h1>
+                </div>
+
                 <div class="balance-card">
                     <div class="balance-label">ยอดเงินคงเหลือในกระเป๋า</div>
                     <div class="balance-amount" id="balanceAmount">0.00 ฿</div>
@@ -231,7 +225,7 @@
                 </div>
             </div>
 
-            <!-- หน้าประวัติทั้งหมด -->
+            <!-- หน้าประวัติ -->
             <div id="page-history" class="page">
                 <div class="card">
                     <div class="card-header">
@@ -253,7 +247,7 @@
         </div>
     </div>
 
-    <!-- Modal ฟอร์มซื้อของ/จ่ายเงิน -->
+    <!-- Modal จ่ายเงิน -->
     <div class="modal-overlay" id="expenseModal">
         <div class="modal-box">
             <h3 class="modal-title">บันทึกการจ่ายเงิน</h3>
@@ -272,9 +266,7 @@
     </div>
 
     <script>
-        // ==========================================
-        // 1. ระบบสลับหน้าเว็บ
-        // ==========================================
+        // 1. ระบบสลับหน้า
         function switchPage(pageName) {
             document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
             document.getElementById('page-' + pageName).classList.add('active');
@@ -287,9 +279,7 @@
             if (pageName === 'history') renderHistory('fullHistoryBody', 9999);
         }
 
-        // ==========================================
-        // 2. ระบบการเงิน (บันทึกถาวร)
-        // ==========================================
+        // 2. ระบบการเงิน
         let balance = parseFloat(localStorage.getItem('dhaf_balance')) || 0;
         let transactions = JSON.parse(localStorage.getItem('dhaf_transactions')) || [];
 
@@ -352,9 +342,7 @@
             }
         }
 
-        // ==========================================
-        // 3. ระบบหน้าเติมเงิน
-        // ==========================================
+        // 3. ระบบเติมเงิน
         function setTopupAmount(amount) {
             document.getElementById('topupAmountInput').value = amount;
         }
@@ -377,9 +365,7 @@
             switchPage('home');
         }
 
-        // ==========================================
         // 4. ระบบล็อกอิน Discord
-        // ==========================================
         const CLIENT_ID = "1532644387639660627";
         const REDIRECT_URI = window.location.origin + window.location.pathname;
         const DISCORD_OAUTH_URL = `https://discord.com/oauth2/authorize?client_id=${CLIENT_ID}&response_type=token&redirect_uri=${encodeURIComponent(REDIRECT_URI)}&scope=identify&prompt=consent`;
@@ -429,7 +415,9 @@
             document.getElementById('loginPage').style.display = 'none';
             document.getElementById('appContainer').style.display = 'block';
             
-            // โหลดข้อมูลเว็บ
+            // อัปเดตชื่อ Welcome
+            document.getElementById('welcomeName').innerText = discordUser.global_name;
+            
             updateBalanceUI();
             renderHistory('recentHistoryBody', 5);
             updateNavProfile();
@@ -477,9 +465,6 @@
 
         // เริ่มการทำงาน
         const isReturningFromDiscord = checkDiscordAuth();
-        if (!isReturningFromDiscord) {
-            // แสดงหน้าล็อกอินปกติ
-        }
     </script>
 
 </body>
