@@ -95,7 +95,12 @@
                 </div>
                 <div>
                     <label class="block text-xs font-bold text-gray-700 uppercase tracking-wider mb-1">รหัสผ่าน</label>
-                    <input type="password" required placeholder="••••••••" class="w-full px-4 py-3 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-black transition text-sm">
+                    <div class="relative">
+                        <input type="password" id="loginPassword" required placeholder="••••••••" class="w-full px-4 py-3 pr-10 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-black transition text-sm">
+                        <button type="button" onclick="togglePasswordVisibility('loginPassword', this)" class="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-black focus:outline-none p-1">
+                            👁️
+                        </button>
+                    </div>
                 </div>
 
                 <!-- Google reCAPTCHA -->
@@ -116,7 +121,12 @@
                 </div>
                 <div>
                     <label class="block text-xs font-bold text-gray-700 uppercase tracking-wider mb-1">รหัสผ่าน</label>
-                    <input type="password" required placeholder="อย่างน้อย 6 ตัวอักษร" class="w-full px-4 py-3 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-black transition text-sm">
+                    <div class="relative">
+                        <input type="password" id="regPassword" required placeholder="อย่างน้อย 6 ตัวอักษร" class="w-full px-4 py-3 pr-10 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-black transition text-sm">
+                        <button type="button" onclick="togglePasswordVisibility('regPassword', this)" class="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-black focus:outline-none p-1">
+                            👁️
+                        </button>
+                    </div>
                 </div>
 
                 <!-- Google reCAPTCHA -->
@@ -216,6 +226,17 @@
                 registerForm.classList.remove('hidden');
                 registerTabBtn.className = "w-1/2 py-3 text-center font-bold text-black border-b-2 border-black transition";
                 loginTabBtn.className = "w-1/2 py-3 text-center font-semibold text-gray-400 hover:text-black border-b-2 border-transparent transition";
+            }
+        }
+
+        function togglePasswordVisibility(inputId, btn) {
+            const input = document.getElementById(inputId);
+            if (input.type === 'password') {
+                input.type = 'text';
+                btn.innerText = '🙈';
+            } else {
+                input.type = 'password';
+                btn.innerText = '👁️';
             }
         }
 
