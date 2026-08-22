@@ -6,6 +6,8 @@
     <title>GPS Shop - ร้านค้าออนไลน์อย่างเป็นทางการ</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <!-- Google reCAPTCHA API -->
+    <script src="https://www.google.com/recaptcha/api.js" async defer></script>
     <style> 
         body { 
             font-family: 'Kanit', sans-serif; 
@@ -15,16 +17,16 @@
 </head>
 <body class="min-h-screen flex flex-col justify-between text-black">
 
-    <!-- 1. LOADING SCREEN (แก้ไขระบบ Fade Out เสถียร 100%) -->
-    <div id="loadingScreen" class="fixed inset-0 bg-white z-50 flex flex-col items-center justify-center p-6 transition-opacity duration-500">
-        <div class="relative w-20 h-20 flex items-center justify-center mb-6">
+    <!-- 1. LOADING SCREEN (หน้าเดิมแบบโหลดไว 0.8 วินาที) -->
+    <div id="loadingScreen" class="fixed inset-0 bg-white z-50 flex flex-col items-center justify-center p-6 transition-opacity duration-300">
+        <div class="relative w-16 h-16 flex items-center justify-center mb-4">
             <div class="absolute inset-0 border-4 border-gray-100 border-t-black rounded-full animate-spin"></div>
-            <div class="w-8 h-8 bg-black rounded-lg flex items-center justify-center text-white font-black text-xs">GPS</div>
+            <div class="w-7 h-7 bg-black rounded-lg flex items-center justify-center text-white font-black text-[10px]">GPS</div>
         </div>
-        <h2 class="text-lg font-bold tracking-wide mb-1">GPS SHOP</h2>
-        <p class="text-xs font-medium text-gray-400 mb-4">กำลังโหลดระบบ...</p>
-        <div class="w-48 bg-gray-100 h-1.5 rounded-full overflow-hidden">
-            <div id="progressBar" class="bg-black h-full w-0 transition-all duration-200"></div>
+        <h2 class="text-base font-bold tracking-wide mb-1">GPS SHOP</h2>
+        <p class="text-[11px] font-medium text-gray-400 mb-3">กำลังเข้าสู่ระบบ...</p>
+        <div class="w-36 bg-gray-100 h-1.5 rounded-full overflow-hidden">
+            <div id="progressBar" class="bg-black h-full w-0 transition-all duration-300 ease-out"></div>
         </div>
     </div>
 
@@ -59,52 +61,67 @@
         </div>
     </header>
 
-    <!-- 3. AUTH MODAL (OTP System) -->
+    <!-- 3. AUTH MODAL + reCAPTCHA -->
     <div id="authModal" class="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
         <div class="bg-white rounded-3xl shadow-2xl border border-gray-100 w-full max-w-md p-8 relative">
             <button onclick="toggleAuthModal(false)" class="absolute top-5 right-5 text-gray-400 hover:text-black font-bold text-xl">✕</button>
 
-            <!-- Step 1: Request OTP -->
-            <div id="stepEmail">
-                <h3 class="text-2xl font-bold mb-2">เข้าสู่ระบบด้วย OTP</h3>
-                <p class="text-xs text-gray-500 mb-6">กรอกอีเมลของคุณเพื่อรับรหัสยืนยัน 6 หลัก</p>
-                <div class="space-y-4">
-                    <div>
-                        <label class="block text-xs font-bold text-gray-700 uppercase mb-1">อีเมลของคุณ</label>
-                        <input type="email" id="targetEmail" required placeholder="name@example.com" class="w-full px-4 py-3 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-black text-sm">
-                    </div>
-                    <button onclick="sendOTP()" id="sendBtn" class="w-full bg-black hover:bg-gray-800 text-white font-semibold py-3.5 rounded-xl transition">
-                        ขอรับรหัส OTP
-                    </button>
-                </div>
-            </div>
-
-            <!-- Step 2: Verify OTP Code -->
-            <div id="stepOTP" class="hidden">
-                <h3 class="text-2xl font-bold mb-2">ยืนยันรหัส OTP</h3>
-                <p class="text-xs text-gray-500 mb-6">รหัสถูกส่งไปที่ <span id="sentEmailText" class="font-bold text-black"></span></p>
-                
-                <div class="flex justify-between gap-2 mb-6" id="otpInputs">
-                    <input type="text" maxlength="1" class="otp-box w-12 h-14 text-center text-xl font-bold border border-gray-200 rounded-xl focus:border-black focus:outline-none">
-                    <input type="text" maxlength="1" class="otp-box w-12 h-14 text-center text-xl font-bold border border-gray-200 rounded-xl focus:border-black focus:outline-none">
-                    <input type="text" maxlength="1" class="otp-box w-12 h-14 text-center text-xl font-bold border border-gray-200 rounded-xl focus:border-black focus:outline-none">
-                    <input type="text" maxlength="1" class="otp-box w-12 h-14 text-center text-xl font-bold border border-gray-200 rounded-xl focus:border-black focus:outline-none">
-                    <input type="text" maxlength="1" class="otp-box w-12 h-14 text-center text-xl font-bold border border-gray-200 rounded-xl focus:border-black focus:outline-none">
-                    <input type="text" maxlength="1" class="otp-box w-12 h-14 text-center text-xl font-bold border border-gray-200 rounded-xl focus:border-black focus:outline-none">
-                </div>
-
-                <button onclick="verifyOTP()" id="verifyBtn" class="w-full bg-black hover:bg-gray-800 text-white font-semibold py-3.5 rounded-xl transition mb-3">
-                    ยืนยันตัวตน
+            <!-- Tab Switch -->
+            <div class="flex border-b border-gray-100 mb-6">
+                <button id="loginTabBtn" onclick="switchForm('login')" class="w-1/2 py-3 text-center font-bold text-black border-b-2 border-black transition">
+                    เข้าสู่ระบบ
                 </button>
-                <button onclick="resetModal()" class="w-full text-xs text-gray-400 hover:text-black">
-                    เปลี่ยนอีเมล / ย้อนกลับ
+                <button id="registerTabBtn" onclick="switchForm('register')" class="w-1/2 py-3 text-center font-semibold text-gray-400 hover:text-black border-b-2 border-transparent transition">
+                    สมัครสมาชิก
                 </button>
             </div>
+
+            <!-- Form: เข้าสู่ระบบ -->
+            <form id="loginForm" onsubmit="handleAuth(event)" class="space-y-4">
+                <div>
+                    <label class="block text-xs font-bold text-gray-700 uppercase tracking-wider mb-1">อีเมล</label>
+                    <input type="email" id="loginEmail" required placeholder="name@example.com" class="w-full px-4 py-3 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-black transition text-sm">
+                </div>
+                <div>
+                    <label class="block text-xs font-bold text-gray-700 uppercase tracking-wider mb-1">รหัสผ่าน</label>
+                    <input type="password" required placeholder="••••••••" class="w-full px-4 py-3 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-black transition text-sm">
+                </div>
+
+                <!-- Google reCAPTCHA Widget -->
+                <div class="flex justify-center my-2">
+                    <div class="g-recaptcha" data-sitekey="6LeIxAcTAAAAAJcZVRqyHhfyE7yXFCuYwe8v65Bi"></div>
+                </div>
+
+                <button type="submit" class="w-full bg-black hover:bg-gray-800 text-white font-semibold py-3.5 rounded-xl shadow-md transition active:scale-95">
+                    เข้าสู่ระบบ
+                </button>
+            </form>
+
+            <!-- Form: สมัครสมาชิก -->
+            <form id="registerForm" onsubmit="handleAuth(event)" class="space-y-4 hidden">
+                <div>
+                    <label class="block text-xs font-bold text-gray-700 uppercase tracking-wider mb-1">อีเมล</label>
+                    <input type="email" id="regEmail" required placeholder="name@example.com" class="w-full px-4 py-3 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-black transition text-sm">
+                </div>
+                <div>
+                    <label class="block text-xs font-bold text-gray-700 uppercase tracking-wider mb-1">รหัสผ่าน</label>
+                    <input type="password" required placeholder="อย่างน้อย 6 ตัวอักษร" class="w-full px-4 py-3 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-black transition text-sm">
+                </div>
+
+                <!-- Google reCAPTCHA Widget -->
+                <div class="flex justify-center my-2">
+                    <div class="g-recaptcha" data-sitekey="6LeIxAcTAAAAAJcZVRqyHhfyE7yXFCuYwe8v65Bi"></div>
+                </div>
+
+                <button type="submit" class="w-full bg-black hover:bg-gray-800 text-white font-semibold py-3.5 rounded-xl shadow-md transition active:scale-95">
+                    ยืนยันสมัครสมาชิก
+                </button>
+            </form>
         </div>
     </div>
 
     <!-- 4. MAIN CONTENT -->
-    <main id="mainContent" class="max-w-5xl mx-auto px-6 py-16">
+    <main class="max-w-5xl mx-auto px-6 py-16">
         <div class="text-center max-w-3xl mx-auto mb-16">
             <div class="inline-block mx-auto mb-6 px-4 py-1.5 bg-black/5 rounded-full border border-black/10">
                 <span class="text-xs font-bold uppercase tracking-wider">ร้านค้าออนไลน์อันดับ #1</span>
@@ -113,10 +130,10 @@
                 ยินดีต้อนรับสู่<br><span class="text-black">GPS SHOP</span>
             </h1>
             <p class="text-lg md:text-xl font-normal text-gray-700 leading-relaxed mb-10">
-                ศูนย์รวมบริการไอเทม สินค้าดิจิทัล และระบบอัตโนมัติ สะดวกรวดเร็ว ปลอดภัย 100% ยืนยันตัวตนด้วย OTP เพื่อเริ่มทำรายการได้ทันที
+                ศูนย์รวมบริการไอเทม สินค้าดิจิทัล และระบบอัตโนมัติ สะดวกรวดเร็ว ปลอดภัย 100%
             </p>
             <div class="flex flex-col sm:flex-row gap-4 justify-center items-center">
-                <a href="#services" class="w-full sm:w-auto bg-black hover:bg-gray-800 text-white font-semibold text-lg px-8 py-4 rounded-2xl shadow-xl hover:shadow-2xl transition duration-200 active:scale-95">
+                <a href="#services" class="w-full sm:w-auto bg-black hover:bg-gray-800 text-white font-semibold text-lg px-8 py-4 rounded-2xl shadow-xl transition active:scale-95">
                     เลือกชมสินค้าทั้งหมด
                 </a>
             </div>
@@ -126,17 +143,17 @@
             <div class="bg-white p-8 rounded-3xl border border-gray-100 shadow-sm hover:shadow-md transition">
                 <div class="w-12 h-12 bg-gray-100 text-black rounded-2xl flex items-center justify-center font-bold text-xl mb-6">⚡</div>
                 <h3 class="text-xl font-bold mb-3">จัดส่งระบบอัตโนมัติ</h3>
-                <p class="text-gray-600 text-sm leading-relaxed">ระบบทำรายการจัดส่งสินค้าให้อัตโนมัติทันทีหลังชำระเงิน รวดเร็ว ไม่ต้องรอแอดมินตอบ ทำรายการได้ตลอด 24 ชั่วโมง</p>
+                <p class="text-gray-600 text-sm leading-relaxed">ระบบทำรายการจัดส่งสินค้าให้อัตโนมัติทันทีหลังชำระเงิน รวดเร็ว ทำรายการได้ตลอด 24 ชั่วโมง</p>
             </div>
             <div class="bg-white p-8 rounded-3xl border border-gray-100 shadow-sm hover:shadow-md transition">
                 <div class="w-12 h-12 bg-gray-100 text-black rounded-2xl flex items-center justify-center font-bold text-xl mb-6">🛡️</div>
                 <h3 class="text-xl font-bold mb-3">ปลอดภัยและเชื่อถือได้</h3>
-                <p class="text-gray-600 text-sm leading-relaxed">ยืนยันตัวตนผ่าน OTP เข้าอีเมลโดยตรง ปลอดภัย มั่นใจได้ในทุกการทำรายการ</p>
+                <p class="text-gray-600 text-sm leading-relaxed">มั่นใจได้ในทุกการสั่งซื้อและการทำรายการ</p>
             </div>
             <div class="bg-white p-8 rounded-3xl border border-gray-100 shadow-sm hover:shadow-md transition">
                 <div class="w-12 h-12 bg-gray-100 text-black rounded-2xl flex items-center justify-center font-bold text-xl mb-6">🎧</div>
                 <h3 class="text-xl font-bold mb-3">บริการดูแลลูกค้า</h3>
-                <p class="text-gray-600 text-sm leading-relaxed">มีทีมงานคอยช่วยเหลือและตอบคำถามตลอดเวลา ติดปัญหาส่วนไหน สามารถติดต่อแอดมินได้โดยตรง</p>
+                <p class="text-gray-600 text-sm leading-relaxed">มีทีมงานคอยช่วยเหลือและตอบคำถามตลอดเวลา</p>
             </div>
         </section>
     </main>
@@ -147,8 +164,8 @@
 
     <!-- 5. JAVASCRIPT LOGIC -->
     <script>
-        // ปิด Loading Screen เมื่อโหลดองค์ประกอบเสร็จ
-        window.addEventListener('load', () => {
+        // ระบบซ่อนหน้า Loading Screen (ความเร็วสูง 0.8 วินาที)
+        window.addEventListener('DOMContentLoaded', () => {
             const progressBar = document.getElementById('progressBar');
             const loadingScreen = document.getElementById('loadingScreen');
             
@@ -157,103 +174,52 @@
             setTimeout(() => {
                 if (loadingScreen) {
                     loadingScreen.style.opacity = '0';
-                    setTimeout(() => { loadingScreen.style.display = 'none'; }, 500);
+                    setTimeout(() => { loadingScreen.style.display = 'none'; }, 300);
                 }
-            }, 300);
+            }, 500); // 0.5 วินาทีในการวิ่งหลอด + Fade out
         });
 
-        // Modal Control
         function toggleAuthModal(show) {
             document.getElementById('authModal').classList.toggle('hidden', !show);
-            if(!show) resetModal();
         }
 
-        function resetModal() {
-            document.getElementById('stepEmail').classList.remove('hidden');
-            document.getElementById('stepOTP').classList.add('hidden');
-            document.querySelectorAll('.otp-box').forEach(input => input.value = '');
-        }
+        function switchForm(type) {
+            const loginForm = document.getElementById('loginForm');
+            const registerForm = document.getElementById('registerForm');
+            const loginTabBtn = document.getElementById('loginTabBtn');
+            const registerTabBtn = document.getElementById('registerTabBtn');
 
-        // Auto Focus Next Input OTP
-        const otpInputs = document.querySelectorAll('.otp-box');
-        otpInputs.forEach((input, index) => {
-            input.addEventListener('input', (e) => {
-                if (e.target.value.length === 1 && index < otpInputs.length - 1) {
-                    otpInputs[index + 1].focus();
-                }
-            });
-            input.addEventListener('keydown', (e) => {
-                if (e.key === 'Backspace' && !e.target.value && index > 0) {
-                    otpInputs[index - 1].focus();
-                }
-            });
-        });
-
-        // Send OTP API
-        async function sendOTP() {
-            const email = document.getElementById('targetEmail').value;
-            if (!email) return alert('กรุณากรอกอีเมล');
-
-            const sendBtn = document.getElementById('sendBtn');
-            sendBtn.innerText = 'กำลังส่ง OTP...';
-            sendBtn.disabled = true;
-
-            try {
-                const res = await fetch('/api/send-otp', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ email })
-                });
-                const data = await res.json();
-
-                if (res.ok) {
-                    document.getElementById('sentEmailText').innerText = email;
-                    document.getElementById('stepEmail').classList.add('hidden');
-                    document.getElementById('stepOTP').classList.remove('hidden');
-                    otpInputs[0].focus();
-                } else {
-                    alert(data.message || 'เกิดข้อผิดพลาดในการส่ง OTP');
-                }
-            } catch (err) {
-                alert('ไม่สามารถเชื่อมต่อระบบเซิร์ฟเวอร์ได้');
-            } finally {
-                sendBtn.innerText = 'ขอรับรหัส OTP';
-                sendBtn.disabled = false;
+            if (type === 'login') {
+                loginForm.classList.remove('hidden');
+                registerForm.classList.add('hidden');
+                loginTabBtn.className = "w-1/2 py-3 text-center font-bold text-black border-b-2 border-black transition";
+                registerTabBtn.className = "w-1/2 py-3 text-center font-semibold text-gray-400 hover:text-black border-b-2 border-transparent transition";
+            } else {
+                loginForm.classList.add('hidden');
+                registerForm.classList.remove('hidden');
+                registerTabBtn.className = "w-1/2 py-3 text-center font-bold text-black border-b-2 border-black transition";
+                loginTabBtn.className = "w-1/2 py-3 text-center font-semibold text-gray-400 hover:text-black border-b-2 border-transparent transition";
             }
         }
 
-        // Verify OTP API
-        async function verifyOTP() {
-            const email = document.getElementById('targetEmail').value;
-            let otp = '';
-            otpInputs.forEach(input => otp += input.value);
+        function handleAuth(e) {
+            e.preventDefault();
 
-            if (otp.length !== 6) return alert('กรุณากรอก OTP ให้ครบ 6 หลัก');
+            // ตรวจสอบ reCAPTCHA ว่าติ๊กถูกหรือยัง
+            const recaptchaResponse = grecaptcha.getResponse();
+            if (recaptchaResponse.length === 0) {
+                alert("กรุณาติ๊กช่อง 'ฉันไม่ใช่โปรแกรมอัตโนมัติ' ก่อนดำเนินการต่อ");
+                return;
+            }
 
-            const verifyBtn = document.getElementById('verifyBtn');
-            verifyBtn.innerText = 'กำลังตรวจสอบ...';
-            verifyBtn.disabled = true;
+            const loginEmail = document.getElementById('loginEmail').value;
+            const regEmail = document.getElementById('regEmail').value;
+            const email = loginEmail || regEmail;
 
-            try {
-                const res = await fetch('/api/verify-otp', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ email, otp })
-                });
-                const data = await res.json();
-
-                if (res.ok) {
-                    localStorage.setItem('user_email', email);
-                    updateProfileUI(email);
-                    toggleAuthModal(false);
-                } else {
-                    alert(data.message || 'รหัส OTP ไม่ถูกต้อง');
-                }
-            } catch (err) {
-                alert('เกิดข้อผิดพลาดในการตรวจสอบรหัส');
-            } finally {
-                verifyBtn.innerText = 'ยืนยันตัวตน';
-                verifyBtn.disabled = false;
+            if (email) {
+                localStorage.setItem('user_email', email);
+                updateProfileUI(email);
+                toggleAuthModal(false);
             }
         }
 
@@ -269,7 +235,7 @@
             location.reload();
         }
 
-        // Auto Check Login Session
+        // ตรวจสอบสถานะการเข้าสู่ระบบ
         window.addEventListener('DOMContentLoaded', () => {
             const savedEmail = localStorage.getItem('user_email');
             if (savedEmail) updateProfileUI(savedEmail);
