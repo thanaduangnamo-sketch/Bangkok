@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>หน้าหลัก - Platform</title>
+    <title>GPS Shop - ร้านค้าออนไลน์อย่างเป็นทางการ</title>
     <!-- โหลด Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
@@ -13,121 +13,160 @@
             background-color: #FAFAFA;
         }
 
-        /* Custom Keyframe Animations สำหรับหน้าโหลดแบบจัดเต็ม */
         @keyframes pulseGlow {
             0%, 100% { opacity: 0.3; transform: scale(0.95); }
             50% { opacity: 0.8; transform: scale(1.05); }
         }
-        .animate-pulse-glow {
-            animation: pulseGlow 2s infinite ease-in-out;
-        }
+        .animate-pulse-glow { animation: pulseGlow 2s infinite ease-in-out; }
         
         @keyframes spinReverse {
             0% { transform: rotate(0deg); }
             100% { transform: rotate(-360deg); }
         }
-        .animate-spin-reverse {
-            animation: spinReverse 1.5s linear infinite;
-        }
+        .animate-spin-reverse { animation: spinReverse 1.5s linear infinite; }
     </style>
 </head>
-<body class="min-h-screen flex flex-col justify-between">
+<body class="min-h-screen flex flex-col justify-between text-black">
 
     <!-- ========================================== -->
-    <!-- 1. ADVANCED DELUXE LOADING SCREEN          -->
+    <!-- 1. ADVANCED LOADING SCREEN                 -->
     <!-- ========================================== -->
     <div id="loadingScreen" class="fixed inset-0 bg-white z-50 flex flex-col items-center justify-center p-6 transition-all duration-700">
-        
-        <!-- Background Glowing Blur -->
         <div class="absolute w-72 h-72 bg-indigo-100 rounded-full blur-3xl animate-pulse-glow -z-10"></div>
 
-        <!-- Spinner Container (วงกลมหมุนซ้อน 3 ชั้น) -->
         <div class="relative w-28 h-28 flex items-center justify-center mb-8">
-            <!-- ชั้นนอกสุด (Outer Ring) -->
             <div class="absolute inset-0 border-4 border-gray-100 border-t-indigo-600 rounded-full animate-spin"></div>
-            <!-- ชั้นกลาง หมุนกลับด้าน (Middle Reverse Ring) -->
             <div class="absolute inset-2 border-4 border-transparent border-b-black rounded-full animate-spin-reverse"></div>
-            <!-- ชั้นในสุด (Inner Pulse Ring) -->
             <div class="absolute inset-5 border-2 border-indigo-200 border-r-indigo-400 rounded-full animate-spin"></div>
-            <!-- โลโก้ตรงกลาง (Center Brand Icon) -->
             <div class="w-10 h-10 bg-black rounded-xl flex items-center justify-center text-white font-black text-lg shadow-md animate-pulse">
-                P
+                GPS
             </div>
         </div>
 
-        <!-- Title & Status Text -->
-        <h2 class="text-xl font-bold text-black tracking-wide mb-2">PLATFORM</h2>
+        <h2 class="text-xl font-bold tracking-wide mb-2">GPS SHOP</h2>
         <p id="loadingStatus" class="text-sm font-medium text-gray-500 h-6 mb-6 transition-all">
             กำลังเชื่อมต่อเซิร์ฟเวอร์...
         </p>
 
-        <!-- Progress Bar & Percentage Bar -->
         <div class="w-64 max-w-xs">
             <div class="w-full bg-gray-100 h-2 rounded-full overflow-hidden p-0.5 border border-gray-200/60 shadow-inner">
                 <div id="progressBar" class="bg-gradient-to-r from-black via-indigo-600 to-indigo-500 h-full rounded-full transition-all duration-300 w-0"></div>
             </div>
             <div class="flex justify-between items-center mt-2 px-1">
                 <span class="text-[11px] font-semibold text-gray-400 uppercase tracking-wider">SYSTEM LOADING</span>
-                <span id="progressText" class="text-xs font-bold text-black">0%</span>
+                <span id="progressText" class="text-xs font-bold">0%</span>
             </div>
         </div>
-
     </div>
 
     <!-- ========================================== -->
-    <!-- 2. HEADER / TOP NAVIGATION BAR             -->
+    <!-- 2. HEADER / NAVBAR                         -->
     <!-- ========================================== -->
     <header class="w-full bg-white/80 backdrop-blur-md border-b border-gray-100 sticky top-0 z-40">
         <div class="max-w-6xl mx-auto px-6 h-20 flex items-center justify-between">
-            <div class="flex items-center gap-2">
-                <div class="w-10 h-10 bg-black rounded-xl flex items-center justify-center font-extrabold text-white text-xl shadow-sm">
-                    P
+            
+            <!-- Logo GPS Shop -->
+            <div class="flex items-center gap-3">
+                <div class="w-10 h-10 bg-black rounded-xl flex items-center justify-center font-extrabold text-white text-sm tracking-wider shadow-sm">
+                    GPS
                 </div>
-                <span class="text-xl font-bold text-black tracking-tight">Platform</span>
+                <span class="text-xl font-extrabold tracking-tight">GPS SHOP</span>
             </div>
 
-            <!-- Discord Login Button -->
-            <a href="https://discord.com/oauth2/authorize?client_id=1532644387639660627&response_type=code&redirect_uri=https%3A%2F%2Fshop-github-io-phi.vercel.app%2F&scope=identify" 
-               class="inline-flex items-center gap-2.5 bg-[#5865F2] hover:bg-[#4752C4] text-white font-medium px-5 py-2.5 rounded-xl shadow-sm hover:shadow-md transition duration-200 active:scale-95">
-                <svg class="w-5 h-5 fill-current" viewBox="0 0 127.14 96.36">
-                    <path d="M107.7,8.07A105.15,105.15,0,0,0,81.47,0a72.06,72.06,0,0,0-3.36,6.83A97.68,97.68,0,0,0,49,6.83,72.37,72.37,0,0,0,45.64,0,105.89,105.89,0,0,0,19.39,8.09C2.79,32.65-1.71,56.6.54,80.21h0A105.73,105.73,0,0,0,32.71,96.36,77.7,77.7,0,0,0,39.6,85.25a68.42,68.42,0,0,1-10.85-5.18c.91-.66,1.8-1.34,2.66-2a75.57,75.57,0,0,0,64.32,0c.87.71,1.76,1.39,2.66,2a68.68,68.68,0,0,1-10.87,5.19,77,77,0,0,0,6.89,11.1,105.25,105.25,0,0,0,32.19-16.14c2.64-27.38-4.51-51.11-21-72.15ZM42.45,65.69C36.18,65.69,31,60,31,53s5-12.74,11.43-12.74c6.51,0,11.6,5.74,11.43,12.74C53.88,60,48.8,65.69,42.45,65.69Zm42.24,0C78.41,65.69,73.25,60,73.25,53s5-12.74,11.44-12.74c6.5,0,11.6,5.74,11.43,12.74C96.12,60,91.08,65.69,84.69,65.69Z"/>
-                </svg>
-                <span>เข้าสู่ระบบด้วย Discord</span>
-            </a>
+            <!-- Discord Auth State (สลับปุ่ม Login / Profile) -->
+            <div id="authContainer">
+                <!-- ปุ่มเข้าสู่ระบบ (แสดงเมื่อยังไม่ล็อกอิน) -->
+                <a id="discordLoginBtn" href="https://discord.com/oauth2/authorize?client_id=1532644387639660627&response_type=code&redirect_uri=https%3A%2F%2Fshop-github-io-phi.vercel.app%2F&scope=identify" 
+                   class="inline-flex items-center gap-2.5 bg-[#5865F2] hover:bg-[#4752C4] text-white font-medium px-5 py-2.5 rounded-xl shadow-sm hover:shadow-md transition duration-200 active:scale-95">
+                    <svg class="w-5 h-5 fill-current" viewBox="0 0 127.14 96.36">
+                        <path d="M107.7,8.07A105.15,105.15,0,0,0,81.47,0a72.06,72.06,0,0,0-3.36,6.83A97.68,97.68,0,0,0,49,6.83,72.37,72.37,0,0,0,45.64,0,105.89,105.89,0,0,0,19.39,8.09C2.79,32.65-1.71,56.6.54,80.21h0A105.73,105.73,0,0,0,32.71,96.36,77.7,77.7,0,0,0,39.6,85.25a68.42,68.42,0,0,1-10.85-5.18c.91-.66,1.8-1.34,2.66-2a75.57,75.57,0,0,0,64.32,0c.87.71,1.76,1.39,2.66,2a68.68,68.68,0,0,1-10.87,5.19,77,77,0,0,0,6.89,11.1,105.25,105.25,0,0,0,32.19-16.14c2.64-27.38-4.51-51.11-21-72.15ZM42.45,65.69C36.18,65.69,31,60,31,53s5-12.74,11.43-12.74c6.51,0,11.6,5.74,11.43,12.74C53.88,60,48.8,65.69,42.45,65.69Zm42.24,0C78.41,65.69,73.25,60,73.25,53s5-12.74,11.44-12.74c6.5,0,11.6,5.74,11.43,12.74C96.12,60,91.08,65.69,84.69,65.69Z"/>
+                    </svg>
+                    <span>เข้าสู่ระบบด้วย Discord</span>
+                </a>
+
+                <!-- โปรไฟล์ Discord (ซ่อนอยู่ จะแสดงขึ้นมาเมื่อดึงข้อมูลสำเร็จ) -->
+                <div id="userProfile" class="hidden flex items-center gap-3 bg-gray-100 border border-gray-200 px-3 py-1.5 rounded-2xl">
+                    <img id="userAvatar" src="" alt="Discord Avatar" class="w-9 h-9 rounded-xl border border-white shadow-sm object-cover">
+                    <div class="text-left pr-2">
+                        <p id="userName" class="text-sm font-bold leading-tight">Username</p>
+                        <span class="text-[10px] font-semibold text-emerald-600">● ยืนยันตัวตนแล้ว</span>
+                    </div>
+                </div>
+            </div>
+
         </div>
     </header>
 
     <!-- ========================================== -->
-    <!-- 3. MAIN HERO CONTENT                       -->
+    <!-- 3. MAIN CONTENT (เนื้อหาอ่านง่าย ละเอียด)    -->
     <!-- ========================================== -->
-    <main id="mainContent" class="max-w-4xl mx-auto px-6 py-20 text-center flex-1 flex flex-col justify-center opacity-0 transition-opacity duration-700">
-        <div class="inline-block mx-auto mb-6 px-4 py-1.5 bg-black/5 rounded-full border border-black/10">
-            <span class="text-xs font-bold text-black uppercase tracking-wider">ยินดีต้อนรับสู่ระบบ</span>
+    <main id="mainContent" class="max-w-5xl mx-auto px-6 py-16 opacity-0 transition-opacity duration-700">
+        
+        <!-- Hero Section -->
+        <div class="text-center max-w-3xl mx-auto mb-16">
+            <div class="inline-block mx-auto mb-6 px-4 py-1.5 bg-black/5 rounded-full border border-black/10">
+                <span class="text-xs font-bold uppercase tracking-wider">ร้านค้าออนไลน์อันดับ #1</span>
+            </div>
+
+            <h1 class="text-5xl md:text-7xl font-black leading-[1.15] tracking-tight mb-8">
+                ยินดีต้อนรับสู่<br><span class="text-indigo-600">GPS SHOP</span>
+            </h1>
+
+            <p class="text-lg md:text-xl font-normal text-gray-700 leading-relaxed mb-10">
+                ศูนย์รวมบริการไอเทม สินค้าดิจิทัล และระบบอัตโนมัติ สะดวกรวดเร็ว ปลอดภัย 100% สามารถเชื่อมต่อบัญชี Discord เพื่อเริ่มต้นทำรายการและรับสิทธิพิเศษได้ทันที
+            </p>
+
+            <div class="flex flex-col sm:flex-row gap-4 justify-center items-center">
+                <a href="#services" class="w-full sm:w-auto bg-black hover:bg-gray-800 text-white font-semibold text-lg px-8 py-4 rounded-2xl shadow-xl hover:shadow-2xl transition duration-200 active:scale-95">
+                    เลือกชมสินค้าทั้งหมด
+                </a>
+            </div>
         </div>
 
-        <h1 class="text-5xl md:text-7xl font-black text-black leading-[1.1] tracking-tight mb-8">
-            เข้าถึงแพลตฟอร์มของคุณ<br>ได้ง่ายและรวดเร็ว
-        </h1>
+        <!-- Features / Stats Section (เนื้อหาหนาแน่น อ่านง่าย) -->
+        <section id="services" class="grid md:grid-cols-3 gap-6 my-16">
+            
+            <div class="bg-white p-8 rounded-3xl border border-gray-100 shadow-sm hover:shadow-md transition">
+                <div class="w-12 h-12 bg-indigo-50 text-indigo-600 rounded-2xl flex items-center justify-center font-bold text-xl mb-6">
+                    ⚡
+                </div>
+                <h3 class="text-xl font-bold mb-3">จัดส่งระบบอัตโนมัติ</h3>
+                <p class="text-gray-600 text-sm leading-relaxed">
+                    ระบบทำรายการจัดส่งสินค้าให้อัตโนมัติทันทีหลังชำระเงิน รวดเร็ว ไม่ต้องรอแอดมินตอบ ทำรายการได้ตลอด 24 ชั่วโมง
+                </p>
+            </div>
 
-        <p class="text-lg md:text-xl font-normal text-gray-700 max-w-2xl mx-auto mb-10 leading-relaxed">
-            เชื่อมต่อบัญชีของคุณผ่าน Discord เพื่อเริ่มต้นใช้งานระบบได้ทันที ไม่ต้องกรอกข้อมูลให้ยุ่งยาก ปลอดภัยและสะดวกที่สุด
-        </p>
+            <div class="bg-white p-8 rounded-3xl border border-gray-100 shadow-sm hover:shadow-md transition">
+                <div class="w-12 h-12 bg-indigo-50 text-indigo-600 rounded-2xl flex items-center justify-center font-bold text-xl mb-6">
+                    🛡️
+                </div>
+                <h3 class="text-xl font-bold mb-3">ปลอดภัยและเชื่อถือได้</h3>
+                <p class="text-gray-600 text-sm leading-relaxed">
+                    เชื่อมต่อระบบยืนยันตัวตนด้วย OAuth2 ผ่าน Discord ป้องกันการแอบอ้าง มั่นใจได้ในทุกการสั่งซื้อและการทำรายการ
+                </p>
+            </div>
 
-        <div class="flex flex-col sm:flex-row gap-4 justify-center items-center">
-            <a href="https://discord.com/oauth2/authorize?client_id=1532644387639660627&response_type=code&redirect_uri=https%3A%2F%2Fshop-github-io-phi.vercel.app%2F&scope=identify" 
-               class="w-full sm:w-auto bg-black hover:bg-gray-800 text-white font-semibold text-lg px-8 py-4 rounded-2xl shadow-xl hover:shadow-2xl transition duration-200 transform hover:-translate-y-0.5 active:translate-y-0">
-                เริ่มต้นใช้งานเลย
-            </a>
-        </div>
+            <div class="bg-white p-8 rounded-3xl border border-gray-100 shadow-sm hover:shadow-md transition">
+                <div class="w-12 h-12 bg-indigo-50 text-indigo-600 rounded-2xl flex items-center justify-center font-bold text-xl mb-6">
+                    🎧
+                </div>
+                <h3 class="text-xl font-bold mb-3">บริการดูแลลูกค้า</h3>
+                <p class="text-gray-600 text-sm leading-relaxed">
+                    มีทีมงานคอยช่วยเหลือและตอบคำถามตลอดเวลา ติดปัญหาส่วนไหน สามารถติดต่อแอดมินผ่าน Discord Server ได้โดยตรง
+                </p>
+            </div>
+
+        </section>
+
     </main>
 
     <!-- Footer -->
     <footer class="w-full border-t border-gray-200 bg-white py-6 text-center text-sm font-medium text-gray-500">
-        © 2026 Platform. All rights reserved.
+        © 2026 GPS SHOP. All rights reserved.
     </footer>
 
     <!-- ========================================== -->
-    <!-- 4. JAVASCRIPT ANIMATION CONTROL            -->
+    <!-- 4. JAVASCRIPT LOGIC                        -->
     <!-- ========================================== -->
     <script>
         const progressBar = document.getElementById('progressBar');
@@ -136,45 +175,56 @@
         const loadingScreen = document.getElementById('loadingScreen');
         const mainContent = document.getElementById('mainContent');
 
-        // ข้อความเปลี่ยนสถานะการโหลด
         const statusMessages = [
-            { percent: 20, text: 'กำลังเชื่อมต่อเซิร์ฟเวอร์...' },
-            { percent: 50, text: 'กำลังโหลดองค์ประกอบหน้าเว็บ...' },
-            { percent: 85, text: 'กำลังจัดเตรียมข้อมูล...' },
-            { percent: 100, text: 'เสร็จสิ้น!' }
+            { percent: 25, text: 'กำลังเชื่อมต่อเซิร์ฟเวอร์ GPS SHOP...' },
+            { percent: 60, text: 'กำลังโหลดข้อมูลและสินค้า...' },
+            { percent: 90, text: 'กำลังจัดเตรียมหน้าต่างการใช้งาน...' },
+            { percent: 100, text: 'พร้อมใช้งาน!' }
         ];
 
         let progress = 0;
 
-        // ฟังก์ชันจำลองการโหลดนับเปอร์เซ็นต์
+        // 1. Loading Screen Animation
         const interval = setInterval(() => {
-            progress += Math.floor(Math.random() * 8) + 2;
-
+            progress += Math.floor(Math.random() * 8) + 3;
             if (progress > 100) progress = 100;
 
-            // อัปเดต Progress Bar และ ตัวเลข %
             progressBar.style.width = `${progress}%`;
             progressText.innerText = `${progress}%`;
 
-            // อัปเดตข้อความตาม %
             const currentMsg = statusMessages.find(msg => progress <= msg.percent);
-            if (currentMsg) {
-                loadingStatus.innerText = currentMsg.text;
-            }
+            if (currentMsg) loadingStatus.innerText = currentMsg.text;
 
-            // เมื่อโหลดครบ 100% ให้จางหน้าโหลดออก
             if (progress >= 100) {
                 clearInterval(interval);
                 setTimeout(() => {
                     loadingScreen.classList.add('opacity-0', 'pointer-events-none');
                     mainContent.classList.remove('opacity-0');
-                    
-                    setTimeout(() => {
-                        loadingScreen.style.display = 'none';
-                    }, 700);
+                    setTimeout(() => { loadingScreen.style.display = 'none'; }, 700);
                 }, 400);
             }
-        }, 80);
+        }, 60);
+
+        // 2. ฟังก์ชันดึงและจำลองการแสดงข้อมูลโปรไฟล์ Discord
+        function setDiscordUser(username, avatarUrl) {
+            const loginBtn = document.getElementById('discordLoginBtn');
+            const userProfile = document.getElementById('userProfile');
+            const userName = document.getElementById('userName');
+            const userAvatar = document.getElementById('userAvatar');
+
+            if (username && avatarUrl) {
+                loginBtn.classList.add('hidden');
+                userProfile.classList.remove('hidden');
+                userName.innerText = username;
+                userAvatar.src = avatarUrl;
+            }
+        }
+
+        // ตัวอย่างการเรียกใช้: เมื่อดึงข้อมูลจาก Discord API สำเร็จ
+        // สามารถเปลี่ยนรูปและชื่อตรงนี้ หรือใช้ฟังก์ชัน setDiscordUser(name, url) ได้เลยครับ
+        /* 
+        setDiscordUser("GPS_User#1234", "https://cdn.discordapp.com/embed/avatars/0.png"); 
+        */
     </script>
 </body>
 </html>
