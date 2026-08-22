@@ -4,7 +4,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>GPS Shop - ร้านค้าออนไลน์อย่างเป็นทางการ</title>
-    <!-- โหลด Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <style>
@@ -12,13 +11,11 @@
             font-family: 'Kanit', sans-serif; 
             background-color: #FAFAFA;
         }
-
         @keyframes pulseGlow {
             0%, 100% { opacity: 0.3; transform: scale(0.95); }
             50% { opacity: 0.8; transform: scale(1.05); }
         }
         .animate-pulse-glow { animation: pulseGlow 2s infinite ease-in-out; }
-        
         @keyframes spinReverse {
             0% { transform: rotate(0deg); }
             100% { transform: rotate(-360deg); }
@@ -28,12 +25,9 @@
 </head>
 <body class="min-h-screen flex flex-col justify-between text-black">
 
-    <!-- ========================================== -->
-    <!-- 1. ADVANCED LOADING SCREEN                 -->
-    <!-- ========================================== -->
+    <!-- 1. LOADING SCREEN -->
     <div id="loadingScreen" class="fixed inset-0 bg-white z-50 flex flex-col items-center justify-center p-6 transition-all duration-700">
         <div class="absolute w-72 h-72 bg-indigo-100 rounded-full blur-3xl animate-pulse-glow -z-10"></div>
-
         <div class="relative w-28 h-28 flex items-center justify-center mb-8">
             <div class="absolute inset-0 border-4 border-gray-100 border-t-indigo-600 rounded-full animate-spin"></div>
             <div class="absolute inset-2 border-4 border-transparent border-b-black rounded-full animate-spin-reverse"></div>
@@ -42,12 +36,8 @@
                 GPS
             </div>
         </div>
-
         <h2 class="text-xl font-bold tracking-wide mb-2">GPS SHOP</h2>
-        <p id="loadingStatus" class="text-sm font-medium text-gray-500 h-6 mb-6 transition-all">
-            กำลังเชื่อมต่อเซิร์ฟเวอร์...
-        </p>
-
+        <p id="loadingStatus" class="text-sm font-medium text-gray-500 h-6 mb-6 transition-all">กำลังยืนยันตัวตนกับ Discord...</p>
         <div class="w-64 max-w-xs">
             <div class="w-full bg-gray-100 h-2 rounded-full overflow-hidden p-0.5 border border-gray-200/60 shadow-inner">
                 <div id="progressBar" class="bg-gradient-to-r from-black via-indigo-600 to-indigo-500 h-full rounded-full transition-all duration-300 w-0"></div>
@@ -59,13 +49,9 @@
         </div>
     </div>
 
-    <!-- ========================================== -->
-    <!-- 2. HEADER / NAVBAR                         -->
-    <!-- ========================================== -->
+    <!-- 2. NAVBAR -->
     <header class="w-full bg-white/80 backdrop-blur-md border-b border-gray-100 sticky top-0 z-40">
         <div class="max-w-6xl mx-auto px-6 h-20 flex items-center justify-between">
-            
-            <!-- Logo GPS Shop -->
             <div class="flex items-center gap-3">
                 <div class="w-10 h-10 bg-black rounded-xl flex items-center justify-center font-extrabold text-white text-sm tracking-wider shadow-sm">
                     GPS
@@ -73,10 +59,9 @@
                 <span class="text-xl font-extrabold tracking-tight">GPS SHOP</span>
             </div>
 
-            <!-- Discord Auth State (สลับปุ่ม Login / Profile) -->
             <div id="authContainer">
-                <!-- ปุ่มเข้าสู่ระบบ -->
-                <a id="discordLoginBtn" href="https://discord.com/oauth2/authorize?client_id=1532644387639660627&response_type=code&redirect_uri=https%3A%2F%2Fshop-github-io-phi.vercel.app%2F&scope=identify" 
+                <!-- ปุ่มล็อกอิน Discord ( response_type=token ) -->
+                <a id="discordLoginBtn" href="https://discord.com/oauth2/authorize?client_id=1532644387639660627&redirect_uri=https%3A%2F%2Fshop-github-io-phi.vercel.app%2F&response_type=token&scope=identify" 
                    class="inline-flex items-center gap-2.5 bg-[#5865F2] hover:bg-[#4752C4] text-white font-medium px-5 py-2.5 rounded-xl shadow-sm hover:shadow-md transition duration-200 active:scale-95">
                     <svg class="w-5 h-5 fill-current" viewBox="0 0 127.14 96.36">
                         <path d="M107.7,8.07A105.15,105.15,0,0,0,81.47,0a72.06,72.06,0,0,0-3.36,6.83A97.68,97.68,0,0,0,49,6.83,72.37,72.37,0,0,0,45.64,0,105.89,105.89,0,0,0,19.39,8.09C2.79,32.65-1.71,56.6.54,80.21h0A105.73,105.73,0,0,0,32.71,96.36,77.7,77.7,0,0,0,39.6,85.25a68.42,68.42,0,0,1-10.85-5.18c.91-.66,1.8-1.34,2.66-2a75.57,75.57,0,0,0,64.32,0c.87.71,1.76,1.39,2.66,2a68.68,68.68,0,0,1-10.87,5.19,77,77,0,0,0,6.89,11.1,105.25,105.25,0,0,0,32.19-16.14c2.64-27.38-4.51-51.11-21-72.15ZM42.45,65.69C36.18,65.69,31,60,31,53s5-12.74,11.43-12.74c6.51,0,11.6,5.74,11.43,12.74C53.88,60,48.8,65.69,42.45,65.69Zm42.24,0C78.41,65.69,73.25,60,73.25,53s5-12.74,11.44-12.74c6.5,0,11.6,5.74,11.43,12.74C96.12,60,91.08,65.69,84.69,65.69Z"/>
@@ -84,37 +69,34 @@
                     <span>เข้าสู่ระบบด้วย Discord</span>
                 </a>
 
-                <!-- โปรไฟล์ Discord (แสดงเมื่อดึงข้อมูลสำเร็จ) -->
-                <div id="userProfile" class="hidden flex items-center gap-3 bg-gray-100 border border-gray-200 px-3 py-1.5 rounded-2xl">
-                    <img id="userAvatar" src="" alt="Discord Avatar" class="w-9 h-9 rounded-xl border border-white shadow-sm object-cover">
-                    <div class="text-left pr-2">
-                        <p id="userName" class="text-sm font-bold leading-tight">Loading...</p>
+                <!-- แสดงโปรไฟล์ Discord จริง + ปุ่มออกจากระบบ -->
+                <div id="userProfile" class="hidden flex items-center gap-3 bg-white border border-gray-200 p-1.5 pl-3 rounded-2xl shadow-sm">
+                    <img id="userAvatar" src="" alt="Discord Avatar" class="w-9 h-9 rounded-xl border border-gray-100 shadow-sm object-cover">
+                    <div class="text-left">
+                        <p id="userName" class="text-sm font-bold leading-tight">Username</p>
                         <span class="text-[10px] font-semibold text-emerald-600">● ยืนยันตัวตนแล้ว</span>
                     </div>
+                    <!-- ปุ่มออกจากระบบ -->
+                    <button onclick="logout()" class="ml-2 text-xs text-red-500 hover:text-red-700 bg-red-50 hover:bg-red-100 font-medium px-3 py-2 rounded-xl transition">
+                        ออกจากระบบ
+                    </button>
                 </div>
             </div>
-
         </div>
     </header>
 
-    <!-- ========================================== -->
-    <!-- 3. MAIN CONTENT                            -->
-    <!-- ========================================== -->
+    <!-- 3. MAIN CONTENT -->
     <main id="mainContent" class="max-w-5xl mx-auto px-6 py-16 opacity-0 transition-opacity duration-700">
-        
         <div class="text-center max-w-3xl mx-auto mb-16">
             <div class="inline-block mx-auto mb-6 px-4 py-1.5 bg-black/5 rounded-full border border-black/10">
                 <span class="text-xs font-bold uppercase tracking-wider">ร้านค้าออนไลน์อันดับ #1</span>
             </div>
-
             <h1 class="text-5xl md:text-7xl font-black leading-[1.15] tracking-tight mb-8">
                 ยินดีต้อนรับสู่<br><span class="text-indigo-600">GPS SHOP</span>
             </h1>
-
             <p class="text-lg md:text-xl font-normal text-gray-700 leading-relaxed mb-10">
                 ศูนย์รวมบริการไอเทม สินค้าดิจิทัล และระบบอัตโนมัติ สะดวกรวดเร็ว ปลอดภัย 100% เชื่อมต่อบัญชี Discord เพื่อเริ่มทำรายการได้ทันที
             </p>
-
             <div class="flex flex-col sm:flex-row gap-4 justify-center items-center">
                 <a href="#services" class="w-full sm:w-auto bg-black hover:bg-gray-800 text-white font-semibold text-lg px-8 py-4 rounded-2xl shadow-xl hover:shadow-2xl transition duration-200 active:scale-95">
                     เลือกชมสินค้าทั้งหมด
@@ -128,29 +110,24 @@
                 <h3 class="text-xl font-bold mb-3">จัดส่งระบบอัตโนมัติ</h3>
                 <p class="text-gray-600 text-sm leading-relaxed">ระบบทำรายการจัดส่งสินค้าให้อัตโนมัติทันทีหลังชำระเงิน รวดเร็ว ไม่ต้องรอแอดมินตอบ ทำรายการได้ตลอด 24 ชั่วโมง</p>
             </div>
-
             <div class="bg-white p-8 rounded-3xl border border-gray-100 shadow-sm hover:shadow-md transition">
                 <div class="w-12 h-12 bg-indigo-50 text-indigo-600 rounded-2xl flex items-center justify-center font-bold text-xl mb-6">🛡️</div>
                 <h3 class="text-xl font-bold mb-3">ปลอดภัยและเชื่อถือได้</h3>
                 <p class="text-gray-600 text-sm leading-relaxed">เชื่อมต่อระบบยืนยันตัวตนด้วย OAuth2 ผ่าน Discord ป้องกันการแอบอ้าง มั่นใจได้ในทุกการสั่งซื้อและการทำรายการ</p>
             </div>
-
             <div class="bg-white p-8 rounded-3xl border border-gray-100 shadow-sm hover:shadow-md transition">
                 <div class="w-12 h-12 bg-indigo-50 text-indigo-600 rounded-2xl flex items-center justify-center font-bold text-xl mb-6">🎧</div>
                 <h3 class="text-xl font-bold mb-3">บริการดูแลลูกค้า</h3>
                 <p class="text-gray-600 text-sm leading-relaxed">มีทีมงานคอยช่วยเหลือและตอบคำถามตลอดเวลา ติดปัญหาส่วนไหน สามารถติดต่อแอดมินผ่าน Discord Server ได้โดยตรง</p>
             </div>
         </section>
-
     </main>
 
     <footer class="w-full border-t border-gray-200 bg-white py-6 text-center text-sm font-medium text-gray-500">
         © 2026 GPS SHOP. All rights reserved.
     </footer>
 
-    <!-- ========================================== -->
-    <!-- 4. JAVASCRIPT LOGIC & DISCORD OAUTH        -->
-    <!-- ========================================== -->
+    <!-- 4. JAVASCRIPT AUTH REAL FETCHING & LOGOUT -->
     <script>
         const progressBar = document.getElementById('progressBar');
         const progressText = document.getElementById('progressText');
@@ -158,25 +135,13 @@
         const loadingScreen = document.getElementById('loadingScreen');
         const mainContent = document.getElementById('mainContent');
 
-        const statusMessages = [
-            { percent: 25, text: 'กำลังเชื่อมต่อเซิร์ฟเวอร์ GPS SHOP...' },
-            { percent: 60, text: 'กำลัง ตรวจสอบข้อมูลโปรไฟล์...' },
-            { percent: 90, text: 'กำลังจัดเตรียมหน้าต่างการใช้งาน...' },
-            { percent: 100, text: 'พร้อมใช้งาน!' }
-        ];
-
+        // 1. Loading Animation
         let progress = 0;
-
-        // Loading Screen Animation
         const interval = setInterval(() => {
-            progress += Math.floor(Math.random() * 8) + 3;
+            progress += Math.floor(Math.random() * 8) + 4;
             if (progress > 100) progress = 100;
-
             progressBar.style.width = `${progress}%`;
             progressText.innerText = `${progress}%`;
-
-            const currentMsg = statusMessages.find(msg => progress <= msg.percent);
-            if (currentMsg) loadingStatus.innerText = currentMsg.text;
 
             if (progress >= 100) {
                 clearInterval(interval);
@@ -186,42 +151,61 @@
                     setTimeout(() => { loadingScreen.style.display = 'none'; }, 700);
                 }, 400);
             }
-        }, 50);
+        }, 40);
 
-        // ดึงข้อมูล Discord โปรไฟล์จาก URL Parameter
+        // 2. ดึงข้อมูล Discord โปรไฟล์จริง
         window.addEventListener('DOMContentLoaded', () => {
-            const urlParams = new URLSearchParams(window.location.search);
-            const code = urlParams.get('code');
-            const fragmentParams = new URLSearchParams(window.location.hash.substring(1));
-            const accessToken = fragmentParams.get('access_token');
+            let accessToken = localStorage.getItem('discord_access_token');
+
+            // อ่านค่า access_token จาก URL Hash หลังล็อกอินสำเร็จ
+            if (window.location.hash) {
+                const params = new URLSearchParams(window.location.hash.substring(1));
+                if (params.has('access_token')) {
+                    accessToken = params.get('access_token');
+                    localStorage.setItem('discord_access_token', accessToken);
+                    // ล้าง Hash ออกจาก URL ให้สะอาด
+                    window.history.replaceState(null, null, window.location.pathname);
+                }
+            }
 
             if (accessToken) {
-                // หากได้ Access Token โดยตรง ให้ดึงข้อมูลผู้ใช้จาก Discord API
-                fetch('https://discord.com/api/users/@me', {
-                    headers: { authorization: `Bearer ${accessToken}` }
-                })
-                .then(res => res.json())
-                .then(user => {
-                    if (user.id) {
-                        const avatarUrl = user.avatar 
-                            ? `https://cdn.discordapp.com/avatars/${user.id}/${user.avatar}.png`
-                            : `https://cdn.discordapp.com/embed/avatars/0.png`;
-                        
-                        showProfile(user.global_name || user.username, avatarUrl);
-                    }
-                })
-                .catch(err => console.error("Discord Error:", err));
-            } else if (code) {
-                // กรณีใช้ response_type=code (แสดงโปรไฟล์ตัวอย่างเพื่อยืนยันการรับค่าสำเร็จ)
-                showProfile("Discord User", "https://cdn.discordapp.com/embed/avatars/0.png");
+                fetchDiscordUser(accessToken);
             }
         });
 
-        function showProfile(username, avatarUrl) {
-            document.getElementById('discordLoginBtn').classList.add('hidden');
-            document.getElementById('userProfile').classList.remove('hidden');
-            document.getElementById('userName').innerText = username;
-            document.getElementById('userAvatar').src = avatarUrl;
+        // ฟังก์ชันเรียก API ดึงชื่อ + รูปจริงจาก Discord
+        function fetchDiscordUser(token) {
+            fetch('https://discord.com/api/users/@me', {
+                headers: { authorization: `Bearer ${token}` }
+            })
+            .then(res => {
+                if (!res.ok) throw new Error('Token Expired');
+                return res.json();
+            })
+            .then(user => {
+                const avatarUrl = user.avatar 
+                    ? `https://cdn.discordapp.com/avatars/${user.id}/${user.avatar}.png`
+                    : `https://cdn.discordapp.com/embed/avatars/0.png`;
+
+                const displayName = user.global_name || user.username;
+
+                // อัปเดตการแสดงผลหน้าเว็บ
+                document.getElementById('discordLoginBtn').classList.add('hidden');
+                document.getElementById('userProfile').classList.remove('hidden');
+                document.getElementById('userProfile').classList.add('flex');
+                document.getElementById('userName').innerText = displayName;
+                document.getElementById('userAvatar').src = avatarUrl;
+            })
+            .catch(err => {
+                console.error("Auth Error:", err);
+                logout(); // หาก Token หมดอายุ ให้ล้างค่าเพื่อล็อกอินใหม่
+            });
+        }
+
+        // 3. ฟังก์ชันออกจากระบบ
+        function logout() {
+            localStorage.removeItem('discord_access_token');
+            window.location.href = window.location.pathname;
         }
     </script>
 </body>
