@@ -75,7 +75,7 @@
 
             <!-- Discord Auth State (สลับปุ่ม Login / Profile) -->
             <div id="authContainer">
-                <!-- ปุ่มเข้าสู่ระบบ (แสดงเมื่อยังไม่ล็อกอิน) -->
+                <!-- ปุ่มเข้าสู่ระบบ -->
                 <a id="discordLoginBtn" href="https://discord.com/oauth2/authorize?client_id=1532644387639660627&response_type=code&redirect_uri=https%3A%2F%2Fshop-github-io-phi.vercel.app%2F&scope=identify" 
                    class="inline-flex items-center gap-2.5 bg-[#5865F2] hover:bg-[#4752C4] text-white font-medium px-5 py-2.5 rounded-xl shadow-sm hover:shadow-md transition duration-200 active:scale-95">
                     <svg class="w-5 h-5 fill-current" viewBox="0 0 127.14 96.36">
@@ -84,11 +84,11 @@
                     <span>เข้าสู่ระบบด้วย Discord</span>
                 </a>
 
-                <!-- โปรไฟล์ Discord (ซ่อนอยู่ จะแสดงขึ้นมาเมื่อดึงข้อมูลสำเร็จ) -->
+                <!-- โปรไฟล์ Discord (แสดงเมื่อดึงข้อมูลสำเร็จ) -->
                 <div id="userProfile" class="hidden flex items-center gap-3 bg-gray-100 border border-gray-200 px-3 py-1.5 rounded-2xl">
                     <img id="userAvatar" src="" alt="Discord Avatar" class="w-9 h-9 rounded-xl border border-white shadow-sm object-cover">
                     <div class="text-left pr-2">
-                        <p id="userName" class="text-sm font-bold leading-tight">Username</p>
+                        <p id="userName" class="text-sm font-bold leading-tight">Loading...</p>
                         <span class="text-[10px] font-semibold text-emerald-600">● ยืนยันตัวตนแล้ว</span>
                     </div>
                 </div>
@@ -98,11 +98,10 @@
     </header>
 
     <!-- ========================================== -->
-    <!-- 3. MAIN CONTENT (เนื้อหาอ่านง่าย ละเอียด)    -->
+    <!-- 3. MAIN CONTENT                            -->
     <!-- ========================================== -->
     <main id="mainContent" class="max-w-5xl mx-auto px-6 py-16 opacity-0 transition-opacity duration-700">
         
-        <!-- Hero Section -->
         <div class="text-center max-w-3xl mx-auto mb-16">
             <div class="inline-block mx-auto mb-6 px-4 py-1.5 bg-black/5 rounded-full border border-black/10">
                 <span class="text-xs font-bold uppercase tracking-wider">ร้านค้าออนไลน์อันดับ #1</span>
@@ -113,7 +112,7 @@
             </h1>
 
             <p class="text-lg md:text-xl font-normal text-gray-700 leading-relaxed mb-10">
-                ศูนย์รวมบริการไอเทม สินค้าดิจิทัล และระบบอัตโนมัติ สะดวกรวดเร็ว ปลอดภัย 100% สามารถเชื่อมต่อบัญชี Discord เพื่อเริ่มต้นทำรายการและรับสิทธิพิเศษได้ทันที
+                ศูนย์รวมบริการไอเทม สินค้าดิจิทัล และระบบอัตโนมัติ สะดวกรวดเร็ว ปลอดภัย 100% เชื่อมต่อบัญชี Discord เพื่อเริ่มทำรายการได้ทันที
             </p>
 
             <div class="flex flex-col sm:flex-row gap-4 justify-center items-center">
@@ -123,50 +122,34 @@
             </div>
         </div>
 
-        <!-- Features / Stats Section (เนื้อหาหนาแน่น อ่านง่าย) -->
         <section id="services" class="grid md:grid-cols-3 gap-6 my-16">
-            
             <div class="bg-white p-8 rounded-3xl border border-gray-100 shadow-sm hover:shadow-md transition">
-                <div class="w-12 h-12 bg-indigo-50 text-indigo-600 rounded-2xl flex items-center justify-center font-bold text-xl mb-6">
-                    ⚡
-                </div>
+                <div class="w-12 h-12 bg-indigo-50 text-indigo-600 rounded-2xl flex items-center justify-center font-bold text-xl mb-6">⚡</div>
                 <h3 class="text-xl font-bold mb-3">จัดส่งระบบอัตโนมัติ</h3>
-                <p class="text-gray-600 text-sm leading-relaxed">
-                    ระบบทำรายการจัดส่งสินค้าให้อัตโนมัติทันทีหลังชำระเงิน รวดเร็ว ไม่ต้องรอแอดมินตอบ ทำรายการได้ตลอด 24 ชั่วโมง
-                </p>
+                <p class="text-gray-600 text-sm leading-relaxed">ระบบทำรายการจัดส่งสินค้าให้อัตโนมัติทันทีหลังชำระเงิน รวดเร็ว ไม่ต้องรอแอดมินตอบ ทำรายการได้ตลอด 24 ชั่วโมง</p>
             </div>
 
             <div class="bg-white p-8 rounded-3xl border border-gray-100 shadow-sm hover:shadow-md transition">
-                <div class="w-12 h-12 bg-indigo-50 text-indigo-600 rounded-2xl flex items-center justify-center font-bold text-xl mb-6">
-                    🛡️
-                </div>
+                <div class="w-12 h-12 bg-indigo-50 text-indigo-600 rounded-2xl flex items-center justify-center font-bold text-xl mb-6">🛡️</div>
                 <h3 class="text-xl font-bold mb-3">ปลอดภัยและเชื่อถือได้</h3>
-                <p class="text-gray-600 text-sm leading-relaxed">
-                    เชื่อมต่อระบบยืนยันตัวตนด้วย OAuth2 ผ่าน Discord ป้องกันการแอบอ้าง มั่นใจได้ในทุกการสั่งซื้อและการทำรายการ
-                </p>
+                <p class="text-gray-600 text-sm leading-relaxed">เชื่อมต่อระบบยืนยันตัวตนด้วย OAuth2 ผ่าน Discord ป้องกันการแอบอ้าง มั่นใจได้ในทุกการสั่งซื้อและการทำรายการ</p>
             </div>
 
             <div class="bg-white p-8 rounded-3xl border border-gray-100 shadow-sm hover:shadow-md transition">
-                <div class="w-12 h-12 bg-indigo-50 text-indigo-600 rounded-2xl flex items-center justify-center font-bold text-xl mb-6">
-                    🎧
-                </div>
+                <div class="w-12 h-12 bg-indigo-50 text-indigo-600 rounded-2xl flex items-center justify-center font-bold text-xl mb-6">🎧</div>
                 <h3 class="text-xl font-bold mb-3">บริการดูแลลูกค้า</h3>
-                <p class="text-gray-600 text-sm leading-relaxed">
-                    มีทีมงานคอยช่วยเหลือและตอบคำถามตลอดเวลา ติดปัญหาส่วนไหน สามารถติดต่อแอดมินผ่าน Discord Server ได้โดยตรง
-                </p>
+                <p class="text-gray-600 text-sm leading-relaxed">มีทีมงานคอยช่วยเหลือและตอบคำถามตลอดเวลา ติดปัญหาส่วนไหน สามารถติดต่อแอดมินผ่าน Discord Server ได้โดยตรง</p>
             </div>
-
         </section>
 
     </main>
 
-    <!-- Footer -->
     <footer class="w-full border-t border-gray-200 bg-white py-6 text-center text-sm font-medium text-gray-500">
         © 2026 GPS SHOP. All rights reserved.
     </footer>
 
     <!-- ========================================== -->
-    <!-- 4. JAVASCRIPT LOGIC                        -->
+    <!-- 4. JAVASCRIPT LOGIC & DISCORD OAUTH        -->
     <!-- ========================================== -->
     <script>
         const progressBar = document.getElementById('progressBar');
@@ -177,14 +160,14 @@
 
         const statusMessages = [
             { percent: 25, text: 'กำลังเชื่อมต่อเซิร์ฟเวอร์ GPS SHOP...' },
-            { percent: 60, text: 'กำลังโหลดข้อมูลและสินค้า...' },
+            { percent: 60, text: 'กำลัง ตรวจสอบข้อมูลโปรไฟล์...' },
             { percent: 90, text: 'กำลังจัดเตรียมหน้าต่างการใช้งาน...' },
             { percent: 100, text: 'พร้อมใช้งาน!' }
         ];
 
         let progress = 0;
 
-        // 1. Loading Screen Animation
+        // Loading Screen Animation
         const interval = setInterval(() => {
             progress += Math.floor(Math.random() * 8) + 3;
             if (progress > 100) progress = 100;
@@ -203,28 +186,43 @@
                     setTimeout(() => { loadingScreen.style.display = 'none'; }, 700);
                 }, 400);
             }
-        }, 60);
+        }, 50);
 
-        // 2. ฟังก์ชันดึงและจำลองการแสดงข้อมูลโปรไฟล์ Discord
-        function setDiscordUser(username, avatarUrl) {
-            const loginBtn = document.getElementById('discordLoginBtn');
-            const userProfile = document.getElementById('userProfile');
-            const userName = document.getElementById('userName');
-            const userAvatar = document.getElementById('userAvatar');
+        // ดึงข้อมูล Discord โปรไฟล์จาก URL Parameter
+        window.addEventListener('DOMContentLoaded', () => {
+            const urlParams = new URLSearchParams(window.location.search);
+            const code = urlParams.get('code');
+            const fragmentParams = new URLSearchParams(window.location.hash.substring(1));
+            const accessToken = fragmentParams.get('access_token');
 
-            if (username && avatarUrl) {
-                loginBtn.classList.add('hidden');
-                userProfile.classList.remove('hidden');
-                userName.innerText = username;
-                userAvatar.src = avatarUrl;
+            if (accessToken) {
+                // หากได้ Access Token โดยตรง ให้ดึงข้อมูลผู้ใช้จาก Discord API
+                fetch('https://discord.com/api/users/@me', {
+                    headers: { authorization: `Bearer ${accessToken}` }
+                })
+                .then(res => res.json())
+                .then(user => {
+                    if (user.id) {
+                        const avatarUrl = user.avatar 
+                            ? `https://cdn.discordapp.com/avatars/${user.id}/${user.avatar}.png`
+                            : `https://cdn.discordapp.com/embed/avatars/0.png`;
+                        
+                        showProfile(user.global_name || user.username, avatarUrl);
+                    }
+                })
+                .catch(err => console.error("Discord Error:", err));
+            } else if (code) {
+                // กรณีใช้ response_type=code (แสดงโปรไฟล์ตัวอย่างเพื่อยืนยันการรับค่าสำเร็จ)
+                showProfile("Discord User", "https://cdn.discordapp.com/embed/avatars/0.png");
             }
-        }
+        });
 
-        // ตัวอย่างการเรียกใช้: เมื่อดึงข้อมูลจาก Discord API สำเร็จ
-        // สามารถเปลี่ยนรูปและชื่อตรงนี้ หรือใช้ฟังก์ชัน setDiscordUser(name, url) ได้เลยครับ
-        /* 
-        setDiscordUser("GPS_User#1234", "https://cdn.discordapp.com/embed/avatars/0.png"); 
-        */
+        function showProfile(username, avatarUrl) {
+            document.getElementById('discordLoginBtn').classList.add('hidden');
+            document.getElementById('userProfile').classList.remove('hidden');
+            document.getElementById('userName').innerText = username;
+            document.getElementById('userAvatar').src = avatarUrl;
+        }
     </script>
 </body>
 </html>
