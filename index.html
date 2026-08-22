@@ -15,31 +15,55 @@
             font-family: 'Kanit', sans-serif; 
             background-color: #F8FAFC; 
         } 
-        .slow-spin {
-            animation: spin 3.5s linear infinite;
+        /* Loading Animations */
+        .ring-spin-cw {
+            animation: spin 3s linear infinite;
+        }
+        .ring-spin-ccw {
+            animation: spin-reverse 2s linear infinite;
+        }
+        .glow-pulse {
+            animation: pulse-glow 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
         }
         @keyframes spin {
             from { transform: rotate(0deg); }
             to { transform: rotate(360deg); }
         }
+        @keyframes spin-reverse {
+            from { transform: rotate(360deg); }
+            to { transform: rotate(0deg); }
+        }
+        @keyframes pulse-glow {
+            0%, 100% { opacity: 0.4; transform: scale(0.95); }
+            50% { opacity: 0.9; transform: scale(1.08); }
+        }
     </style>
 </head>
 <body class="min-h-screen flex flex-col justify-between text-slate-800">
 
-    <!-- LOADING SCREEN -->
-    <div id="loadingScreen" class="fixed inset-0 bg-white z-50 flex flex-col items-center justify-center p-6 transition-opacity duration-700">
-        <div class="relative w-24 h-24 flex items-center justify-center mb-6">
-            <div class="absolute inset-0 border-4 border-slate-100 border-t-black rounded-full slow-spin"></div>
-            <div class="w-14 h-14 bg-black rounded-2xl flex items-center justify-center shadow-lg transform transition hover:scale-105">
-                <span class="font-black text-white text-lg tracking-widest">GPS</span>
+    <!-- NEW MODERN LOADING SCREEN -->
+    <div id="loadingScreen" class="fixed inset-0 bg-slate-950 z-50 flex flex-col items-center justify-center p-6 transition-opacity duration-700">
+        <!-- Background Ambient Glow -->
+        <div class="absolute w-72 h-72 bg-emerald-500/10 rounded-full blur-3xl glow-pulse pointer-events-none"></div>
+
+        <div class="relative w-28 h-28 flex items-center justify-center mb-8">
+            <!-- Outer Orbit Ring -->
+            <div class="absolute inset-0 border-2 border-slate-800 border-t-emerald-400 rounded-full ring-spin-cw"></div>
+            <!-- Inner Orbit Ring -->
+            <div class="absolute inset-2 border-2 border-slate-800 border-b-cyan-400 rounded-full ring-spin-ccw"></div>
+            
+            <!-- Logo Box -->
+            <div class="w-16 h-16 bg-slate-900 border border-slate-700/80 rounded-2xl flex items-center justify-center shadow-2xl z-10">
+                <span class="font-black text-white text-xl tracking-widest bg-gradient-to-r from-emerald-400 to-cyan-400 bg-clip-text text-transparent">GPS</span>
             </div>
         </div>
         
-        <h2 class="text-xl font-extrabold tracking-wider mb-1 text-slate-900">GPS SHOP</h2>
-        <p id="loadingStatusText" class="text-xs font-medium text-slate-400 mb-4 animate-pulse">กำลังเชื่อมต่อกับเซิร์ฟเวอร์...</p>
+        <h2 class="text-2xl font-black tracking-widest text-white mb-1">GPS SHOP</h2>
+        <p id="loadingStatusText" class="text-xs font-semibold tracking-wider text-emerald-400/90 mb-6 uppercase animate-pulse">Initializing System...</p>
         
-        <div class="w-56 bg-slate-100 h-2 rounded-full overflow-hidden p-0.5 border border-slate-100 shadow-inner">
-            <div id="progressBar" class="bg-black h-full rounded-full w-0 transition-all duration-[3000ms] ease-out"></div>
+        <!-- Sleek Progress Bar -->
+        <div class="w-64 bg-slate-900/80 h-1.5 rounded-full overflow-hidden p-0.5 border border-slate-800 shadow-inner">
+            <div id="progressBar" class="bg-gradient-to-r from-emerald-400 via-teal-400 to-cyan-400 h-full rounded-full w-0 transition-all duration-[3000ms] ease-out shadow-[0_0_12px_rgba(52,211,153,0.5)]"></div>
         </div>
     </div>
 
@@ -59,13 +83,12 @@
                     <span>เข้าสู่ระบบ / สมัครสมาชิก</span>
                 </button>
 
-                <!-- USER PROFILE & BALANCE (ปรับแก้ชื่ออีเมลยาวไม่ล้น) -->
+                <!-- USER PROFILE & BALANCE -->
                 <div id="userProfile" class="hidden flex items-center gap-2.5 bg-slate-50 border border-slate-200 p-1.5 pl-3 rounded-2xl shadow-sm max-w-[280px] sm:max-w-sm">
                     <div id="emailAvatar" class="w-9 h-9 bg-black text-white rounded-xl flex items-center justify-center font-bold text-base uppercase shadow-sm shrink-0">
                         U
                     </div>
                     <div class="text-left min-w-0 flex-1">
-                        <!-- ตัดคำอีเมลยาวด้วย truncate -->
                         <p id="displayEmail" class="text-xs font-bold text-slate-900 leading-tight truncate max-w-[100px] sm:max-w-[130px]" title="user@email.com">user@email.com</p>
                         <div class="flex items-center gap-1.5 mt-0.5">
                             <span class="text-xs font-extrabold text-emerald-600 truncate">฿<span id="userBalance">0.00</span></span>
@@ -119,7 +142,7 @@
 
                 <!-- Google reCAPTCHA LOGIN -->
                 <div class="flex justify-center my-2">
-                    <div class="g-recaptcha" id="loginRecaptcha" data-sitekey="6Leca5ItAAAAAJsKoyizUf98z4DMN1G81ErZrY42"></div>
+                    <div class="g-recaptcha" id="loginRecaptcha" data-sitekey="6LfYbJItAAAAAPcg5IjBX-_UHOfahFWIHTqECY_v"></div>
                 </div>
 
                 <button type="submit" onclick="playClickSound()" class="w-full bg-black hover:bg-slate-800 text-white font-semibold py-3.5 rounded-xl shadow-md transition active:scale-95 flex items-center justify-center gap-2">
@@ -149,7 +172,7 @@
 
                 <!-- Google reCAPTCHA REGISTER -->
                 <div class="flex justify-center my-2">
-                    <div class="g-recaptcha" id="registerRecaptcha" data-sitekey="6Leca5ItAAAAAJsKoyizUf98z4DMN1G81ErZrY42"></div>
+                    <div class="g-recaptcha" id="registerRecaptcha" data-sitekey="6LfYbJItAAAAAPcg5IjBX-_UHOfahFWIHTqECY_v"></div>
                 </div>
 
                 <button type="submit" onclick="playClickSound()" class="w-full bg-black hover:bg-slate-800 text-white font-semibold py-3.5 rounded-xl shadow-md transition active:scale-95 flex items-center justify-center gap-2">
@@ -187,7 +210,7 @@
 
                 <!-- Google reCAPTCHA TOP-UP -->
                 <div class="flex justify-center my-2">
-                    <div class="g-recaptcha" id="topupRecaptcha" data-sitekey="6LdsbJItAAAAAJFQjoI4oTm8oZ6lXlfjM1Li_WYo"></div>
+                    <div class="g-recaptcha" id="topupRecaptcha" data-sitekey="6LfYbJItAAAAAPcg5IjBX-_UHOfahFWIHTqECY_v"></div>
                 </div>
 
                 <button type="submit" onclick="playClickSound()" id="redeemBtn" class="w-full bg-red-600 hover:bg-red-700 text-white font-semibold py-3.5 rounded-xl shadow-md transition active:scale-95 flex items-center justify-center gap-2">
@@ -197,7 +220,7 @@
         </div>
     </div>
 
-    <!-- MAIN CONTENT (ปรับแต่งหน้าหลักให้อ่านง่าย สบายตา) -->
+    <!-- MAIN CONTENT -->
     <main class="max-w-6xl mx-auto px-6 py-12">
         <!-- Hero Section -->
         <div class="text-center max-w-3xl mx-auto mb-20">
@@ -268,7 +291,6 @@
 
     <!-- JAVASCRIPT LOGIC -->
     <script>
-        // WEB AUDIO API FOR BUTTON CLICK SOUND
         function playClickSound() {
             try {
                 const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
@@ -304,8 +326,12 @@
             }, 100);
 
             setTimeout(() => {
-                if (statusText) statusText.innerText = "กำลังจัดเตรียมข้อมูลร้านค้า...";
-            }, 1500);
+                if (statusText) statusText.innerText = "Connecting Security Engine...";
+            }, 1200);
+
+            setTimeout(() => {
+                if (statusText) statusText.innerText = "System Ready";
+            }, 2600);
 
             setTimeout(() => {
                 if (loadingScreen) {
@@ -382,7 +408,6 @@
         function handleRedeemAngpao(e) {
             e.preventDefault();
 
-            // ตรวจสอบ reCAPTCHA สำหรับระบบเติมเงิน (Widget ID 2)
             const response = grecaptcha.getResponse(2);
             if (response.length === 0) {
                 alert("กรุณาติ๊กช่อง 'ฉันไม่ใช่โปรแกรมอัตโนมัติ' ก่อนทำรายการเติมเงิน");
@@ -418,7 +443,7 @@
             
             const displayEmailElem = document.getElementById('displayEmail');
             displayEmailElem.innerText = email;
-            displayEmailElem.title = email; // เมื่อเอาเมาส์ไปชี้จะเห็นชื่อเต็ม
+            displayEmailElem.title = email;
 
             document.getElementById('userBalance').innerText = balance;
             lucide.createIcons();
