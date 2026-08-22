@@ -16,8 +16,15 @@
 </head>
 <body class="min-h-screen flex items-center justify-center p-4">
 
-    <!-- Card Box -->
-    <div class="w-full max-w-md bg-white rounded-2xl shadow-[0_10px_40px_rgba(0,0,0,0.06)] border border-gray-100 p-8 text-center">
+    <!-- 1. Loading Screen (หน้าโหลด) -->
+    <div id="loadingScreen" class="fixed inset-0 bg-white z-50 flex flex-col items-center justify-center transition-opacity duration-500">
+        <!-- วงกลมหมุน (Spinner) -->
+        <div class="w-12 h-12 border-4 border-indigo-200 border-t-indigo-600 rounded-full animate-spin mb-4"></div>
+        <p class="text-gray-500 font-medium text-sm animate-pulse">กำลังโหลด...</p>
+    </div>
+
+    <!-- 2. Main Content Card (หน้าหลัก) -->
+    <div id="mainContent" class="w-full max-w-md bg-white rounded-2xl shadow-[0_10px_40px_rgba(0,0,0,0.06)] border border-gray-100 p-8 text-center opacity-0 transition-opacity duration-500">
         
         <!-- Tab Navigation Bar -->
         <div class="flex border-b border-gray-100 mb-10">
@@ -29,7 +36,7 @@
             </button>
         </div>
 
-        <!-- Main Content inside Card -->
+        <!-- Main Content -->
         <div class="py-6">
             <h1 class="text-3xl md:text-4xl font-bold text-indigo-600 mb-4 leading-tight">
                 ยินดีต้อนรับสู่<br>แพลตฟอร์มของคุณ
@@ -46,5 +53,22 @@
 
     </div>
 
+    <!-- JavaScript ซ่อนหน้าโหลด -->
+    <script>
+        window.addEventListener('load', () => {
+            const loadingScreen = document.getElementById('loadingScreen');
+            const mainContent = document.getElementById('mainContent');
+
+            // ตั้งเวลาจำลองการโหลด 1.5 วินาที (สามารถปรับลด/เพิ่มได้ตามต้องการ)
+            setTimeout(() => {
+                loadingScreen.classList.add('opacity-0');
+                
+                setTimeout(() => {
+                    loadingScreen.style.display = 'none';
+                    mainContent.classList.remove('opacity-0');
+                }, 500);
+            }, 1500);
+        });
+    </script>
 </body>
 </html>
