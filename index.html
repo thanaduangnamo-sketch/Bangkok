@@ -88,7 +88,7 @@
             </div>
 
             <!-- Form: เข้าสู่ระบบ -->
-            <form id="loginForm" onsubmit="handleAuth(event)" class="space-y-4">
+            <form id="loginForm" onsubmit="handleAuth(event, 'login')" class="space-y-4">
                 <div>
                     <label class="block text-xs font-bold text-gray-700 uppercase tracking-wider mb-1">อีเมล</label>
                     <input type="email" id="loginEmail" required placeholder="name@example.com" class="w-full px-4 py-3 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-black transition text-sm">
@@ -100,7 +100,7 @@
 
                 <!-- Google reCAPTCHA -->
                 <div class="flex justify-center my-2">
-                    <div class="g-recaptcha" data-sitekey="6LeIxAcTAAAAAJcZVRqyHhfyE7yXFCuYwe8v65Bi"></div>
+                    <div class="g-recaptcha" id="loginRecaptcha" data-sitekey="6Lf-aZItAAAAAK_kwcuL2KYtNoL7S3lqEwZaThW9"></div>
                 </div>
 
                 <button type="submit" class="w-full bg-black hover:bg-gray-800 text-white font-semibold py-3.5 rounded-xl shadow-md transition active:scale-95">
@@ -109,7 +109,7 @@
             </form>
 
             <!-- Form: สมัครสมาชิก -->
-            <form id="registerForm" onsubmit="handleAuth(event)" class="space-y-4 hidden">
+            <form id="registerForm" onsubmit="handleAuth(event, 'register')" class="space-y-4 hidden">
                 <div>
                     <label class="block text-xs font-bold text-gray-700 uppercase tracking-wider mb-1">อีเมล</label>
                     <input type="email" id="regEmail" required placeholder="name@example.com" class="w-full px-4 py-3 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-black transition text-sm">
@@ -121,7 +121,7 @@
 
                 <!-- Google reCAPTCHA -->
                 <div class="flex justify-center my-2">
-                    <div class="g-recaptcha" data-sitekey="6LeIxAcTAAAAAJcZVRqyHhfyE7yXFCuYwe8v65Bi"></div>
+                    <div class="g-recaptcha" id="registerRecaptcha" data-sitekey="6Lf-aZItAAAAAK_kwcuL2KYtNoL7S3lqEwZaThW9"></div>
                 </div>
 
                 <button type="submit" class="w-full bg-black hover:bg-gray-800 text-white font-semibold py-3.5 rounded-xl shadow-md transition active:scale-95">
@@ -219,18 +219,20 @@
             }
         }
 
-        function handleAuth(e) {
+        function handleAuth(e, formType) {
             e.preventDefault();
 
-            const recaptchaResponse = grecaptcha.getResponse();
-            if (recaptchaResponse.length === 0) {
+            const widgetId = formType === 'login' ? 0 : 1;
+            const response = grecaptcha.getResponse(widgetId);
+
+            if (response.length === 0) {
                 alert("กรุณาติ๊กช่อง 'ฉันไม่ใช่โปรแกรมอัตโนมัติ' ก่อนดำเนินการต่อ");
                 return;
             }
 
             const loginEmail = document.getElementById('loginEmail').value;
             const regEmail = document.getElementById('regEmail').value;
-            const email = loginEmail || regEmail;
+            const email = formType === 'login' ? loginEmail : regEmail;
 
             if (email) {
                 localStorage.setItem('user_email', email);
