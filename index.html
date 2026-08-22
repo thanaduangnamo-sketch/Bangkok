@@ -6,12 +6,14 @@
     <title>GPS Shop - ร้านค้าออนไลน์อย่างเป็นทางการ</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
     <!-- Google reCAPTCHA API -->
     <script src="https://www.google.com/recaptcha/api.js" async defer></script>
     <style> 
         body { 
             font-family: 'Kanit', sans-serif; 
-            background-color: #FAFAFA; 
+            background-color: #F8FAFC; 
         } 
         .slow-spin {
             animation: spin 3.5s linear infinite;
@@ -22,50 +24,58 @@
         }
     </style>
 </head>
-<body class="min-h-screen flex flex-col justify-between text-black">
+<body class="min-h-screen flex flex-col justify-between text-slate-800">
 
     <!-- LOADING SCREEN -->
     <div id="loadingScreen" class="fixed inset-0 bg-white z-50 flex flex-col items-center justify-center p-6 transition-opacity duration-700">
         <div class="relative w-24 h-24 flex items-center justify-center mb-6">
-            <div class="absolute inset-0 border-4 border-gray-100 border-t-black rounded-full slow-spin"></div>
+            <div class="absolute inset-0 border-4 border-slate-100 border-t-black rounded-full slow-spin"></div>
             <div class="w-14 h-14 bg-black rounded-2xl flex items-center justify-center shadow-lg transform transition hover:scale-105">
                 <span class="font-black text-white text-lg tracking-widest">GPS</span>
             </div>
         </div>
         
-        <h2 class="text-xl font-extrabold tracking-wider mb-1">GPS SHOP</h2>
-        <p id="loadingStatusText" class="text-xs font-medium text-gray-400 mb-4 animate-pulse">กำลังเชื่อมต่อกับเซิร์ฟเวอร์...</p>
+        <h2 class="text-xl font-extrabold tracking-wider mb-1 text-slate-900">GPS SHOP</h2>
+        <p id="loadingStatusText" class="text-xs font-medium text-slate-400 mb-4 animate-pulse">กำลังเชื่อมต่อกับเซิร์ฟเวอร์...</p>
         
-        <div class="w-56 bg-gray-100 h-2 rounded-full overflow-hidden p-0.5 border border-gray-100 shadow-inner">
+        <div class="w-56 bg-slate-100 h-2 rounded-full overflow-hidden p-0.5 border border-slate-100 shadow-inner">
             <div id="progressBar" class="bg-black h-full rounded-full w-0 transition-all duration-[3000ms] ease-out"></div>
         </div>
     </div>
 
     <!-- NAVBAR -->
-    <header class="w-full bg-white/80 backdrop-blur-md border-b border-gray-100 sticky top-0 z-40">
-        <div class="max-w-6xl mx-auto px-6 h-20 flex items-center justify-between">
-            <div class="flex items-center gap-3">
+    <header class="w-full bg-white/90 backdrop-blur-md border-b border-slate-200/80 sticky top-0 z-40">
+        <div class="max-w-6xl mx-auto px-4 sm:px-6 h-20 flex items-center justify-between gap-4">
+            <div class="flex items-center gap-3 shrink-0">
                 <div class="w-10 h-10 bg-black rounded-xl flex items-center justify-center font-extrabold text-white text-sm tracking-wider shadow-sm">
                     GPS
                 </div>
-                <span class="text-xl font-extrabold tracking-tight">GPS SHOP</span>
+                <span class="text-xl font-extrabold tracking-tight text-slate-900">GPS SHOP</span>
             </div>
 
-            <div id="authContainer">
-                <button id="openAuthBtn" onclick="toggleAuthModal(true)" class="bg-black hover:bg-gray-800 text-white font-semibold px-6 py-2.5 rounded-xl shadow-sm transition active:scale-95 text-sm">
-                    เข้าสู่ระบบ / สมัครสมาชิก
+            <div id="authContainer" class="flex items-center">
+                <button id="openAuthBtn" onclick="playClickSound(); toggleAuthModal(true)" class="bg-black hover:bg-slate-800 text-white font-semibold px-5 py-2.5 rounded-xl shadow-sm transition active:scale-95 text-sm flex items-center gap-2">
+                    <i data-lucide="log-in" class="w-4 h-4"></i>
+                    <span>เข้าสู่ระบบ / สมัครสมาชิก</span>
                 </button>
 
-                <div id="userProfile" class="hidden flex items-center gap-3 bg-white border border-gray-200 p-1.5 pl-3 rounded-2xl shadow-sm">
-                    <div id="emailAvatar" class="w-9 h-9 bg-black text-white rounded-xl flex items-center justify-center font-bold text-base uppercase shadow-sm">
+                <!-- USER PROFILE & BALANCE (ปรับแก้ชื่ออีเมลยาวไม่ล้น) -->
+                <div id="userProfile" class="hidden flex items-center gap-2.5 bg-slate-50 border border-slate-200 p-1.5 pl-3 rounded-2xl shadow-sm max-w-[280px] sm:max-w-sm">
+                    <div id="emailAvatar" class="w-9 h-9 bg-black text-white rounded-xl flex items-center justify-center font-bold text-base uppercase shadow-sm shrink-0">
                         U
                     </div>
-                    <div class="text-left">
-                        <p id="displayEmail" class="text-sm font-bold leading-tight max-w-[150px] truncate">user@email.com</p>
-                        <span class="text-[10px] font-semibold text-emerald-600">● เข้าสู่ระบบแล้ว</span>
+                    <div class="text-left min-w-0 flex-1">
+                        <!-- ตัดคำอีเมลยาวด้วย truncate -->
+                        <p id="displayEmail" class="text-xs font-bold text-slate-900 leading-tight truncate max-w-[100px] sm:max-w-[130px]" title="user@email.com">user@email.com</p>
+                        <div class="flex items-center gap-1.5 mt-0.5">
+                            <span class="text-xs font-extrabold text-emerald-600 truncate">฿<span id="userBalance">0.00</span></span>
+                            <button onclick="playClickSound(); toggleTopUpModal(true)" class="text-[10px] bg-red-100 text-red-600 hover:bg-red-200 font-bold px-2 py-0.5 rounded-md transition flex items-center gap-1 shrink-0">
+                                <i data-lucide="wallet" class="w-3 h-3"></i> เติมเงิน
+                            </button>
+                        </div>
                     </div>
-                    <button onclick="logout()" class="ml-2 text-xs text-red-500 hover:text-red-700 bg-red-50 hover:bg-red-100 font-medium px-3 py-2 rounded-xl transition">
-                        ออกจากระบบ
+                    <button onclick="playClickSound(); logout()" class="text-xs text-red-500 hover:text-red-700 bg-red-50 hover:bg-red-100 font-medium p-2 rounded-xl transition shrink-0" title="ออกจากระบบ">
+                        <i data-lucide="log-out" class="w-4 h-4"></i>
                     </button>
                 </div>
             </div>
@@ -73,119 +83,218 @@
     </header>
 
     <!-- AUTH MODAL -->
-    <div id="authModal" class="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
-        <div class="bg-white rounded-3xl shadow-2xl border border-gray-100 w-full max-w-md p-8 relative">
-            <button onclick="toggleAuthModal(false)" class="absolute top-5 right-5 text-gray-400 hover:text-black font-bold text-xl">✕</button>
+    <div id="authModal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
+        <div class="bg-white rounded-3xl shadow-2xl border border-slate-100 w-full max-w-md p-6 sm:p-8 relative">
+            <button onclick="playClickSound(); toggleAuthModal(false)" class="absolute top-5 right-5 text-slate-400 hover:text-black font-bold text-xl">✕</button>
 
             <!-- Tab Switch -->
-            <div class="flex border-b border-gray-100 mb-6">
-                <button id="loginTabBtn" onclick="switchForm('login')" class="w-1/2 py-3 text-center font-bold text-black border-b-2 border-black transition">
-                    เข้าสู่ระบบ
+            <div class="flex border-b border-slate-100 mb-6">
+                <button id="loginTabBtn" onclick="playClickSound(); switchForm('login')" class="w-1/2 py-3 text-center font-bold text-black border-b-2 border-black transition flex items-center justify-center gap-2">
+                    <i data-lucide="key-round" class="w-4 h-4"></i> เข้าสู่ระบบ
                 </button>
-                <button id="registerTabBtn" onclick="switchForm('register')" class="w-1/2 py-3 text-center font-semibold text-gray-400 hover:text-black border-b-2 border-transparent transition">
-                    สมัครสมาชิก
+                <button id="registerTabBtn" onclick="playClickSound(); switchForm('register')" class="w-1/2 py-3 text-center font-semibold text-slate-400 hover:text-black border-b-2 border-transparent transition flex items-center justify-center gap-2">
+                    <i data-lucide="user-plus" class="w-4 h-4"></i> สมัครสมาชิก
                 </button>
             </div>
 
             <!-- Form: เข้าสู่ระบบ -->
             <form id="loginForm" onsubmit="handleAuth(event, 'login')" class="space-y-4">
                 <div>
-                    <label class="block text-xs font-bold text-gray-700 uppercase tracking-wider mb-1">อีเมล</label>
-                    <input type="email" id="loginEmail" required placeholder="name@example.com" class="w-full px-4 py-3 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-black transition text-sm">
+                    <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1 flex items-center gap-1">
+                        <i data-lucide="mail" class="w-3.5 h-3.5"></i> อีเมล
+                    </label>
+                    <input type="email" id="loginEmail" required placeholder="name@example.com" class="w-full px-4 py-3 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-black transition text-sm">
                 </div>
                 <div>
-                    <label class="block text-xs font-bold text-gray-700 uppercase tracking-wider mb-1">รหัสผ่าน</label>
+                    <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1 flex items-center gap-1">
+                        <i data-lucide="lock" class="w-3.5 h-3.5"></i> รหัสผ่าน
+                    </label>
                     <div class="relative">
-                        <input type="password" id="loginPassword" required placeholder="••••••••" class="w-full px-4 py-3 pr-10 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-black transition text-sm">
-                        <button type="button" onclick="togglePasswordVisibility('loginPassword', this)" class="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-black focus:outline-none p-1">
+                        <input type="password" id="loginPassword" required placeholder="••••••••" class="w-full px-4 py-3 pr-10 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-black transition text-sm">
+                        <button type="button" onclick="playClickSound(); togglePasswordVisibility('loginPassword', this)" class="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-black focus:outline-none p-1">
                             👁️
                         </button>
                     </div>
                 </div>
 
-                <!-- Google reCAPTCHA -->
+                <!-- Google reCAPTCHA LOGIN -->
                 <div class="flex justify-center my-2">
-                    <div class="g-recaptcha" id="loginRecaptcha" data-sitekey="6Lf-aZItAAAAAK_kwcuL2KYtNoL7S3lqEwZaThW9"></div>
+                    <div class="g-recaptcha" id="loginRecaptcha" data-sitekey="6Leca5ItAAAAAJsKoyizUf98z4DMN1G81ErZrY42"></div>
                 </div>
 
-                <button type="submit" class="w-full bg-black hover:bg-gray-800 text-white font-semibold py-3.5 rounded-xl shadow-md transition active:scale-95">
-                    เข้าสู่ระบบ
+                <button type="submit" onclick="playClickSound()" class="w-full bg-black hover:bg-slate-800 text-white font-semibold py-3.5 rounded-xl shadow-md transition active:scale-95 flex items-center justify-center gap-2">
+                    <i data-lucide="check-circle" class="w-4 h-4"></i> ยืนยันเข้าสู่ระบบ
                 </button>
             </form>
 
             <!-- Form: สมัครสมาชิก -->
             <form id="registerForm" onsubmit="handleAuth(event, 'register')" class="space-y-4 hidden">
                 <div>
-                    <label class="block text-xs font-bold text-gray-700 uppercase tracking-wider mb-1">อีเมล</label>
-                    <input type="email" id="regEmail" required placeholder="name@example.com" class="w-full px-4 py-3 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-black transition text-sm">
+                    <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1 flex items-center gap-1">
+                        <i data-lucide="mail" class="w-3.5 h-3.5"></i> อีเมล
+                    </label>
+                    <input type="email" id="regEmail" required placeholder="name@example.com" class="w-full px-4 py-3 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-black transition text-sm">
                 </div>
                 <div>
-                    <label class="block text-xs font-bold text-gray-700 uppercase tracking-wider mb-1">รหัสผ่าน</label>
+                    <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1 flex items-center gap-1">
+                        <i data-lucide="lock" class="w-3.5 h-3.5"></i> รหัสผ่าน
+                    </label>
                     <div class="relative">
-                        <input type="password" id="regPassword" required placeholder="อย่างน้อย 6 ตัวอักษร" class="w-full px-4 py-3 pr-10 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-black transition text-sm">
-                        <button type="button" onclick="togglePasswordVisibility('regPassword', this)" class="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-black focus:outline-none p-1">
+                        <input type="password" id="regPassword" required placeholder="อย่างน้อย 6 ตัวอักษร" class="w-full px-4 py-3 pr-10 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-black transition text-sm">
+                        <button type="button" onclick="playClickSound(); togglePasswordVisibility('regPassword', this)" class="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-black focus:outline-none p-1">
                             👁️
                         </button>
                     </div>
                 </div>
 
-                <!-- Google reCAPTCHA -->
+                <!-- Google reCAPTCHA REGISTER -->
                 <div class="flex justify-center my-2">
-                    <div class="g-recaptcha" id="registerRecaptcha" data-sitekey="6Lf-aZItAAAAAK_kwcuL2KYtNoL7S3lqEwZaThW9"></div>
+                    <div class="g-recaptcha" id="registerRecaptcha" data-sitekey="6Leca5ItAAAAAJsKoyizUf98z4DMN1G81ErZrY42"></div>
                 </div>
 
-                <button type="submit" class="w-full bg-black hover:bg-gray-800 text-white font-semibold py-3.5 rounded-xl shadow-md transition active:scale-95">
-                    ยืนยันสมัครสมาชิก
+                <button type="submit" onclick="playClickSound()" class="w-full bg-black hover:bg-slate-800 text-white font-semibold py-3.5 rounded-xl shadow-md transition active:scale-95 flex items-center justify-center gap-2">
+                    <i data-lucide="user-check" class="w-4 h-4"></i> ยืนยันสมัครสมาชิก
                 </button>
             </form>
         </div>
     </div>
 
-    <!-- MAIN CONTENT -->
-    <main class="max-w-5xl mx-auto px-6 py-16">
-        <div class="text-center max-w-3xl mx-auto mb-16">
-            <div class="inline-block mx-auto mb-6 px-4 py-1.5 bg-black/5 rounded-full border border-black/10">
-                <span class="text-xs font-bold uppercase tracking-wider">ร้านค้าออนไลน์อันดับ #1</span>
+    <!-- TOP-UP MODAL (ซองอั่งเปา TrueMoney) -->
+    <div id="topUpModal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
+        <div class="bg-white rounded-3xl shadow-2xl border border-slate-100 w-full max-w-md p-6 sm:p-8 relative">
+            <button onclick="playClickSound(); toggleTopUpModal(false)" class="absolute top-5 right-5 text-slate-400 hover:text-black font-bold text-xl">✕</button>
+
+            <div class="text-center mb-6">
+                <div class="w-14 h-14 bg-red-100 text-red-600 rounded-2xl flex items-center justify-center mx-auto mb-3 text-2xl font-bold">
+                    🧧
+                </div>
+                <h3 class="text-xl font-bold flex items-center justify-center gap-2 text-slate-900">
+                    <i data-lucide="gift" class="w-5 h-5 text-red-600"></i> เติมเงินด้วยซองอั่งเปา
+                </h3>
+                <p class="text-xs text-slate-500 mt-1">TrueMoney Wallet (ระบบเติมเงินอัตโนมัติ)</p>
             </div>
-            <h1 class="text-5xl md:text-7xl font-black leading-[1.15] tracking-tight mb-8">
-                ยินดีต้อนรับสู่<br><span class="text-black">GPS SHOP</span>
+
+            <form onsubmit="handleRedeemAngpao(event)" class="space-y-4">
+                <div>
+                    <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1 flex items-center gap-1">
+                        <i data-lucide="link" class="w-3.5 h-3.5"></i> ลิงก์ซองอั่งเปา
+                    </label>
+                    <input type="url" id="angpaoUrl" required placeholder="https://gift.truemoney.com/campaign/v1/..." class="w-full px-4 py-3 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-red-500 transition text-sm">
+                </div>
+                <div class="bg-orange-50 border border-orange-100 rounded-xl p-3 text-xs text-orange-800 leading-relaxed">
+                    💡 <strong>วิธีใช้งาน:</strong> สร้างซองอั่งเปาใน TrueMoney Wallet เลือก "แบ่งจำนวนเงินเท่ากัน" ใส่จำนวนคน 1 คน แล้วคัดลอกลิงก์มาวาง
+                </div>
+
+                <!-- Google reCAPTCHA TOP-UP -->
+                <div class="flex justify-center my-2">
+                    <div class="g-recaptcha" id="topupRecaptcha" data-sitekey="6LdsbJItAAAAAJFQjoI4oTm8oZ6lXlfjM1Li_WYo"></div>
+                </div>
+
+                <button type="submit" onclick="playClickSound()" id="redeemBtn" class="w-full bg-red-600 hover:bg-red-700 text-white font-semibold py-3.5 rounded-xl shadow-md transition active:scale-95 flex items-center justify-center gap-2">
+                    <i data-lucide="arrow-right-circle" class="w-4 h-4"></i> ยืนยันเติมเงิน
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <!-- MAIN CONTENT (ปรับแต่งหน้าหลักให้อ่านง่าย สบายตา) -->
+    <main class="max-w-6xl mx-auto px-6 py-12">
+        <!-- Hero Section -->
+        <div class="text-center max-w-3xl mx-auto mb-20">
+            <div class="inline-flex items-center gap-2 px-4 py-2 bg-slate-100 rounded-full border border-slate-200 text-slate-700 text-xs font-semibold mb-6 shadow-sm">
+                <i data-lucide="sparkles" class="w-4 h-4 text-amber-500"></i>
+                <span>แพลตฟอร์มเติมเกมและไอเทมดิจิทัล อันดับ #1</span>
+            </div>
+            <h1 class="text-4xl sm:text-6xl font-black text-slate-900 tracking-tight leading-tight mb-6">
+                เติมไว มั่นใจ ปลอดภัย<br><span class="text-black bg-slate-200/60 px-3 py-1 rounded-2xl inline-block mt-1">GPS SHOP</span>
             </h1>
-            <p class="text-lg md:text-xl font-normal text-gray-700 leading-relaxed mb-10">
-                ศูนย์รวมบริการไอเทม สินค้าดิจิทัล และระบบอัตโนมัติ สะดวกรวดเร็ว ปลอดภัย 100%
+            <p class="text-base sm:text-lg text-slate-600 leading-relaxed mb-8 max-w-2xl mx-auto">
+                บริการเติมเงินเกมและสินค้าดิจิทัลครบวงจร ด้วยระบบจัดส่งอัตโนมัติ 24 ชั่วโมง รวดเร็ว ทันใจ ในราคาที่คุ้มค่าที่สุด
             </p>
             <div class="flex flex-col sm:flex-row gap-4 justify-center items-center">
-                <a href="#services" class="w-full sm:w-auto bg-black hover:bg-gray-800 text-white font-semibold text-lg px-8 py-4 rounded-2xl shadow-xl transition active:scale-95">
-                    เลือกชมสินค้าทั้งหมด
+                <a href="#services" onclick="playClickSound()" class="w-full sm:w-auto bg-black hover:bg-slate-800 text-white font-semibold text-base px-8 py-3.5 rounded-2xl shadow-lg hover:shadow-xl transition active:scale-95 flex items-center justify-center gap-2">
+                    <i data-lucide="shopping-bag" class="w-5 h-5"></i>
+                    <span>เลือกชมสินค้าทั้งหมด</span>
+                </a>
+                <a href="#features" onclick="playClickSound()" class="w-full sm:w-auto bg-white hover:bg-slate-100 text-slate-700 border border-slate-200 font-semibold text-base px-8 py-3.5 rounded-2xl transition active:scale-95 flex items-center justify-center gap-2">
+                    <i data-lucide="info" class="w-5 h-5"></i>
+                    <span>ทำไมต้องเลือกเรา?</span>
                 </a>
             </div>
         </div>
 
-        <section id="services" class="grid md:grid-cols-3 gap-6 my-16">
-            <div class="bg-white p-8 rounded-3xl border border-gray-100 shadow-sm hover:shadow-md transition">
-                <div class="w-12 h-12 bg-gray-100 text-black rounded-2xl flex items-center justify-center font-bold text-xl mb-6">⚡</div>
-                <h3 class="text-xl font-bold mb-3">จัดส่งระบบอัตโนมัติ</h3>
-                <p class="text-gray-600 text-sm leading-relaxed">ระบบทำรายการจัดส่งสินค้าให้อัตโนมัติทันทีหลังชำระเงิน รวดเร็ว ทำรายการได้ตลอด 24 ชั่วโมง</p>
+        <!-- Features Grid -->
+        <section id="features" class="grid sm:grid-cols-2 md:grid-cols-3 gap-6 my-16">
+            <div class="bg-white p-6 rounded-3xl border border-slate-200/80 shadow-sm hover:shadow-md transition">
+                <div class="w-12 h-12 bg-slate-100 text-slate-900 rounded-2xl flex items-center justify-center font-bold text-xl mb-5">
+                    <i data-lucide="zap" class="w-6 h-6 text-amber-500"></i>
+                </div>
+                <h3 class="text-lg font-bold text-slate-900 mb-2">จัดส่งระบบอัตโนมัติ</h3>
+                <p class="text-slate-500 text-sm leading-relaxed">ทำรายการรวดเร็วทันใจ ไร้การรอคอย ระบบประมวลผลจัดส่งสินค้าเข้าบัญชีทันทีหลังชำระเงินสำเร็จ</p>
             </div>
-            <div class="bg-white p-8 rounded-3xl border border-gray-100 shadow-sm hover:shadow-md transition">
-                <div class="w-12 h-12 bg-gray-100 text-black rounded-2xl flex items-center justify-center font-bold text-xl mb-6">🛡️</div>
-                <h3 class="text-xl font-bold mb-3">ปลอดภัยและเชื่อถือได้</h3>
-                <p class="text-gray-600 text-sm leading-relaxed">มั่นใจได้ในทุกการสั่งซื้อและการทำรายการ</p>
+
+            <div class="bg-white p-6 rounded-3xl border border-slate-200/80 shadow-sm hover:shadow-md transition">
+                <div class="w-12 h-12 bg-slate-100 text-slate-900 rounded-2xl flex items-center justify-center font-bold text-xl mb-5">
+                    <i data-lucide="shield-check" class="w-6 h-6 text-emerald-500"></i>
+                </div>
+                <h3 class="text-lg font-bold text-slate-900 mb-2">ปลอดภัย 100%</h3>
+                <p class="text-slate-500 text-sm leading-relaxed">การันตีความปลอดภัยทุกขั้นตอนการทำรายการ ข้อมูลลูกค้าถูกปกป้องด้วยระบบการเข้ารหัสขั้นสูง</p>
             </div>
-            <div class="bg-white p-8 rounded-3xl border border-gray-100 shadow-sm hover:shadow-md transition">
-                <div class="w-12 h-12 bg-gray-100 text-black rounded-2xl flex items-center justify-center font-bold text-xl mb-6">🎧</div>
-                <h3 class="text-xl font-bold mb-3">บริการดูแลลูกค้า</h3>
-                <p class="text-gray-600 text-sm leading-relaxed">มีทีมงานคอยช่วยเหลือและตอบคำถามตลอดเวลา</p>
+
+            <div class="bg-white p-6 rounded-3xl border border-slate-200/80 shadow-sm hover:shadow-md transition sm:col-span-2 md:col-span-1">
+                <div class="w-12 h-12 bg-slate-100 text-slate-900 rounded-2xl flex items-center justify-center font-bold text-xl mb-5">
+                    <i data-lucide="headphones" class="w-6 h-6 text-blue-500"></i>
+                </div>
+                <h3 class="text-lg font-bold text-slate-900 mb-2">บริการดูแล 24 ชม.</h3>
+                <p class="text-slate-500 text-sm leading-relaxed">ทีมงานมืออาชีพพร้อมให้คำปรึกษา แนะนำ และช่วยเหลือแก้ไขปัญหาให้คุณตลอดเวลาไม่มีวันหยุด</p>
+            </div>
+        </section>
+
+        <!-- Product Preview Placeholder Section -->
+        <section id="services" class="my-16 bg-white border border-slate-200/80 rounded-3xl p-8 sm:p-12 text-center">
+            <div class="max-w-md mx-auto">
+                <div class="w-16 h-16 bg-slate-100 text-slate-700 rounded-3xl flex items-center justify-center mx-auto mb-4">
+                    <i data-lucide="package-search" class="w-8 h-8"></i>
+                </div>
+                <h3 class="text-2xl font-bold text-slate-900 mb-2">หมวดหมู่สินค้าและบริการ</h3>
+                <p class="text-slate-500 text-sm mb-6">กำลังเตรียมรายการสินค้าใหม่ล่าสุดสำหรับคุณ สามารถติดตามและเลือกซื้อได้เร็วๆ นี้</p>
             </div>
         </section>
     </main>
 
-    <footer class="w-full border-t border-gray-200 bg-white py-6 text-center text-sm font-medium text-gray-500">
+    <footer class="w-full border-t border-slate-200 bg-white py-6 text-center text-xs font-medium text-slate-500">
         © 2026 GPS SHOP. All rights reserved.
     </footer>
 
     <!-- JAVASCRIPT LOGIC -->
     <script>
+        // WEB AUDIO API FOR BUTTON CLICK SOUND
+        function playClickSound() {
+            try {
+                const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+                const osc = audioCtx.createOscillator();
+                const gain = audioCtx.createGain();
+
+                osc.type = 'sine';
+                osc.frequency.setValueAtTime(600, audioCtx.currentTime);
+                osc.frequency.exponentialRampToValueAtTime(120, audioCtx.currentTime + 0.08);
+
+                gain.gain.setValueAtTime(0.15, audioCtx.currentTime);
+                gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.08);
+
+                osc.connect(gain);
+                gain.connect(audioCtx.destination);
+
+                osc.start();
+                osc.stop(audioCtx.currentTime + 0.08);
+            } catch (e) {
+                console.log('Audio error:', e);
+            }
+        }
+
         window.addEventListener('DOMContentLoaded', () => {
+            lucide.createIcons();
+
             const progressBar = document.getElementById('progressBar');
             const loadingScreen = document.getElementById('loadingScreen');
             const statusText = document.getElementById('loadingStatusText');
@@ -210,6 +319,10 @@
             document.getElementById('authModal').classList.toggle('hidden', !show);
         }
 
+        function toggleTopUpModal(show) {
+            document.getElementById('topUpModal').classList.toggle('hidden', !show);
+        }
+
         function switchForm(type) {
             const loginForm = document.getElementById('loginForm');
             const registerForm = document.getElementById('registerForm');
@@ -219,14 +332,15 @@
             if (type === 'login') {
                 loginForm.classList.remove('hidden');
                 registerForm.classList.add('hidden');
-                loginTabBtn.className = "w-1/2 py-3 text-center font-bold text-black border-b-2 border-black transition";
-                registerTabBtn.className = "w-1/2 py-3 text-center font-semibold text-gray-400 hover:text-black border-b-2 border-transparent transition";
+                loginTabBtn.className = "w-1/2 py-3 text-center font-bold text-black border-b-2 border-black transition flex items-center justify-center gap-2";
+                registerTabBtn.className = "w-1/2 py-3 text-center font-semibold text-slate-400 hover:text-black border-b-2 border-transparent transition flex items-center justify-center gap-2";
             } else {
                 loginForm.classList.add('hidden');
                 registerForm.classList.remove('hidden');
-                registerTabBtn.className = "w-1/2 py-3 text-center font-bold text-black border-b-2 border-black transition";
-                loginTabBtn.className = "w-1/2 py-3 text-center font-semibold text-gray-400 hover:text-black border-b-2 border-transparent transition";
+                registerTabBtn.className = "w-1/2 py-3 text-center font-bold text-black border-b-2 border-black transition flex items-center justify-center gap-2";
+                loginTabBtn.className = "w-1/2 py-3 text-center font-semibold text-slate-400 hover:text-black border-b-2 border-transparent transition flex items-center justify-center gap-2";
             }
+            lucide.createIcons();
         }
 
         function togglePasswordVisibility(inputId, btn) {
@@ -257,16 +371,57 @@
 
             if (email) {
                 localStorage.setItem('user_email', email);
+                if (localStorage.getItem('user_balance') === null) {
+                    localStorage.setItem('user_balance', '0');
+                }
                 updateProfileUI(email);
                 toggleAuthModal(false);
             }
         }
 
+        function handleRedeemAngpao(e) {
+            e.preventDefault();
+
+            // ตรวจสอบ reCAPTCHA สำหรับระบบเติมเงิน (Widget ID 2)
+            const response = grecaptcha.getResponse(2);
+            if (response.length === 0) {
+                alert("กรุณาติ๊กช่อง 'ฉันไม่ใช่โปรแกรมอัตโนมัติ' ก่อนทำรายการเติมเงิน");
+                return;
+            }
+
+            const urlInput = document.getElementById('angpaoUrl');
+            const url = urlInput.value.trim();
+
+            if (!url.includes('gift.truemoney.com/campaign/v1/')) {
+                alert('รูปแบบลิงก์ซองอั่งเปาไม่ถูกต้อง กรุณาตรวจสอบลิงก์อีกครั้ง');
+                return;
+            }
+
+            const randomAmount = Math.floor(Math.random() * 90) + 10; 
+            let currentBalance = parseFloat(localStorage.getItem('user_balance') || '0');
+            currentBalance += randomAmount;
+
+            localStorage.setItem('user_balance', currentBalance.toString());
+            updateProfileUI(localStorage.getItem('user_email'));
+
+            alert(`เติมเงินสำเร็จ! ได้รับจำนวน ${randomAmount}.00 บาท`);
+            urlInput.value = '';
+            grecaptcha.reset(2);
+            toggleTopUpModal(false);
+        }
+
         function updateProfileUI(email) {
+            const balance = parseFloat(localStorage.getItem('user_balance') || '0').toFixed(2);
             document.getElementById('openAuthBtn').classList.add('hidden');
             document.getElementById('userProfile').classList.remove('hidden');
             document.getElementById('emailAvatar').innerText = email.charAt(0).toUpperCase();
-            document.getElementById('displayEmail').innerText = email;
+            
+            const displayEmailElem = document.getElementById('displayEmail');
+            displayEmailElem.innerText = email;
+            displayEmailElem.title = email; // เมื่อเอาเมาส์ไปชี้จะเห็นชื่อเต็ม
+
+            document.getElementById('userBalance').innerText = balance;
+            lucide.createIcons();
         }
 
         function logout() {
