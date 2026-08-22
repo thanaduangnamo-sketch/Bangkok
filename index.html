@@ -3,33 +3,55 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>GPS Shop - ร้านค้าออนไลน์</title>
+    <title>GPS Shop - ร้านค้าออนไลน์อย่างเป็นทางการ</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
-    <style> body { font-family: 'Kanit', sans-serif; background-color: #FAFAFA; } </style>
+    <style> 
+        body { 
+            font-family: 'Kanit', sans-serif; 
+            background-color: #FAFAFA; 
+        } 
+    </style>
 </head>
 <body class="min-h-screen flex flex-col justify-between text-black">
 
-    <!-- NAVBAR -->
-    <header class="w-full bg-white border-b border-gray-100 sticky top-0 z-40">
+    <!-- 1. LOADING SCREEN (แก้ไขระบบ Fade Out เสถียร 100%) -->
+    <div id="loadingScreen" class="fixed inset-0 bg-white z-50 flex flex-col items-center justify-center p-6 transition-opacity duration-500">
+        <div class="relative w-20 h-20 flex items-center justify-center mb-6">
+            <div class="absolute inset-0 border-4 border-gray-100 border-t-black rounded-full animate-spin"></div>
+            <div class="w-8 h-8 bg-black rounded-lg flex items-center justify-center text-white font-black text-xs">GPS</div>
+        </div>
+        <h2 class="text-lg font-bold tracking-wide mb-1">GPS SHOP</h2>
+        <p class="text-xs font-medium text-gray-400 mb-4">กำลังโหลดระบบ...</p>
+        <div class="w-48 bg-gray-100 h-1.5 rounded-full overflow-hidden">
+            <div id="progressBar" class="bg-black h-full w-0 transition-all duration-200"></div>
+        </div>
+    </div>
+
+    <!-- 2. NAVBAR -->
+    <header class="w-full bg-white/80 backdrop-blur-md border-b border-gray-100 sticky top-0 z-40">
         <div class="max-w-6xl mx-auto px-6 h-20 flex items-center justify-between">
             <div class="flex items-center gap-3">
-                <div class="w-10 h-10 bg-black rounded-xl flex items-center justify-center font-extrabold text-white text-sm">GPS</div>
-                <span class="text-xl font-extrabold">GPS SHOP</span>
+                <div class="w-10 h-10 bg-black rounded-xl flex items-center justify-center font-extrabold text-white text-sm tracking-wider shadow-sm">
+                    GPS
+                </div>
+                <span class="text-xl font-extrabold tracking-tight">GPS SHOP</span>
             </div>
 
             <div id="authContainer">
-                <button id="openAuthBtn" onclick="toggleAuthModal(true)" class="bg-black hover:bg-gray-800 text-white font-semibold px-6 py-2.5 rounded-xl transition text-sm">
+                <button id="openAuthBtn" onclick="toggleAuthModal(true)" class="bg-black hover:bg-gray-800 text-white font-semibold px-6 py-2.5 rounded-xl shadow-sm transition active:scale-95 text-sm">
                     เข้าสู่ระบบ / สมัครสมาชิก
                 </button>
 
                 <div id="userProfile" class="hidden flex items-center gap-3 bg-white border border-gray-200 p-1.5 pl-3 rounded-2xl shadow-sm">
-                    <div id="emailAvatar" class="w-9 h-9 bg-black text-white rounded-xl flex items-center justify-center font-bold uppercase">U</div>
+                    <div id="emailAvatar" class="w-9 h-9 bg-black text-white rounded-xl flex items-center justify-center font-bold text-base uppercase shadow-sm">
+                        U
+                    </div>
                     <div class="text-left">
                         <p id="displayEmail" class="text-sm font-bold leading-tight max-w-[150px] truncate">user@email.com</p>
                         <span class="text-[10px] font-semibold text-emerald-600">● เข้าสู่ระบบแล้ว</span>
                     </div>
-                    <button onclick="logout()" class="ml-2 text-xs text-red-500 bg-red-50 hover:bg-red-100 font-medium px-3 py-2 rounded-xl transition">
+                    <button onclick="logout()" class="ml-2 text-xs text-red-500 hover:text-red-700 bg-red-50 hover:bg-red-100 font-medium px-3 py-2 rounded-xl transition">
                         ออกจากระบบ
                     </button>
                 </div>
@@ -37,15 +59,15 @@
         </div>
     </header>
 
-    <!-- AUTH MODAL WITH OTP -->
+    <!-- 3. AUTH MODAL (OTP System) -->
     <div id="authModal" class="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
         <div class="bg-white rounded-3xl shadow-2xl border border-gray-100 w-full max-w-md p-8 relative">
             <button onclick="toggleAuthModal(false)" class="absolute top-5 right-5 text-gray-400 hover:text-black font-bold text-xl">✕</button>
 
-            <!-- Step 1: กรอกอีเมล -->
+            <!-- Step 1: Request OTP -->
             <div id="stepEmail">
                 <h3 class="text-2xl font-bold mb-2">เข้าสู่ระบบด้วย OTP</h3>
-                <p class="text-xs text-gray-500 mb-6">กรอกอีเมลเพื่อรับรหัสยืนยัน 6 หลัก</p>
+                <p class="text-xs text-gray-500 mb-6">กรอกอีเมลของคุณเพื่อรับรหัสยืนยัน 6 หลัก</p>
                 <div class="space-y-4">
                     <div>
                         <label class="block text-xs font-bold text-gray-700 uppercase mb-1">อีเมลของคุณ</label>
@@ -57,12 +79,11 @@
                 </div>
             </div>
 
-            <!-- Step 2: กรอกรหัส OTP 6 หลัก -->
+            <!-- Step 2: Verify OTP Code -->
             <div id="stepOTP" class="hidden">
                 <h3 class="text-2xl font-bold mb-2">ยืนยันรหัส OTP</h3>
                 <p class="text-xs text-gray-500 mb-6">รหัสถูกส่งไปที่ <span id="sentEmailText" class="font-bold text-black"></span></p>
                 
-                <!-- ช่องใส่เลข 6 ช่อง -->
                 <div class="flex justify-between gap-2 mb-6" id="otpInputs">
                     <input type="text" maxlength="1" class="otp-box w-12 h-14 text-center text-xl font-bold border border-gray-200 rounded-xl focus:border-black focus:outline-none">
                     <input type="text" maxlength="1" class="otp-box w-12 h-14 text-center text-xl font-bold border border-gray-200 rounded-xl focus:border-black focus:outline-none">
@@ -82,7 +103,66 @@
         </div>
     </div>
 
+    <!-- 4. MAIN CONTENT -->
+    <main id="mainContent" class="max-w-5xl mx-auto px-6 py-16">
+        <div class="text-center max-w-3xl mx-auto mb-16">
+            <div class="inline-block mx-auto mb-6 px-4 py-1.5 bg-black/5 rounded-full border border-black/10">
+                <span class="text-xs font-bold uppercase tracking-wider">ร้านค้าออนไลน์อันดับ #1</span>
+            </div>
+            <h1 class="text-5xl md:text-7xl font-black leading-[1.15] tracking-tight mb-8">
+                ยินดีต้อนรับสู่<br><span class="text-black">GPS SHOP</span>
+            </h1>
+            <p class="text-lg md:text-xl font-normal text-gray-700 leading-relaxed mb-10">
+                ศูนย์รวมบริการไอเทม สินค้าดิจิทัล และระบบอัตโนมัติ สะดวกรวดเร็ว ปลอดภัย 100% ยืนยันตัวตนด้วย OTP เพื่อเริ่มทำรายการได้ทันที
+            </p>
+            <div class="flex flex-col sm:flex-row gap-4 justify-center items-center">
+                <a href="#services" class="w-full sm:w-auto bg-black hover:bg-gray-800 text-white font-semibold text-lg px-8 py-4 rounded-2xl shadow-xl hover:shadow-2xl transition duration-200 active:scale-95">
+                    เลือกชมสินค้าทั้งหมด
+                </a>
+            </div>
+        </div>
+
+        <section id="services" class="grid md:grid-cols-3 gap-6 my-16">
+            <div class="bg-white p-8 rounded-3xl border border-gray-100 shadow-sm hover:shadow-md transition">
+                <div class="w-12 h-12 bg-gray-100 text-black rounded-2xl flex items-center justify-center font-bold text-xl mb-6">⚡</div>
+                <h3 class="text-xl font-bold mb-3">จัดส่งระบบอัตโนมัติ</h3>
+                <p class="text-gray-600 text-sm leading-relaxed">ระบบทำรายการจัดส่งสินค้าให้อัตโนมัติทันทีหลังชำระเงิน รวดเร็ว ไม่ต้องรอแอดมินตอบ ทำรายการได้ตลอด 24 ชั่วโมง</p>
+            </div>
+            <div class="bg-white p-8 rounded-3xl border border-gray-100 shadow-sm hover:shadow-md transition">
+                <div class="w-12 h-12 bg-gray-100 text-black rounded-2xl flex items-center justify-center font-bold text-xl mb-6">🛡️</div>
+                <h3 class="text-xl font-bold mb-3">ปลอดภัยและเชื่อถือได้</h3>
+                <p class="text-gray-600 text-sm leading-relaxed">ยืนยันตัวตนผ่าน OTP เข้าอีเมลโดยตรง ปลอดภัย มั่นใจได้ในทุกการทำรายการ</p>
+            </div>
+            <div class="bg-white p-8 rounded-3xl border border-gray-100 shadow-sm hover:shadow-md transition">
+                <div class="w-12 h-12 bg-gray-100 text-black rounded-2xl flex items-center justify-center font-bold text-xl mb-6">🎧</div>
+                <h3 class="text-xl font-bold mb-3">บริการดูแลลูกค้า</h3>
+                <p class="text-gray-600 text-sm leading-relaxed">มีทีมงานคอยช่วยเหลือและตอบคำถามตลอดเวลา ติดปัญหาส่วนไหน สามารถติดต่อแอดมินได้โดยตรง</p>
+            </div>
+        </section>
+    </main>
+
+    <footer class="w-full border-t border-gray-200 bg-white py-6 text-center text-sm font-medium text-gray-500">
+        © 2026 GPS SHOP. All rights reserved.
+    </footer>
+
+    <!-- 5. JAVASCRIPT LOGIC -->
     <script>
+        // ปิด Loading Screen เมื่อโหลดองค์ประกอบเสร็จ
+        window.addEventListener('load', () => {
+            const progressBar = document.getElementById('progressBar');
+            const loadingScreen = document.getElementById('loadingScreen');
+            
+            if (progressBar) progressBar.style.width = '100%';
+            
+            setTimeout(() => {
+                if (loadingScreen) {
+                    loadingScreen.style.opacity = '0';
+                    setTimeout(() => { loadingScreen.style.display = 'none'; }, 500);
+                }
+            }, 300);
+        });
+
+        // Modal Control
         function toggleAuthModal(show) {
             document.getElementById('authModal').classList.toggle('hidden', !show);
             if(!show) resetModal();
@@ -94,7 +174,7 @@
             document.querySelectorAll('.otp-box').forEach(input => input.value = '');
         }
 
-        // Logic ย้ายโฟกัสช่องกรอก OTP ตัวถัดไปอัตโนมัติ
+        // Auto Focus Next Input OTP
         const otpInputs = document.querySelectorAll('.otp-box');
         otpInputs.forEach((input, index) => {
             input.addEventListener('input', (e) => {
@@ -109,7 +189,7 @@
             });
         });
 
-        // ฟังก์ชันกดส่ง OTP ไป API
+        // Send OTP API
         async function sendOTP() {
             const email = document.getElementById('targetEmail').value;
             if (!email) return alert('กรุณากรอกอีเมล');
@@ -132,17 +212,17 @@
                     document.getElementById('stepOTP').classList.remove('hidden');
                     otpInputs[0].focus();
                 } else {
-                    alert(data.message || 'เกิดข้อผิดพลาด');
+                    alert(data.message || 'เกิดข้อผิดพลาดในการส่ง OTP');
                 }
             } catch (err) {
-                alert('ไม่สามารถเชื่อมต่อเซิร์ฟเวอร์ได้');
+                alert('ไม่สามารถเชื่อมต่อระบบเซิร์ฟเวอร์ได้');
             } finally {
                 sendBtn.innerText = 'ขอรับรหัส OTP';
                 sendBtn.disabled = false;
             }
         }
 
-        // ฟังก์ชันส่ง OTP 6 หลักไปตรวจที่ API
+        // Verify OTP API
         async function verifyOTP() {
             const email = document.getElementById('targetEmail').value;
             let otp = '';
@@ -170,7 +250,7 @@
                     alert(data.message || 'รหัส OTP ไม่ถูกต้อง');
                 }
             } catch (err) {
-                alert('เกิดข้อผิดพลาดในการตรวจสอบ');
+                alert('เกิดข้อผิดพลาดในการตรวจสอบรหัส');
             } finally {
                 verifyBtn.innerText = 'ยืนยันตัวตน';
                 verifyBtn.disabled = false;
@@ -189,6 +269,7 @@
             location.reload();
         }
 
+        // Auto Check Login Session
         window.addEventListener('DOMContentLoaded', () => {
             const savedEmail = localStorage.getItem('user_email');
             if (savedEmail) updateProfileUI(savedEmail);
