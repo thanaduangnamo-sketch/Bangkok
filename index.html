@@ -29,18 +29,18 @@
     <div id="loadingScreen" class="fixed inset-0 bg-white z-50 flex flex-col items-center justify-center p-6 transition-all duration-700">
         <div class="absolute w-72 h-72 bg-indigo-100 rounded-full blur-3xl animate-pulse-glow -z-10"></div>
         <div class="relative w-28 h-28 flex items-center justify-center mb-8">
-            <div class="absolute inset-0 border-4 border-gray-100 border-t-indigo-600 rounded-full animate-spin"></div>
-            <div class="absolute inset-2 border-4 border-transparent border-b-black rounded-full animate-spin-reverse"></div>
-            <div class="absolute inset-5 border-2 border-indigo-200 border-r-indigo-400 rounded-full animate-spin"></div>
+            <div class="absolute inset-0 border-4 border-gray-100 border-t-black rounded-full animate-spin"></div>
+            <div class="absolute inset-2 border-4 border-transparent border-b-gray-400 rounded-full animate-spin-reverse"></div>
+            <div class="absolute inset-5 border-2 border-gray-200 border-r-gray-600 rounded-full animate-spin"></div>
             <div class="w-10 h-10 bg-black rounded-xl flex items-center justify-center text-white font-black text-lg shadow-md animate-pulse">
                 GPS
             </div>
         </div>
         <h2 class="text-xl font-bold tracking-wide mb-2">GPS SHOP</h2>
-        <p id="loadingStatus" class="text-sm font-medium text-gray-500 h-6 mb-6 transition-all">กำลังยืนยันตัวตนกับ Discord...</p>
+        <p id="loadingStatus" class="text-sm font-medium text-gray-500 h-6 mb-6 transition-all">กำลังจัดเตรียมระบบ...</p>
         <div class="w-64 max-w-xs">
             <div class="w-full bg-gray-100 h-2 rounded-full overflow-hidden p-0.5 border border-gray-200/60 shadow-inner">
-                <div id="progressBar" class="bg-gradient-to-r from-black via-indigo-600 to-indigo-500 h-full rounded-full transition-all duration-300 w-0"></div>
+                <div id="progressBar" class="bg-gradient-to-r from-black via-gray-700 to-black h-full rounded-full transition-all duration-300 w-0"></div>
             </div>
             <div class="flex justify-between items-center mt-2 px-1">
                 <span class="text-[11px] font-semibold text-gray-400 uppercase tracking-wider">SYSTEM LOADING</span>
@@ -60,23 +60,21 @@
             </div>
 
             <div id="authContainer">
-                <!-- ปุ่มล็อกอิน Discord ( response_type=token ) -->
-                <a id="discordLoginBtn" href="https://discord.com/oauth2/authorize?client_id=1532644387639660627&redirect_uri=https%3A%2F%2Fshop-github-io-phi.vercel.app%2F&response_type=token&scope=identify" 
-                   class="inline-flex items-center gap-2.5 bg-[#5865F2] hover:bg-[#4752C4] text-white font-medium px-5 py-2.5 rounded-xl shadow-sm hover:shadow-md transition duration-200 active:scale-95">
-                    <svg class="w-5 h-5 fill-current" viewBox="0 0 127.14 96.36">
-                        <path d="M107.7,8.07A105.15,105.15,0,0,0,81.47,0a72.06,72.06,0,0,0-3.36,6.83A97.68,97.68,0,0,0,49,6.83,72.37,72.37,0,0,0,45.64,0,105.89,105.89,0,0,0,19.39,8.09C2.79,32.65-1.71,56.6.54,80.21h0A105.73,105.73,0,0,0,32.71,96.36,77.7,77.7,0,0,0,39.6,85.25a68.42,68.42,0,0,1-10.85-5.18c.91-.66,1.8-1.34,2.66-2a75.57,75.57,0,0,0,64.32,0c.87.71,1.76,1.39,2.66,2a68.68,68.68,0,0,1-10.87,5.19,77,77,0,0,0,6.89,11.1,105.25,105.25,0,0,0,32.19-16.14c2.64-27.38-4.51-51.11-21-72.15ZM42.45,65.69C36.18,65.69,31,60,31,53s5-12.74,11.43-12.74c6.51,0,11.6,5.74,11.43,12.74C53.88,60,48.8,65.69,42.45,65.69Zm42.24,0C78.41,65.69,73.25,60,73.25,53s5-12.74,11.44-12.74c6.5,0,11.6,5.74,11.43,12.74C96.12,60,91.08,65.69,84.69,65.69Z"/>
-                    </svg>
-                    <span>เข้าสู่ระบบด้วย Discord</span>
-                </a>
+                <!-- ปุ่มเปิด Modal เข้าสู่ระบบ -->
+                <button id="openAuthBtn" onclick="toggleAuthModal(true)" class="bg-black hover:bg-gray-800 text-white font-semibold px-6 py-2.5 rounded-xl shadow-sm transition active:scale-95 text-sm">
+                    เข้าสู่ระบบ / สมัครสมาชิก
+                </button>
 
-                <!-- แสดงโปรไฟล์ Discord จริง + ปุ่มออกจากระบบ -->
+                <!-- แสดงโปรไฟล์ชื่อย่ออีเมล (แสดงเมื่อล็อกอินสำเร็จ) -->
                 <div id="userProfile" class="hidden flex items-center gap-3 bg-white border border-gray-200 p-1.5 pl-3 rounded-2xl shadow-sm">
-                    <img id="userAvatar" src="" alt="Discord Avatar" class="w-9 h-9 rounded-xl border border-gray-100 shadow-sm object-cover">
-                    <div class="text-left">
-                        <p id="userName" class="text-sm font-bold leading-tight">Username</p>
-                        <span class="text-[10px] font-semibold text-emerald-600">● ยืนยันตัวตนแล้ว</span>
+                    <!-- วงกลมแสดงตัวอักษรแรกของอีเมล -->
+                    <div id="emailAvatar" class="w-9 h-9 bg-black text-white rounded-xl flex items-center justify-center font-bold text-base uppercase shadow-sm">
+                        U
                     </div>
-                    <!-- ปุ่มออกจากระบบ -->
+                    <div class="text-left">
+                        <p id="displayEmail" class="text-sm font-bold leading-tight max-w-[150px] truncate">user@email.com</p>
+                        <span class="text-[10px] font-semibold text-emerald-600">● เข้าสู่ระบบแล้ว</span>
+                    </div>
                     <button onclick="logout()" class="ml-2 text-xs text-red-500 hover:text-red-700 bg-red-50 hover:bg-red-100 font-medium px-3 py-2 rounded-xl transition">
                         ออกจากระบบ
                     </button>
@@ -85,17 +83,69 @@
         </div>
     </header>
 
-    <!-- 3. MAIN CONTENT -->
+    <!-- 3. AUTH MODAL (หน้าต่างล็อกอิน/สมัครสมาชิกแบบสลับ Tab) -->
+    <div id="authModal" class="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4 transition-all">
+        <div class="bg-white rounded-3xl shadow-2xl border border-gray-100 w-full max-w-md p-8 relative transform transition-all">
+            <!-- ปุ่มปิด Modal -->
+            <button onclick="toggleAuthModal(false)" class="absolute top-5 right-5 text-gray-400 hover:text-black font-bold text-xl">✕</button>
+
+            <!-- Tab Switch -->
+            <div class="flex border-b border-gray-100 mb-6">
+                <button id="loginTabBtn" onclick="switchForm('login')" class="w-1/2 py-3 text-center font-bold text-black border-b-2 border-black transition">
+                    เข้าสู่ระบบ
+                </button>
+                <button id="registerTabBtn" onclick="switchForm('register')" class="w-1/2 py-3 text-center font-semibold text-gray-400 hover:text-black border-b-2 border-transparent transition">
+                    สมัครสมาชิก
+                </button>
+            </div>
+
+            <!-- Form: เข้าสู่ระบบ -->
+            <form id="loginForm" onsubmit="handleAuth(event, 'login')" class="space-y-4">
+                <div>
+                    <label class="block text-xs font-bold text-gray-700 uppercase tracking-wider mb-1">อีเมล</label>
+                    <input type="email" id="loginEmail" required placeholder="name@example.com" class="w-full px-4 py-3 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-black transition text-sm">
+                </div>
+                <div>
+                    <label class="block text-xs font-bold text-gray-700 uppercase tracking-wider mb-1">รหัสผ่าน</label>
+                    <input type="password" required placeholder="••••••••" class="w-full px-4 py-3 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-black transition text-sm">
+                </div>
+                <button type="submit" class="w-full bg-black hover:bg-gray-800 text-white font-semibold py-3.5 rounded-xl shadow-md transition active:scale-95">
+                    เข้าสู่ระบบ
+                </button>
+            </form>
+
+            <!-- Form: สมัครสมาชิก -->
+            <form id="registerForm" onsubmit="handleAuth(event, 'register')" class="space-y-4 hidden">
+                <div>
+                    <label class="block text-xs font-bold text-gray-700 uppercase tracking-wider mb-1">อีเมล</label>
+                    <input type="email" id="regEmail" required placeholder="name@example.com" class="w-full px-4 py-3 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-black transition text-sm">
+                </div>
+                <div>
+                    <label class="block text-xs font-bold text-gray-700 uppercase tracking-wider mb-1">รหัสผ่าน</label>
+                    <input type="password" required placeholder="อย่างน้อย 6 ตัวอักษร" class="w-full px-4 py-3 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-black transition text-sm">
+                </div>
+                <div>
+                    <label class="block text-xs font-bold text-gray-700 uppercase tracking-wider mb-1">ยืนยันรหัสผ่าน</label>
+                    <input type="password" required placeholder="••••••••" class="w-full px-4 py-3 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-black transition text-sm">
+                </div>
+                <button type="submit" class="w-full bg-black hover:bg-gray-800 text-white font-semibold py-3.5 rounded-xl shadow-md transition active:scale-95">
+                    ยืนยันสมัครสมาชิก
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <!-- 4. MAIN CONTENT -->
     <main id="mainContent" class="max-w-5xl mx-auto px-6 py-16 opacity-0 transition-opacity duration-700">
         <div class="text-center max-w-3xl mx-auto mb-16">
             <div class="inline-block mx-auto mb-6 px-4 py-1.5 bg-black/5 rounded-full border border-black/10">
                 <span class="text-xs font-bold uppercase tracking-wider">ร้านค้าออนไลน์อันดับ #1</span>
             </div>
             <h1 class="text-5xl md:text-7xl font-black leading-[1.15] tracking-tight mb-8">
-                ยินดีต้อนรับสู่<br><span class="text-indigo-600">GPS SHOP</span>
+                ยินดีต้อนรับสู่<br><span class="text-black">GPS SHOP</span>
             </h1>
             <p class="text-lg md:text-xl font-normal text-gray-700 leading-relaxed mb-10">
-                ศูนย์รวมบริการไอเทม สินค้าดิจิทัล และระบบอัตโนมัติ สะดวกรวดเร็ว ปลอดภัย 100% เชื่อมต่อบัญชี Discord เพื่อเริ่มทำรายการได้ทันที
+                ศูนย์รวมบริการไอเทม สินค้าดิจิทัล และระบบอัตโนมัติ สะดวกรวดเร็ว ปลอดภัย 100% สมัครและเข้าสู่ระบบเพื่อเริ่มทำรายการได้ทันที
             </p>
             <div class="flex flex-col sm:flex-row gap-4 justify-center items-center">
                 <a href="#services" class="w-full sm:w-auto bg-black hover:bg-gray-800 text-white font-semibold text-lg px-8 py-4 rounded-2xl shadow-xl hover:shadow-2xl transition duration-200 active:scale-95">
@@ -106,19 +156,19 @@
 
         <section id="services" class="grid md:grid-cols-3 gap-6 my-16">
             <div class="bg-white p-8 rounded-3xl border border-gray-100 shadow-sm hover:shadow-md transition">
-                <div class="w-12 h-12 bg-indigo-50 text-indigo-600 rounded-2xl flex items-center justify-center font-bold text-xl mb-6">⚡</div>
+                <div class="w-12 h-12 bg-gray-100 text-black rounded-2xl flex items-center justify-center font-bold text-xl mb-6">⚡</div>
                 <h3 class="text-xl font-bold mb-3">จัดส่งระบบอัตโนมัติ</h3>
                 <p class="text-gray-600 text-sm leading-relaxed">ระบบทำรายการจัดส่งสินค้าให้อัตโนมัติทันทีหลังชำระเงิน รวดเร็ว ไม่ต้องรอแอดมินตอบ ทำรายการได้ตลอด 24 ชั่วโมง</p>
             </div>
             <div class="bg-white p-8 rounded-3xl border border-gray-100 shadow-sm hover:shadow-md transition">
-                <div class="w-12 h-12 bg-indigo-50 text-indigo-600 rounded-2xl flex items-center justify-center font-bold text-xl mb-6">🛡️</div>
+                <div class="w-12 h-12 bg-gray-100 text-black rounded-2xl flex items-center justify-center font-bold text-xl mb-6">🛡️</div>
                 <h3 class="text-xl font-bold mb-3">ปลอดภัยและเชื่อถือได้</h3>
-                <p class="text-gray-600 text-sm leading-relaxed">เชื่อมต่อระบบยืนยันตัวตนด้วย OAuth2 ผ่าน Discord ป้องกันการแอบอ้าง มั่นใจได้ในทุกการสั่งซื้อและการทำรายการ</p>
+                <p class="text-gray-600 text-sm leading-relaxed">เข้ารหัสรักษาความปลอดภัยข้อมูลผู้ใช้ มั่นใจได้ในทุกการสั่งซื้อและการทำรายการ</p>
             </div>
             <div class="bg-white p-8 rounded-3xl border border-gray-100 shadow-sm hover:shadow-md transition">
-                <div class="w-12 h-12 bg-indigo-50 text-indigo-600 rounded-2xl flex items-center justify-center font-bold text-xl mb-6">🎧</div>
+                <div class="w-12 h-12 bg-gray-100 text-black rounded-2xl flex items-center justify-center font-bold text-xl mb-6">🎧</div>
                 <h3 class="text-xl font-bold mb-3">บริการดูแลลูกค้า</h3>
-                <p class="text-gray-600 text-sm leading-relaxed">มีทีมงานคอยช่วยเหลือและตอบคำถามตลอดเวลา ติดปัญหาส่วนไหน สามารถติดต่อแอดมินผ่าน Discord Server ได้โดยตรง</p>
+                <p class="text-gray-600 text-sm leading-relaxed">มีทีมงานคอยช่วยเหลือและตอบคำถามตลอดเวลา ติดปัญหาส่วนไหน สามารถติดต่อแอดมินได้โดยตรง</p>
             </div>
         </section>
     </main>
@@ -127,15 +177,14 @@
         © 2026 GPS SHOP. All rights reserved.
     </footer>
 
-    <!-- 4. JAVASCRIPT AUTH REAL FETCHING & LOGOUT -->
+    <!-- 5. JAVASCRIPT LOGIC -->
     <script>
         const progressBar = document.getElementById('progressBar');
         const progressText = document.getElementById('progressText');
-        const loadingStatus = document.getElementById('loadingStatus');
         const loadingScreen = document.getElementById('loadingScreen');
         const mainContent = document.getElementById('mainContent');
 
-        // 1. Loading Animation
+        // Loading Screen Animation
         let progress = 0;
         const interval = setInterval(() => {
             progress += Math.floor(Math.random() * 8) + 4;
@@ -153,60 +202,67 @@
             }
         }, 40);
 
-        // 2. ดึงข้อมูล Discord โปรไฟล์จริง
-        window.addEventListener('DOMContentLoaded', () => {
-            let accessToken = localStorage.getItem('discord_access_token');
+        // Modal & Form Switch Logic
+        function toggleAuthModal(show) {
+            const modal = document.getElementById('authModal');
+            if (show) modal.classList.remove('hidden');
+            else modal.classList.add('hidden');
+        }
 
-            // อ่านค่า access_token จาก URL Hash หลังล็อกอินสำเร็จ
-            if (window.location.hash) {
-                const params = new URLSearchParams(window.location.hash.substring(1));
-                if (params.has('access_token')) {
-                    accessToken = params.get('access_token');
-                    localStorage.setItem('discord_access_token', accessToken);
-                    // ล้าง Hash ออกจาก URL ให้สะอาด
-                    window.history.replaceState(null, null, window.location.pathname);
-                }
+        function switchForm(type) {
+            const loginForm = document.getElementById('loginForm');
+            const registerForm = document.getElementById('registerForm');
+            const loginTabBtn = document.getElementById('loginTabBtn');
+            const registerTabBtn = document.getElementById('registerTabBtn');
+
+            if (type === 'login') {
+                loginForm.classList.remove('hidden');
+                registerForm.classList.add('hidden');
+                loginTabBtn.className = "w-1/2 py-3 text-center font-bold text-black border-b-2 border-black transition";
+                registerTabBtn.className = "w-1/2 py-3 text-center font-semibold text-gray-400 hover:text-black border-b-2 border-transparent transition";
+            } else {
+                loginForm.classList.add('hidden');
+                registerForm.classList.remove('hidden');
+                registerTabBtn.className = "w-1/2 py-3 text-center font-bold text-black border-b-2 border-black transition";
+                loginTabBtn.className = "w-1/2 py-3 text-center font-semibold text-gray-400 hover:text-black border-b-2 border-transparent transition";
             }
+        }
 
-            if (accessToken) {
-                fetchDiscordUser(accessToken);
+        // Auth Processing Logic (เก็บอีเมล + แสดงชื่อย่อ)
+        function handleAuth(e, type) {
+            e.preventDefault();
+            const email = type === 'login' 
+                ? document.getElementById('loginEmail').value 
+                : document.getElementById('regEmail').value;
+
+            if (email) {
+                localStorage.setItem('user_email', email);
+                updateProfileUI(email);
+                toggleAuthModal(false);
+            }
+        }
+
+        function updateProfileUI(email) {
+            const initial = email.charAt(0).toUpperCase(); // ดึงตัวอักษรแรก
+            document.getElementById('openAuthBtn').classList.add('hidden');
+            document.getElementById('userProfile').classList.remove('hidden');
+            document.getElementById('userProfile').classList.add('flex');
+            document.getElementById('emailAvatar').innerText = initial;
+            document.getElementById('displayEmail').innerText = email;
+        }
+
+        function logout() {
+            localStorage.removeItem('user_email');
+            location.reload();
+        }
+
+        // Auto Check Login Status on Page Load
+        window.addEventListener('DOMContentLoaded', () => {
+            const savedEmail = localStorage.getItem('user_email');
+            if (savedEmail) {
+                updateProfileUI(savedEmail);
             }
         });
-
-        // ฟังก์ชันเรียก API ดึงชื่อ + รูปจริงจาก Discord
-        function fetchDiscordUser(token) {
-            fetch('https://discord.com/api/users/@me', {
-                headers: { authorization: `Bearer ${token}` }
-            })
-            .then(res => {
-                if (!res.ok) throw new Error('Token Expired');
-                return res.json();
-            })
-            .then(user => {
-                const avatarUrl = user.avatar 
-                    ? `https://cdn.discordapp.com/avatars/${user.id}/${user.avatar}.png`
-                    : `https://cdn.discordapp.com/embed/avatars/0.png`;
-
-                const displayName = user.global_name || user.username;
-
-                // อัปเดตการแสดงผลหน้าเว็บ
-                document.getElementById('discordLoginBtn').classList.add('hidden');
-                document.getElementById('userProfile').classList.remove('hidden');
-                document.getElementById('userProfile').classList.add('flex');
-                document.getElementById('userName').innerText = displayName;
-                document.getElementById('userAvatar').src = avatarUrl;
-            })
-            .catch(err => {
-                console.error("Auth Error:", err);
-                logout(); // หาก Token หมดอายุ ให้ล้างค่าเพื่อล็อกอินใหม่
-            });
-        }
-
-        // 3. ฟังก์ชันออกจากระบบ
-        function logout() {
-            localStorage.removeItem('discord_access_token');
-            window.location.href = window.location.pathname;
-        }
     </script>
 </body>
 </html>
