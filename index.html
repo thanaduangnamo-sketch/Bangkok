@@ -263,7 +263,6 @@
         }
 
         function triggerCaptchaClick() {
-            // ถ้ายืนยัน reCAPTCHA แล้ว ให้เข้าสู่หน้าเว็บทันที
             if (typeof grecaptcha !== 'undefined' && grecaptcha.getResponse().length > 0) {
                 onInitialCaptchaSuccess();
             } else {
@@ -313,6 +312,7 @@
             }, 3600);
         }
 
+        // ฟังก์ชันดึง Profile จาก Discord (แก้ไขเพื่อป้องกันปัญหา SyntaxError)
         async function handleDiscordCallback() {
             const urlParams = new URLSearchParams(window.location.search);
             const code = urlParams.get('code');
@@ -326,11 +326,18 @@
                         headers: { 'Content-Type': 'application/json' },
                         body: JSON.stringify({ code })
                     });
-                    
+
+                    if (!res.ok) {
+                        const errorText = await res.text();
+                        console.error(`Discord Login Server Error (${res.status}):`, errorText);
+                        return;
+                    }
+
                     const data = await res.json();
-                    if (data.username) {
+
+                    if (data && data.username) {
                         localStorage.setItem('user_email', data.username);
-                        localStorage.setItem('user_avatar', data.avatar);
+                        localStorage.setItem('user_avatar', data.avatar || '');
                         if (!localStorage.getItem('user_balance')) {
                             localStorage.setItem('user_balance', '0');
                         }
