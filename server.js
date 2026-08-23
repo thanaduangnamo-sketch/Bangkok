@@ -1,54 +1,47 @@
-const express = require('express');
-const axios = require('axios');
-const app = express();
-
+// ต้องใส่ app.use(express.json()) ไว้ด้านบนสุดก่อน Routes
 app.use(express.json());
 
-// ตั้งค่า Discord Developer Portal
-const CLIENT_ID = '1532644387639660627';
-const CLIENT_SECRET = '7dwFMdQPO4pjRHm2zgKYGyoParBOzXJw';
-const REDIRECT_URI = 'http://localhost:3000/callback'; // ต้องตรงกับใน Discord Portal เป๊ะๆ
-
 app.post('/api/discord-login', async (req, res) => {
-  const { code } = req.body;
+    try {
+        const { code } = req.body;
+        if (!code) {
+            return res.status(400).json({ error: 'Missing code' });
+        }
 
-  if (!code) {
-    return res.status(400).json({ error: 'ไม่พบ Code' });
-  }
+        const tokenResponse = await fetch('https://discord.com/api/oauth2/token', {
+            method: 'POST',
+            body: new URLSearchParams({
+                client_id: '1532644387639660627',
+                client_secret: process.env.DISCORD_CLIENT_SECRET,
+                grant_type: 'authorization_code',
+                code: code,
+                redirect_uri: 'https://dhaf-shop.onrender.com/',
+            }),
+            headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+        });
 
-  try {
-    // 1. นำ code ไปแลก Token กับ Discord
-    const tokenResponse = await axios.post(
-      'https://discord.com/api/v10/oauth2/token',
-      new URLSearchParams({
-        client_id: CLIENT_ID,
-        client_secret: CLIENT_SECRET,
-        grant_type: 'authorization_code',
-        code: code,
-        redirect_uri: REDIRECT_URI,
-      }),
-      {
-        headers: { 'Content-Type': 'application/x-www-form-urlencoded' }
-      }
-    );
+        const tokenData = await tokenResponse.json();
 
-    const accessToken = tokenResponse.data.access_token;
+        if (!tokenData.access_token) {
+            return res.status(400).json({ error: 'Token exchange failed', details: tokenData });
+        }
 
-    // 2. ใช้ Access Token ดึงข้อมูลโปรไฟล์ผู้ใช้
-    const userResponse = await axios.get('https://discord.com/api/v10/users/@me', {
-      headers: { Authorization: `Bearer ${accessToken}` }
-    });
+        const userResponse = await fetch('https://discord.com/api/users/@me', {
+            headers: { authorization: `${tokenData.token_type} ${tokenData.access_token}` },
+        });
 
-    // 3. ส่งข้อมูลผู้ใช้กลับไปที่ Frontend (สำคัญ: ต้องมีบรรทัดนี้เสมอ)
-    return res.status(200).json(userResponse.data);
+        const userData = await userResponse.json();
 
-  } catch (error) {
-    console.error('Discord API Error:', error.response?.data || error.message);
-    return res.status(500).json({ 
-      error: 'เกิดข้อผิดพลาดในการเชื่อมต่อกับ Discord',
-      details: error.response?.data || error.message 
-    });
-  }
+        // *** บรรทัดนี้สำคัญที่สุด ต้องตอบ res.json กลับไปเสมอ ***
+        return res.json({
+            username: userData.global_name || userData.username,
+            avatar: userData.avatar 
+                ? `https://cdn.discordapp.com/avatars/${userData.id}/${userData.avatar}.png`
+                : 'https://cdn.discordapp.com/embed/avatars/0.png'
+        });
+
+    } catch (error) {
+        console.error('Discord Auth Error:', error);
+        return res.status(500).json({ error: 'Internal Server Error' });
+    }
 });
-
-app.listen(3000, () => console.log('Server running on port 3000'));
