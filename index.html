@@ -3,51 +3,58 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>GPS SHOP - Discord Login</title>
+    <title>GPS SHOP - Official Store</title>
     <style>
-        body { font-family: sans-serif; display: flex; justify-content: center; align-items: center; height: 100vh; margin: 0; background: #0f172a; color: white; }
-        .login-btn { background: #5865F2; color: white; padding: 12px 24px; border: none; border-radius: 8px; font-size: 16px; cursor: pointer; text-decoration: none; font-weight: bold; }
-        .login-btn:hover { background: #4752C4; }
-        #status-text { display: none; font-size: 20px; }
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Sukhumvit Set', sans-serif, Arial; }
+        body { background-color: #0f172a; color: #f8fafc; display: flex; justify-content: center; align-items: center; min-height: 100vh; text-align: center; }
+        .card { background: #1e293b; padding: 2.5rem; border-radius: 16px; box-shadow: 0 10px 25px rgba(0,0,0,0.5); max-width: 420px; width: 90%; }
+        h1 { font-size: 1.8rem; margin-bottom: 0.5rem; color: #38bdf8; }
+        p { color: #94a3b8; font-size: 0.95rem; margin-bottom: 1.5rem; }
+        .btn-discord { display: inline-flex; align-items: center; justify-content: center; gap: 10px; background: #5865F2; color: #fff; text-decoration: none; padding: 12px 20px; border-radius: 8px; font-weight: bold; width: 100%; transition: 0.2s; border: none; cursor: pointer; font-size: 1rem; }
+        .btn-discord:hover { background: #4752C4; }
+        #status-box { display: none; margin-top: 1rem; padding: 10px; border-radius: 8px; background: #334155; }
+        .user-info { display: none; }
+        .avatar { width: 80px; height: 80px; border-radius: 50%; margin-bottom: 1rem; border: 3px solid #38bdf8; }
     </style>
 </head>
 <body>
 
-    <!-- ปุ่มล็อกอิน (จะแสดงเมื่อเปิดเว็บมาปกติ) -->
-    <a id="login-btn" class="login-btn" href="#">เข้าสู่ระบบด้วย Discord</a>
+    <div class="card">
+        <h1>GPS SHOP</h1>
+        <p>ยินดีต้อนรับสู่ระบบร้านค้า เข้าสู่ระบบเพื่อเริ่มใช้งาน</p>
 
-    <!-- ข้อความกำลังโหลด (จะแสดงเมื่อมี code กลับมาจาก Discord) -->
-    <div id="status-text">กำลังเข้าสู่ระบบ...</div>
+        <!-- ปุ่มเข้าสู่ระบบหน้าหลัก -->
+        <a id="login-btn" class="btn-discord" href="https://discord.com/oauth2/authorize?client_id=1532644387639660627&response_type=code&redirect_uri=https%3A%2F%2Fdhaf-shop.onrender.com%2F&scope=identify">
+            เข้าสู่ระบบด้วย Discord
+        </a>
+
+        <!-- กล่องแสดงสถานะตอนยิง API -->
+        <div id="status-box">กำลังเข้าสู่ระบบ...</div>
+
+        <!-- หน้าแสดงโปรไฟล์เมื่อล็อกอินสำเร็จ -->
+        <div id="user-info" class="user-info">
+            <img id="user-avatar" class="avatar" src="" alt="User Avatar">
+            <h2 id="user-name"></h2>
+            <p id="user-id" style="font-size:0.8rem; margin-top:5px;"></p>
+        </div>
+    </div>
 
     <script>
-      // ⚠️ 1. ใส่ Client ID จริงของคุณตรงนี้ (ดูจาก Discord Developer Portal)
-      const DISCORD_CLIENT_ID = '1532644387639660627';
-      
-      // Redirect URI ที่ตั้งไว้ใน Discord Portal
-      const REDIRECT_URI = encodeURIComponent(window.location.origin + window.location.pathname);
-
-      // สร้าง Link สำหรับกด OAuth2
-      const discordAuthUrl = `https://discord.com/oauth2/authorize?client_id=${DISCORD_CLIENT_ID}&response_type=code&redirect_uri=${REDIRECT_URI}&scope=identify`;
-      
-      // ตั้งค่า href ให้ปุ่มล็อกอิน
-      document.getElementById('login-btn').href = discordAuthUrl;
-
       async function handleDiscordCallback() {
         const urlParams = new URLSearchParams(window.location.search);
         const code = urlParams.get('code');
 
-        // ถ้าไม่มี code ใน URL ให้แสดงปุ่มล็อกอินตามปกติ
+        // กรณีเปิดหน้าเว็บเข้าปกติ (ไม่มี Code)
         if (!code) {
-          console.log("ยังไม่ได้ล็อกอิน ให้แสดงปุ่มกดปกติ");
+          console.log("เข้าสู่หน้าหลักปกติ");
           return;
         }
 
-        // ถ้ามี code แสดงว่าย้อนกลับมาจาก Discord ให้สลับ UI
+        // กรณีกลับมาจาก Discord (มี Code ใน URL)
         document.getElementById('login-btn').style.display = 'none';
-        document.getElementById('status-text').style.display = 'block';
+        document.getElementById('status-box').style.display = 'block';
 
         try {
-          // ยิงส่ง code ไปประมวลผลที่ Backend
           const response = await fetch('/api/discord-login', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
@@ -56,7 +63,7 @@
 
           if (!response.ok) {
             const errorText = await response.text();
-            throw new Error(`Server Error (${response.status}): ${errorText}`);
+            throw new Error(`Server ตอบกลับข้อผิดพลาด (${response.status}): ${errorText}`);
           }
 
           const responseText = await response.text();
@@ -65,22 +72,30 @@
           }
 
           const userData = JSON.parse(responseText);
-          console.log("ล็อกอินสำเร็จ:", userData);
           
-          document.getElementById('status-text').innerText = `ยินดีต้อนรับ ${userData.username}!`;
+          // ล็อกอินสำเร็จ: แสดงข้อมูลผู้ใช้บนหน้าหลัก
+          document.getElementById('status-box').style.display = 'none';
+          document.getElementById('user-info').style.display = 'block';
           
-          // บันทึก Session และเปลี่ยนหน้า (ถ้าต้องการ)
-          // localStorage.setItem('user', JSON.stringify(userData));
-          // window.location.href = '/dashboard.html';
+          document.getElementById('user-name').innerText = `ยินดีต้อนรับ ${userData.username}`;
+          document.getElementById('user-id').innerText = `ID: ${userData.id}`;
+          
+          if (userData.avatar) {
+            document.getElementById('user-avatar').src = `https://cdn.discordapp.com/avatars/${userData.id}/${userData.avatar}.png`;
+          } else {
+            document.getElementById('user-avatar').src = 'https://cdn.discordapp.com/embed/avatars/0.png';
+          }
+
+          // ลบ ?code= ออกจาก URL เพื่อความสะอาดสวยงาม
+          window.history.replaceState({}, document.title, window.location.pathname);
 
         } catch (error) {
           console.error("Discord Login Error:", error);
-          document.getElementById('status-text').innerText = "เกิดข้อผิดพลาดในการล็อกอิน";
-          alert("การล็อกอินล้มเหลว: " + error.message);
+          document.getElementById('status-box').style.color = '#ef4444';
+          document.getElementById('status-box').innerText = "เกิดข้อผิดพลาดในการล็อกอิน: " + error.message;
         }
       }
 
-      // เรียกทำงานเมื่อโหลดหน้าเว็บ
       window.addEventListener('DOMContentLoaded', handleDiscordCallback);
     </script>
 </body>
