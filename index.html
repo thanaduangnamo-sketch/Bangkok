@@ -15,7 +15,7 @@
     <!-- Google Font -->
     <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
 
-    <!-- Lucide Icons (มี CDN สำรอง) -->
+    <!-- Lucide Icons -->
     <script src="https://unpkg.com/lucide@latest"></script>
     <script>
         if (!window.lucide) {
@@ -70,14 +70,12 @@
             from { opacity: 0; transform: translateY(30px) scale(0.95); }
             to { opacity: 1; transform: translateY(0) scale(1); }
         }
-
         .modal-enter { animation: modal-in 0.7s cubic-bezier(0.16, 1, 0.3, 1) both; }
 
         @keyframes shine {
             0% { transform: translateX(-150%) skewX(-15deg); }
             60%, 100% { transform: translateX(350%) skewX(-15deg); }
         }
-
         .btn-shine::after {
             content: '';
             position: absolute;
@@ -119,10 +117,8 @@
             background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
         }
 
-        /* เกียร์หมุน */
         .gear-spin { animation: spin 6s linear infinite; }
 
-        /* จุดสามจุดวิ่ง */
         .dots-anim::after {
             content: '';
             display: inline-block;
@@ -138,7 +134,6 @@
             100% { content: ''; }
         }
 
-        /* เส้นสแกนกวาด */
         @keyframes scanline {
             0% { top: -5%; opacity: 0; }
             15% { opacity: 1; }
@@ -155,7 +150,6 @@
             pointer-events: none;
         }
 
-        /* แถบความคืบหน้าวิ่งไม่รู้จบ */
         @keyframes progress-slide {
             0% { left: -35%; }
             100% { left: 105%; }
@@ -169,25 +163,18 @@
             animation: progress-slide 2.2s ease-in-out infinite;
         }
 
-        /* =========================
-           🎁 REDEEM MODAL EFFECTS
-        ========================== */
-
-        /* ซองของขวัญลอย */
         @keyframes gift-bounce {
             0%, 100% { transform: translateY(0) rotate(-3deg); }
             50% { transform: translateY(-10px) rotate(3deg); }
         }
         .gift-bounce { animation: gift-bounce 2.5s ease-in-out infinite; }
 
-        /* ประกายวิ่งรอบซอง */
         @keyframes sparkle-ping {
             0% { transform: scale(0.8); opacity: 0.9; }
             80%, 100% { transform: scale(2.2); opacity: 0; }
         }
         .sparkle-ping { animation: sparkle-ping 1.8s cubic-bezier(0, 0, 0.2, 1) infinite; }
 
-        /* เงินเด้งขึ้น */
         @keyframes money-pop {
             0% { transform: scale(0.3); opacity: 0; }
             60% { transform: scale(1.15); opacity: 1; }
@@ -195,9 +182,6 @@
         }
         .money-pop { animation: money-pop 0.6s cubic-bezier(0.16, 1, 0.3, 1) both; }
 
-        /* =========================
-           ⚙️ SWITCH TOGGLE
-        ========================== */
         .sk-switch { position: relative; display: inline-block; width: 46px; height: 26px; flex-shrink: 0; }
         .sk-switch input { opacity: 0; width: 0; height: 0; }
         .sk-slider {
@@ -218,6 +202,67 @@
         }
         .sk-switch input:checked + .sk-slider { background: #ffffff; border-color: #ffffff; }
         .sk-switch input:checked + .sk-slider:before { transform: translateX(20px); background: #050505; }
+
+        /* ==============================
+           ADMIN TIP BANNER
+        ============================== */
+        @keyframes tip-glow {
+            0%, 100% { border-color: rgba(255,255,255,0.15); box-shadow: 0 0 0 rgba(255,255,255,0); }
+            50% { border-color: rgba(255,255,255,0.4); box-shadow: 0 0 20px rgba(255,255,255,0.08); }
+        }
+        .tip-banner {
+            animation: tip-glow 3s ease-in-out infinite;
+            background: linear-gradient(135deg, rgba(255,255,255,0.06) 0%, rgba(255,255,255,0.02) 100%);
+        }
+
+        @keyframes tip-marquee {
+            0% { transform: translateX(100%); }
+            100% { transform: translateX(-100%); }
+        }
+        .tip-marquee {
+            animation: tip-marquee 18s linear infinite;
+            white-space: nowrap;
+        }
+
+        @keyframes megaphone-shake {
+            0%, 100% { transform: rotate(0deg); }
+            15% { transform: rotate(12deg); }
+            30% { transform: rotate(-10deg); }
+            45% { transform: rotate(8deg); }
+            60% { transform: rotate(-6deg); }
+            75% { transform: rotate(3deg); }
+        }
+        .megaphone-shake { animation: megaphone-shake 2.5s ease-in-out infinite; animation-delay: 1s; }
+
+        /* คอนเฟตติ */
+        @keyframes confetti-fall {
+            0% { transform: translateY(-20px) rotate(0deg); opacity: 1; }
+            100% { transform: translateY(80px) rotate(720deg); opacity: 0; }
+        }
+        .confetti-piece {
+            position: absolute;
+            width: 6px; height: 6px;
+            border-radius: 1px;
+            animation: confetti-fall 1.2s ease-out forwards;
+            pointer-events: none;
+        }
+
+        /* แถบสไลด์ TIP แบบเลื่อนไปมา */
+        @keyframes tip-slide {
+            0%, 10% { transform: translateX(0); }
+            45%, 55% { transform: translateX(-50%); }
+            90%, 100% { transform: translateX(0); }
+        }
+        .tip-slide-track {
+            animation: tip-slide 20s ease-in-out infinite;
+        }
+
+        /* ป้าย NEW กระพริบ */
+        @keyframes new-blink {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.4; }
+        }
+        .new-blink { animation: new-blink 1.5s ease-in-out infinite; }
     </style>
 </head>
 
@@ -276,7 +321,7 @@
                     <span>เข้าสู่ระบบ / สมัครสมาชิก</span>
                 </button>
 
-                <!-- ✅ USER PROFILE (ชื่อ + เงิน + แลกโค้ด + ตั้งค่า) -->
+                <!-- USER PROFILE -->
                 <div id="userProfile"
                      class="hidden flex items-center gap-2 bg-white/[0.05] border border-white/10 p-1.5 pl-3 rounded-2xl shadow-sm max-w-[320px] sm:max-w-md">
 
@@ -286,13 +331,11 @@
                     </div>
 
                     <div class="text-left min-w-0 flex-1">
-                        <!-- ชื่อแสดง / อีเมลย่อ -->
                         <p id="displayName" class="text-xs font-bold text-white leading-tight truncate max-w-[90px] sm:max-w-[130px]" title="User">User</p>
 
                         <div class="flex items-center gap-1.5 mt-0.5">
                             <span class="text-xs font-extrabold text-white truncate">฿<span id="userBalance">0.00</span></span>
 
-                            <!-- ปุ่มแลกโค้ด -->
                             <button onclick="playClickSound(); toggleRedeemModal(true)"
                                     class="text-[10px] btn-light hover:bg-zinc-200 font-bold px-2 py-0.5 rounded-md transition flex items-center gap-1 shrink-0"
                                     title="แลกโค้ดรับเงิน">
@@ -302,14 +345,12 @@
                         </div>
                     </div>
 
-                    <!-- ปุ่มตั้งค่า -->
                     <button onclick="playClickSound(); toggleSettingsModal(true)"
                             class="text-white/60 hover:text-white bg-white/[0.06] hover:bg-white/[0.12] font-medium p-2 rounded-xl transition shrink-0"
                             title="ตั้งค่า">
                         <i data-lucide="settings" class="w-4 h-4"></i>
                     </button>
 
-                    <!-- ปุ่มออกจากระบบ -->
                     <button onclick="playClickSound(); logout()"
                             class="text-white/60 hover:text-red-300 bg-white/[0.06] hover:bg-red-400/10 font-medium p-2 rounded-xl transition shrink-0"
                             title="ออกจากระบบ">
@@ -323,6 +364,61 @@
 
 
     <!-- =========================
+         ADMIN TIP BANNER (แถบประกาศ)
+    ========================== -->
+    <div id="adminTipBanner" class="tip-banner border-b border-white/15 overflow-hidden relative">
+        <div class="max-w-6xl mx-auto px-4 sm:px-6 py-2.5 flex items-center gap-3">
+            <!-- ไอคอนลำโพง + ป้าย NEW -->
+            <div class="flex items-center gap-2 shrink-0">
+                <div class="w-7 h-7 btn-light rounded-lg flex items-center justify-center shadow-sm">
+                    <i data-lucide="megaphone" class="w-3.5 h-3.5 megaphone-shake"></i>
+                </div>
+                <span class="new-blink text-[10px] font-black bg-white text-black px-1.5 py-0.5 rounded-md tracking-wider">NEW</span>
+            </div>
+
+            <!-- ข้อความ TIP ที่เลื่อน -->
+            <div class="overflow-hidden flex-1 relative h-5">
+                <div class="tip-slide-track flex items-center gap-12 absolute" style="min-width: max-content;">
+                    <span class="text-xs font-semibold text-white/80 flex items-center gap-1.5">
+                        <i data-lucide="ticket" class="w-3 h-3 text-white/50"></i>
+                        ระบบแลกโค้ด Admin 100 บาท — กรอกโค้ดที่ปุ่ม "แลกโค้ด" เพื่อรับเงินเข้าบัญชีทันที
+                    </span>
+                    <span class="text-xs font-semibold text-white/80 flex items-center gap-1.5">
+                        <i data-lucide="zap" class="w-3 h-3 text-white/50"></i>
+                        ระบบว่าไรบัค — แลกโค้ดแล้วเงินเข้าเลย ไม่ต้องรอ ไม่ต้องกรอกข้อมูลเพิ่ม
+                    </span>
+                    <span class="text-xs font-semibold text-white/80 flex items-center gap-1.5">
+                        <i data-lucide="gift" class="w-3 h-3 text-white/50"></i>
+                        โค้ด Admin มูลค่า 100 บาท — แอดมินประกาศแจก ใช้ได้ 1 ครั้งต่อ 1 บัญชี
+                    </span>
+                    <span class="text-xs font-semibold text-white/80 flex items-center gap-1.5">
+                        <i data-lucide="shield-check" class="w-3 h-3 text-white/50"></i>
+                        ปลอดภัย 100% — โค้ดใช้แล้วจะหมดสิทธิ์ทันที ไม่สามารถใช้ซ้ำได้
+                    </span>
+                    <!-- ซ้ำอีกรอบเพื่อให้เลื่อนต่อเนื่อง -->
+                    <span class="text-xs font-semibold text-white/80 flex items-center gap-1.5">
+                        <i data-lucide="ticket" class="w-3 h-3 text-white/50"></i>
+                        ระบบแลกโค้ด Admin 100 บาท — กรอกโค้ดที่ปุ่ม "แลกโค้ด" เพื่อรับเงินเข้าบัญชีทันที
+                    </span>
+                    <span class="text-xs font-semibold text-white/80 flex items-center gap-1.5">
+                        <i data-lucide="zap" class="w-3 h-3 text-white/50"></i>
+                        ระบบว่าไรบัค — แลกโค้ดแล้วเงินเข้าเลย ไม่ต้องรอ ไม่ต้องกรอกข้อมูลเพิ่ม
+                    </span>
+                    <span class="text-xs font-semibold text-white/80 flex items-center gap-1.5">
+                        <i data-lucide="gift" class="w-3 h-3 text-white/50"></i>
+                        โค้ด Admin มูลค่า 100 บาท — แอดมินประกาศแจก ใช้ได้ 1 ครั้งต่อ 1 บัญชี
+                    </span>
+                    <span class="text-xs font-semibold text-white/80 flex items-center gap-1.5">
+                        <i data-lucide="shield-check" class="w-3 h-3 text-white/50"></i>
+                        ปลอดภัย 100% — โค้ดใช้แล้วจะหมดสิทธิ์ทันที ไม่สามารถใช้ซ้ำได้
+                    </span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <!-- =========================
          AUTH MODAL
     ========================== -->
     <div id="authModal"
@@ -333,7 +429,6 @@
             <button onclick="playClickSound(); toggleAuthModal(false)"
                     class="absolute top-5 right-5 text-white/40 hover:text-white font-bold text-xl transition">✕</button>
 
-            <!-- TABS -->
             <div id="authTabs" class="flex border-b border-white/10 mb-6">
                 <button id="loginTabBtn" onclick="playClickSound(); switchForm('login')"
                         class="w-1/2 py-3 text-center font-bold text-white border-b-2 border-white transition flex items-center justify-center gap-2">
@@ -347,23 +442,18 @@
                 </button>
             </div>
 
-
             <!-- LOGIN FORM -->
             <form id="loginForm" onsubmit="handleAuth(event, 'login')" class="space-y-4">
-
                 <div>
                     <label class="block text-xs font-bold text-white/60 uppercase tracking-wider mb-1 flex items-center gap-1">
-                        <i data-lucide="mail" class="w-3.5 h-3.5"></i>
-                        อีเมล
+                        <i data-lucide="mail" class="w-3.5 h-3.5"></i> อีเมล
                     </label>
                     <input type="email" id="loginEmail" required placeholder="name@example.com"
                            class="input-dark w-full px-4 py-3 rounded-xl transition text-sm">
                 </div>
-
                 <div>
                     <label class="block text-xs font-bold text-white/60 uppercase tracking-wider mb-1 flex items-center gap-1">
-                        <i data-lucide="lock" class="w-3.5 h-3.5"></i>
-                        รหัสผ่าน
+                        <i data-lucide="lock" class="w-3.5 h-3.5"></i> รหัสผ่าน
                     </label>
                     <div class="relative">
                         <input type="password" id="loginPassword" required placeholder="••••••••"
@@ -374,39 +464,30 @@
                         </button>
                     </div>
                 </div>
-
                 <div class="flex justify-end">
                     <button type="button" onclick="playClickSound(); showForgotPassword()"
                             class="text-xs text-white/50 hover:text-white underline underline-offset-4 transition flex items-center gap-1">
-                        <i data-lucide="help-circle" class="w-3.5 h-3.5"></i>
-                        ลืมรหัสผ่าน?
+                        <i data-lucide="help-circle" class="w-3.5 h-3.5"></i> ลืมรหัสผ่าน?
                     </button>
                 </div>
-
                 <button type="submit" onclick="playClickSound()"
                         class="btn-light hover:bg-zinc-200 w-full font-semibold py-3.5 rounded-xl shadow-[0_0_30px_rgba(255,255,255,0.12)] transition active:scale-95 flex items-center justify-center gap-2">
-                    <i data-lucide="check-circle" class="w-4 h-4"></i>
-                    ยืนยันเข้าสู่ระบบ
+                    <i data-lucide="check-circle" class="w-4 h-4"></i> ยืนยันเข้าสู่ระบบ
                 </button>
             </form>
 
-
-            <!-- REGISTER FORM (พร้อม reCAPTCHA) -->
+            <!-- REGISTER FORM -->
             <form id="registerForm" onsubmit="handleAuth(event, 'register')" class="space-y-4 hidden">
-
                 <div>
                     <label class="block text-xs font-bold text-white/60 uppercase tracking-wider mb-1 flex items-center gap-1">
-                        <i data-lucide="mail" class="w-3.5 h-3.5"></i>
-                        อีเมล
+                        <i data-lucide="mail" class="w-3.5 h-3.5"></i> อีเมล
                     </label>
                     <input type="email" id="regEmail" required placeholder="name@example.com"
                            class="input-dark w-full px-4 py-3 rounded-xl transition text-sm">
                 </div>
-
                 <div>
                     <label class="block text-xs font-bold text-white/60 uppercase tracking-wider mb-1 flex items-center gap-1">
-                        <i data-lucide="lock" class="w-3.5 h-3.5"></i>
-                        รหัสผ่าน
+                        <i data-lucide="lock" class="w-3.5 h-3.5"></i> รหัสผ่าน
                     </label>
                     <div class="relative">
                         <input type="password" id="regPassword" required minlength="6" placeholder="อย่างน้อย 6 ตัวอักษร"
@@ -417,32 +498,23 @@
                         </button>
                     </div>
                 </div>
-
                 <div>
                     <div class="bg-white rounded-2xl p-3 flex justify-center shadow-[0_10px_35px_rgba(0,0,0,0.5)]">
-                        <div class="g-recaptcha"
-                             id="registerRecaptcha"
+                        <div class="g-recaptcha" id="registerRecaptcha"
                              data-sitekey="6LdtDpQtAAAAAN-ijFLD4U3g98I6MNS6g-GJ48Qz"
                              data-expired-callback="onRegCaptchaExpired">
                         </div>
                     </div>
-
-                    <p id="regCaptchaError"
-                       class="hidden mt-2 text-[11px] text-red-400 bg-red-400/10 border border-red-400/20 rounded-xl px-3 py-2 text-center">
-                    </p>
+                    <p id="regCaptchaError" class="hidden mt-2 text-[11px] text-red-400 bg-red-400/10 border border-red-400/20 rounded-xl px-3 py-2 text-center"></p>
                 </div>
-
                 <button type="submit" onclick="playClickSound()"
                         class="btn-light hover:bg-zinc-200 w-full font-semibold py-3.5 rounded-xl shadow-[0_0_30px_rgba(255,255,255,0.12)] transition active:scale-95 flex items-center justify-center gap-2">
-                    <i data-lucide="user-check" class="w-4 h-4"></i>
-                    ยืนยันสมัครสมาชิก
+                    <i data-lucide="user-check" class="w-4 h-4"></i> ยืนยันสมัครสมาชิก
                 </button>
             </form>
 
-
-            <!-- หน้าลืมรหัสผ่าน -->
+            <!-- ลืมรหัสผ่าน -->
             <div id="forgotView" class="hidden">
-
                 <div class="text-center mb-6">
                     <div class="w-14 h-14 bg-white/[0.07] border border-white/15 rounded-2xl flex items-center justify-center mx-auto mb-4">
                         <i data-lucide="key-round" class="w-7 h-7 text-white"></i>
@@ -450,74 +522,58 @@
                     <h3 class="text-xl font-extrabold text-white mb-1">ลืมรหัสผ่าน</h3>
                     <p class="text-xs text-white/50" id="forgotSubtitle">กรอกอีเมลที่ใช้สมัคร เพื่อตั้งรหัสผ่านใหม่</p>
                 </div>
-
                 <form id="forgotStep1" onsubmit="handleForgotStep1(event)" class="space-y-4">
                     <div>
                         <label class="block text-xs font-bold text-white/60 uppercase tracking-wider mb-1 flex items-center gap-1">
-                            <i data-lucide="mail" class="w-3.5 h-3.5"></i>
-                            อีเมลที่ใช้สมัคร
+                            <i data-lucide="mail" class="w-3.5 h-3.5"></i> อีเมลที่ใช้สมัคร
                         </label>
                         <input type="email" id="forgotEmail" required placeholder="name@example.com"
                                class="input-dark w-full px-4 py-3 rounded-xl transition text-sm">
                     </div>
-
                     <p id="forgotError1" class="hidden text-xs text-red-400 bg-red-400/10 border border-red-400/20 rounded-xl px-3 py-2"></p>
-
                     <button type="submit" onclick="playClickSound()"
                             class="btn-light hover:bg-zinc-200 w-full font-semibold py-3.5 rounded-xl shadow-[0_0_30px_rgba(255,255,255,0.12)] transition active:scale-95 flex items-center justify-center gap-2">
-                        <i data-lucide="arrow-right" class="w-4 h-4"></i>
-                        ถัดไป
+                        <i data-lucide="arrow-right" class="w-4 h-4"></i> ถัดไป
                     </button>
                 </form>
-
                 <form id="forgotStep2" onsubmit="handleForgotStep2(event)" class="space-y-4 hidden">
                     <div>
                         <label class="block text-xs font-bold text-white/60 uppercase tracking-wider mb-1 flex items-center gap-1">
-                            <i data-lucide="lock" class="w-3.5 h-3.5"></i>
-                            รหัสผ่านใหม่
+                            <i data-lucide="lock" class="w-3.5 h-3.5"></i> รหัสผ่านใหม่
                         </label>
                         <input type="password" id="forgotNewPass" required minlength="6" placeholder="อย่างน้อย 6 ตัวอักษร"
                                class="input-dark w-full px-4 py-3 rounded-xl transition text-sm">
                     </div>
-
                     <div>
                         <label class="block text-xs font-bold text-white/60 uppercase tracking-wider mb-1 flex items-center gap-1">
-                            <i data-lucide="lock" class="w-3.5 h-3.5"></i>
-                            ยืนยันรหัสผ่านใหม่
+                            <i data-lucide="lock" class="w-3.5 h-3.5"></i> ยืนยันรหัสผ่านใหม่
                         </label>
                         <input type="password" id="forgotConfirmPass" required minlength="6" placeholder="กรอกรหัสผ่านซ้ำ"
                                class="input-dark w-full px-4 py-3 rounded-xl transition text-sm">
                     </div>
-
                     <p id="forgotError2" class="hidden text-xs text-red-400 bg-red-400/10 border border-red-400/20 rounded-xl px-3 py-2"></p>
-
                     <button type="submit" onclick="playClickSound()"
                             class="btn-light hover:bg-zinc-200 w-full font-semibold py-3.5 rounded-xl shadow-[0_0_30px_rgba(255,255,255,0.12)] transition active:scale-95 flex items-center justify-center gap-2">
-                        <i data-lucide="check-circle" class="w-4 h-4"></i>
-                        ยืนยันเปลี่ยนรหัสผ่าน
+                        <i data-lucide="check-circle" class="w-4 h-4"></i> ยืนยันเปลี่ยนรหัสผ่าน
                     </button>
                 </form>
-
                 <button onclick="playClickSound(); backToLogin()"
                         class="w-full text-center text-xs text-white/50 hover:text-white mt-4 transition flex items-center justify-center gap-1">
-                    <i data-lucide="arrow-left" class="w-3.5 h-3.5"></i>
-                    กลับไปหน้าเข้าสู่ระบบ
+                    <i data-lucide="arrow-left" class="w-3.5 h-3.5"></i> กลับไปหน้าเข้าสู่ระบบ
                 </button>
             </div>
-
         </div>
     </div>
 
 
     <!-- =========================
-         🎁 REDEEM CODE MODAL (แลกโค้ดรับเงิน)
+         REDEEM CODE MODAL
     ========================== -->
     <div id="redeemModal"
          class="fixed inset-0 bg-black/70 backdrop-blur-sm z-[65] hidden flex items-center justify-center p-4">
 
         <div class="relative bg-[#0d0d0d] rounded-3xl shadow-2xl border border-white/10 w-full max-w-md p-8 text-center overflow-hidden modal-enter max-h-[90vh] overflow-y-auto">
 
-            <!-- แสงเรืองหลังการ์ด -->
             <div class="absolute -top-24 left-1/2 -translate-x-1/2 w-80 h-80 bg-white/[0.06] rounded-full blur-3xl glow-pulse pointer-events-none"></div>
             <div class="scan-line"></div>
 
@@ -566,9 +622,10 @@
 
             <!-- ===== หน้าสำเร็จ ===== -->
             <div id="redeemSuccessView" class="hidden">
-
-                <div class="money-pop w-20 h-20 btn-light rounded-full flex items-center justify-center mx-auto mb-5 shadow-[0_0_45px_rgba(255,255,255,0.25)]">
-                    <i data-lucide="check" class="w-10 h-10"></i>
+                <div id="confettiContainer" class="relative w-20 h-20 mx-auto mb-5">
+                    <div class="money-pop w-20 h-20 btn-light rounded-full flex items-center justify-center shadow-[0_0_45px_rgba(255,255,255,0.25)]">
+                        <i data-lucide="check" class="w-10 h-10"></i>
+                    </div>
                 </div>
 
                 <p class="text-xs text-white/50 mb-2">แลกโค้ดสำเร็จ รับเงินไปแล้ว</p>
@@ -596,7 +653,7 @@
 
 
     <!-- =========================
-         ⚙️ SETTINGS MODAL (ตั้งค่า)
+         SETTINGS MODAL
     ========================== -->
     <div id="settingsModal"
          class="fixed inset-0 bg-black/70 backdrop-blur-sm z-[65] hidden flex items-center justify-center p-4">
@@ -609,7 +666,6 @@
                     class="absolute top-5 right-5 text-white/40 hover:text-white font-bold text-xl transition z-10">✕</button>
 
             <div class="relative">
-
                 <div class="text-center mb-6">
                     <div class="relative w-20 h-20 mx-auto mb-4">
                         <i data-lucide="settings" class="gear-spin absolute w-10 h-10 text-white/20 top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2"></i>
@@ -620,11 +676,9 @@
                     <h3 class="text-2xl font-extrabold text-white">ตั้งค่า</h3>
                 </div>
 
-                <!-- ===== ชื่อที่แสดง ===== -->
                 <div class="bg-white/[0.04] border border-white/10 rounded-2xl p-4 mb-3">
                     <label class="block text-xs font-bold text-white/60 uppercase tracking-wider mb-2 flex items-center gap-1">
-                        <i data-lucide="user" class="w-3.5 h-3.5"></i>
-                        ชื่อที่แสดง
+                        <i data-lucide="user" class="w-3.5 h-3.5"></i> ชื่อที่แสดง
                     </label>
                     <div class="flex gap-2">
                         <input type="text" id="settingNameInput" maxlength="20" placeholder="เช่น กันต์"
@@ -635,12 +689,10 @@
                         </button>
                     </div>
                     <p id="nameSavedMsg" class="hidden mt-2 text-[10px] text-white/60 flex items-center gap-1">
-                        <i data-lucide="check-circle" class="w-3 h-3"></i>
-                        บันทึกชื่อเรียบร้อยแล้ว
+                        <i data-lucide="check-circle" class="w-3 h-3"></i> บันทึกชื่อเรียบร้อยแล้ว
                     </p>
                 </div>
 
-                <!-- ===== เสียงคลิก ===== -->
                 <div class="bg-white/[0.04] border border-white/10 rounded-2xl p-4 mb-3 flex items-center justify-between">
                     <div class="flex items-center gap-2.5">
                         <span class="w-9 h-9 bg-white/[0.07] border border-white/15 rounded-xl flex items-center justify-center shrink-0">
@@ -657,7 +709,6 @@
                     </label>
                 </div>
 
-                <!-- ===== ข้อมูลบัญชี ===== -->
                 <div class="bg-white/[0.04] border border-white/10 rounded-2xl p-4 mb-3 space-y-2.5">
                     <div class="flex items-center justify-between text-xs">
                         <span class="text-white/50 flex items-center gap-1.5"><i data-lucide="mail" class="w-3.5 h-3.5"></i> อีเมล</span>
@@ -670,22 +721,19 @@
                     </div>
                 </div>
 
-                <!-- ===== ออกจากระบบ ===== -->
                 <button onclick="playClickSound(); confirmLogout()"
                         class="w-full bg-red-400/10 hover:bg-red-400/20 border border-red-400/25 text-red-300 font-bold py-3 rounded-xl transition active:scale-95 flex items-center justify-center gap-2 text-sm mt-4">
-                    <i data-lucide="log-out" class="w-4 h-4"></i>
-                    ออกจากระบบ
+                    <i data-lucide="log-out" class="w-4 h-4"></i> ออกจากระบบ
                 </button>
 
                 <p class="text-[10px] text-white/30 text-center mt-5">Skey Shop · Version 1.0</p>
-
             </div>
         </div>
     </div>
 
 
     <!-- =========================
-         🔧 MAINTENANCE MODAL (ระบบเติมเงินปิดปรับปรุง)
+         MAINTENANCE MODAL (ระบบเติมเงินปิดปรับปรุง)
     ========================== -->
     <div id="topUpModal"
          class="fixed inset-0 bg-black/70 backdrop-blur-sm z-[60] hidden flex items-center justify-center p-4">
@@ -699,7 +747,6 @@
                     class="absolute top-5 right-5 text-white/40 hover:text-white font-bold text-xl transition z-10">✕</button>
 
             <div class="relative">
-
                 <div class="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full bg-white/[0.06] border border-white/15 text-[10px] font-bold tracking-[0.2em] text-white/80 uppercase mb-6">
                     <span class="w-1.5 h-1.5 bg-white rounded-full animate-pulse"></span>
                     Under Maintenance
@@ -725,8 +772,7 @@
 
                 <div class="bg-white/[0.04] border border-white/10 rounded-2xl px-4 py-3.5 mb-5 flex items-center justify-between">
                     <span class="text-xs text-white/50 flex items-center gap-1.5">
-                        <i data-lucide="wallet" class="w-3.5 h-3.5"></i>
-                        ยอดเงินในระบบของคุณ
+                        <i data-lucide="wallet" class="w-3.5 h-3.5"></i> ยอดเงินในระบบของคุณ
                     </span>
                     <span class="text-sm font-black text-white">฿<span id="tumBalance">0.00</span></span>
                 </div>
@@ -758,16 +804,13 @@
 
                 <button onclick="playClickSound(); toggleTopUpModal(false)"
                         class="btn-shine relative overflow-hidden btn-light hover:bg-zinc-200 w-full font-bold py-3.5 rounded-xl shadow-[0_0_30px_rgba(255,255,255,0.12)] transition active:scale-95 flex items-center justify-center gap-2 text-sm mb-3">
-                    <i data-lucide="check-circle" class="w-4 h-4"></i>
-                    รับทราบ
+                    <i data-lucide="check-circle" class="w-4 h-4"></i> รับทราบ
                 </button>
 
                 <button onclick="playClickSound(); contactAdmin()"
                         class="w-full bg-white/[0.06] hover:bg-white/[0.12] border border-white/15 text-white font-semibold py-3 rounded-xl transition active:scale-95 flex items-center justify-center gap-2 text-sm">
-                    <i data-lucide="message-circle" class="w-4 h-4"></i>
-                    สอบถามแอดมิน
+                    <i data-lucide="message-circle" class="w-4 h-4"></i> สอบถามแอดมิน
                 </button>
-
             </div>
         </div>
     </div>
@@ -781,7 +824,7 @@
 
         <div class="max-w-6xl mx-auto px-6 py-12 relative">
 
-            <!-- ============ HERO ============ -->
+            <!-- HERO -->
             <div class="text-center max-w-3xl mx-auto mb-20">
                 <div class="inline-flex items-center gap-2 px-4 py-2 bg-white/[0.05] rounded-full border border-white/15 text-white/80 text-xs font-semibold mb-6 shadow-sm">
                     <i data-lucide="sparkles" class="w-4 h-4 text-white/70"></i>
@@ -802,19 +845,17 @@
                 <div class="flex flex-col sm:flex-row items-center justify-center gap-3 mb-10">
                     <button onclick="playClickSound(); openRegisterForm()"
                             class="btn-light hover:bg-zinc-200 font-bold px-8 py-3.5 rounded-2xl shadow-[0_0_35px_rgba(255,255,255,0.15)] transition active:scale-95 flex items-center gap-2 text-sm w-full sm:w-auto justify-center">
-                        <i data-lucide="user-plus" class="w-4 h-4"></i>
-                        สมัครสมาชิกฟรี
+                        <i data-lucide="user-plus" class="w-4 h-4"></i> สมัครสมาชิกฟรี
                     </button>
                     <button onclick="playClickSound(); scrollToSection('features')"
                             class="bg-white/[0.06] hover:bg-white/[0.12] border border-white/15 text-white font-semibold px-8 py-3.5 rounded-2xl transition active:scale-95 flex items-center gap-2 text-sm w-full sm:w-auto justify-center">
-                        <i data-lucide="book-open" class="w-4 h-4"></i>
-                        เรียนรู้เพิ่มเติม
+                        <i data-lucide="book-open" class="w-4 h-4"></i> เรียนรู้เพิ่มเติม
                     </button>
                 </div>
             </div>
 
 
-            <!-- ============ STATS ============ -->
+            <!-- STATS -->
             <div class="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-24">
                 <div class="bg-white/[0.04] border border-white/10 rounded-2xl p-6 text-center hover:bg-white/[0.07] transition-all duration-300">
                     <div class="w-10 h-10 bg-white/[0.08] border border-white/15 rounded-xl flex items-center justify-center mx-auto mb-3">
@@ -827,8 +868,8 @@
                     <div class="w-10 h-10 bg-white/[0.08] border border-white/15 rounded-xl flex items-center justify-center mx-auto mb-3">
                         <i data-lucide="gift" class="w-5 h-5 text-white"></i>
                     </div>
-                    <p class="text-2xl sm:text-3xl font-black text-white stat-number">🎁</p>
-                    <p class="text-xs text-white/45 mt-1">แลกโค้ดรับเงินฟรี</p>
+                    <p class="text-2xl sm:text-3xl font-black text-white stat-number">100 ฿</p>
+                    <p class="text-xs text-white/45 mt-1">โค้ด Admin แจกฟรี</p>
                 </div>
                 <div class="bg-white/[0.04] border border-white/10 rounded-2xl p-6 text-center hover:bg-white/[0.07] transition-all duration-300">
                     <div class="w-10 h-10 bg-white/[0.08] border border-white/15 rounded-xl flex items-center justify-center mx-auto mb-3">
@@ -850,7 +891,7 @@
             </div>
 
 
-            <!-- ============ FEATURES ============ -->
+            <!-- FEATURES -->
             <div id="features" class="mb-24 scroll-mt-24">
                 <div class="text-center mb-10">
                     <p class="text-xs font-bold tracking-[0.25em] text-white/40 uppercase mb-3">Why Choose Us</p>
@@ -884,7 +925,7 @@
             </div>
 
 
-            <!-- ============ FAQ ============ -->
+            <!-- FAQ -->
             <div id="faq" class="mb-24 scroll-mt-24 max-w-3xl mx-auto">
                 <div class="text-center mb-10">
                     <p class="text-xs font-bold tracking-[0.25em] text-white/40 uppercase mb-3">FAQ</p>
@@ -895,859 +936,748 @@
                 <div class="space-y-3">
                     <div class="faq-item bg-white/[0.04] border border-white/10 rounded-2xl overflow-hidden hover:border-white/20 transition-all duration-300">
                         <button onclick="playClickSound(); toggleFaq(this)" class="w-full px-6 py-5 flex items-center justify-between gap-4 text-left">
+                            <span class="text-sm font-bold text-white">โค้ด Admin 100 บาท คืออะไร?</span>
+                            <i data-lucide="chevron-down" class="faq-chevron w-4 h-4 text-white/40 shrink-0"></i>
+                        </button>
+                        <div class="faq-answer px-6 pb-0">
+                            <div class="pb-5">
+                                <p class="text-xs text-white/50 leading-relaxed">เป็นโค้ดพิเศษที่แอดมินประกาศแจก มูลค่า 100 บาท สามารถนำไปกรอกในระบบ "แลกโค้ด" ได้ทันที เงินจะเข้าบัญชีของคุณในระบบทันที (ว่าไรบัค) โดยไม่ต้องรออนุมัติ ใช้ได้ 1 ครั้งต่อ 1 บัญชีเท่านั้น</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="faq-item bg-white/[0.04] border border-white/10 rounded-2xl overflow-hidden hover:border-white/20 transition-all duration-300">
+                        <button onclick="playClickSound(); toggleFaq(this)" class="w-full px-6 py-5 flex items-center justify-between gap-4 text-left">
+                            <span class="text-sm font-bold text-white">ระบบว่าไรบัคคืออะไร?</span>
+                            <i data-lucide="chevron-down" class="faq-chevron w-4 h-4 text-white/40 shrink-0"></i>
+                        </button>
+                        <div class="faq-answer px-6 pb-0">
+                            <div class="pb-5">
+                                <p class="text-xs text-white/50 leading-relaxed">ว่าไรบัค (Cashback) คือระบบที่เมื่อคุณแลกโค้ดสำเร็จ เงินจะถูกเติมเข้าบัญชีในระบบของ Skey Shop ทันที โดยอัตโนมัติ ไม่ต้องรอแอดมินอนุมัติ ไม่ต้องส่งสลิป รวดเร็วทันใจ</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="faq-item bg-white/[0.04] border border-white/10 rounded-2xl overflow-hidden hover:border-white/20 transition-all duration-300">
+                        <button onclick="playClickSound(); toggleFaq(this)" class="w-full px-6 py-5 flex items-center justify-between gap-4 text-left">
                             <span class="text-sm font-bold text-white">ได้โค้ดจากไหนบ้าง? ใช้ยังไง?</span>
-                            <i data-lucide="chevron-down" class="faq-chevron w-5 h-5 text-white/50 shrink-0"></i>
+                            <i data-lucide="chevron-down" class="faq-chevron w-4 h-4 text-white/40 shrink-0"></i>
                         </button>
-                        <div class="faq-answer px-6">
-                            <p class="text-xs text-white/50 leading-relaxed pb-5">โค้ดจะแจกในกิจกรรมต่างๆ ของร้าน หรือรับจากแอดมินโดยตรง เมื่อได้โค้ดมาให้กดปุ่ม "แลกโค้ด" ที่แถบด้านบน กรอกโค้ด กดยืนยัน เงินจะเข้าบัญชีทันที โดย 1 โค้ด ใช้ได้ 1 ครั้งต่อบัญชีครับ</p>
+                        <div class="faq-answer px-6 pb-0">
+                            <div class="pb-5">
+                                <p class="text-xs text-white/50 leading-relaxed">โค้ดจะถูกแจกผ่านช่องทางทางการของ Skey Shop เช่น หน้าเว็บ, ช่องแชท, กิจกรรมพิเศษ หรือจากแอดมินโดยตรง เมื่อได้โค้ดแล้ว กดปุ่ม "แลกโค้ด" ในเมนูบนสุด กรอกโค้ดแล้วกดยืนยัน เงินจะเข้าทันที</p>
+                            </div>
                         </div>
                     </div>
 
                     <div class="faq-item bg-white/[0.04] border border-white/10 rounded-2xl overflow-hidden hover:border-white/20 transition-all duration-300">
                         <button onclick="playClickSound(); toggleFaq(this)" class="w-full px-6 py-5 flex items-center justify-between gap-4 text-left">
-                            <span class="text-sm font-bold text-white">ตั้งชื่อแสดงยังไง?</span>
-                            <i data-lucide="chevron-down" class="faq-chevron w-5 h-5 text-white/50 shrink-0"></i>
+                            <span class="text-sm font-bold text-white">โค้ดใช้ซ้ำได้ไหม?</span>
+                            <i data-lucide="chevron-down" class="faq-chevron w-4 h-4 text-white/40 shrink-0"></i>
                         </button>
-                        <div class="faq-answer px-6">
-                            <p class="text-xs text-white/50 leading-relaxed pb-5">กดไอคอน ⚙️ ที่แถบด้านบน → ช่อง "ชื่อที่แสดง" → พิมพ์ชื่อที่ต้องการ → กดบันทึก ชื่อจะแสดงแทนอีเมลทันทีครับ</p>
+                        <div class="faq-answer px-6 pb-0">
+                            <div class="pb-5">
+                                <p class="text-xs text-white/50 leading-relaxed">ไม่ได้ครับ โค้ดทุกรหัสสามารถใช้ได้เพียง 1 ครั้งต่อ 1 บัญชีเท่านั้น เพื่อความเป็นธรรมสำหรับทุกคน หากพบว่ามีการใช้โค้ดผิดปกติ ระบบจะบล็อคทันที</p>
+                            </div>
                         </div>
                     </div>
 
                     <div class="faq-item bg-white/[0.04] border border-white/10 rounded-2xl overflow-hidden hover:border-white/20 transition-all duration-300">
                         <button onclick="playClickSound(); toggleFaq(this)" class="w-full px-6 py-5 flex items-center justify-between gap-4 text-left">
-                            <span class="text-sm font-bold text-white">ลืมรหัสผ่านทำอย่างไร?</span>
-                            <i data-lucide="chevron-down" class="faq-chevron w-5 h-5 text-white/50 shrink-0"></i>
+                            <span class="text-sm font-bold text-white">เงินในระบบสามารถถอนได้ไหม?</span>
+                            <i data-lucide="chevron-down" class="faq-chevron w-4 h-4 text-white/40 shrink-0"></i>
                         </button>
-                        <div class="faq-answer px-6">
-                            <p class="text-xs text-white/50 leading-relaxed pb-5">กดปุ่ม "ลืมรหัสผ่าน?" ใต้ช่องรหัสผ่านในหน้าเข้าสู่ระบบ แล้วกรอกอีเมลเพื่อตั้งรหัสผ่านใหม่ได้ทันทีครับ</p>
+                        <div class="faq-answer px-6 pb-0">
+                            <div class="pb-5">
+                                <p class="text-xs text-white/50 leading-relaxed">ตอนนี้ระบบเติมเงินอยู่ระหว่างปรับปรุง แต่เงินที่ได้จากการแลกโค้ดจะถูกเก็บไว้ในบัญชีของคุณ เมื่อระบบเปิดใช้งานเต็มรูปแบบแล้ว จะสามารถนำเงินไปใช้จ่ายหรือถอนได้ตามเงื่อนไขที่กำหนด</p>
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
 
 
-            <!-- ============ CTA ============ -->
-            <div class="mb-4">
-                <div class="relative overflow-hidden bg-white/[0.04] border border-white/10 rounded-3xl p-10 sm:p-14 text-center">
-                    <div class="absolute -top-16 -left-16 w-64 h-64 bg-white/[0.05] rounded-full blur-3xl glow-pulse pointer-events-none"></div>
-                    <div class="absolute -bottom-16 -right-16 w-64 h-64 bg-white/[0.04] rounded-full blur-3xl glow-pulse pointer-events-none" style="animation-delay: 1s;"></div>
-
-                    <div class="relative">
-                        <div class="w-16 h-16 btn-light rounded-2xl flex items-center justify-center mx-auto mb-6 shadow-[0_0_40px_rgba(255,255,255,0.2)]">
-                            <i data-lucide="rocket" class="w-8 h-8"></i>
-                        </div>
-                        <h2 class="text-3xl sm:text-4xl font-black text-white mb-4">พร้อมเริ่มใช้งานหรือยัง?</h2>
-                        <p class="text-sm sm:text-base text-white/50 leading-relaxed mb-8 max-w-lg mx-auto">
-                            สมัครสมาชิกวันนี้ ฟรี! และรับสิทธิ์แลกโค้ดรับเงินได้เลย
-                        </p>
-                        <div class="flex flex-col sm:flex-row items-center justify-center gap-3">
-                            <button onclick="playClickSound(); openRegisterForm()"
-                                    class="btn-shine relative overflow-hidden btn-light font-bold px-8 py-3.5 rounded-2xl shadow-[0_0_35px_rgba(255,255,255,0.15)] transition active:scale-95 flex items-center gap-2 text-sm w-full sm:w-auto justify-center">
-                                <i data-lucide="user-plus" class="w-4 h-4"></i>
-                                สมัครสมาชิกฟรี
-                            </button>
-                            <button onclick="playClickSound(); toggleAuthModal(true)"
-                                    class="bg-white/[0.06] hover:bg-white/[0.12] border border-white/15 text-white font-semibold px-8 py-3.5 rounded-2xl transition active:scale-95 flex items-center gap-2 text-sm w-full sm:w-auto justify-center">
-                                <i data-lucide="log-in" class="w-4 h-4"></i>
-                                เข้าสู่ระบบ
-                            </button>
-                        </div>
+            <!-- FOOTER -->
+            <footer class="border-t border-white/10 pt-10 pb-8">
+                <div class="flex flex-col sm:flex-row items-center justify-between gap-4">
+                    <div class="flex items-center gap-3">
+                        <div class="w-8 h-8 btn-light rounded-lg flex items-center justify-center font-extrabold text-xs">SK</div>
+                        <span class="text-sm font-bold text-white/70">Skey Shop</span>
+                    </div>
+                    <p class="text-xs text-white/30 text-center">2025 Skey Shop. สงวนลิขสิทธิ์ทั้งหมด</p>
+                    <div class="flex items-center gap-2">
+                        <a href="#" onclick="playClickSound(); return false" class="w-9 h-9 bg-white/[0.06] hover:bg-white/[0.12] border border-white/10 rounded-xl flex items-center justify-center transition">
+                            <i data-lucide="message-circle" class="w-4 h-4 text-white/60"></i>
+                        </a>
+                        <a href="#" onclick="playClickSound(); return false" class="w-9 h-9 bg-white/[0.06] hover:bg-white/[0.12] border border-white/10 rounded-xl flex items-center justify-center transition">
+                            <i data-lucide="globe" class="w-4 h-4 text-white/60"></i>
+                        </a>
                     </div>
                 </div>
-            </div>
+            </footer>
 
         </div>
     </main>
 
 
     <!-- =========================
-         FOOTER
+         TOAST NOTIFICATION
     ========================== -->
-    <footer class="w-full border-t border-white/10 bg-black relative">
-        <div class="max-w-6xl mx-auto px-6 py-12">
-            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-10 mb-10">
-                <div>
-                    <div class="flex items-center gap-3 mb-4">
-                        <div class="w-9 h-9 btn-light rounded-xl flex items-center justify-center font-extrabold text-xs tracking-wider">SK</div>
-                        <span class="text-lg font-extrabold text-white">Skey Shop</span>
-                    </div>
-                    <p class="text-xs text-white/45 leading-relaxed mb-4">
-                        แพลตฟอร์มสินค้าและบริการดิจิทัลครบวงจร ปลอดภัย รวดเร็ว และเชื่อถือได้
-                    </p>
-                    <span class="inline-flex items-center gap-1.5 text-[10px] font-bold text-white/60 bg-white/[0.06] border border-white/10 px-2.5 py-1 rounded-full">
-                        <span class="w-1.5 h-1.5 bg-white rounded-full animate-pulse"></span>
-                        เซิร์ฟเวอร์ออนไลน์
-                    </span>
-                </div>
-
-                <div>
-                    <h4 class="text-xs font-bold text-white uppercase tracking-wider mb-4">เมนูด่วน</h4>
-                    <ul class="space-y-2.5">
-                        <li><a onclick="playClickSound(); scrollToSection('features')" class="text-xs text-white/45 hover:text-white transition cursor-pointer">ทำไมต้องเรา</a></li>
-                        <li><a onclick="playClickSound(); scrollToSection('faq')" class="text-xs text-white/45 hover:text-white transition cursor-pointer">คำถามที่พบบ่อย</a></li>
-                    </ul>
-                </div>
-
-                <div>
-                    <h4 class="text-xs font-bold text-white uppercase tracking-wider mb-4">ติดต่อเรา</h4>
-                    <ul class="space-y-2.5">
-                        <li class="flex items-center gap-2 text-xs text-white/45"><i data-lucide="mail" class="w-3.5 h-3.5"></i> support@skeyshop.com</li>
-                        <li class="flex items-center gap-2 text-xs text-white/45"><i data-lucide="clock" class="w-3.5 h-3.5"></i> แอดมินตอบ 09:00 - 24:00</li>
-                        <li class="flex items-center gap-2 text-xs text-white/45"><i data-lucide="message-circle" class="w-3.5 h-3.5"></i> ทักแชทผ่านหน้าเว็บได้เลย</li>
-                    </ul>
-                </div>
-
-                <div>
-                    <h4 class="text-xs font-bold text-white uppercase tracking-wider mb-4">ความปลอดภัย</h4>
-                    <div class="space-y-2.5">
-                        <div class="flex items-center gap-2 text-xs text-white/45"><i data-lucide="shield-check" class="w-3.5 h-3.5 text-white/70"></i> เข้ารหัส SSL/TLS</div>
-                        <div class="flex items-center gap-2 text-xs text-white/45"><i data-lucide="lock" class="w-3.5 h-3.5 text-white/70"></i> reCAPTCHA ป้องกันบอทตอนสมัคร</div>
-                        <div class="flex items-center gap-2 text-xs text-white/45"><i data-lucide="gift" class="w-3.5 h-3.5 text-white/70"></i> โค้ดแลก 1 ครั้ง/บัญชี ปลอดภัย</div>
-                    </div>
-                </div>
-            </div>
-
-            <div class="divider-mono mb-6"></div>
-
-            <div class="flex flex-col sm:flex-row items-center justify-between gap-3">
-                <p class="text-[10px] text-white/35">© 2026 Skey Shop. All rights reserved.</p>
-                <p class="text-[10px] text-white/35 flex items-center gap-1.5">
-                    Made with <i data-lucide="heart" class="w-3 h-3 text-white/60"></i> for our customers
-                </p>
-            </div>
-        </div>
-    </footer>
+    <div id="toastContainer" class="fixed bottom-6 right-6 z-[100] flex flex-col gap-2 items-end"></div>
 
 
-    <!-- =========================
-         JAVASCRIPT
-    ========================== -->
     <script>
+    /* ==============================================
+       ฐานข้อมูล LocalStorage + ระบบโค้ด Admin
+    ============================================== */
 
-        /* =========================
-           🎁 รายการโค้ดแลกเงิน (แก้ไขได้ที่นี่)
-        ========================== */
-        const REDEEM_CODES = [
-            { code: 'WELCOME50',  amount: 50  },
-            { code: 'SKEY100',    amount: 100 },
-            { code: 'VIP2026',    amount: 500 }
+    // โค้ด Admin ที่แอดมินประกาศ — เพิ่ม/ลบ/แก้ไขได้ที่นี่
+    const ADMIN_CODES = {
+        'SKEY100': { amount: 100, label: 'โค้ด Admin 100 บาท', usedBy: [] },
+        'SKEYFREE': { amount: 100, label: 'โค้ดแจกฟรี 100 บาท', usedBy: [] },
+        'WELCOME100': { amount: 100, label: 'โค้ดต้อนรับ 100 บาท', usedBy: [] }
+    };
+
+    // โหลดข้อมูลผู้ใช้ทั้งหมดจาก localStorage
+    function getUsers() {
+        try {
+            return JSON.parse(localStorage.getItem('skey_users') || '{}');
+        } catch (e) {
+            return {};
+        }
+    }
+
+    function saveUsers(users) {
+        localStorage.setItem('skey_users', JSON.stringify(users));
+    }
+
+    function getCurrentUser() {
+        try {
+            return JSON.parse(sessionStorage.getItem('skey_session') || 'null');
+        } catch (e) {
+            return null;
+        }
+    }
+
+    function setCurrentUser(user) {
+        sessionStorage.setItem('skey_session', JSON.stringify(user));
+    }
+
+    function clearSession() {
+        sessionStorage.removeItem('skey_session');
+    }
+
+    // อัปเดตยอดเงินของ user ปัจจุบันใน localStorage
+    function updateBalance(email, newBalance) {
+        const users = getUsers();
+        if (users[email]) {
+            users[email].balance = newBalance;
+            saveUsers(users);
+        }
+        // อัปเดต session ด้วย
+        const session = getCurrentUser();
+        if (session && session.email === email) {
+            session.balance = newBalance;
+            setCurrentUser(session);
+        }
+    }
+
+    // บันทึกชื่อที่แสดง
+    function updateDisplayName(email, name) {
+        const users = getUsers();
+        if (users[email]) {
+            users[email].displayName = name;
+            saveUsers(users);
+        }
+        const session = getCurrentUser();
+        if (session && session.email === email) {
+            session.displayName = name;
+            setCurrentUser(session);
+        }
+    }
+
+    /* ==============================================
+       เสียงคลิก
+    ============================================== */
+    let soundEnabled = true;
+
+    // โหลดค่าตั้งค่าเสียงจาก localStorage
+    (function() {
+        const saved = localStorage.getItem('skey_sound');
+        if (saved !== null) soundEnabled = saved === 'true';
+    })();
+
+    function playClickSound() {
+        if (!soundEnabled) return;
+        try {
+            const ctx = new (window.AudioContext || window.webkitAudioContext)();
+            const osc = ctx.createOscillator();
+            const gain = ctx.createGain();
+            osc.connect(gain);
+            gain.connect(ctx.destination);
+            osc.type = 'sine';
+            osc.frequency.setValueAtTime(800, ctx.currentTime);
+            osc.frequency.exponentialRampToValueAtTime(1200, ctx.currentTime + 0.05);
+            gain.gain.setValueAtTime(0.08, ctx.currentTime);
+            gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.1);
+            osc.start(ctx.currentTime);
+            osc.stop(ctx.currentTime + 0.1);
+        } catch (e) {}
+    }
+
+    function toggleSoundSetting(enabled) {
+        soundEnabled = enabled;
+        localStorage.setItem('skey_sound', String(enabled));
+    }
+
+    /* ==============================================
+       LOADING SCREEN
+    ============================================== */
+    window.addEventListener('load', function() {
+        const bar = document.getElementById('progressBar');
+        const pct = document.getElementById('loadingPercent');
+        const txt = document.getElementById('loadingStatusText');
+        const screen = document.getElementById('loadingScreen');
+
+        const steps = [
+            { p: 15, t: 'กำลังเชื่อมต่อระบบ...' },
+            { p: 40, t: 'กำลังตรวจสอบโค้ด Admin...' },
+            { p: 65, t: 'กำลังโหลดข้อมูลผู้ใช้...' },
+            { p: 85, t: 'กำลังเตรียมหน้าจอ...' },
+            { p: 100, t: 'พร้อมใช้งาน!' }
         ];
 
-
-        /* =========================
-           SAFE ICONS
-        ========================== */
-        function safeIcons() {
-            try {
-                if (window.lucide && typeof lucide.createIcons === 'function') {
-                    lucide.createIcons();
-                }
-            } catch (e) {}
-        }
-
-
-        /* =========================
-           CLICK SOUND (เช็คตั้งค่าเสียง)
-        ========================== */
-        function playClickSound() {
-            try {
-                if (localStorage.getItem('sk_sound') === 'off') return;
-
-                const AudioContext = window.AudioContext || window.webkitAudioContext;
-                const audioCtx = new AudioContext();
-                const oscillator = audioCtx.createOscillator();
-                const gain = audioCtx.createGain();
-
-                oscillator.type = 'sine';
-                oscillator.frequency.setValueAtTime(600, audioCtx.currentTime);
-                oscillator.frequency.exponentialRampToValueAtTime(120, audioCtx.currentTime + 0.08);
-                gain.gain.setValueAtTime(0.15, audioCtx.currentTime);
-                gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.08);
-
-                oscillator.connect(gain);
-                gain.connect(audioCtx.destination);
-                oscillator.start();
-                oscillator.stop(audioCtx.currentTime + 0.08);
-            } catch (e) {}
-        }
-
-
-        /* =========================
-           LOADING SCREEN
-        ========================== */
-        let loadingStarted = false;
-        let loadingDone = false;
-
-        function startLoadingScreen() {
-            if (loadingStarted) return;
-            loadingStarted = true;
-
-            const loadingScreen = document.getElementById('loadingScreen');
-            if (!loadingScreen) return;
-
-            loadingScreen.classList.remove('hidden');
-            loadingScreen.classList.add('flex');
-            loadingScreen.style.opacity = '1';
-
-            const progressBar = document.getElementById('progressBar');
-            const statusText = document.getElementById('loadingStatusText');
-            const percentText = document.getElementById('loadingPercent');
-
-            let percent = 0;
-
-            const interval = setInterval(() => {
-                percent += Math.floor(Math.random() * 8) + 2;
-                if (percent > 100) percent = 100;
-
-                if (percentText) percentText.innerText = percent + '%';
-
-                if (percent >= 35 && percent < 75) {
-                    if (statusText) statusText.innerText = 'กำลังตรวจสอบความปลอดภัย...';
-                } else if (percent >= 75 && percent < 100) {
-                    if (statusText) statusText.innerText = 'กำลังโหลดข้อมูล...';
-                } else if (percent === 100) {
-                    if (statusText) statusText.innerText = 'พร้อมใช้งานแล้ว!';
-                    clearInterval(interval);
-                }
-            }, 120);
-
-            setTimeout(() => {
-                if (progressBar) progressBar.style.width = '100%';
-            }, 100);
-
-            setTimeout(forceHideLoading, 3600);
-            setTimeout(forceHideLoading, 8000);
-        }
-
-        function forceHideLoading() {
-            if (loadingDone) return;
-            loadingDone = true;
-
-            const loadingScreen = document.getElementById('loadingScreen');
-            if (!loadingScreen) return;
-
-            loadingScreen.style.opacity = '0';
-            setTimeout(() => {
-                loadingScreen.classList.add('hidden');
-                loadingScreen.classList.remove('flex');
-                loadingScreen.style.opacity = '1';
-            }, 700);
-        }
-
-
-        /* =========================
-           STORAGE HELPERS
-        ========================== */
-        function getUsers() {
-            try {
-                return JSON.parse(localStorage.getItem('sk_users') || '{}');
-            } catch (e) {
-                return {};
-            }
-        }
-
-        function saveUsers(users) {
-            localStorage.setItem('sk_users', JSON.stringify(users));
-        }
-
-        function getUsedCodes() {
-            const email = localStorage.getItem('user_email');
-            if (!email) return [];
-            try {
-                return JSON.parse(localStorage.getItem('sk_used_codes_' + email) || '[]');
-            } catch (e) {
-                return [];
-            }
-        }
-
-        function saveUsedCodes(arr) {
-            const email = localStorage.getItem('user_email');
-            if (email) {
-                localStorage.setItem('sk_used_codes_' + email, JSON.stringify(arr));
-            }
-        }
-
-
-        /* =========================
-           MODAL TOGGLES
-        ========================== */
-        function toggleAuthModal(show) {
-            document.getElementById('authModal').classList.toggle('hidden', !show);
-            if (!show) backToLogin(true);
-        }
-
-        function toggleTopUpModal(show) {
-            const modal = document.getElementById('topUpModal');
-            modal.classList.toggle('hidden', !show);
-
-            if (show) {
-                refreshTopUpModal();
-                replayCardAnimation(modal);
-                safeIcons();
-            }
-        }
-
-        function toggleRedeemModal(show) {
-            const modal = document.getElementById('redeemModal');
-            modal.classList.toggle('hidden', !show);
-
-            if (show) {
-                /* รีเซ็ตกลับหน้ากรอกโค้ด */
-                document.getElementById('redeemInputView').classList.remove('hidden');
-                document.getElementById('redeemSuccessView').classList.add('hidden');
-                document.getElementById('redeemCodeInput').value = '';
-                hideRedeemError();
-                refreshRedeemBalance();
-
-                replayCardAnimation(modal);
-                safeIcons();
-
-                /* โฟกัสช่องกรอก */
-                setTimeout(() => {
-                    try { document.getElementById('redeemCodeInput').focus(); } catch (e) {}
+        let i = 0;
+        function nextStep() {
+            if (i < steps.length) {
+                bar.style.width = steps[i].p + '%';
+                pct.textContent = steps[i].p + '%';
+                txt.textContent = steps[i].t;
+                i++;
+                setTimeout(nextStep, 600);
+            } else {
+                setTimeout(function() {
+                    screen.style.opacity = '0';
+                    setTimeout(function() {
+                        screen.style.display = 'none';
+                        refreshUI();
+                    }, 700);
                 }, 400);
             }
         }
+        setTimeout(nextStep, 300);
+    });
 
-        function toggleSettingsModal(show) {
-            const modal = document.getElementById('settingsModal');
-            modal.classList.toggle('hidden', !show);
-
-            if (show) {
-                loadSettings();
-                replayCardAnimation(modal);
-                safeIcons();
-            }
+    /* ==============================================
+       AUTH SYSTEM
+    ============================================== */
+    function toggleAuthModal(show) {
+        const m = document.getElementById('authModal');
+        if (show) {
+            m.classList.remove('hidden');
+            m.classList.add('flex');
+            switchForm('login');
+        } else {
+            m.classList.add('hidden');
+            m.classList.remove('flex');
+            hideAllErrors();
         }
+    }
 
-        /* เล่นอนิเมชันการ์ดเด้งซ้ำ */
-        function replayCardAnimation(modal) {
-            const card = modal.querySelector('.modal-enter');
-            if (card) {
-                card.classList.remove('modal-enter');
-                void card.offsetWidth;
-                card.classList.add('modal-enter');
-            }
-        }
+    function switchForm(type) {
+        const loginTab = document.getElementById('loginTabBtn');
+        const regTab = document.getElementById('registerTabBtn');
+        const loginForm = document.getElementById('loginForm');
+        const regForm = document.getElementById('registerForm');
+        const forgotView = document.getElementById('forgotView');
+        const tabs = document.getElementById('authTabs');
 
+        forgotView.classList.add('hidden');
+        tabs.classList.remove('hidden');
 
-        /* =========================
-           🎁 REDEEM CODE SYSTEM
-        ========================== */
-        function refreshRedeemBalance() {
-            const el = document.getElementById('redeemBalance');
-            if (el) {
-                el.innerText = parseFloat(localStorage.getItem('user_balance') || '0').toFixed(2);
-            }
-        }
-
-        function showRedeemError(message) {
-            document.getElementById('redeemErrorText').innerText = message;
-            document.getElementById('redeemError').classList.remove('hidden');
-            safeIcons();
-        }
-
-        function hideRedeemError() {
-            document.getElementById('redeemError').classList.add('hidden');
-        }
-
-        function redeemNow() {
-            hideRedeemError();
-
-            /* ต้องล็อกอินก่อน */
-            const email = localStorage.getItem('user_email');
-            if (!email) {
-                toggleRedeemModal(false);
-                toggleAuthModal(true);
-                alert('กรุณาเข้าสู่ระบบก่อนแลกโค้ดครับ');
-                return;
-            }
-
-            const input = document.getElementById('redeemCodeInput');
-            const code = input.value.trim().toUpperCase();
-
-            if (!code) {
-                showRedeemError('กรุณากรอกโค้ดก่อนกดยืนยันครับ');
-                return;
-            }
-
-            /* หาโค้ดในระบบ */
-            const found = REDEEM_CODES.find(c => c.code === code);
-
-            if (!found) {
-                showRedeemError('ไม่พบรหัสโค้ดนี้ กรุณาตรวจสอบและลองอีกครั้ง');
-                return;
-            }
-
-            /* เช็คว่าใช้ไปแล้วหรือยัง */
-            const used = getUsedCodes();
-            if (used.includes(code)) {
-                showRedeemError('คุณได้ใช้โค้ดนี้ไปแล้ว (1 โค้ด ใช้ได้ 1 ครั้งต่อบัญชี)');
-                return;
-            }
-
-            /* เพิ่มเงิน */
-            const balance = parseFloat(localStorage.getItem('user_balance') || '0');
-            const newBalance = (balance + found.amount).toFixed(2);
-
-            localStorage.setItem('user_balance', newBalance);
-
-            /* จำว่าใช้โค้ดนี้แล้ว */
-            used.push(code);
-            saveUsedCodes(used);
-
-            /* อัปเดตหน้าเว็บ + แสดงผลสำเร็จ */
-            updateProfileUI(email);
-
-            document.getElementById('redeemAmount').innerText = found.amount;
-            document.getElementById('redeemNewBalance').innerText = newBalance;
-
-            document.getElementById('redeemInputView').classList.add('hidden');
-            document.getElementById('redeemSuccessView').classList.remove('hidden');
-
-            safeIcons();
-        }
-
-
-        /* =========================
-           ⚙️ SETTINGS SYSTEM
-        ========================== */
-        function loadSettings() {
-            const email = localStorage.getItem('user_email') || '-';
-
-            /* โหลดชื่อเดิม */
-            const savedName = localStorage.getItem('sk_name_' + email) || '';
-            document.getElementById('settingNameInput').value = savedName;
-
-            /* ข้อมูลบัญชี */
-            document.getElementById('settingEmail').innerText = email;
-            document.getElementById('settingBalance').innerText =
-                parseFloat(localStorage.getItem('user_balance') || '0').toFixed(2);
-
-            /* สถานะเสียง */
-            document.getElementById('soundToggle').checked =
-                (localStorage.getItem('sk_sound') !== 'off');
-
-            /* ซ่อนข้อความบันทึกสำเร็จ */
-            document.getElementById('nameSavedMsg').classList.add('hidden');
-
-            safeIcons();
-        }
-
-        function saveDisplayName() {
-            const email = localStorage.getItem('user_email');
-            const name = document.getElementById('settingNameInput').value.trim();
-
-            if (!email) {
-                alert('กรุณาเข้าสู่ระบบก่อนครับ');
-                return;
-            }
-
-            if (!name) {
-                /* ลบชื่อ = กลับไปแสดงอีเมล */
-                localStorage.removeItem('sk_name_' + email);
-            } else {
-                localStorage.setItem('sk_name_' + email, name);
-            }
-
-            updateProfileUI(email);
-
-            const msg = document.getElementById('nameSavedMsg');
-            msg.classList.remove('hidden');
-            safeIcons();
-
-            setTimeout(() => msg.classList.add('hidden'), 2000);
-        }
-
-        function toggleSoundSetting(isOn) {
-            if (isOn) {
-                localStorage.setItem('sk_sound', 'on');
-            } else {
-                localStorage.setItem('sk_sound', 'off');
-            }
-        }
-
-        function confirmLogout() {
-            if (confirm('ต้องการออกจากระบบใช่ไหมครับ?')) {
-                logout();
-            }
-        }
-
-
-        /* =========================
-           SCROLL / FAQ
-        ========================== */
-        function scrollToSection(id) {
-            try {
-                const el = document.getElementById(id);
-                if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
-            } catch (e) {}
-        }
-
-        function toggleFaq(btn) {
-            const item = btn.closest('.faq-item');
-            const isOpen = item.classList.contains('open');
-
-            document.querySelectorAll('.faq-item').forEach(faq => faq.classList.remove('open'));
-
-            if (!isOpen) item.classList.add('open');
-        }
-
-
-        /* =========================
-           LOGIN / REGISTER TAB
-        ========================== */
-        function switchForm(type) {
-            backToLogin(true);
-
-            const loginForm = document.getElementById('loginForm');
-            const registerForm = document.getElementById('registerForm');
-            const loginTab = document.getElementById('loginTabBtn');
-            const registerTab = document.getElementById('registerTabBtn');
-
-            const activeClass = 'w-1/2 py-3 text-center font-bold text-white border-b-2 border-white transition flex items-center justify-center gap-2';
-            const inactiveClass = 'w-1/2 py-3 text-center font-semibold text-white/40 hover:text-white border-b-2 border-transparent transition flex items-center justify-center gap-2';
-
-            if (type === 'login') {
-                loginForm.classList.remove('hidden');
-                registerForm.classList.add('hidden');
-                loginTab.className = activeClass;
-                registerTab.className = inactiveClass;
-            } else {
-                loginForm.classList.add('hidden');
-                registerForm.classList.remove('hidden');
-                registerTab.className = activeClass;
-                loginTab.className = inactiveClass;
-            }
-
-            hideRegCaptchaError();
-            safeIcons();
-        }
-
-        function openRegisterForm() {
-            toggleAuthModal(true);
-            switchForm('register');
-        }
-
-
-        /* =========================
-           REGISTER CAPTCHA HELPERS
-        ========================== */
-        function showRegCaptchaError(message) {
-            const el = document.getElementById('regCaptchaError');
-            el.innerText = message;
-            el.classList.remove('hidden');
-        }
-
-        function hideRegCaptchaError() {
-            document.getElementById('regCaptchaError').classList.add('hidden');
-        }
-
-        function onRegCaptchaExpired() {
-            showRegCaptchaError('การยืนยันหมดอายุแล้ว กรุณาติ๊ก ✓ ใหม่อีกครั้ง');
-        }
-
-
-        /* =========================
-           FORGOT PASSWORD
-        ========================== */
-        let forgotEmail = '';
-
-        function showForgotPassword() {
-            document.getElementById('authTabs').classList.add('hidden');
-            document.getElementById('loginForm').classList.add('hidden');
-            document.getElementById('registerForm').classList.add('hidden');
-
-            document.getElementById('forgotView').classList.remove('hidden');
-
-            document.getElementById('forgotStep1').classList.remove('hidden');
-            document.getElementById('forgotStep2').classList.add('hidden');
-            document.getElementById('forgotError1').classList.add('hidden');
-            document.getElementById('forgotError2').classList.add('hidden');
-            document.getElementById('forgotSubtitle').innerText = 'กรอกอีเมลที่ใช้สมัคร เพื่อตั้งรหัสผ่านใหม่';
-
-            safeIcons();
-        }
-
-        function backToLogin(silent) {
-            const forgotView = document.getElementById('forgotView');
-
-            if (forgotView) {
-                forgotView.classList.add('hidden');
-                document.getElementById('forgotStep1').classList.remove('hidden');
-                document.getElementById('forgotStep2').classList.add('hidden');
-                document.getElementById('forgotError1').classList.add('hidden');
-                document.getElementById('forgotError2').classList.add('hidden');
-                document.getElementById('forgotEmail').value = '';
-                document.getElementById('forgotNewPass').value = '';
-                document.getElementById('forgotConfirmPass').value = '';
-            }
-
-            if (silent === true) return;
-
-            document.getElementById('authTabs').classList.remove('hidden');
-
-            const loginForm = document.getElementById('loginForm');
-            const registerForm = document.getElementById('registerForm');
+        if (type === 'login') {
+            loginTab.className = 'w-1/2 py-3 text-center font-bold text-white border-b-2 border-white transition flex items-center justify-center gap-2';
+            regTab.className = 'w-1/2 py-3 text-center font-semibold text-white/40 hover:text-white border-b-2 border-transparent transition flex items-center justify-center gap-2';
             loginForm.classList.remove('hidden');
-            registerForm.classList.add('hidden');
-
-            safeIcons();
+            regForm.classList.add('hidden');
+        } else {
+            regTab.className = 'w-1/2 py-3 text-center font-bold text-white border-b-2 border-white transition flex items-center justify-center gap-2';
+            loginTab.className = 'w-1/2 py-3 text-center font-semibold text-white/40 hover:text-white border-b-2 border-transparent transition flex items-center justify-center gap-2';
+            regForm.classList.remove('hidden');
+            loginForm.classList.add('hidden');
         }
+        hideAllErrors();
+    }
 
-        function showForgotError(elementId, message) {
-            const el = document.getElementById(elementId);
-            el.innerText = message;
-            el.classList.remove('hidden');
-        }
+    function handleAuth(e, type) {
+        e.preventDefault();
+        hideAllErrors();
 
-        function handleForgotStep1(e) {
-            e.preventDefault();
-
-            const email = document.getElementById('forgotEmail').value.trim().toLowerCase();
-            const users = getUsers();
-
-            if (!users[email]) {
-                showForgotError('forgotError1', 'ไม่พบอีเมลนี้ในระบบ กรุณาตรวจสอบอีเมลอีกครั้ง');
+        if (type === 'register') {
+            // ตรวจ reCAPTCHA
+            const resp = grecaptcha.getResponse();
+            if (!resp) {
+                const err = document.getElementById('regCaptchaError');
+                err.textContent = 'กรุณายืนยันว่าคุณไม่ใช่โปรแกรมอัตโนมัติ';
+                err.classList.remove('hidden');
                 return;
             }
 
-            forgotEmail = email;
-            document.getElementById('forgotError1').classList.add('hidden');
-            document.getElementById('forgotStep1').classList.add('hidden');
-            document.getElementById('forgotStep2').classList.remove('hidden');
-            document.getElementById('forgotSubtitle').innerText = 'ตั้งรหัสผ่านใหม่สำหรับ ' + email;
-        }
-
-        function handleForgotStep2(e) {
-            e.preventDefault();
-
-            const newPass = document.getElementById('forgotNewPass').value;
-            const confirmPass = document.getElementById('forgotConfirmPass').value;
-
-            if (newPass.length < 6) {
-                showForgotError('forgotError2', 'รหัสผ่านต้องมีอย่างน้อย 6 ตัวอักษร');
-                return;
-            }
-
-            if (newPass !== confirmPass) {
-                showForgotError('forgotError2', 'รหัสผ่านทั้งสองช่องไม่ตรงกัน');
-                return;
-            }
+            const email = document.getElementById('regEmail').value.trim().toLowerCase();
+            const pass = document.getElementById('regPassword').value;
 
             const users = getUsers();
-            users[forgotEmail] = newPass;
+            if (users[email]) {
+                const err = document.getElementById('regCaptchaError');
+                err.textContent = 'อีเมลนี้ถูกสมัครไปแล้ว กรุณาเข้าสู่ระบบ';
+                err.classList.remove('hidden');
+                grecaptcha.reset();
+                return;
+            }
+
+            users[email] = {
+                password: pass,
+                balance: 0,
+                displayName: '',
+                createdAt: Date.now(),
+                redeemedCodes: []
+            };
             saveUsers(users);
 
-            alert('เปลี่ยนรหัสผ่านสำเร็จแล้ว! กรุณาเข้าสู่ระบบด้วยรหัสผ่านใหม่ครับ');
+            // ล็อกอินอัตโนมัติหลังสมัคร
+            const user = { email: email, balance: 0, displayName: '' };
+            setCurrentUser(user);
 
-            backToLogin();
-            document.getElementById('loginEmail').value = forgotEmail;
-        }
+            grecaptcha.reset();
+            toggleAuthModal(false);
+            refreshUI();
+            showToast('สมัครสมาชิกสำเร็จ! ยินดีต้อนรับ', 'success');
 
+        } else {
+            // LOGIN
+            const email = document.getElementById('loginEmail').value.trim().toLowerCase();
+            const pass = document.getElementById('loginPassword').value;
 
-        /* =========================
-           PASSWORD VISIBILITY
-        ========================== */
-        function togglePasswordVisibility(inputId, btn) {
-            const input = document.getElementById(inputId);
-
-            if (input.type === 'password') {
-                input.type = 'text';
-                btn.innerHTML = '<i data-lucide="eye-off" class="w-4 h-4"></i>';
-            } else {
-                input.type = 'password';
-                btn.innerHTML = '<i data-lucide="eye" class="w-4 h-4"></i>';
-            }
-
-            safeIcons();
-        }
-
-
-        /* =========================
-           LOGIN / REGISTER
-        ========================== */
-        function handleAuth(e, formType) {
-            e.preventDefault();
-
-            let email, password;
-
-            if (formType === 'login') {
-                email = document.getElementById('loginEmail').value.trim().toLowerCase();
-                password = document.getElementById('loginPassword').value;
-            } else {
-                email = document.getElementById('regEmail').value.trim().toLowerCase();
-                password = document.getElementById('regPassword').value;
-            }
-
-            if (!email || !password) {
-                alert('กรุณากรอกข้อมูลให้ครบ');
+            const users = getUsers();
+            if (!users[email] || users[email].password !== pass) {
+                showToast('อีเมลหรือรหัสผ่านไม่ถูกต้อง', 'error');
                 return;
             }
 
-            const users = getUsers();
-
-            if (formType === 'register') {
-                if (password.length < 6) {
-                    alert('รหัสผ่านต้องมีอย่างน้อย 6 ตัวอักษร');
-                    return;
-                }
-
-                if (users[email]) {
-                    alert('อีเมลนี้ถูกใช้สมัครสมาชิกแล้ว กรุณาใช้อีเมลอื่นครับ');
-                    return;
-                }
-
-                hideRegCaptchaError();
-
-                let captchaOk = false;
-                try {
-                    captchaOk = (typeof grecaptcha !== 'undefined' && grecaptcha.getResponse());
-                } catch (err) {}
-
-                if (!captchaOk) {
-                    showRegCaptchaError('กรุณาติ๊ก ✓ "ฉันไม่ใช่โปรแกรมอัตโนมัติ" ก่อนสมัครสมาชิกครับ');
-                    return;
-                }
-
-                users[email] = password;
-                saveUsers(users);
-
-                try { grecaptcha.reset(); } catch (err) {}
-
-            } else {
-                if (!users[email]) {
-                    if (localStorage.getItem('user_email') === email) {
-                        users[email] = password;
-                        saveUsers(users);
-                    } else {
-                        alert('ไม่พบบัญชีนี้ในระบบ กรุณาสมัครสมาชิกก่อนครับ');
-                        return;
-                    }
-                } else if (users[email] !== password) {
-                    alert('รหัสผ่านไม่ถูกต้อง กรุณาลองอีกครั้ง (หรือกดลืมรหัสผ่าน)');
-                    return;
-                }
-            }
-
-            localStorage.setItem('user_email', email);
-
-            if (!localStorage.getItem('user_balance')) {
-                localStorage.setItem('user_balance', '0');
-            }
-
-            updateProfileUI(email);
+            const user = {
+                email: email,
+                balance: users[email].balance,
+                displayName: users[email].displayName || ''
+            };
+            setCurrentUser(user);
             toggleAuthModal(false);
+            refreshUI();
+            showToast('เข้าสู่ระบบสำเร็จ สวัสดีครับ', 'success');
+        }
+    }
+
+    function onRegCaptchaExpired() {
+        grecaptcha.reset();
+    }
+
+    /* ==============================================
+       ลืมรหัสผ่าน
+    ============================================== */
+    let forgotEmail = '';
+
+    function showForgotPassword() {
+        document.getElementById('loginForm').classList.add('hidden');
+        document.getElementById('registerForm').classList.add('hidden');
+        document.getElementById('authTabs').classList.add('hidden');
+        document.getElementById('forgotView').classList.remove('hidden');
+        document.getElementById('forgotStep1').classList.remove('hidden');
+        document.getElementById('forgotStep2').classList.add('hidden');
+        hideAllErrors();
+    }
+
+    function backToLogin() {
+        document.getElementById('forgotView').classList.add('hidden');
+        switchForm('login');
+    }
+
+    function handleForgotStep1(e) {
+        e.preventDefault();
+        hideAllErrors();
+        const email = document.getElementById('forgotEmail').value.trim().toLowerCase();
+        const users = getUsers();
+
+        if (!users[email]) {
+            const err = document.getElementById('forgotError1');
+            err.textContent = 'ไม่พบอีเมลนี้ในระบบ กรุณาตรวจสอบอีกครั้ง';
+            err.classList.remove('hidden');
+            return;
         }
 
+        forgotEmail = email;
+        document.getElementById('forgotStep1').classList.add('hidden');
+        document.getElementById('forgotStep2').classList.remove('hidden');
+    }
 
-        /* =========================
-           CHECK LOGIN
-        ========================== */
-        function checkPersistedLogin() {
-            const savedEmail = localStorage.getItem('user_email');
-            if (savedEmail) {
-                updateProfileUI(savedEmail);
+    function handleForgotStep2(e) {
+        e.preventDefault();
+        hideAllErrors();
+        const newPass = document.getElementById('forgotNewPass').value;
+        const confirmPass = document.getElementById('forgotConfirmPass').value;
+
+        if (newPass !== confirmPass) {
+            const err = document.getElementById('forgotError2');
+            err.textContent = 'รหัสผ่านใหม่ไม่ตรงกัน กรุณากรอกใหม่';
+            err.classList.remove('hidden');
+            return;
+        }
+
+        const users = getUsers();
+        if (users[forgotEmail]) {
+            users[forgotEmail].password = newPass;
+            saveUsers(users);
+        }
+
+        showToast('เปลี่ยนรหัสผ่านสำเร็จแล้ว กรุณาเข้าสู่ระบบใหม่', 'success');
+        backToLogin();
+    }
+
+    /* ==============================================
+       แสดง/ซ่อนรหัสผ่าน
+    ============================================== */
+    function togglePasswordVisibility(inputId, btn) {
+        const input = document.getElementById(inputId);
+        if (input.type === 'password') {
+            input.type = 'text';
+            btn.innerHTML = '<i data-lucide="eye-off" class="w-4 h-4"></i>';
+        } else {
+            input.type = 'password';
+            btn.innerHTML = '<i data-lucide="eye" class="w-4 h-4"></i>';
+        }
+        lucide.createIcons();
+    }
+
+    /* ==============================================
+       REDEEM CODE SYSTEM (ระบบแลกโค้ด Admin 100 บาท)
+    ============================================== */
+    function toggleRedeemModal(show) {
+        const m = document.getElementById('redeemModal');
+        if (show) {
+            // ต้องล็อกอินก่อน
+            const user = getCurrentUser();
+            if (!user) {
+                showToast('กรุณาเข้าสู่ระบบก่อนจึงจะแลกโค้ดได้', 'error');
+                toggleAuthModal(true);
+                return;
             }
+            m.classList.remove('hidden');
+            m.classList.add('flex');
+            // รีเซ็ตหน้า
+            document.getElementById('redeemInputView').classList.remove('hidden');
+            document.getElementById('redeemSuccessView').classList.add('hidden');
+            document.getElementById('redeemCodeInput').value = '';
+            document.getElementById('redeemError').classList.add('hidden');
+            document.getElementById('redeemBalance').textContent = user.balance.toFixed(2);
+            // โฟกัส input
+            setTimeout(function() { document.getElementById('redeemCodeInput').focus(); }, 300);
+        } else {
+            m.classList.add('hidden');
+            m.classList.remove('flex');
+        }
+    }
+
+    function redeemNow() {
+        const user = getCurrentUser();
+        if (!user) return;
+
+        const codeInput = document.getElementById('redeemCodeInput');
+        const errBox = document.getElementById('redeemError');
+        const errText = document.getElementById('redeemErrorText');
+        const code = codeInput.value.trim().toUpperCase();
+
+        // ตรวจว่ากรอกโค้ดหรือยัง
+        if (!code) {
+            errText.textContent = 'กรุณากรอกรหัสโค้ดก่อน';
+            errBox.classList.remove('hidden');
+            return;
         }
 
+        // ตรวจว่าโค้ดมีอยู่ในระบบหรือไม่
+        const codeData = ADMIN_CODES[code];
+        if (!codeData) {
+            errText.textContent = 'โค้ดนี้ไม่ถูกต้อง กรุณาตรวจสอบอีกครั้ง';
+            errBox.classList.remove('hidden');
+            shakeElement(codeInput);
+            return;
+        }
 
-        /* =========================
-           ย่ออีเมล
-        ========================== */
-        function abbreviateEmail(email) {
-            const parts = email.split('@');
+        // ตรวจว่าเคยใช้โค้ดนี้แล้วหรือยัง (ต่อ 1 บัญชี)
+        const users = getUsers();
+        const userData = users[user.email];
+        if (userData && userData.redeemedCodes && userData.redeemedCodes.includes(code)) {
+            errText.textContent = 'คุณเคยใช้โค้ด "' + code + '" ไปแล้ว โค้ดนี้ใช้ได้ 1 ครั้งต่อ 1 บัญชี';
+            errBox.classList.remove('hidden');
+            shakeElement(codeInput);
+            return;
+        }
 
-            if (parts.length !== 2 || !parts[0]) {
-                return email;
+        // แลกโค้ดสำเร็จ — เพิ่มเงิน
+        const newBalance = user.balance + codeData.amount;
+        updateBalance(user.email, newBalance);
+
+        // บันทึกว่าใช้โค้ดนี้แล้ว
+        if (userData) {
+            if (!userData.redeemedCodes) userData.redeemedCodes = [];
+            userData.redeemedCodes.push(code);
+            users[user.email] = userData;
+            saveUsers(users);
+        }
+
+        // แสดงหน้าสำเร็จ
+        document.getElementById('redeemInputView').classList.add('hidden');
+        document.getElementById('redeemSuccessView').classList.remove('hidden');
+        document.getElementById('redeemAmount').textContent = codeData.amount;
+        document.getElementById('redeemNewBalance').textContent = newBalance.toFixed(2);
+
+        // เอฟเฟกต์คอนเฟตติ
+        spawnConfetti('confettiContainer');
+
+        // รีเฟรช UI หลัก
+        refreshUI();
+    }
+
+    // เอฟเฟกต์สั่น input
+    function shakeElement(el) {
+        el.style.animation = 'none';
+        el.offsetHeight; // reflow
+        el.style.animation = 'shake 0.4s ease';
+        setTimeout(function() { el.style.animation = ''; }, 400);
+    }
+
+    // เพิ่ม keyframe shake แบบ dynamic
+    (function() {
+        const style = document.createElement('style');
+        style.textContent = '@keyframes shake { 0%,100%{transform:translateX(0)} 20%{transform:translateX(-8px)} 40%{transform:translateX(8px)} 60%{transform:translateX(-5px)} 80%{transform:translateX(5px)} }';
+        document.head.appendChild(style);
+    })();
+
+    // สร้างคอนเฟตติ
+    function spawnConfetti(containerId) {
+        const container = document.getElementById(containerId);
+        if (!container) return;
+        const colors = ['#ffffff', '#e5e5e5', '#a3a3a3', '#d4d4d4', '#f5f5f5'];
+        for (let i = 0; i < 24; i++) {
+            const piece = document.createElement('div');
+            piece.className = 'confetti-piece';
+            piece.style.left = (Math.random() * 80 + 10) + '%';
+            piece.style.top = '-10px';
+            piece.style.background = colors[Math.floor(Math.random() * colors.length)];
+            piece.style.animationDelay = (Math.random() * 0.5) + 's';
+            piece.style.animationDuration = (0.8 + Math.random() * 0.6) + 's';
+            piece.style.transform = 'rotate(' + (Math.random() * 360) + 'deg)';
+            container.appendChild(piece);
+            // ลบออกหลัง animation จบ
+            setTimeout(function() { piece.remove(); }, 2000);
+        }
+    }
+
+    /* ==============================================
+       SETTINGS MODAL
+    ============================================== */
+    function toggleSettingsModal(show) {
+        const m = document.getElementById('settingsModal');
+        if (show) {
+            const user = getCurrentUser();
+            if (!user) return;
+            m.classList.remove('hidden');
+            m.classList.add('flex');
+            document.getElementById('settingEmail').textContent = user.email;
+            document.getElementById('settingBalance').textContent = user.balance.toFixed(2);
+            document.getElementById('settingNameInput').value = user.displayName || '';
+            document.getElementById('nameSavedMsg').classList.add('hidden');
+            document.getElementById('soundToggle').checked = soundEnabled;
+        } else {
+            m.classList.add('hidden');
+            m.classList.remove('flex');
+        }
+    }
+
+    function saveDisplayName() {
+        const user = getCurrentUser();
+        if (!user) return;
+        const name = document.getElementById('settingNameInput').value.trim();
+        updateDisplayName(user.email, name);
+        refreshUI();
+        const msg = document.getElementById('nameSavedMsg');
+        msg.classList.remove('hidden');
+        setTimeout(function() { msg.classList.add('hidden'); }, 2500);
+        showToast('บันทึกชื่อเรียบร้อยแล้ว', 'success');
+    }
+
+    function confirmLogout() {
+        toggleSettingsModal(false);
+        logout();
+    }
+
+    /* ==============================================
+       TOP UP MODAL (ปิดปรับปรุง)
+    ============================================== */
+    function toggleTopUpModal(show) {
+        const m = document.getElementById('topUpModal');
+        if (show) {
+            const user = getCurrentUser();
+            if (user) {
+                document.getElementById('tumBalance').textContent = user.balance.toFixed(2);
             }
+            m.classList.remove('hidden');
+            m.classList.add('flex');
+        } else {
+            m.classList.add('hidden');
+            m.classList.remove('flex');
+        }
+    }
 
-            const username = parts[0];
-            const domain = parts[1];
+    function contactAdmin() {
+        showToast('กรุณาทักแชททางช่องทางที่แอดมินกำหนด', 'info');
+    }
 
-            const shortUser = username.length <= 2
-                ? username.charAt(0) + '***'
-                : username.substring(0, 2) + '***';
+    /* ==============================================
+       LOGOUT
+    ============================================== */
+    function logout() {
+        clearSession();
+        refreshUI();
+        showToast('ออกจากระบบแล้ว', 'info');
+    }
 
-            return shortUser + '@' + domain;
+    /* ==============================================
+       FAQ TOGGLE
+    ============================================== */
+    function toggleFaq(btn) {
+        const item = btn.closest('.faq-item');
+        const isOpen = item.classList.contains('open');
+        // ปิดทั้งหมดก่อน
+        document.querySelectorAll('.faq-item').forEach(function(el) { el.classList.remove('open'); });
+        if (!isOpen) item.classList.add('open');
+    }
+
+    /* ==============================================
+       TOAST NOTIFICATION
+    ============================================== */
+    function showToast(message, type) {
+        const container = document.getElementById('toastContainer');
+        const toast = document.createElement('div');
+
+        let icon = 'info';
+        let borderColor = 'border-white/20';
+        let iconColor = 'text-white/80';
+
+        if (type === 'success') {
+            icon = 'check-circle';
+            borderColor = 'border-green-400/30';
+            iconColor = 'text-green-400';
+        } else if (type === 'error') {
+            icon = 'alert-circle';
+            borderColor = 'border-red-400/30';
+            iconColor = 'text-red-400';
         }
 
+        toast.className = 'modal-enter bg-[#0d0d0d] border ' + borderColor + ' rounded-2xl px-5 py-3.5 shadow-2xl flex items-center gap-3 max-w-xs';
+        toast.innerHTML = '<i data-lucide="' + icon + '" class="w-5 h-5 ' + iconColor + ' shrink-0"></i><span class="text-xs font-semibold text-white/90 leading-snug">' + message + '</span>';
 
-        /* =========================
-           PROFILE (แสดงชื่อ + เงิน)
-        ========================== */
-        function updateProfileUI(email) {
-            const balance =
-                parseFloat(localStorage.getItem('user_balance') || '0').toFixed(2);
+        container.appendChild(toast);
+        lucide.createIcons({ nodes: [toast] });
 
-            document.getElementById('openAuthBtn').classList.add('hidden');
-            document.getElementById('userProfile').classList.remove('hidden');
+        setTimeout(function() {
+            toast.style.transition = 'opacity 0.4s, transform 0.4s';
+            toast.style.opacity = '0';
+            toast.style.transform = 'translateX(20px)';
+            setTimeout(function() { toast.remove(); }, 400);
+        }, 3500);
+    }
 
-            /* ชื่อแสดง (ถ้าตั้งไว้) หรืออีเมลย่อ */
-            const savedName = localStorage.getItem('sk_name_' + email);
+    /* ==============================================
+       REFRESH UI (อัปเดตทุกอย่างตาม session)
+    ============================================== */
+    function refreshUI() {
+        const user = getCurrentUser();
+        const authBtn = document.getElementById('openAuthBtn');
+        const profile = document.getElementById('userProfile');
+
+        if (user) {
+            authBtn.classList.add('hidden');
+            profile.classList.remove('hidden');
+            profile.classList.add('flex');
+
+            // อัตราตัวอักษรแรกของอีเมล
+            document.getElementById('avatarLetter').textContent = (user.displayName || user.email).charAt(0).toUpperCase();
+
+            // ชื่อแสดง
             const nameEl = document.getElementById('displayName');
-            nameEl.innerText = savedName || abbreviateEmail(email);
-            nameEl.title = savedName ? savedName : email;
+            nameEl.textContent = user.displayName || user.email.split('@')[0];
+            nameEl.title = user.email;
 
-            /* อวตาร = ตัวแรกของชื่อ หรืออีเมล */
-            const firstChar = (savedName || email).charAt(0).toUpperCase();
-            document.getElementById('avatarLetter').innerText = firstChar;
-
-            document.getElementById('userBalance').innerText = balance;
-
-            refreshTopUpModal();
-            refreshRedeemBalance();
-            safeIcons();
+            // ยอดเงิน
+            document.getElementById('userBalance').textContent = user.balance.toFixed(2);
+        } else {
+            authBtn.classList.remove('hidden');
+            profile.classList.add('hidden');
+            profile.classList.remove('flex');
         }
 
+        // รีเรนเดอร์ไอคอน
+        try { lucide.createIcons(); } catch (e) {}
+    }
 
-        /* =========================
-           LOGOUT
-        ========================== */
-        function logout() {
-            localStorage.removeItem('user_email');
-            location.reload();
+    /* ==============================================
+       UTILITY
+    ============================================== */
+    function hideAllErrors() {
+        document.querySelectorAll('#regCaptchaError, #forgotError1, #forgotError2, #redeemError').forEach(function(el) {
+            el.classList.add('hidden');
+        });
+    }
+
+    function openRegisterForm() {
+        const user = getCurrentUser();
+        if (user) {
+            showToast('คุณเข้าสู่ระบบอยู่แล้ว', 'info');
+            return;
         }
+        toggleAuthModal(true);
+        switchForm('register');
+    }
 
+    function scrollToSection(id) {
+        const el = document.getElementById(id);
+        if (el) el.scrollIntoView({ behavior: 'smooth' });
+    }
 
-        /* =========================
-           TOP UP (ปิดปรับปรุง)
-        ========================== */
-        function refreshTopUpModal() {
-            const el = document.getElementById('tumBalance');
-            if (el) {
-                el.innerText = parseFloat(localStorage.getItem('user_balance') || '0').toFixed(2);
-            }
-        }
-
-        function contactAdmin() {
-            alert('สอบถามเพิ่มเติมติดต่อได้ที่\n\n📧 support@skeyshop.com\n🕐 แอดมินตอบ 09:00 - 24:00');
-        }
-
-
-        /* =========================
-           ESC KEY
-        ========================== */
-        document.addEventListener('keydown', function (event) {
-            if (event.key === 'Escape') {
-                toggleAuthModal(false);
-                toggleTopUpModal(false);
-                toggleRedeemModal(false);
-                toggleSettingsModal(false);
+    // ปิด modal เมื่อคลิกพื้นหลัง
+    document.querySelectorAll('#authModal, #redeemModal, #settingsModal, #topUpModal').forEach(function(modal) {
+        modal.addEventListener('click', function(e) {
+            if (e.target === modal) {
+                playClickSound();
+                modal.classList.add('hidden');
+                modal.classList.remove('flex');
             }
         });
+    });
 
+    // ปิด modal ด้วยปุ่ม Escape
+    document.addEventListener('keydown', function(e) {
+        if (e.key === 'Escape') {
+            ['authModal', 'redeemModal', 'settingsModal', 'topUpModal'].forEach(function(id) {
+                const m = document.getElementById(id);
+                if (!m.classList.contains('hidden')) {
+                    m.classList.add('hidden');
+                    m.classList.remove('flex');
+                }
+            });
+        }
+    });
 
-        /* =========================
-           ✅ เริ่มระบบทันที
-        ========================== */
-        startLoadingScreen();
-        safeIcons();
-        checkPersistedLogin();
-
-        setTimeout(safeIcons, 1500);
-        setTimeout(safeIcons, 3000);
-
+    // รีเฟรช UI ครั้งแรก
+    refreshUI();
     </script>
 
 </body>
