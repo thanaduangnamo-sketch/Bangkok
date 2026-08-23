@@ -238,7 +238,8 @@
                 <div class="g-recaptcha"
                      id="initialRecaptcha"
                      data-sitekey="6LdtDpQtAAAAAN-ijFLD4U3g98I6MNS6g-GJ48Qz"
-                     data-callback="onInitialCaptchaSuccess">
+                     data-callback="onInitialCaptchaSuccess"
+                     data-expired-callback="onCaptchaExpired">
                 </div>
             </div>
 
@@ -247,6 +248,13 @@
                 <i data-lucide="fingerprint" class="w-4 h-4"></i>
                 <span>ยืนยันตัวตนเพื่อความปลอดภัย</span>
             </button>
+
+            <!-- ✅ กล่องแสดงข้อผิดพลาด -->
+            <p id="captchaError"
+               class="hidden mt-3 text-[11px] text-red-400 bg-red-400/10 border border-red-400/20 rounded-xl px-3 py-2.5 flex items-start gap-2 text-left">
+                <i data-lucide="alert-circle" class="w-3.5 h-3.5 shrink-0 mt-0.5"></i>
+                <span id="captchaErrorText"></span>
+            </p>
 
             <p class="text-[10px] text-white/35 mt-6 flex items-center justify-center gap-1.5">
                 <i data-lucide="shield" class="w-3 h-3"></i>
@@ -349,7 +357,7 @@
 
 
     <!-- =========================
-         AUTH MODAL (Login / Register / Forgot Password)
+         AUTH MODAL
     ========================== -->
     <div id="authModal"
          class="fixed inset-0 bg-black/70 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
@@ -401,7 +409,7 @@
                     </div>
                 </div>
 
-                <!-- ✅ ปุ่มลืมรหัสผ่าน -->
+                <!-- ปุ่มลืมรหัสผ่าน -->
                 <div class="flex justify-end">
                     <button type="button" onclick="playClickSound(); showForgotPassword()"
                             class="text-xs text-white/50 hover:text-white underline underline-offset-4 transition flex items-center gap-1">
@@ -453,7 +461,7 @@
             </form>
 
 
-            <!-- ✅ หน้าลืมรหัสผ่าน -->
+            <!-- หน้าลืมรหัสผ่าน -->
             <div id="forgotView" class="hidden">
 
                 <div class="text-center mb-6">
@@ -525,7 +533,7 @@
 
 
     <!-- =========================
-         TOP UP MODAL (ใช้งานได้จริง)
+         TOP UP MODAL
     ========================== -->
     <div id="topUpModal"
          class="fixed inset-0 bg-black/70 backdrop-blur-sm z-[60] hidden flex items-center justify-center p-4">
@@ -542,7 +550,6 @@
             <h3 class="text-xl font-bold text-white mb-1">เติมเงินเข้าระบบ</h3>
             <p class="text-xs text-white/50 mb-5">ยอดเงินปัจจุบัน <span id="tumBalance" class="font-extrabold text-white">฿0.00</span></p>
 
-            <!-- เลือกยอดเติม -->
             <div id="topUpAmounts" class="grid grid-cols-3 gap-2.5 mb-4"></div>
 
             <p class="text-[10px] text-white/35 mb-5 leading-relaxed">
@@ -555,7 +562,6 @@
                 ยืนยันการเติมเงิน ฿100
             </button>
 
-            <!-- ข้อความสำเร็จ -->
             <div id="topUpSuccess" class="hidden mt-4 bg-white/[0.06] border border-white/15 rounded-xl px-4 py-3">
                 <p class="text-xs font-bold text-white flex items-center justify-center gap-1.5">
                     <i data-lucide="check-circle" class="w-4 h-4"></i>
@@ -578,7 +584,6 @@
             <button onclick="playClickSound(); toggleProductModal(false)"
                     class="absolute top-5 right-5 text-white/40 hover:text-white font-bold text-xl transition">✕</button>
 
-            <!-- หัวสินค้า -->
             <div class="flex items-center gap-4 mb-6 mt-2">
                 <div id="pmEmoji" class="w-16 h-16 bg-white/[0.07] border border-white/15 rounded-2xl flex items-center justify-center text-3xl shrink-0">🎮</div>
                 <div class="min-w-0">
@@ -587,7 +592,6 @@
                 </div>
             </div>
 
-            <!-- กรอกไอดี / อีเมล -->
             <div id="pmIdField" class="mb-5">
                 <label id="pmIdLabel" class="block text-xs font-bold text-white/60 uppercase tracking-wider mb-1 flex items-center gap-1">
                     <i data-lucide="user" class="w-3.5 h-3.5"></i>
@@ -597,14 +601,12 @@
                        class="input-dark w-full px-4 py-3 rounded-xl transition text-sm">
             </div>
 
-            <!-- แพ็กเกจ -->
             <p class="text-xs font-bold text-white/60 uppercase tracking-wider mb-2 flex items-center gap-1">
                 <i data-lucide="package" class="w-3.5 h-3.5"></i>
                 เลือกแพ็กเกจ
             </p>
             <div id="packageList" class="space-y-2 mb-5"></div>
 
-            <!-- ยอดเงิน + ราคารวม -->
             <div class="flex items-center justify-between bg-white/[0.04] border border-white/10 rounded-xl px-4 py-3 mb-4">
                 <p class="text-xs text-white/50">ยอดเงินคงเหลือ</p>
                 <div class="text-right">
@@ -613,7 +615,6 @@
                 </div>
             </div>
 
-            <!-- ข้อความ Error -->
             <div id="buyError" class="hidden bg-red-400/10 border border-red-400/20 rounded-xl px-4 py-3 mb-4 flex items-center justify-between gap-3">
                 <p id="buyErrorText" class="text-xs text-red-300 leading-relaxed"></p>
                 <button onclick="playClickSound(); toggleTopUpModal(true)"
@@ -622,7 +623,6 @@
                 </button>
             </div>
 
-            <!-- ปุ่มซื้อ -->
             <button onclick="playClickSound(); buyProduct()"
                     class="btn-shine relative overflow-hidden btn-light hover:bg-zinc-200 w-full font-bold py-3.5 rounded-xl shadow-[0_0_30px_rgba(255,255,255,0.12)] transition active:scale-95 flex items-center justify-center gap-2 text-sm">
                 <i data-lucide="shopping-cart" class="w-4 h-4"></i>
@@ -843,10 +843,8 @@
                     <p class="text-sm text-white/50 max-w-xl mx-auto">กดเลือกสินค้าเพื่อดูแพ็กเกจและราคา</p>
                 </div>
 
-                <!-- แถบฟิลเตอร์ -->
                 <div id="filterTabs" class="flex flex-wrap items-center justify-center gap-2 mb-8"></div>
 
-                <!-- กริดสินค้า -->
                 <div id="productsGrid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4"></div>
 
             </div>
@@ -1370,9 +1368,25 @@
 
 
         /* =========================
+           CAPTCHA ERROR DISPLAY
+        ========================== */
+        function showCaptchaError(message) {
+            document.getElementById('captchaErrorText').innerText = message;
+            document.getElementById('captchaError').classList.remove('hidden');
+            lucide.createIcons();
+        }
+
+        function hideCaptchaError() {
+            document.getElementById('captchaError').classList.add('hidden');
+        }
+
+
+        /* =========================
            CAPTCHA
         ========================== */
         function onInitialCaptchaSuccess() {
+            hideCaptchaError();
+
             const modal = document.getElementById('initialSecurityModal');
             modal.classList.add('opacity-0', 'pointer-events-none');
 
@@ -1382,13 +1396,39 @@
             }, 400);
         }
 
+
         function triggerCaptchaClick() {
-            if (typeof grecaptcha !== 'undefined' && grecaptcha.getResponse().length > 0) {
+            hideCaptchaError();
+
+            /* 1. reCAPTCHA โหลดยัง? */
+            if (typeof grecaptcha === 'undefined') {
+                showCaptchaError('ระบบยังโหลดไม่เสร็จ กรุณารอ 3-5 วินาทีแล้วกดอีกครั้ง');
+                return;
+            }
+
+            try {
+                const response = grecaptcha.getResponse();
+
+                /* 2. ติ๊ก ✓ แล้วหรือยัง? */
+                if (!response || response.length === 0) {
+                    showCaptchaError('กรุณาติ๊ก ✓ ช่อง "ฉันไม่ใช่โปรแกรมอัตโนมัติ" ก่อนครับ ถ้าติ๊กไม่ได้ หรือขึ้นข้อความสีแดง แสดงว่ายังไม่ได้เพิ่มโดเมนใน Google reCAPTCHA Admin');
+                    return;
+                }
+
+                /* ผ่านครบ ไปต่อ! */
                 onInitialCaptchaSuccess();
-            } else {
-                alert('กรุณาติ๊กช่อง "ฉันไม่ใช่โปรแกรมอัตโนมัติ" ก่อนครับ');
+
+            } catch (e) {
+                showCaptchaError('เกิดข้อผิดพลาด กรุณารีเฟรชหน้าเว็บ (Ctrl+Shift+R) แล้วลองใหม่');
             }
         }
+
+
+        /* ติ๊กแล้วหมดอายุ (เกิน 2 นาที) */
+        function onCaptchaExpired() {
+            showCaptchaError('การยืนยันหมดอายุแล้ว กรุณาติ๊ก ✓ ใหม่อีกครั้ง');
+        }
+
 
         function reVerifyCaptcha() {
             const modal = document.getElementById('initialSecurityModal');
@@ -1399,6 +1439,7 @@
             }
 
             modal.classList.remove('hidden', 'opacity-0', 'pointer-events-none');
+            hideCaptchaError();
 
             if (card) {
                 card.classList.remove('modal-enter');
@@ -1471,7 +1512,7 @@
 
 
         /* =========================
-           AUTH MODAL
+           MODAL TOGGLES
         ========================== */
         function toggleAuthModal(show) {
             document.getElementById('authModal').classList.toggle('hidden', !show);
@@ -1542,7 +1583,6 @@
             forgotView.classList.remove('hidden');
             forgotView.classList.add('modal-enter');
 
-            /* รีเซ็ตกลับสู่ขั้นตอน 1 */
             document.getElementById('forgotStep1').classList.remove('hidden');
             document.getElementById('forgotStep2').classList.add('hidden');
             document.getElementById('forgotError1').classList.add('hidden');
@@ -1571,7 +1611,6 @@
 
             document.getElementById('authTabs').classList.remove('hidden');
 
-            /* กลับมาเป็นหน้า login */
             const loginForm = document.getElementById('loginForm');
             const registerForm = document.getElementById('registerForm');
             loginForm.classList.remove('hidden');
@@ -1650,7 +1689,7 @@
 
 
         /* =========================
-           LOGIN / REGISTER (ตรวจสอบจริง)
+           LOGIN / REGISTER
         ========================== */
         function handleAuth(e, formType) {
             e.preventDefault();
@@ -1683,14 +1722,11 @@
                     return;
                 }
 
-                /* สมัครใหม่ */
                 users[email] = password;
                 saveUsers(users);
 
             } else {
-                /* เข้าสู่ระบบ */
                 if (!users[email]) {
-                    /* บัญชีเก่าจากเวอร์ชันก่อน — ย้ายข้อมูลอัตโนมัติ */
                     if (localStorage.getItem('user_email') === email) {
                         users[email] = password;
                         saveUsers(users);
@@ -1765,7 +1801,6 @@
 
             document.getElementById('userBalance').innerText = balance;
 
-            /* อัปเดตยอดเงินใน modal ที่เปิดอยู่ด้วย */
             refreshTopUpModal();
             if (currentProduct) refreshProductModal();
 
@@ -1867,7 +1902,6 @@
             document.getElementById('pmName').innerText = currentProduct.name;
             document.getElementById('pmDesc').innerText = currentProduct.desc;
 
-            /* ช่องกรอกไอดี/อีเมล */
             const idField = document.getElementById('pmIdField');
             if (currentProduct.needId) {
                 idField.classList.remove('hidden');
@@ -1956,12 +1990,10 @@
                 return;
             }
 
-            /* หักเงิน */
             const newBalance = (balance - pkg.price).toFixed(2);
             localStorage.setItem('user_balance', newBalance);
             updateProfileUI(email);
 
-            /* สรุปออเดอร์ */
             const orderId = 'SK' + Date.now().toString().slice(-8);
 
             document.getElementById('smOrderId').innerText = orderId;
