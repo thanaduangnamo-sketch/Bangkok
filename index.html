@@ -119,11 +119,10 @@
             background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
         }
 
-        /* =========================
-           🔧 MAINTENANCE MODAL EFFECTS
-        ========================== */
+        /* เกียร์หมุน */
+        .gear-spin { animation: spin 6s linear infinite; }
 
-        /* จุดสามจุดวิ่งหลังข้อความ */
+        /* จุดสามจุดวิ่ง */
         .dots-anim::after {
             content: '';
             display: inline-block;
@@ -131,7 +130,6 @@
             text-align: left;
             animation: dots 1.4s steps(4, end) infinite;
         }
-
         @keyframes dots {
             0% { content: ''; }
             25% { content: '.'; }
@@ -140,18 +138,13 @@
             100% { content: ''; }
         }
 
-        /* เกียร์หมุน */
-        .gear-spin { animation: spin 6s linear infinite; }
-        .gear-spin-slow { animation: spin 9s linear infinite reverse; }
-
-        /* สายสแกนกวาดการ์ด */
+        /* เส้นสแกนกวาด */
         @keyframes scanline {
             0% { top: -5%; opacity: 0; }
             15% { opacity: 1; }
             85% { opacity: 1; }
             100% { top: 105%; opacity: 0; }
         }
-
         .scan-line {
             position: absolute;
             left: 8%; right: 8%;
@@ -162,12 +155,11 @@
             pointer-events: none;
         }
 
-        /* แถบความคืบหน้าอนินิเดต (แบบไม่รู้จบ) */
+        /* แถบความคืบหน้าวิ่งไม่รู้จบ */
         @keyframes progress-slide {
             0% { left: -35%; }
             100% { left: 105%; }
         }
-
         .progress-slider {
             position: absolute;
             top: 0; bottom: 0;
@@ -176,6 +168,56 @@
             background: linear-gradient(90deg, transparent, rgba(255,255,255,0.85), transparent);
             animation: progress-slide 2.2s ease-in-out infinite;
         }
+
+        /* =========================
+           🎁 REDEEM MODAL EFFECTS
+        ========================== */
+
+        /* ซองของขวัญลอย */
+        @keyframes gift-bounce {
+            0%, 100% { transform: translateY(0) rotate(-3deg); }
+            50% { transform: translateY(-10px) rotate(3deg); }
+        }
+        .gift-bounce { animation: gift-bounce 2.5s ease-in-out infinite; }
+
+        /* ประกายวิ่งรอบซอง */
+        @keyframes sparkle-ping {
+            0% { transform: scale(0.8); opacity: 0.9; }
+            80%, 100% { transform: scale(2.2); opacity: 0; }
+        }
+        .sparkle-ping { animation: sparkle-ping 1.8s cubic-bezier(0, 0, 0.2, 1) infinite; }
+
+        /* เงินเด้งขึ้น */
+        @keyframes money-pop {
+            0% { transform: scale(0.3); opacity: 0; }
+            60% { transform: scale(1.15); opacity: 1; }
+            100% { transform: scale(1); opacity: 1; }
+        }
+        .money-pop { animation: money-pop 0.6s cubic-bezier(0.16, 1, 0.3, 1) both; }
+
+        /* =========================
+           ⚙️ SWITCH TOGGLE
+        ========================== */
+        .sk-switch { position: relative; display: inline-block; width: 46px; height: 26px; flex-shrink: 0; }
+        .sk-switch input { opacity: 0; width: 0; height: 0; }
+        .sk-slider {
+            position: absolute; cursor: pointer; inset: 0;
+            background: rgba(255,255,255,0.08);
+            border: 1px solid rgba(255,255,255,0.15);
+            border-radius: 9999px;
+            transition: 0.3s;
+        }
+        .sk-slider:before {
+            content: '';
+            position: absolute;
+            height: 18px; width: 18px;
+            left: 3px; top: 3px;
+            background: #737373;
+            border-radius: 50%;
+            transition: 0.3s;
+        }
+        .sk-switch input:checked + .sk-slider { background: #ffffff; border-color: #ffffff; }
+        .sk-switch input:checked + .sk-slider:before { transform: translateX(20px); background: #050505; }
     </style>
 </head>
 
@@ -234,8 +276,9 @@
                     <span>เข้าสู่ระบบ / สมัครสมาชิก</span>
                 </button>
 
+                <!-- ✅ USER PROFILE (ชื่อ + เงิน + แลกโค้ด + ตั้งค่า) -->
                 <div id="userProfile"
-                     class="hidden flex items-center gap-2.5 bg-white/[0.05] border border-white/10 p-1.5 pl-3 rounded-2xl shadow-sm max-w-[280px] sm:max-w-sm">
+                     class="hidden flex items-center gap-2 bg-white/[0.05] border border-white/10 p-1.5 pl-3 rounded-2xl shadow-sm max-w-[320px] sm:max-w-md">
 
                     <div id="emailAvatar"
                          class="w-9 h-9 btn-light rounded-xl flex items-center justify-center font-bold text-base uppercase shadow-sm shrink-0 overflow-hidden">
@@ -243,19 +286,32 @@
                     </div>
 
                     <div class="text-left min-w-0 flex-1">
-                        <p id="displayEmail" class="text-xs font-bold text-white leading-tight truncate max-w-[100px] sm:max-w-[130px]" title="User">User</p>
+                        <!-- ชื่อแสดง / อีเมลย่อ -->
+                        <p id="displayName" class="text-xs font-bold text-white leading-tight truncate max-w-[90px] sm:max-w-[130px]" title="User">User</p>
+
                         <div class="flex items-center gap-1.5 mt-0.5">
                             <span class="text-xs font-extrabold text-white truncate">฿<span id="userBalance">0.00</span></span>
-                            <button onclick="playClickSound(); toggleTopUpModal(true)"
-                                    class="text-[10px] bg-white/[0.08] text-white hover:bg-white/[0.16] font-bold px-2 py-0.5 rounded-md transition flex items-center gap-1 shrink-0 border border-white/10">
-                                <i data-lucide="wallet" class="w-3 h-3"></i>
-                                เติมเงิน
+
+                            <!-- ปุ่มแลกโค้ด -->
+                            <button onclick="playClickSound(); toggleRedeemModal(true)"
+                                    class="text-[10px] btn-light hover:bg-zinc-200 font-bold px-2 py-0.5 rounded-md transition flex items-center gap-1 shrink-0"
+                                    title="แลกโค้ดรับเงิน">
+                                <i data-lucide="gift" class="w-3 h-3"></i>
+                                แลกโค้ด
                             </button>
                         </div>
                     </div>
 
+                    <!-- ปุ่มตั้งค่า -->
+                    <button onclick="playClickSound(); toggleSettingsModal(true)"
+                            class="text-white/60 hover:text-white bg-white/[0.06] hover:bg-white/[0.12] font-medium p-2 rounded-xl transition shrink-0"
+                            title="ตั้งค่า">
+                        <i data-lucide="settings" class="w-4 h-4"></i>
+                    </button>
+
+                    <!-- ปุ่มออกจากระบบ -->
                     <button onclick="playClickSound(); logout()"
-                            class="text-xs text-white/60 hover:text-white bg-white/[0.06] hover:bg-white/[0.12] font-medium p-2 rounded-xl transition shrink-0"
+                            class="text-white/60 hover:text-red-300 bg-white/[0.06] hover:bg-red-400/10 font-medium p-2 rounded-xl transition shrink-0"
                             title="ออกจากระบบ">
                         <i data-lucide="log-out" class="w-4 h-4"></i>
                     </button>
@@ -454,58 +510,219 @@
 
 
     <!-- =========================
-         🔧 MAINTENANCE MODAL (ระบบเติมเงินปิดปรับปรุง - ดีไซน์ใหม่)
+         🎁 REDEEM CODE MODAL (แลกโค้ดรับเงิน)
+    ========================== -->
+    <div id="redeemModal"
+         class="fixed inset-0 bg-black/70 backdrop-blur-sm z-[65] hidden flex items-center justify-center p-4">
+
+        <div class="relative bg-[#0d0d0d] rounded-3xl shadow-2xl border border-white/10 w-full max-w-md p-8 text-center overflow-hidden modal-enter max-h-[90vh] overflow-y-auto">
+
+            <!-- แสงเรืองหลังการ์ด -->
+            <div class="absolute -top-24 left-1/2 -translate-x-1/2 w-80 h-80 bg-white/[0.06] rounded-full blur-3xl glow-pulse pointer-events-none"></div>
+            <div class="scan-line"></div>
+
+            <button onclick="playClickSound(); toggleRedeemModal(false)"
+                    class="absolute top-5 right-5 text-white/40 hover:text-white font-bold text-xl transition z-10">✕</button>
+
+            <!-- ซองของขวัญลอย -->
+            <div class="relative w-24 h-24 mx-auto mb-5">
+                <span class="sparkle-ping absolute inset-0 rounded-3xl border-2 border-white/40"></span>
+                <div class="w-24 h-24 rounded-3xl bg-gradient-to-br from-white/[0.14] to-white/[0.04] border border-white/25 flex items-center justify-center shadow-[0_0_35px_rgba(255,255,255,0.25)] gift-bounce">
+                    <i data-lucide="gift" class="w-12 h-12 text-white"></i>
+                </div>
+            </div>
+
+            <h3 class="text-2xl font-extrabold text-white mb-1">แลกโค้ดรับเงิน</h3>
+            <p class="text-xs text-white/50 mb-5">กรอกรหัสโค้ดที่ได้รับ แล้วรับเงินเข้าบัญชีทันที</p>
+
+            <!-- ยอดเงินปัจจุบัน -->
+            <div class="bg-white/[0.04] border border-white/10 rounded-2xl px-4 py-3 mb-5 flex items-center justify-between">
+                <span class="text-xs text-white/50 flex items-center gap-1.5">
+                    <i data-lucide="wallet" class="w-3.5 h-3.5"></i>
+                    ยอดเงินปัจจุบัน
+                </span>
+                <span class="text-sm font-black text-white">฿<span id="redeemBalance">0.00</span></span>
+            </div>
+
+            <!-- ===== หน้ากรอกโค้ด ===== -->
+            <div id="redeemInputView">
+                <input type="text" id="redeemCodeInput" placeholder="กรอกโค้ดที่นี่..."
+                       autocomplete="off"
+                       class="input-dark w-full px-4 py-3.5 rounded-xl transition text-sm text-center font-mono tracking-[0.2em] uppercase mb-3"
+                       onkeydown="if(event.key==='Enter'){ event.preventDefault(); redeemNow(); }">
+
+                <p id="redeemError"
+                   class="hidden text-[11px] text-red-400 bg-red-400/10 border border-red-400/20 rounded-xl px-3 py-2.5 mb-3 flex items-center justify-center gap-1.5">
+                    <i data-lucide="alert-circle" class="w-3.5 h-3.5 shrink-0"></i>
+                    <span id="redeemErrorText"></span>
+                </p>
+
+                <button onclick="playClickSound(); redeemNow()"
+                        class="btn-shine relative overflow-hidden btn-light hover:bg-zinc-200 w-full font-bold py-3.5 rounded-xl shadow-[0_0_30px_rgba(255,255,255,0.12)] transition active:scale-95 flex items-center justify-center gap-2 text-sm">
+                    <i data-lucide="ticket" class="w-4 h-4"></i>
+                    แลกรหัสรับเงิน
+                </button>
+            </div>
+
+            <!-- ===== หน้าสำเร็จ ===== -->
+            <div id="redeemSuccessView" class="hidden">
+
+                <div class="money-pop w-20 h-20 btn-light rounded-full flex items-center justify-center mx-auto mb-5 shadow-[0_0_45px_rgba(255,255,255,0.25)]">
+                    <i data-lucide="check" class="w-10 h-10"></i>
+                </div>
+
+                <p class="text-xs text-white/50 mb-2">แลกโค้ดสำเร็จ รับเงินไปแล้ว</p>
+                <p class="text-4xl font-black text-white mb-6 money-pop">+฿<span id="redeemAmount">0</span></p>
+
+                <div class="bg-white/[0.04] border border-white/10 rounded-2xl px-4 py-3 mb-6 flex items-center justify-between">
+                    <span class="text-xs text-white/50">ยอดเงินล่าสุด</span>
+                    <span class="text-sm font-black text-white">฿<span id="redeemNewBalance">0.00</span></span>
+                </div>
+
+                <button onclick="playClickSound(); toggleRedeemModal(false)"
+                        class="btn-light hover:bg-zinc-200 w-full font-semibold py-3 rounded-xl transition active:scale-95 text-sm">
+                    เยี่ยม! ขอบคุณครับ
+                </button>
+            </div>
+
+            <!-- ท้ายการ์ด -->
+            <p class="text-[10px] text-white/35 mt-6 flex items-center justify-center gap-1.5">
+                <i data-lucide="shield" class="w-3 h-3"></i>
+                โค้ด 1 รหัส ใช้ได้ 1 ครั้ง ต่อ 1 บัญชี
+            </p>
+
+        </div>
+    </div>
+
+
+    <!-- =========================
+         ⚙️ SETTINGS MODAL (ตั้งค่า)
+    ========================== -->
+    <div id="settingsModal"
+         class="fixed inset-0 bg-black/70 backdrop-blur-sm z-[65] hidden flex items-center justify-center p-4">
+
+        <div class="relative bg-[#0d0d0d] rounded-3xl shadow-2xl border border-white/10 w-full max-w-md p-8 overflow-hidden modal-enter max-h-[90vh] overflow-y-auto">
+
+            <div class="absolute -top-24 left-1/2 -translate-x-1/2 w-80 h-80 bg-white/[0.05] rounded-full blur-3xl glow-pulse pointer-events-none"></div>
+
+            <button onclick="playClickSound(); toggleSettingsModal(false)"
+                    class="absolute top-5 right-5 text-white/40 hover:text-white font-bold text-xl transition z-10">✕</button>
+
+            <div class="relative">
+
+                <div class="text-center mb-6">
+                    <div class="relative w-20 h-20 mx-auto mb-4">
+                        <i data-lucide="settings" class="gear-spin absolute w-10 h-10 text-white/20 top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2"></i>
+                        <div class="w-16 h-16 rounded-2xl bg-gradient-to-br from-white/[0.14] to-white/[0.04] border border-white/25 flex items-center justify-center shadow-[0_0_30px_rgba(255,255,255,0.2)]">
+                            <i data-lucide="sliders-horizontal" class="w-7 h-7 text-white"></i>
+                        </div>
+                    </div>
+                    <h3 class="text-2xl font-extrabold text-white">ตั้งค่า</h3>
+                </div>
+
+                <!-- ===== ชื่อที่แสดง ===== -->
+                <div class="bg-white/[0.04] border border-white/10 rounded-2xl p-4 mb-3">
+                    <label class="block text-xs font-bold text-white/60 uppercase tracking-wider mb-2 flex items-center gap-1">
+                        <i data-lucide="user" class="w-3.5 h-3.5"></i>
+                        ชื่อที่แสดง
+                    </label>
+                    <div class="flex gap-2">
+                        <input type="text" id="settingNameInput" maxlength="20" placeholder="เช่น กันต์"
+                               class="input-dark flex-1 px-4 py-2.5 rounded-xl transition text-sm">
+                        <button onclick="playClickSound(); saveDisplayName()"
+                                class="btn-light hover:bg-zinc-200 font-bold px-4 py-2.5 rounded-xl transition active:scale-95 text-xs shrink-0">
+                            บันทึก
+                        </button>
+                    </div>
+                    <p id="nameSavedMsg" class="hidden mt-2 text-[10px] text-white/60 flex items-center gap-1">
+                        <i data-lucide="check-circle" class="w-3 h-3"></i>
+                        บันทึกชื่อเรียบร้อยแล้ว
+                    </p>
+                </div>
+
+                <!-- ===== เสียงคลิก ===== -->
+                <div class="bg-white/[0.04] border border-white/10 rounded-2xl p-4 mb-3 flex items-center justify-between">
+                    <div class="flex items-center gap-2.5">
+                        <span class="w-9 h-9 bg-white/[0.07] border border-white/15 rounded-xl flex items-center justify-center shrink-0">
+                            <i data-lucide="volume-2" class="w-4 h-4 text-white/80"></i>
+                        </span>
+                        <div>
+                            <p class="text-sm font-bold text-white">เสียงคลิก</p>
+                            <p class="text-[10px] text-white/45">เสียงเอฟเฟกต์ตอนกดปุ่ม</p>
+                        </div>
+                    </div>
+                    <label class="sk-switch">
+                        <input type="checkbox" id="soundToggle" onchange="playClickSound(); toggleSoundSetting(this.checked)">
+                        <span class="sk-slider"></span>
+                    </label>
+                </div>
+
+                <!-- ===== ข้อมูลบัญชี ===== -->
+                <div class="bg-white/[0.04] border border-white/10 rounded-2xl p-4 mb-3 space-y-2.5">
+                    <div class="flex items-center justify-between text-xs">
+                        <span class="text-white/50 flex items-center gap-1.5"><i data-lucide="mail" class="w-3.5 h-3.5"></i> อีเมล</span>
+                        <span id="settingEmail" class="font-bold text-white truncate max-w-[180px]">-</span>
+                    </div>
+                    <div class="divider-mono"></div>
+                    <div class="flex items-center justify-between text-xs">
+                        <span class="text-white/50 flex items-center gap-1.5"><i data-lucide="wallet" class="w-3.5 h-3.5"></i> ยอดเงินคงเหลือ</span>
+                        <span class="font-black text-white">฿<span id="settingBalance">0.00</span></span>
+                    </div>
+                </div>
+
+                <!-- ===== ออกจากระบบ ===== -->
+                <button onclick="playClickSound(); confirmLogout()"
+                        class="w-full bg-red-400/10 hover:bg-red-400/20 border border-red-400/25 text-red-300 font-bold py-3 rounded-xl transition active:scale-95 flex items-center justify-center gap-2 text-sm mt-4">
+                    <i data-lucide="log-out" class="w-4 h-4"></i>
+                    ออกจากระบบ
+                </button>
+
+                <p class="text-[10px] text-white/30 text-center mt-5">Skey Shop · Version 1.0</p>
+
+            </div>
+        </div>
+    </div>
+
+
+    <!-- =========================
+         🔧 MAINTENANCE MODAL (ระบบเติมเงินปิดปรับปรุง)
     ========================== -->
     <div id="topUpModal"
          class="fixed inset-0 bg-black/70 backdrop-blur-sm z-[60] hidden flex items-center justify-center p-4">
 
         <div class="relative bg-[#0d0d0d] rounded-3xl shadow-2xl border border-white/10 w-full max-w-md p-8 sm:p-10 text-center overflow-hidden modal-enter max-h-[90vh] overflow-y-auto">
 
-            <!-- แสงเรืองเต้นหลังการ์ด -->
             <div class="absolute -top-24 left-1/2 -translate-x-1/2 w-80 h-80 bg-white/[0.06] rounded-full blur-3xl glow-pulse pointer-events-none"></div>
-            <div class="absolute -bottom-24 -right-16 w-64 h-64 bg-white/[0.04] rounded-full blur-3xl glow-pulse pointer-events-none" style="animation-delay: 1.1s;"></div>
-
-            <!-- เส้นสแกนกวาด -->
             <div class="scan-line"></div>
 
-            <!-- ปุ่มปิด -->
             <button onclick="playClickSound(); toggleTopUpModal(false)"
                     class="absolute top-5 right-5 text-white/40 hover:text-white font-bold text-xl transition z-10">✕</button>
 
             <div class="relative">
 
-                <!-- ป้าย Under Maintenance -->
                 <div class="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full bg-white/[0.06] border border-white/15 text-[10px] font-bold tracking-[0.2em] text-white/80 uppercase mb-6">
                     <span class="w-1.5 h-1.5 bg-white rounded-full animate-pulse"></span>
                     Under Maintenance
                 </div>
 
-                <!-- ไอคอนประแจ + เกียร์หมุน -->
                 <div class="relative w-28 h-28 flex items-center justify-center mx-auto mb-6">
                     <div class="absolute -inset-1 rounded-full border-2 border-dashed border-white/20 ring-spin-cw"></div>
                     <div class="absolute inset-1.5 rounded-full border-2 border-white/10 border-b-white/60 ring-spin-ccw"></div>
-
-                    <!-- เกียร์หลัง -->
                     <i data-lucide="settings" class="gear-spin absolute w-14 h-14 text-white/15"></i>
-
-                    <!-- ประแจหน้า -->
                     <div class="w-20 h-20 rounded-full bg-gradient-to-br from-white/[0.14] to-white/[0.04] border border-white/25 flex items-center justify-center shadow-[0_0_35px_rgba(255,255,255,0.25)]">
                         <i data-lucide="wrench" class="w-9 h-9 text-white"></i>
                     </div>
                 </div>
 
-                <!-- หัวข้อ -->
                 <h3 class="text-2xl font-extrabold text-white mb-2">
                     ระบบเติมเงินปิดปรับปรุง<span class="dots-anim"></span>
                 </h3>
 
                 <p class="text-xs text-white/50 leading-relaxed mb-6 max-w-xs mx-auto">
                     ทีมงานกำลังอัปเกรดระบบให้ดียิ่งขึ้น
-                    เพื่อประสบการณ์ที่รวดเร็วและปลอดภัยกว่าเดิม
-                    ขออภัยในความไม่สะดวกครับ
+                    ตอนนี้สามารถใช้ "แลกโค้ด" เพื่อรับเงินเข้าบัญชีได้
                 </p>
 
-                <!-- ยอดเงินปัจจุบัน -->
                 <div class="bg-white/[0.04] border border-white/10 rounded-2xl px-4 py-3.5 mb-5 flex items-center justify-between">
                     <span class="text-xs text-white/50 flex items-center gap-1.5">
                         <i data-lucide="wallet" class="w-3.5 h-3.5"></i>
@@ -514,38 +731,31 @@
                     <span class="text-sm font-black text-white">฿<span id="tumBalance">0.00</span></span>
                 </div>
 
-                <!-- เช็คลิสต์งานซ่อม -->
                 <div class="bg-black/40 border border-white/[0.07] rounded-2xl p-4 space-y-3 mb-5 text-left">
-
                     <div class="flex items-center gap-3">
                         <span class="w-6 h-6 rounded-lg bg-white/[0.07] border border-white/15 flex items-center justify-center shrink-0">
                             <i data-lucide="loader" class="w-3 h-3 text-white animate-spin"></i>
                         </span>
                         <span class="text-xs text-white/75">อัปเกรดระบบชำระเงินอัตโนมัติ</span>
                     </div>
-
                     <div class="flex items-center gap-3">
                         <span class="w-6 h-6 rounded-lg bg-white/[0.07] border border-white/15 flex items-center justify-center shrink-0">
                             <i data-lucide="loader" class="w-3 h-3 text-white animate-spin"></i>
                         </span>
                         <span class="text-xs text-white/75">เพิ่มช่องทางเติมเงินใหม่</span>
                     </div>
-
                     <div class="flex items-center gap-3">
                         <span class="w-6 h-6 rounded-lg bg-white/[0.07] border border-white/15 flex items-center justify-center shrink-0">
                             <i data-lucide="check" class="w-3 h-3 text-white"></i>
                         </span>
                         <span class="text-xs text-white/75">ตรวจสอบความปลอดภัยเรียบร้อยแล้ว</span>
                     </div>
-
                 </div>
 
-                <!-- แถบความคืบหน้าวิ่งไม่รู้จบ -->
                 <div class="relative w-full h-1.5 bg-white/[0.07] rounded-full overflow-hidden border border-white/[0.06] mb-6">
                     <div class="progress-slider"></div>
                 </div>
 
-                <!-- ปุ่ม -->
                 <button onclick="playClickSound(); toggleTopUpModal(false)"
                         class="btn-shine relative overflow-hidden btn-light hover:bg-zinc-200 w-full font-bold py-3.5 rounded-xl shadow-[0_0_30px_rgba(255,255,255,0.12)] transition active:scale-95 flex items-center justify-center gap-2 text-sm mb-3">
                     <i data-lucide="check-circle" class="w-4 h-4"></i>
@@ -557,12 +767,6 @@
                     <i data-lucide="message-circle" class="w-4 h-4"></i>
                     สอบถามแอดมิน
                 </button>
-
-                <!-- ท้ายการ์ด -->
-                <p class="text-[10px] text-white/35 mt-6 flex items-center justify-center gap-1.5">
-                    <i data-lucide="clock" class="w-3 h-3"></i>
-                    คาดว่าจะเปิดใช้งานอีกครั้งเร็วๆ นี้
-                </p>
 
             </div>
         </div>
@@ -621,10 +825,10 @@
                 </div>
                 <div class="bg-white/[0.04] border border-white/10 rounded-2xl p-6 text-center hover:bg-white/[0.07] transition-all duration-300">
                     <div class="w-10 h-10 bg-white/[0.08] border border-white/15 rounded-xl flex items-center justify-center mx-auto mb-3">
-                        <i data-lucide="shopping-cart" class="w-5 h-5 text-white"></i>
+                        <i data-lucide="gift" class="w-5 h-5 text-white"></i>
                     </div>
-                    <p class="text-2xl sm:text-3xl font-black text-white stat-number">85,000+</p>
-                    <p class="text-xs text-white/45 mt-1">ออเดอร์สำเร็จ</p>
+                    <p class="text-2xl sm:text-3xl font-black text-white stat-number">🎁</p>
+                    <p class="text-xs text-white/45 mt-1">แลกโค้ดรับเงินฟรี</p>
                 </div>
                 <div class="bg-white/[0.04] border border-white/10 rounded-2xl p-6 text-center hover:bg-white/[0.07] transition-all duration-300">
                     <div class="w-10 h-10 bg-white/[0.08] border border-white/15 rounded-xl flex items-center justify-center mx-auto mb-3">
@@ -657,10 +861,10 @@
                 <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
                     <div class="bg-white/[0.04] border border-white/10 rounded-2xl p-6 hover:bg-white/[0.07] hover:border-white/20 transition-all duration-300">
                         <div class="w-11 h-11 bg-white/[0.08] text-white border border-white/15 rounded-xl flex items-center justify-center mb-4">
-                            <i data-lucide="zap" class="w-5 h-5"></i>
+                            <i data-lucide="gift" class="w-5 h-5"></i>
                         </div>
-                        <h3 class="font-bold text-white mb-2">ระบบอัตโนมัติ</h3>
-                        <p class="text-xs text-white/45 leading-relaxed">ใช้งานตอนไหนก็ได้ แม้ตีสาม ระบบทำงานรวดเร็ว ตอบสนองภายในไม่กี่วินาที</p>
+                        <h3 class="font-bold text-white mb-2">แลกโค้ดรับเงิน</h3>
+                        <p class="text-xs text-white/45 leading-relaxed">มีโค้ดจากกิจกรรมหรือแอดมิน? กรอกได้เลย เงินเข้าบัญชีทันที ไม่ต้องรอ</p>
                     </div>
                     <div class="bg-white/[0.04] border border-white/10 rounded-2xl p-6 hover:bg-white/[0.07] hover:border-white/20 transition-all duration-300">
                         <div class="w-11 h-11 bg-white/[0.08] text-white border border-white/15 rounded-xl flex items-center justify-center mb-4">
@@ -680,60 +884,6 @@
             </div>
 
 
-            <!-- ============ TESTIMONIALS ============ -->
-            <div class="mb-24">
-                <div class="text-center mb-10">
-                    <p class="text-xs font-bold tracking-[0.25em] text-white/40 uppercase mb-3">Reviews</p>
-                    <h2 class="text-3xl sm:text-4xl font-black text-white mb-3">รีวิวจากลูกค้า</h2>
-                    <p class="text-sm text-white/50 max-w-xl mx-auto">เสียงจากลูกค้าจริงที่ไว้วางใจเรา</p>
-                </div>
-
-                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-                    <div class="bg-white/[0.04] border border-white/10 rounded-2xl p-6 hover:bg-white/[0.07] transition-all duration-300">
-                        <div class="flex items-center gap-1 mb-3">
-                            <i data-lucide="star" class="w-4 h-4 text-white"></i><i data-lucide="star" class="w-4 h-4 text-white"></i><i data-lucide="star" class="w-4 h-4 text-white"></i><i data-lucide="star" class="w-4 h-4 text-white"></i><i data-lucide="star" class="w-4 h-4 text-white"></i>
-                        </div>
-                        <p class="text-sm text-white/70 leading-relaxed mb-4">"ใช้บริการตีสอง ระบบตอบสนองภายใน 10 วินาที เร็วมากครับ ประทับใจมาก"</p>
-                        <div class="flex items-center gap-3">
-                            <div class="w-9 h-9 btn-light rounded-full flex items-center justify-center font-black text-xs">ก</div>
-                            <div>
-                                <p class="text-xs font-bold text-white">กันต์ ★ Verified</p>
-                                <p class="text-[10px] text-white/40">ลูกค้าประจำ</p>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="bg-white/[0.04] border border-white/10 rounded-2xl p-6 hover:bg-white/[0.07] transition-all duration-300">
-                        <div class="flex items-center gap-1 mb-3">
-                            <i data-lucide="star" class="w-4 h-4 text-white"></i><i data-lucide="star" class="w-4 h-4 text-white"></i><i data-lucide="star" class="w-4 h-4 text-white"></i><i data-lucide="star" class="w-4 h-4 text-white"></i><i data-lucide="star" class="w-4 h-4 text-white"></i>
-                        </div>
-                        <p class="text-sm text-white/70 leading-relaxed mb-4">"เว็บสวยใช้งานง่าย ชอบธีมดำๆ มินิมอลมากครับ สะดวกดี"</p>
-                        <div class="flex items-center gap-3">
-                            <div class="w-9 h-9 btn-light rounded-full flex items-center justify-center font-black text-xs">น</div>
-                            <div>
-                                <p class="text-xs font-bold text-white">น้ำฝน ★ Verified</p>
-                                <p class="text-[10px] text-white/40">ลูกค้าใหม่</p>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="bg-white/[0.04] border border-white/10 rounded-2xl p-6 hover:bg-white/[0.07] transition-all duration-300">
-                        <div class="flex items-center gap-1 mb-3">
-                            <i data-lucide="star" class="w-4 h-4 text-white"></i><i data-lucide="star" class="w-4 h-4 text-white"></i><i data-lucide="star" class="w-4 h-4 text-white"></i><i data-lucide="star" class="w-4 h-4 text-white"></i><i data-lucide="star" class="w-4 h-4 text-white"></i>
-                        </div>
-                        <p class="text-sm text-white/70 leading-relaxed mb-4">"มีปัญหาการใช้งานตอนแรก ทักแอดมินแล้วแก้ให้ทันทีเลยค่ะ บริการดีเกินราคา"</p>
-                        <div class="flex items-center gap-3">
-                            <div class="w-9 h-9 btn-light rounded-full flex items-center justify-center font-black text-xs">ภ</div>
-                            <div>
-                                <p class="text-xs font-bold text-white">ภูมิ ★ Verified</p>
-                                <p class="text-[10px] text-white/40">ลูกค้าประจำ</p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-
             <!-- ============ FAQ ============ -->
             <div id="faq" class="mb-24 scroll-mt-24 max-w-3xl mx-auto">
                 <div class="text-center mb-10">
@@ -745,21 +895,21 @@
                 <div class="space-y-3">
                     <div class="faq-item bg-white/[0.04] border border-white/10 rounded-2xl overflow-hidden hover:border-white/20 transition-all duration-300">
                         <button onclick="playClickSound(); toggleFaq(this)" class="w-full px-6 py-5 flex items-center justify-between gap-4 text-left">
-                            <span class="text-sm font-bold text-white">ตอนสมัครสมาชิกต้องทำอะไรบ้าง?</span>
+                            <span class="text-sm font-bold text-white">ได้โค้ดจากไหนบ้าง? ใช้ยังไง?</span>
                             <i data-lucide="chevron-down" class="faq-chevron w-5 h-5 text-white/50 shrink-0"></i>
                         </button>
                         <div class="faq-answer px-6">
-                            <p class="text-xs text-white/50 leading-relaxed pb-5">กรอกอีเมลและรหัสผ่าน (อย่างน้อย 6 ตัวอักษร) แล้วติ๊ก ✓ ยืนยัน reCAPTCHA ว่าไม่ใช่โปรแกรมอัตโนมัติ ก็สมัครเสร็จทันทีครับ</p>
+                            <p class="text-xs text-white/50 leading-relaxed pb-5">โค้ดจะแจกในกิจกรรมต่างๆ ของร้าน หรือรับจากแอดมินโดยตรง เมื่อได้โค้ดมาให้กดปุ่ม "แลกโค้ด" ที่แถบด้านบน กรอกโค้ด กดยืนยัน เงินจะเข้าบัญชีทันที โดย 1 โค้ด ใช้ได้ 1 ครั้งต่อบัญชีครับ</p>
                         </div>
                     </div>
 
                     <div class="faq-item bg-white/[0.04] border border-white/10 rounded-2xl overflow-hidden hover:border-white/20 transition-all duration-300">
                         <button onclick="playClickSound(); toggleFaq(this)" class="w-full px-6 py-5 flex items-center justify-between gap-4 text-left">
-                            <span class="text-sm font-bold text-white">ระบบเติมเงินไปทำอะไรอยู่?</span>
+                            <span class="text-sm font-bold text-white">ตั้งชื่อแสดงยังไง?</span>
                             <i data-lucide="chevron-down" class="faq-chevron w-5 h-5 text-white/50 shrink-0"></i>
                         </button>
                         <div class="faq-answer px-6">
-                            <p class="text-xs text-white/50 leading-relaxed pb-5">ระบบเติมเงินกำลังปิดปรับปรุงเพื่ออัปเกรดระบบชำระเงินและเพิ่มช่องทางการเติมเงินใหม่ คาดว่าจะกลับมาให้บริการอีกครั้งเร็วๆ นี้ครับ</p>
+                            <p class="text-xs text-white/50 leading-relaxed pb-5">กดไอคอน ⚙️ ที่แถบด้านบน → ช่อง "ชื่อที่แสดง" → พิมพ์ชื่อที่ต้องการ → กดบันทึก ชื่อจะแสดงแทนอีเมลทันทีครับ</p>
                         </div>
                     </div>
 
@@ -788,7 +938,7 @@
                         </div>
                         <h2 class="text-3xl sm:text-4xl font-black text-white mb-4">พร้อมเริ่มใช้งานหรือยัง?</h2>
                         <p class="text-sm sm:text-base text-white/50 leading-relaxed mb-8 max-w-lg mx-auto">
-                            สมัครสมาชิกวันนี้ ฟรี! ใช้เวลาไม่ถึง 1 นาที
+                            สมัครสมาชิกวันนี้ ฟรี! และรับสิทธิ์แลกโค้ดรับเงินได้เลย
                         </p>
                         <div class="flex flex-col sm:flex-row items-center justify-center gap-3">
                             <button onclick="playClickSound(); openRegisterForm()"
@@ -852,7 +1002,7 @@
                     <div class="space-y-2.5">
                         <div class="flex items-center gap-2 text-xs text-white/45"><i data-lucide="shield-check" class="w-3.5 h-3.5 text-white/70"></i> เข้ารหัส SSL/TLS</div>
                         <div class="flex items-center gap-2 text-xs text-white/45"><i data-lucide="lock" class="w-3.5 h-3.5 text-white/70"></i> reCAPTCHA ป้องกันบอทตอนสมัคร</div>
-                        <div class="flex items-center gap-2 text-xs text-white/45"><i data-lucide="check-circle" class="w-3.5 h-3.5 text-white/70"></i> ดูแลข้อมูลลูกค้าอย่างดีที่สุด</div>
+                        <div class="flex items-center gap-2 text-xs text-white/45"><i data-lucide="gift" class="w-3.5 h-3.5 text-white/70"></i> โค้ดแลก 1 ครั้ง/บัญชี ปลอดภัย</div>
                     </div>
                 </div>
             </div>
@@ -875,7 +1025,17 @@
     <script>
 
         /* =========================
-           SAFE ICONS (กันพังถ้า CDN ตาย)
+           🎁 รายการโค้ดแลกเงิน (แก้ไขได้ที่นี่)
+        ========================== */
+        const REDEEM_CODES = [
+            { code: 'WELCOME50',  amount: 50  },
+            { code: 'SKEY100',    amount: 100 },
+            { code: 'VIP2026',    amount: 500 }
+        ];
+
+
+        /* =========================
+           SAFE ICONS
         ========================== */
         function safeIcons() {
             try {
@@ -887,10 +1047,12 @@
 
 
         /* =========================
-           CLICK SOUND
+           CLICK SOUND (เช็คตั้งค่าเสียง)
         ========================== */
         function playClickSound() {
             try {
+                if (localStorage.getItem('sk_sound') === 'off') return;
+
                 const AudioContext = window.AudioContext || window.webkitAudioContext;
                 const audioCtx = new AudioContext();
                 const oscillator = audioCtx.createOscillator();
@@ -974,7 +1136,7 @@
 
 
         /* =========================
-           USER STORAGE HELPERS
+           STORAGE HELPERS
         ========================== */
         function getUsers() {
             try {
@@ -988,6 +1150,23 @@
             localStorage.setItem('sk_users', JSON.stringify(users));
         }
 
+        function getUsedCodes() {
+            const email = localStorage.getItem('user_email');
+            if (!email) return [];
+            try {
+                return JSON.parse(localStorage.getItem('sk_used_codes_' + email) || '[]');
+            } catch (e) {
+                return [];
+            }
+        }
+
+        function saveUsedCodes(arr) {
+            const email = localStorage.getItem('user_email');
+            if (email) {
+                localStorage.setItem('sk_used_codes_' + email, JSON.stringify(arr));
+            }
+        }
+
 
         /* =========================
            MODAL TOGGLES
@@ -997,23 +1176,200 @@
             if (!show) backToLogin(true);
         }
 
-        /* เปิด/ปิดหน้าปิดปรับปรุงระบบเติมเงิน */
         function toggleTopUpModal(show) {
             const modal = document.getElementById('topUpModal');
             modal.classList.toggle('hidden', !show);
 
             if (show) {
                 refreshTopUpModal();
-
-                /* เล่นอนิเมชันการ์ดเด้งขึ้นใหม่ */
-                const card = modal.querySelector('.modal-enter');
-                if (card) {
-                    card.classList.remove('modal-enter');
-                    void card.offsetWidth;
-                    card.classList.add('modal-enter');
-                }
-
+                replayCardAnimation(modal);
                 safeIcons();
+            }
+        }
+
+        function toggleRedeemModal(show) {
+            const modal = document.getElementById('redeemModal');
+            modal.classList.toggle('hidden', !show);
+
+            if (show) {
+                /* รีเซ็ตกลับหน้ากรอกโค้ด */
+                document.getElementById('redeemInputView').classList.remove('hidden');
+                document.getElementById('redeemSuccessView').classList.add('hidden');
+                document.getElementById('redeemCodeInput').value = '';
+                hideRedeemError();
+                refreshRedeemBalance();
+
+                replayCardAnimation(modal);
+                safeIcons();
+
+                /* โฟกัสช่องกรอก */
+                setTimeout(() => {
+                    try { document.getElementById('redeemCodeInput').focus(); } catch (e) {}
+                }, 400);
+            }
+        }
+
+        function toggleSettingsModal(show) {
+            const modal = document.getElementById('settingsModal');
+            modal.classList.toggle('hidden', !show);
+
+            if (show) {
+                loadSettings();
+                replayCardAnimation(modal);
+                safeIcons();
+            }
+        }
+
+        /* เล่นอนิเมชันการ์ดเด้งซ้ำ */
+        function replayCardAnimation(modal) {
+            const card = modal.querySelector('.modal-enter');
+            if (card) {
+                card.classList.remove('modal-enter');
+                void card.offsetWidth;
+                card.classList.add('modal-enter');
+            }
+        }
+
+
+        /* =========================
+           🎁 REDEEM CODE SYSTEM
+        ========================== */
+        function refreshRedeemBalance() {
+            const el = document.getElementById('redeemBalance');
+            if (el) {
+                el.innerText = parseFloat(localStorage.getItem('user_balance') || '0').toFixed(2);
+            }
+        }
+
+        function showRedeemError(message) {
+            document.getElementById('redeemErrorText').innerText = message;
+            document.getElementById('redeemError').classList.remove('hidden');
+            safeIcons();
+        }
+
+        function hideRedeemError() {
+            document.getElementById('redeemError').classList.add('hidden');
+        }
+
+        function redeemNow() {
+            hideRedeemError();
+
+            /* ต้องล็อกอินก่อน */
+            const email = localStorage.getItem('user_email');
+            if (!email) {
+                toggleRedeemModal(false);
+                toggleAuthModal(true);
+                alert('กรุณาเข้าสู่ระบบก่อนแลกโค้ดครับ');
+                return;
+            }
+
+            const input = document.getElementById('redeemCodeInput');
+            const code = input.value.trim().toUpperCase();
+
+            if (!code) {
+                showRedeemError('กรุณากรอกโค้ดก่อนกดยืนยันครับ');
+                return;
+            }
+
+            /* หาโค้ดในระบบ */
+            const found = REDEEM_CODES.find(c => c.code === code);
+
+            if (!found) {
+                showRedeemError('ไม่พบรหัสโค้ดนี้ กรุณาตรวจสอบและลองอีกครั้ง');
+                return;
+            }
+
+            /* เช็คว่าใช้ไปแล้วหรือยัง */
+            const used = getUsedCodes();
+            if (used.includes(code)) {
+                showRedeemError('คุณได้ใช้โค้ดนี้ไปแล้ว (1 โค้ด ใช้ได้ 1 ครั้งต่อบัญชี)');
+                return;
+            }
+
+            /* เพิ่มเงิน */
+            const balance = parseFloat(localStorage.getItem('user_balance') || '0');
+            const newBalance = (balance + found.amount).toFixed(2);
+
+            localStorage.setItem('user_balance', newBalance);
+
+            /* จำว่าใช้โค้ดนี้แล้ว */
+            used.push(code);
+            saveUsedCodes(used);
+
+            /* อัปเดตหน้าเว็บ + แสดงผลสำเร็จ */
+            updateProfileUI(email);
+
+            document.getElementById('redeemAmount').innerText = found.amount;
+            document.getElementById('redeemNewBalance').innerText = newBalance;
+
+            document.getElementById('redeemInputView').classList.add('hidden');
+            document.getElementById('redeemSuccessView').classList.remove('hidden');
+
+            safeIcons();
+        }
+
+
+        /* =========================
+           ⚙️ SETTINGS SYSTEM
+        ========================== */
+        function loadSettings() {
+            const email = localStorage.getItem('user_email') || '-';
+
+            /* โหลดชื่อเดิม */
+            const savedName = localStorage.getItem('sk_name_' + email) || '';
+            document.getElementById('settingNameInput').value = savedName;
+
+            /* ข้อมูลบัญชี */
+            document.getElementById('settingEmail').innerText = email;
+            document.getElementById('settingBalance').innerText =
+                parseFloat(localStorage.getItem('user_balance') || '0').toFixed(2);
+
+            /* สถานะเสียง */
+            document.getElementById('soundToggle').checked =
+                (localStorage.getItem('sk_sound') !== 'off');
+
+            /* ซ่อนข้อความบันทึกสำเร็จ */
+            document.getElementById('nameSavedMsg').classList.add('hidden');
+
+            safeIcons();
+        }
+
+        function saveDisplayName() {
+            const email = localStorage.getItem('user_email');
+            const name = document.getElementById('settingNameInput').value.trim();
+
+            if (!email) {
+                alert('กรุณาเข้าสู่ระบบก่อนครับ');
+                return;
+            }
+
+            if (!name) {
+                /* ลบชื่อ = กลับไปแสดงอีเมล */
+                localStorage.removeItem('sk_name_' + email);
+            } else {
+                localStorage.setItem('sk_name_' + email, name);
+            }
+
+            updateProfileUI(email);
+
+            const msg = document.getElementById('nameSavedMsg');
+            msg.classList.remove('hidden');
+            safeIcons();
+
+            setTimeout(() => msg.classList.add('hidden'), 2000);
+        }
+
+        function toggleSoundSetting(isOn) {
+            if (isOn) {
+                localStorage.setItem('sk_sound', 'on');
+            } else {
+                localStorage.setItem('sk_sound', 'off');
+            }
+        }
+
+        function confirmLogout() {
+            if (confirm('ต้องการออกจากระบบใช่ไหมครับ?')) {
+                logout();
             }
         }
 
@@ -1318,7 +1674,7 @@
 
 
         /* =========================
-           PROFILE
+           PROFILE (แสดงชื่อ + เงิน)
         ========================== */
         function updateProfileUI(email) {
             const balance =
@@ -1327,15 +1683,20 @@
             document.getElementById('openAuthBtn').classList.add('hidden');
             document.getElementById('userProfile').classList.remove('hidden');
 
-            document.getElementById('avatarLetter').innerText =
-                email.charAt(0).toUpperCase();
+            /* ชื่อแสดง (ถ้าตั้งไว้) หรืออีเมลย่อ */
+            const savedName = localStorage.getItem('sk_name_' + email);
+            const nameEl = document.getElementById('displayName');
+            nameEl.innerText = savedName || abbreviateEmail(email);
+            nameEl.title = savedName ? savedName : email;
 
-            document.getElementById('displayEmail').innerText = abbreviateEmail(email);
-            document.getElementById('displayEmail').title = email;
+            /* อวตาร = ตัวแรกของชื่อ หรืออีเมล */
+            const firstChar = (savedName || email).charAt(0).toUpperCase();
+            document.getElementById('avatarLetter').innerText = firstChar;
 
             document.getElementById('userBalance').innerText = balance;
 
             refreshTopUpModal();
+            refreshRedeemBalance();
             safeIcons();
         }
 
@@ -1350,7 +1711,7 @@
 
 
         /* =========================
-           🔧 TOP UP (ปิดปรับปรุง)
+           TOP UP (ปิดปรับปรุง)
         ========================== */
         function refreshTopUpModal() {
             const el = document.getElementById('tumBalance');
@@ -1359,7 +1720,6 @@
             }
         }
 
-        /* ปุ่มสอบถามแอดมิน */
         function contactAdmin() {
             alert('สอบถามเพิ่มเติมติดต่อได้ที่\n\n📧 support@skeyshop.com\n🕐 แอดมินตอบ 09:00 - 24:00');
         }
@@ -1372,6 +1732,8 @@
             if (event.key === 'Escape') {
                 toggleAuthModal(false);
                 toggleTopUpModal(false);
+                toggleRedeemModal(false);
+                toggleSettingsModal(false);
             }
         });
 
