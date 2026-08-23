@@ -3,571 +3,143 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
     <title>Skey Shop - ร้านค้าออนไลน์อย่างเป็นทางการ</title>
-
-    <link rel="icon"
-          href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='20' fill='black'/><text x='50' y='68' font-size='55' text-anchor='middle' fill='white' font-family='Arial' font-weight='bold'>S</text></svg>">
-
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='20' fill='black'/><text x='50' y='68' font-size='55' text-anchor='middle' fill='white' font-family='Arial' font-weight='bold'>S</text></svg>">
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <script src="https://unpkg.com/lucide@latest"></script>
-    <script>
-        if (!window.lucide) {
-            var s = document.createElement('script');
-            s.src = 'https://cdn.jsdelivr.net/npm/lucide@latest/dist/umd/lucide.min.js';
-            document.head.appendChild(s);
-        }
-    </script>
-
+    <script>if(!window.lucide){var s=document.createElement('script');s.src='https://cdn.jsdelivr.net/npm/lucide@latest/dist/umd/lucide.min.js';document.head.appendChild(s);}</script>
+    <script src="https://www.google.com/recaptcha/api.js?render=explicit&async defer"></script>
     <style>
-        * { box-sizing: border-box; }
+        *{box-sizing:border-box}
+        body{font-family:'Kanit',sans-serif;background:#050505;color:#fff;margin:0;overflow-x:hidden}
+        ::selection{background:#fff;color:#050505}
+        ::-webkit-scrollbar{width:8px}::-webkit-scrollbar-track{background:#050505}
+        ::-webkit-scrollbar-thumb{background:#262626;border-radius:8px;border:2px solid #050505}
+        ::-webkit-scrollbar-thumb:hover{background:#3f3f3f}
 
-        body {
-            font-family: 'Kanit', sans-serif;
-            background-color: #050505;
-            color: #ffffff;
-            margin: 0;
-            overflow-x: hidden;
-        }
+        #globalLoader{position:fixed;inset:0;z-index:9999;background:rgba(5,5,5,.85);backdrop-filter:blur(6px);display:none;align-items:center;justify-content:center;flex-direction:column;gap:20px;opacity:0;transition:opacity .25s}
+        #globalLoader.active{display:flex;opacity:1}
+        #globalLoader.fade-out{opacity:0}
+        .gl-ring{width:56px;height:56px;border:3px solid rgba(255,255,255,.1);border-top-color:#fff;border-radius:50%;animation:spin .8s linear infinite;box-shadow:0 0 30px rgba(255,255,255,.15)}
+        .gl-ring-2{position:absolute;width:80px;height:80px;border:2px solid rgba(255,255,255,.05);border-bottom-color:rgba(255,255,255,.3);border-radius:50%;animation:spin 1.8s linear infinite reverse}
+        .gl-ring-3{position:absolute;width:104px;height:104px;border:1px dashed rgba(255,255,255,.08);border-left-color:rgba(255,255,255,.15);border-radius:50%;animation:spin 3s linear infinite}
+        .gl-pulse-dot{width:8px;height:8px;background:#fff;border-radius:50%;animation:gp 1.2s ease-in-out infinite;box-shadow:0 0 12px rgba(255,255,255,.5)}
+        @keyframes gp{0%,100%{transform:scale(.8);opacity:.4}50%{transform:scale(1.3);opacity:1}}
 
-        ::selection { background: #ffffff; color: #050505; }
+        #loadingScreen{position:fixed;inset:0;z-index:10000;background:#050505;display:flex;flex-direction:column;align-items:center;justify-content:center;transition:opacity .8s cubic-bezier(.4,0,0,1),transform .8s cubic-bezier(.4,0,0,1)}
+        #loadingScreen.done{opacity:0;transform:scale(1.05);pointer-events:none}
+        .ls-particle{position:absolute;width:2px;height:2px;background:rgba(255,255,255,.6);border-radius:50%;pointer-events:none}
+        @keyframes float-up{0%{transform:translateY(0) scale(1);opacity:.7}100%{transform:translateY(-120vh) scale(0);opacity:0}}
+        .ls-orbit{position:absolute;border-radius:50%;border:2px solid transparent}
+        .ls-orbit-1{width:200px;height:200px;border-top-color:rgba(255,255,255,.7);border-right-color:rgba(255,255,255,.2);animation:spin 3s linear infinite;box-shadow:0 0 25px rgba(255,255,255,.1)}
+        .ls-orbit-2{width:160px;height:160px;border-bottom-color:rgba(255,255,255,.5);border-left-color:rgba(255,255,255,.15);animation:spin 2.2s linear infinite reverse}
+        .ls-orbit-3{width:120px;height:120px;border:1px dashed rgba(255,255,255,.1);border-top-color:rgba(255,255,255,.25);animation:spin 4.5s linear infinite}
+        .ls-orbit-dot{position:absolute;width:6px;height:6px;background:#fff;border-radius:50%;box-shadow:0 0 10px rgba(255,255,255,.8),0 0 25px rgba(255,255,255,.3)}
+        .ls-orbit-1 .ls-orbit-dot{top:-3px;left:50%;margin-left:-3px}
+        .ls-orbit-2 .ls-orbit-dot{bottom:-3px;left:50%;margin-left:-3px}
+        .ls-logo-inner{width:80px;height:80px;border-radius:24px;background:linear-gradient(135deg,rgba(255,255,255,.12),rgba(255,255,255,.03));border:2px solid rgba(255,255,255,.2);display:flex;align-items:center;justify-content:center;box-shadow:0 0 40px rgba(255,255,255,.15);overflow:hidden}
+        .ls-logo-inner img{width:100%;height:100%;object-fit:cover}
+        .ls-glow{position:absolute;width:240px;height:240px;border-radius:50%;background:radial-gradient(circle,rgba(255,255,255,.08) 0%,transparent 70%);animation:gb 3s ease-in-out infinite;pointer-events:none}
+        @keyframes gb{0%,100%{transform:scale(.9);opacity:.5}50%{transform:scale(1.15);opacity:1}}
+        .ls-bar-track{width:280px;height:4px;background:rgba(255,255,255,.06);border-radius:999px;overflow:hidden;position:relative;border:1px solid rgba(255,255,255,.08)}
+        .ls-bar-fill{height:100%;width:0%;border-radius:999px;background:linear-gradient(90deg,rgba(255,255,255,.6),#fff,rgba(255,255,255,.6));box-shadow:0 0 15px rgba(255,255,255,.5);transition:width .5s cubic-bezier(.16,1,.3,1);position:relative}
+        .ls-bar-fill::after{content:'';position:absolute;right:0;top:-3px;bottom:-3px;width:20px;background:#fff;border-radius:999px;box-shadow:0 0 12px rgba(255,255,255,.8);filter:blur(1px)}
 
-        ::-webkit-scrollbar { width: 8px; }
-        ::-webkit-scrollbar-track { background: #050505; }
-        ::-webkit-scrollbar-thumb {
-            background: #262626;
-            border-radius: 8px;
-            border: 2px solid #050505;
-        }
-        ::-webkit-scrollbar-thumb:hover { background: #3f3f3f; }
+        @keyframes spin{from{transform:rotate(0deg)}to{transform:rotate(360deg)}}
+        .glow-pulse{animation:pg 2s cubic-bezier(.4,0,.6,1) infinite}
+        @keyframes pg{0%,100%{opacity:.25;transform:scale(.95)}50%{opacity:.7;transform:scale(1.1)}}
+        .bg-grid-mono{background-image:linear-gradient(rgba(255,255,255,.035) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.035) 1px,transparent 1px);background-size:44px 44px;-webkit-mask-image:radial-gradient(ellipse 80% 60% at 50% 40%,black 30%,transparent 75%);mask-image:radial-gradient(ellipse 80% 60% at 50% 40%,black 30%,transparent 75%)}
+        @keyframes modal-in{from{opacity:0;transform:translateY(30px) scale(.95)}to{opacity:1;transform:translateY(0) scale(1)}}
+        .modal-enter{animation:modal-in .7s cubic-bezier(.16,1,.3,1) both}
+        @keyframes shine{0%{transform:translateX(-150%) skewX(-15deg)}60%,100%{transform:translateX(350%) skewX(-15deg)}}
+        .btn-shine::after{content:'';position:absolute;top:0;left:0;width:35%;height:100%;background:linear-gradient(90deg,transparent,rgba(0,0,0,.25),transparent);animation:shine 3.2s ease-in-out infinite;pointer-events:none}
+        .btn-light{background:#fff;color:#050505}.btn-light:hover{background:#e5e5e5}.btn-light:active{transform:scale(.95)}
+        .input-dark{background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.12);color:#fff}
+        .input-dark::placeholder{color:#525252}
+        .input-dark:focus{outline:none;border-color:rgba(255,255,255,.5);box-shadow:0 0 0 2px rgba(255,255,255,.15)}
+        .stat-number{font-variant-numeric:tabular-nums;letter-spacing:-.02em}
+        .faq-answer{max-height:0;overflow:hidden;transition:max-height .4s ease,padding .4s ease}
+        .faq-item.open .faq-answer{max-height:300px}
+        .faq-item.open .faq-chevron{transform:rotate(180deg)}
+        .faq-chevron{transition:transform .3s ease}
+        .divider-mono{height:1px;background:linear-gradient(90deg,transparent,rgba(255,255,255,.2),transparent)}
+        .gear-spin{animation:spin 6s linear infinite}
+        .dots-anim::after{content:'';display:inline-block;width:1.2em;text-align:left;animation:dots 1.4s steps(4,end) infinite}
+        @keyframes dots{0%{content:''}25%{content:'.'}50%{content:'..'}75%{content:'...'}100%{content:''}}
+        @keyframes scanline{0%{top:-5%;opacity:0}15%{opacity:1}85%{opacity:1}100%{top:105%;opacity:0}}
+        .scan-line{position:absolute;left:8%;right:8%;height:2px;background:linear-gradient(90deg,transparent,rgba(255,255,255,.9),transparent);box-shadow:0 0 14px rgba(255,255,255,.55);animation:scanline 3.5s ease-in-out infinite;pointer-events:none}
+        @keyframes gift-bounce{0%,100%{transform:translateY(0) rotate(-3deg)}50%{transform:translateY(-10px) rotate(3deg)}}
+        .gift-bounce{animation:gift-bounce 2.5s ease-in-out infinite}
+        @keyframes sparkle-ping{0%{transform:scale(.8);opacity:.9}80%,100%{transform:scale(2.2);opacity:0}}
+        .sparkle-ping{animation:sparkle-ping 1.8s cubic-bezier(0,0,.2,1) infinite}
+        @keyframes money-pop{0%{transform:scale(.3);opacity:0}60%{transform:scale(1.15);opacity:1}100%{transform:scale(1);opacity:1}}
+        .money-pop{animation:money-pop .6s cubic-bezier(.16,1,.3,1) both}
+        .sk-switch{position:relative;display:inline-block;width:46px;height:26px;flex-shrink:0}
+        .sk-switch input{opacity:0;width:0;height:0}
+        .sk-slider{position:absolute;cursor:pointer;inset:0;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.15);border-radius:999px;transition:.3s}
+        .sk-slider:before{content:'';position:absolute;height:18px;width:18px;left:3px;top:3px;background:#737373;border-radius:50%;transition:.3s}
+        .sk-switch input:checked+.sk-slider{background:#fff;border-color:#fff}
+        .sk-switch input:checked+.sk-slider:before{transform:translateX(20px);background:#050505}
+        @keyframes tip-glow{0%,100%{border-color:rgba(255,255,255,.15);box-shadow:0 0 0 rgba(255,255,255,0)}50%{border-color:rgba(255,255,255,.4);box-shadow:0 0 20px rgba(255,255,255,.08)}}
+        .tip-banner{animation:tip-glow 3s ease-in-out infinite;background:linear-gradient(135deg,rgba(255,255,255,.06),rgba(255,255,255,.02))}
+        @keyframes tip-slide{0%,10%{transform:translateX(0)}45%,55%{transform:translateX(-50%)}90%,100%{transform:translateX(0)}}
+        .tip-slide-track{animation:tip-slide 20s ease-in-out infinite}
+        @keyframes megaphone-shake{0%,100%{transform:rotate(0)}15%{transform:rotate(12deg)}30%{transform:rotate(-10deg)}45%{transform:rotate(8deg)}60%{transform:rotate(-6deg)}75%{transform:rotate(3deg)}}
+        .megaphone-shake{animation:megaphone-shake 2.5s ease-in-out infinite;animation-delay:1s}
+        @keyframes new-blink{0%,100%{opacity:1}50%{opacity:.4}}.new-blink{animation:new-blink 1.5s ease-in-out infinite}
+        @keyframes confetti-fall{0%{transform:translateY(-20px) rotate(0);opacity:1}100%{transform:translateY(80px) rotate(720deg);opacity:0}}
+        .confetti-piece{position:absolute;width:6px;height:6px;border-radius:1px;animation:confetti-fall 1.2s ease-out forwards;pointer-events:none}
+        @keyframes shake{0%,100%{transform:translateX(0)}20%{transform:translateX(-8px)}40%{transform:translateX(8px)}60%{transform:translateX(-5px)}80%{transform:translateX(5px)}}
+        .btn-loading{position:relative!important;color:transparent!important;pointer-events:none}
+        .btn-loading::before{content:'';position:absolute;width:18px;height:18px;border:2px solid rgba(0,0,0,.15);border-top-color:#050505;border-radius:50%;animation:spin .7s linear infinite;top:50%;left:50%;margin-top:-9px;margin-left:-9px}
+        .rc-wrap{background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.08);border-radius:12px;padding:12px;display:flex;justify-content:center}
+        @keyframes lock-pulse{0%,100%{border-color:rgba(239,68,68,.3)}50%{border-color:rgba(239,68,68,.6)}}
+        .lockout-warn{animation:lock-pulse 2s ease-in-out infinite}
 
-        /* ============================
-           GLOBAL LOADING OVERLAY
-        ============================ */
-        #globalLoader {
-            position: fixed;
-            inset: 0;
-            z-index: 9999;
-            background: rgba(5,5,5,0.85);
-            backdrop-filter: blur(6px);
-            display: none;
-            align-items: center;
-            justify-content: center;
-            flex-direction: column;
-            gap: 20px;
-            opacity: 0;
-            transition: opacity 0.25s;
-        }
-        #globalLoader.active {
-            display: flex;
-            opacity: 1;
-        }
-        #globalLoader.fade-out {
-            opacity: 0;
-        }
-
-        .gl-ring {
-            width: 56px; height: 56px;
-            border: 3px solid rgba(255,255,255,0.1);
-            border-top-color: #fff;
-            border-radius: 50%;
-            animation: spin 0.8s linear infinite;
-            box-shadow: 0 0 30px rgba(255,255,255,0.15), 0 0 60px rgba(255,255,255,0.05);
-        }
-        .gl-ring-2 {
-            position: absolute;
-            width: 80px; height: 80px;
-            border: 2px solid rgba(255,255,255,0.05);
-            border-bottom-color: rgba(255,255,255,0.3);
-            border-radius: 50%;
-            animation: spin 1.8s linear infinite reverse;
-        }
-        .gl-ring-3 {
-            position: absolute;
-            width: 104px; height: 104px;
-            border: 1px dashed rgba(255,255,255,0.08);
-            border-left-color: rgba(255,255,255,0.15);
-            border-radius: 50%;
-            animation: spin 3s linear infinite;
-        }
-
-        .gl-pulse-dot {
-            width: 8px; height: 8px;
-            background: #fff;
-            border-radius: 50%;
-            animation: gl-pulse 1.2s ease-in-out infinite;
-            box-shadow: 0 0 12px rgba(255,255,255,0.5);
-        }
-        @keyframes gl-pulse {
-            0%, 100% { transform: scale(0.8); opacity: 0.4; }
-            50% { transform: scale(1.3); opacity: 1; }
-        }
-
-        /* ============================
-           LOADING SCREEN (เด้งแรก)
-        ============================ */
-        #loadingScreen {
-            position: fixed;
-            inset: 0;
-            z-index: 10000;
-            background: #050505;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            transition: opacity 0.8s cubic-bezier(0.4, 0, 0, 1), transform 0.8s cubic-bezier(0.4, 0, 0, 1);
-        }
-        #loadingScreen.done {
-            opacity: 0;
-            transform: scale(1.05);
-            pointer-events: none;
-        }
-
-        /* พาร์ติเคิลบน loading */
-        .ls-particle {
-            position: absolute;
-            width: 2px; height: 2px;
-            background: rgba(255,255,255,0.6);
-            border-radius: 50%;
-            pointer-events: none;
-        }
-
-        @keyframes float-up {
-            0% { transform: translateY(0) scale(1); opacity: 0.7; }
-            100% { transform: translateY(-120vh) scale(0); opacity: 0; }
-        }
-
-        /* วงแหวนหมุน loading */
-        .ls-orbit {
-            position: absolute;
-            border-radius: 50%;
-            border: 2px solid transparent;
-        }
-        .ls-orbit-1 {
-            width: 200px; height: 200px;
-            border-top-color: rgba(255,255,255,0.7);
-            border-right-color: rgba(255,255,255,0.2);
-            animation: spin 3s linear infinite;
-            box-shadow: 0 0 25px rgba(255,255,255,0.1);
-        }
-        .ls-orbit-2 {
-            width: 160px; height: 160px;
-            border-bottom-color: rgba(255,255,255,0.5);
-            border-left-color: rgba(255,255,255,0.15);
-            animation: spin 2.2s linear infinite reverse;
-            box-shadow: 0 0 20px rgba(255,255,255,0.08);
-        }
-        .ls-orbit-3 {
-            width: 120px; height: 120px;
-            border: 1px dashed rgba(255,255,255,0.1);
-            border-top-color: rgba(255,255,255,0.25);
-            animation: spin 4.5s linear infinite;
-        }
-
-        /* จุดบนวงแหวน */
-        .ls-orbit-dot {
-            position: absolute;
-            width: 6px; height: 6px;
-            background: #fff;
-            border-radius: 50%;
-            box-shadow: 0 0 10px rgba(255,255,255,0.8), 0 0 25px rgba(255,255,255,0.3);
-        }
-        .ls-orbit-1 .ls-orbit-dot { top: -3px; left: 50%; margin-left: -3px; }
-        .ls-orbit-2 .ls-orbit-dot { bottom: -3px; left: 50%; margin-left: -3px; }
-
-        /* โลโก้ตรงกลาง */
-        .ls-logo-wrap {
-            position: relative;
-            width: 100px; height: 100px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            z-index: 2;
-        }
-        .ls-logo-inner {
-            width: 80px; height: 80px;
-            border-radius: 24px;
-            background: linear-gradient(135deg, rgba(255,255,255,0.12), rgba(255,255,255,0.03));
-            border: 2px solid rgba(255,255,255,0.2);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 32px;
-            font-weight: 900;
-            color: #fff;
-            box-shadow: 0 0 40px rgba(255,255,255,0.15), inset 0 0 30px rgba(255,255,255,0.03);
-            overflow: hidden;
-            position: relative;
-        }
-        .ls-logo-inner img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-        }
-
-        /* เงาวงแหวนเรือง */
-        .ls-glow {
-            position: absolute;
-            width: 240px; height: 240px;
-            border-radius: 50%;
-            background: radial-gradient(circle, rgba(255,255,255,0.08) 0%, transparent 70%);
-            animation: glow-breathe 3s ease-in-out infinite;
-            pointer-events: none;
-        }
-        @keyframes glow-breathe {
-            0%, 100% { transform: scale(0.9); opacity: 0.5; }
-            50% { transform: scale(1.15); opacity: 1; }
-        }
-
-        /* Progress bar แบบโหด */
-        .ls-bar-track {
-            width: 280px;
-            height: 4px;
-            background: rgba(255,255,255,0.06);
-            border-radius: 999px;
-            overflow: hidden;
-            position: relative;
-            border: 1px solid rgba(255,255,255,0.08);
-        }
-        .ls-bar-fill {
-            height: 100%;
-            width: 0%;
-            border-radius: 999px;
-            background: linear-gradient(90deg, rgba(255,255,255,0.6), #fff, rgba(255,255,255,0.6));
-            box-shadow: 0 0 15px rgba(255,255,255,0.5), 0 0 40px rgba(255,255,255,0.15);
-            transition: width 0.5s cubic-bezier(0.16, 1, 0.3, 1);
-            position: relative;
-        }
-        .ls-bar-fill::after {
-            content: '';
-            position: absolute;
-            right: 0; top: -3px; bottom: -3px;
-            width: 20px;
-            background: #fff;
-            border-radius: 999px;
-            box-shadow: 0 0 12px rgba(255,255,255,0.8), 0 0 30px rgba(255,255,255,0.3);
-            filter: blur(1px);
-        }
-
-        /* ตัวเลข % แบบโหด */
-        .ls-percent {
-            font-size: 14px;
-            font-weight: 800;
-            font-variant-numeric: tabular-nums;
-            letter-spacing: 0.05em;
-            color: rgba(255,255,255,0.9);
-            text-shadow: 0 0 10px rgba(255,255,255,0.3);
-        }
-
-        /* ข้อความสเตตัส */
-        .ls-status {
-            font-size: 11px;
-            font-weight: 600;
-            letter-spacing: 0.15em;
-            text-transform: uppercase;
-            color: rgba(255,255,255,0.45);
-        }
-
-        /* เส้นแนวนอนเรือง */
-        .ls-hline {
-            width: 60px;
-            height: 1px;
-            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
-        }
-
-        /* ชื่อร้าน */
-        .ls-brand {
-            font-size: 28px;
-            font-weight: 900;
-            letter-spacing: 0.12em;
-            color: #fff;
-            text-shadow: 0 0 30px rgba(255,255,255,0.2);
-            margin-top: 4px;
-        }
-        .ls-brand-sub {
-            font-size: 10px;
-            font-weight: 500;
-            letter-spacing: 0.3em;
-            text-transform: uppercase;
-            color: rgba(255,255,255,0.3);
-            margin-top: 2px;
-        }
-
-        /* ============================
-           ANIMATIONS ทั่วไป
-        ============================ */
-        @keyframes spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
-
-        .glow-pulse { animation: pulse-glow 2s cubic-bezier(0.4, 0, 0.6, 1) infinite; }
-        @keyframes pulse-glow {
-            0%, 100% { opacity: 0.25; transform: scale(0.95); }
-            50% { opacity: 0.7; transform: scale(1.1); }
-        }
-
-        .bg-grid-mono {
-            background-image:
-                linear-gradient(rgba(255,255,255,0.035) 1px, transparent 1px),
-                linear-gradient(90deg, rgba(255,255,255,0.035) 1px, transparent 1px);
-            background-size: 44px 44px;
-            -webkit-mask-image: radial-gradient(ellipse 80% 60% at 50% 40%, black 30%, transparent 75%);
-            mask-image: radial-gradient(ellipse 80% 60% at 50% 40%, black 30%, transparent 75%);
-        }
-
-        @keyframes modal-in {
-            from { opacity: 0; transform: translateY(30px) scale(0.95); }
-            to { opacity: 1; transform: translateY(0) scale(1); }
-        }
-        .modal-enter { animation: modal-in 0.7s cubic-bezier(0.16, 1, 0.3, 1) both; }
-
-        @keyframes shine {
-            0% { transform: translateX(-150%) skewX(-15deg); }
-            60%, 100% { transform: translateX(350%) skewX(-15deg); }
-        }
-        .btn-shine::after {
-            content: '';
-            position: absolute;
-            top: 0; left: 0;
-            width: 35%; height: 100%;
-            background: linear-gradient(90deg, transparent, rgba(0,0,0,0.25), transparent);
-            animation: shine 3.2s ease-in-out infinite;
-            pointer-events: none;
-        }
-
-        .btn-light { background: #ffffff; color: #050505; }
-        .btn-light:hover { background: #e5e5e5; }
-        .btn-light:active { transform: scale(0.95); }
-
-        .input-dark {
-            background: rgba(255,255,255,0.05);
-            border: 1px solid rgba(255,255,255,0.12);
-            color: #ffffff;
-        }
-        .input-dark::placeholder { color: #525252; }
-        .input-dark:focus {
-            outline: none;
-            border-color: rgba(255,255,255,0.5);
-            box-shadow: 0 0 0 2px rgba(255,255,255,0.15);
-        }
-
-        .stat-number { font-variant-numeric: tabular-nums; letter-spacing: -0.02em; }
-
-        .faq-answer {
-            max-height: 0;
-            overflow: hidden;
-            transition: max-height 0.4s ease, padding 0.4s ease;
-        }
-        .faq-item.open .faq-answer { max-height: 300px; }
-        .faq-item.open .faq-chevron { transform: rotate(180deg); }
-        .faq-chevron { transition: transform 0.3s ease; }
-
-        .divider-mono {
-            height: 1px;
-            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
-        }
-
-        .gear-spin { animation: spin 6s linear infinite; }
-
-        .dots-anim::after {
-            content: '';
-            display: inline-block;
-            width: 1.2em;
-            text-align: left;
-            animation: dots 1.4s steps(4, end) infinite;
-        }
-        @keyframes dots {
-            0% { content: ''; } 25% { content: '.'; }
-            50% { content: '..'; } 75% { content: '...'; } 100% { content: ''; }
-        }
-
-        @keyframes scanline {
-            0% { top: -5%; opacity: 0; } 15% { opacity: 1; }
-            85% { opacity: 1; } 100% { top: 105%; opacity: 0; }
-        }
-        .scan-line {
-            position: absolute; left: 8%; right: 8%; height: 2px;
-            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.9), transparent);
-            box-shadow: 0 0 14px rgba(255,255,255,0.55);
-            animation: scanline 3.5s ease-in-out infinite;
-            pointer-events: none;
-        }
-
-        @keyframes progress-slide {
-            0% { left: -35%; } 100% { left: 105%; }
-        }
-        .progress-slider {
-            position: absolute; top: 0; bottom: 0; width: 35%;
-            border-radius: 9999px;
-            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.85), transparent);
-            animation: progress-slide 2.2s ease-in-out infinite;
-        }
-
-        @keyframes gift-bounce {
-            0%, 100% { transform: translateY(0) rotate(-3deg); }
-            50% { transform: translateY(-10px) rotate(3deg); }
-        }
-        .gift-bounce { animation: gift-bounce 2.5s ease-in-out infinite; }
-
-        @keyframes sparkle-ping {
-            0% { transform: scale(0.8); opacity: 0.9; }
-            80%, 100% { transform: scale(2.2); opacity: 0; }
-        }
-        .sparkle-ping { animation: sparkle-ping 1.8s cubic-bezier(0, 0, 0.2, 1) infinite; }
-
-        @keyframes money-pop {
-            0% { transform: scale(0.3); opacity: 0; }
-            60% { transform: scale(1.15); opacity: 1; }
-            100% { transform: scale(1); opacity: 1; }
-        }
-        .money-pop { animation: money-pop 0.6s cubic-bezier(0.16, 1, 0.3, 1) both; }
-
-        .sk-switch { position: relative; display: inline-block; width: 46px; height: 26px; flex-shrink: 0; }
-        .sk-switch input { opacity: 0; width: 0; height: 0; }
-        .sk-slider {
-            position: absolute; cursor: pointer; inset: 0;
-            background: rgba(255,255,255,0.08);
-            border: 1px solid rgba(255,255,255,0.15);
-            border-radius: 9999px; transition: 0.3s;
-        }
-        .sk-slider:before {
-            content: ''; position: absolute;
-            height: 18px; width: 18px; left: 3px; top: 3px;
-            background: #737373; border-radius: 50%; transition: 0.3s;
-        }
-        .sk-switch input:checked + .sk-slider { background: #ffffff; border-color: #ffffff; }
-        .sk-switch input:checked + .sk-slider:before { transform: translateX(20px); background: #050505; }
-
-        /* TIP BANNER */
-        @keyframes tip-glow {
-            0%, 100% { border-color: rgba(255,255,255,0.15); box-shadow: 0 0 0 rgba(255,255,255,0); }
-            50% { border-color: rgba(255,255,255,0.4); box-shadow: 0 0 20px rgba(255,255,255,0.08); }
-        }
-        .tip-banner { animation: tip-glow 3s ease-in-out infinite; background: linear-gradient(135deg, rgba(255,255,255,0.06) 0%, rgba(255,255,255,0.02) 100%); }
-
-        @keyframes tip-slide {
-            0%, 10% { transform: translateX(0); }
-            45%, 55% { transform: translateX(-50%); }
-            90%, 100% { transform: translateX(0); }
-        }
-        .tip-slide-track { animation: tip-slide 20s ease-in-out infinite; }
-
-        @keyframes megaphone-shake {
-            0%, 100% { transform: rotate(0deg); }
-            15% { transform: rotate(12deg); } 30% { transform: rotate(-10deg); }
-            45% { transform: rotate(8deg); } 60% { transform: rotate(-6deg); }
-            75% { transform: rotate(3deg); }
-        }
-        .megaphone-shake { animation: megaphone-shake 2.5s ease-in-out infinite; animation-delay: 1s; }
-
-        @keyframes new-blink { 0%, 100% { opacity: 1; } 50% { opacity: 0.4; } }
-        .new-blink { animation: new-blink 1.5s ease-in-out infinite; }
-
-        @keyframes confetti-fall {
-            0% { transform: translateY(-20px) rotate(0deg); opacity: 1; }
-            100% { transform: translateY(80px) rotate(720deg); opacity: 0; }
-        }
-        .confetti-piece {
-            position: absolute; width: 6px; height: 6px;
-            border-radius: 1px; animation: confetti-fall 1.2s ease-out forwards; pointer-events: none;
-        }
-
-        @keyframes shake {
-            0%,100%{transform:translateX(0)} 20%{transform:translateX(-8px)}
-            40%{transform:translateX(8px)} 60%{transform:translateX(-5px)} 80%{transform:translateX(5px)}
-        }
-
-        /* ปุ่มกำลังโหลด */
-        .btn-loading {
-            position: relative !important;
-            color: transparent !important;
-            pointer-events: none;
-        }
-        .btn-loading::before {
-            content: '';
-            position: absolute;
-            width: 18px; height: 18px;
-            border: 2px solid rgba(0,0,0,0.15);
-            border-top-color: #050505;
-            border-radius: 50%;
-            animation: spin 0.7s linear infinite;
-            top: 50%; left: 50%;
-            margin-top: -9px; margin-left: -9px;
-        }
+        /* Roblox Server Status */
+        .srv-card{background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.1);border-radius:16px;padding:16px;transition:all .3s}
+        .srv-card:hover{background:rgba(255,255,255,.07);border-color:rgba(255,255,255,.2)}
+        .srv-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0}
+        .srv-dot.online{background:#22c55e;box-shadow:0 0 8px rgba(34,197,94,.5);animation:srv-pulse 2s ease-in-out infinite}
+        .srv-dot.offline{background:#ef4444;box-shadow:0 0 8px rgba(239,68,68,.4)}
+        .srv-dot.maintenance{background:#f59e0b;box-shadow:0 0 8px rgba(245,158,11,.4);animation:srv-pulse 1s ease-in-out infinite}
+        @keyframes srv-pulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.5;transform:scale(.8)}}
+        .srv-bar-track{height:6px;background:rgba(255,255,255,.08);border-radius:999px;overflow:hidden}
+        .srv-bar-fill{height:100%;border-radius:999px;transition:width 1s ease}
+        .srv-shimmer{background:linear-gradient(90deg,rgba(255,255,255,0) 0%,rgba(255,255,255,.15) 50%,rgba(255,255,255,0) 100%);background-size:200% 100%;animation:shimmer 2s infinite}
+        @keyframes shimmer{0%{background-position:200% 0}100%{background-position:-200% 0}}
     </style>
 </head>
-
 <body class="min-h-screen flex flex-col justify-between text-white">
 
-    <!-- ============================
-         GLOBAL BUTTON LOADER
-    ============================ -->
     <div id="globalLoader">
-        <div style="position:relative; display:flex; align-items:center; justify-content:center;">
-            <div class="gl-ring-3"></div>
-            <div class="gl-ring-2"></div>
-            <div class="gl-ring"></div>
-        </div>
+        <div style="position:relative;display:flex;align-items:center;justify-content:center"><div class="gl-ring-3"></div><div class="gl-ring-2"></div><div class="gl-ring"></div></div>
         <div class="gl-pulse-dot"></div>
         <p class="text-xs font-semibold text-white/50 tracking-widest uppercase">กำลังดำเนินการ...</p>
     </div>
 
-
-    <!-- ============================
-         LOADING SCREEN (หน้าโหด)
-    ============================ -->
     <div id="loadingScreen">
-        <!-- พาร์ติเคิล -->
-        <div id="lsParticles" style="position:absolute;inset:0;overflow:hidden;pointer-events:none;"></div>
-
-        <!-- เส้นแนวนอนบน -->
-        <div style="position:absolute;top:35%;left:50%;transform:translateX(-50%);width:300px;height:1px;background:linear-gradient(90deg,transparent,rgba(255,255,255,0.1),transparent);"></div>
-        <!-- เส้นแนวนอนล่าง -->
-        <div style="position:absolute;top:65%;left:50%;transform:translateX(-50%);width:300px;height:1px;background:linear-gradient(90deg,transparent,rgba(255,255,255,0.1),transparent);"></div>
-
-        <!-- เงาเรือง -->
+        <div id="lsParticles" style="position:absolute;inset:0;overflow:hidden;pointer-events:none"></div>
+        <div style="position:absolute;top:35%;left:50%;transform:translateX(-50%);width:300px;height:1px;background:linear-gradient(90deg,transparent,rgba(255,255,255,.1),transparent)"></div>
+        <div style="position:absolute;top:65%;left:50%;transform:translateX(-50%);width:300px;height:1px;background:linear-gradient(90deg,transparent,rgba(255,255,255,.1),transparent)"></div>
         <div class="ls-glow"></div>
-
-        <!-- วงแหวนหมุน + โลโก้ -->
-        <div style="position:relative; width:200px; height:200px; display:flex; align-items:center; justify-content:center; margin-bottom:32px;">
+        <div style="position:relative;width:200px;height:200px;display:flex;align-items:center;justify-content:center;margin-bottom:32px">
             <div class="ls-orbit ls-orbit-1"><div class="ls-orbit-dot"></div></div>
             <div class="ls-orbit ls-orbit-2"><div class="ls-orbit-dot"></div></div>
             <div class="ls-orbit ls-orbit-3"></div>
-            <div class="ls-logo-wrap">
-                <div class="ls-logo-inner">
-                    <img src="https://i.pinimg.com/564x/8e/3c/37/8e3c3757dbd74fa1f9712ee4df2a8dc4.jpg" alt="Skey">
-                </div>
-            </div>
+            <div style="position:relative;width:100px;height:100px;display:flex;align-items:center;justify-content:center;z-index:2"><div class="ls-logo-inner"><img src="https://i.pinimg.com/564x/8e/3c/37/8e3c3757dbd74fa1f9712ee4df2a8dc4.jpg" alt="Skey"></div></div>
         </div>
-
-        <!-- ชื่อร้าน -->
-        <p class="ls-brand">SKEY SHOP</p>
-        <p class="ls-brand-sub">Official Digital Store</p>
-
-        <!-- ช่องว่าง -->
-        <div style="height:28px;"></div>
-
-        <!-- Progress -->
-        <div style="display:flex; align-items:center; gap:14px;">
-            <div class="ls-bar-track">
-                <div class="ls-bar-fill" id="lsBarFill"></div>
-            </div>
-            <span class="ls-percent" id="lsPercent">0%</span>
-        </div>
-
-        <!-- สเตตัส -->
-        <p class="ls-status" id="lsStatus" style="margin-top:12px;">กำลังเริ่มต้นระบบ...</p>
-
-        <!-- เส้น -->
-        <div class="ls-hline" style="margin-top:20px;"></div>
-
-        <!-- เวอร์ชัน -->
-        <p style="position:absolute;bottom:28px;font-size:9px;letter-spacing:0.25em;text-transform:uppercase;color:rgba(255,255,255,0.15);">v1.0.0 · Secure Connection</p>
+        <p style="font-size:28px;font-weight:900;letter-spacing:.12em;color:#fff;text-shadow:0 0 30px rgba(255,255,255,.2);margin-top:4px">SKEY SHOP</p>
+        <p style="font-size:10px;font-weight:500;letter-spacing:.3em;text-transform:uppercase;color:rgba(255,255,255,.3);margin-top:2px">Official Digital Store</p>
+        <div style="height:28px"></div>
+        <div style="display:flex;align-items:center;gap:14px"><div class="ls-bar-track"><div class="ls-bar-fill" id="lsBarFill"></div></div><span id="lsPercent" style="font-size:14px;font-weight:800;font-variant-numeric:tabular-nums;letter-spacing:.05em;color:rgba(255,255,255,.9);text-shadow:0 0 10px rgba(255,255,255,.3)">0%</span></div>
+        <p id="lsStatus" style="font-size:11px;font-weight:600;letter-spacing:.15em;text-transform:uppercase;color:rgba(255,255,255,.45);margin-top:12px">กำลังเริ่มต้นระบบ...</p>
+        <div class="ls-hline" style="width:60px;height:1px;background:linear-gradient(90deg,transparent,rgba(255,255,255,.3),transparent);margin-top:20px"></div>
+        <p style="position:absolute;bottom:28px;font-size:9px;letter-spacing:.25em;text-transform:uppercase;color:rgba(255,255,255,.15)">v1.0.0 · Secure Connection</p>
     </div>
 
-
-    <!-- ============================
-         NAVBAR
-    ============================ -->
+    <!-- NAVBAR -->
     <header class="w-full bg-black/80 backdrop-blur-md border-b border-white/10 sticky top-0 z-30">
         <div class="max-w-6xl mx-auto px-4 sm:px-6 h-20 flex items-center justify-between gap-4">
             <div class="flex items-center gap-3 shrink-0">
@@ -575,835 +147,516 @@
                 <span class="text-xl font-extrabold tracking-tight text-white">Skey Shop</span>
             </div>
             <div id="authContainer" class="flex items-center gap-2 sm:gap-3">
-                <button id="openAuthBtn" onclick="glClick(this, function(){ toggleAuthModal(true); })"
-                        class="btn-light hover:bg-zinc-200 font-semibold px-4 sm:px-5 py-2.5 rounded-xl shadow-[0_0_25px_rgba(255,255,255,0.12)] transition text-xs sm:text-sm flex items-center gap-2">
-                    <i data-lucide="log-in" class="w-4 h-4"></i>
-                    <span>เข้าสู่ระบบ / สมัครสมาชิก</span>
+                <button id="openAuthBtn" onclick="glClick(this,function(){toggleAuthModal(true)})" class="btn-light hover:bg-zinc-200 font-semibold px-4 sm:px-5 py-2.5 rounded-xl shadow-[0_0_25px_rgba(255,255,255,0.12)] transition text-xs sm:text-sm flex items-center gap-2">
+                    <i data-lucide="log-in" class="w-4 h-4"></i><span>เข้าสู่ระบบ / สมัครสมาชิก</span>
                 </button>
                 <div id="userProfile" class="hidden flex items-center gap-2 bg-white/[0.05] border border-white/10 p-1.5 pl-3 rounded-2xl shadow-sm max-w-[320px] sm:max-w-md">
-                    <div class="w-9 h-9 btn-light rounded-xl flex items-center justify-center font-bold text-base uppercase shadow-sm shrink-0 overflow-hidden">
-                        <span id="avatarLetter">U</span>
-                    </div>
+                    <div class="w-9 h-9 btn-light rounded-xl flex items-center justify-center font-bold text-base uppercase shadow-sm shrink-0"><span id="avatarLetter">U</span></div>
                     <div class="text-left min-w-0 flex-1">
                         <p id="displayName" class="text-xs font-bold text-white leading-tight truncate max-w-[90px] sm:max-w-[130px]" title="User">User</p>
                         <div class="flex items-center gap-1.5 mt-0.5">
                             <span class="text-xs font-extrabold text-white truncate">฿<span id="userBalance">0.00</span></span>
-                            <button onclick="glClick(this, function(){ toggleRedeemModal(true); })"
-                                    class="text-[10px] btn-light hover:bg-zinc-200 font-bold px-2 py-0.5 rounded-md transition flex items-center gap-1 shrink-0" title="แลกโค้ดรับเงิน">
-                                <i data-lucide="gift" class="w-3 h-3"></i> แลกโค้ด
-                            </button>
+                            <button onclick="glClick(this,function(){toggleRedeemModal(true)})" class="text-[10px] btn-light hover:bg-zinc-200 font-bold px-2 py-0.5 rounded-md transition flex items-center gap-1 shrink-0"><i data-lucide="gift" class="w-3 h-3"></i> แลกโค้ด</button>
                         </div>
                     </div>
-                    <button onclick="glClick(this, function(){ toggleSettingsModal(true); })"
-                            class="text-white/60 hover:text-white bg-white/[0.06] hover:bg-white/[0.12] font-medium p-2 rounded-xl transition shrink-0" title="ตั้งค่า">
-                        <i data-lucide="settings" class="w-4 h-4"></i>
-                    </button>
-                    <button onclick="glClick(this, function(){ logout(); })"
-                            class="text-white/60 hover:text-red-300 bg-white/[0.06] hover:bg-red-400/10 font-medium p-2 rounded-xl transition shrink-0" title="ออกจากระบบ">
-                        <i data-lucide="log-out" class="w-4 h-4"></i>
-                    </button>
+                    <button onclick="glClick(this,function(){toggleSettingsModal(true)})" class="text-white/60 hover:text-white bg-white/[0.06] hover:bg-white/[0.12] font-medium p-2 rounded-xl transition shrink-0"><i data-lucide="settings" class="w-4 h-4"></i></button>
+                    <button onclick="glClick(this,function(){logout()})" class="text-white/60 hover:text-red-300 bg-white/[0.06] hover:bg-red-400/10 font-medium p-2 rounded-xl transition shrink-0"><i data-lucide="log-out" class="w-4 h-4"></i></button>
                 </div>
             </div>
         </div>
     </header>
 
-
-    <!-- ============================
-         ADMIN TIP BANNER
-    ============================ -->
+    <!-- TIP BANNER -->
     <div class="tip-banner border-b border-white/15 overflow-hidden relative">
         <div class="max-w-6xl mx-auto px-4 sm:px-6 py-2.5 flex items-center gap-3">
             <div class="flex items-center gap-2 shrink-0">
-                <div class="w-7 h-7 btn-light rounded-lg flex items-center justify-center shadow-sm">
-                    <i data-lucide="megaphone" class="w-3.5 h-3.5 megaphone-shake"></i>
-                </div>
+                <div class="w-7 h-7 btn-light rounded-lg flex items-center justify-center shadow-sm"><i data-lucide="megaphone" class="w-3.5 h-3.5 megaphone-shake"></i></div>
                 <span class="new-blink text-[10px] font-black bg-white text-black px-1.5 py-0.5 rounded-md tracking-wider">NEW</span>
             </div>
             <div class="overflow-hidden flex-1 relative h-5">
-                <div class="tip-slide-track flex items-center gap-12 absolute" style="min-width:max-content;">
-                    <span class="text-xs font-semibold text-white/80 flex items-center gap-1.5"><i data-lucide="ticket" class="w-3 h-3 text-white/50"></i> ระบบแลกโค้ด Admin 100 บาท — กรอกโค้ดที่ปุ่ม "แลกโค้ด" เพื่อรับเงินเข้าบัญชีทันที</span>
-                    <span class="text-xs font-semibold text-white/80 flex items-center gap-1.5"><i data-lucide="zap" class="w-3 h-3 text-white/50"></i> ระบบว่าไรบัค — แลกโค้ดแล้วเงินเข้าเลย ไม่ต้องรอ ไม่ต้องกรอกข้อมูลเพิ่ม</span>
-                    <span class="text-xs font-semibold text-white/80 flex items-center gap-1.5"><i data-lucide="gift" class="w-3 h-3 text-white/50"></i> โค้ด Admin มูลค่า 100 บาท — แอดมินประกาศแจก ใช้ได้ 1 ครั้งต่อ 1 บัญชี</span>
-                    <span class="text-xs font-semibold text-white/80 flex items-center gap-1.5"><i data-lucide="shield-check" class="w-3 h-3 text-white/50"></i> ปลอดภัย 100% — โค้ดใช้แล้วจะหมดสิทธิ์ทันที ไม่สามารถใช้ซ้ำได้</span>
-                    <span class="text-xs font-semibold text-white/80 flex items-center gap-1.5"><i data-lucide="ticket" class="w-3 h-3 text-white/50"></i> ระบบแลกโค้ด Admin 100 บาท — กรอกโค้ดที่ปุ่ม "แลกโค้ด" เพื่อรับเงินเข้าบัญชีทันที</span>
-                    <span class="text-xs font-semibold text-white/80 flex items-center gap-1.5"><i data-lucide="zap" class="w-3 h-3 text-white/50"></i> ระบบว่าไรบัค — แลกโค้ดแล้วเงินเข้าเลย ไม่ต้องรอ ไม่ต้องกรอกข้อมูลเพิ่ม</span>
-                    <span class="text-xs font-semibold text-white/80 flex items-center gap-1.5"><i data-lucide="gift" class="w-3 h-3 text-white/50"></i> โค้ด Admin มูลค่า 100 บาท — แอดมินประกาศแจก ใช้ได้ 1 ครั้งต่อ 1 บัญชี</span>
-                    <span class="text-xs font-semibold text-white/80 flex items-center gap-1.5"><i data-lucide="shield-check" class="w-3 h-3 text-white/50"></i> ปลอดภัย 100% — โค้ดใช้แล้วจะหมดสิทธิ์ทันที ไม่สามารถใช้ซ้ำได้</span>
+                <div class="tip-slide-track flex items-center gap-12 absolute" style="min-width:max-content">
+                    <span class="text-xs font-semibold text-white/80 flex items-center gap-1.5"><i data-lucide="ticket" class="w-3 h-3 text-white/50"></i> โค้ด Admin 100 บาท — กรอกโค้ดที่ปุ่ม "แลกโค้ด" เงินเข้าทันที</span>
+                    <span class="text-xs font-semibold text-white/80 flex items-center gap-1.5"><i data-lucide="server" class="w-3 h-3 text-white/50"></i> ตรวจสอบสถานะเซิร์ฟเวอร์ Roblox แบบเรียลไทม์</span>
+                    <span class="text-xs font-semibold text-white/80 flex items-center gap-1.5"><i data-lucide="shield-check" class="w-3 h-3 text-white/50"></i> reCAPTCHA + ล็อคบัญชีอัตโนมัติ ป้องกันแฮก</span>
+                    <span class="text-xs font-semibold text-white/80 flex items-center gap-1.5"><i data-lucide="ticket" class="w-3 h-3 text-white/50"></i> โค้ด Admin 100 บาท — กรอกโค้ดที่ปุ่ม "แลกโค้ด" เงินเข้าทันที</span>
+                    <span class="text-xs font-semibold text-white/80 flex items-center gap-1.5"><i data-lucide="server" class="w-3 h-3 text-white/50"></i> ตรวจสอบสถานะเซิร์ฟเวอร์ Roblox แบบเรียลไทม์</span>
+                    <span class="text-xs font-semibold text-white/80 flex items-center gap-1.5"><i data-lucide="shield-check" class="w-3 h-3 text-white/50"></i> reCAPTCHA + ล็อคบัญชีอัตโนมัติ ป้องกันแฮก</span>
                 </div>
             </div>
         </div>
     </div>
 
-
-    <!-- ============================
-         AUTH MODAL
-    ============================ -->
+    <!-- AUTH MODAL -->
     <div id="authModal" class="fixed inset-0 bg-black/70 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
         <div class="bg-[#0d0d0d] rounded-3xl shadow-2xl border border-white/10 w-full max-w-md p-6 sm:p-8 relative max-h-[90vh] overflow-y-auto">
-            <button onclick="glClick(this, function(){ toggleAuthModal(false); })" class="absolute top-5 right-5 text-white/40 hover:text-white font-bold text-xl transition z-10">✕</button>
-
+            <button onclick="glClick(this,function(){toggleAuthModal(false)})" class="absolute top-5 right-5 text-white/40 hover:text-white font-bold text-xl transition z-10">✕</button>
             <div id="authTabs" class="flex border-b border-white/10 mb-6">
-                <button id="loginTabBtn" onclick="glClick(this, function(){ switchForm('login'); })"
-                        class="w-1/2 py-3 text-center font-bold text-white border-b-2 border-white transition flex items-center justify-center gap-2">
-                    <i data-lucide="key-round" class="w-4 h-4"></i> เข้าสู่ระบบ
-                </button>
-                <button id="registerTabBtn" onclick="glClick(this, function(){ switchForm('register'); })"
-                        class="w-1/2 py-3 text-center font-semibold text-white/40 hover:text-white border-b-2 border-transparent transition flex items-center justify-center gap-2">
-                    <i data-lucide="user-plus" class="w-4 h-4"></i> สมัครสมาชิก
-                </button>
+                <button id="loginTabBtn" onclick="glClick(this,function(){switchForm('login')})" class="w-1/2 py-3 text-center font-bold text-white border-b-2 border-white transition flex items-center justify-center gap-2"><i data-lucide="key-round" class="w-4 h-4"></i> เข้าสู่ระบบ</button>
+                <button id="registerTabBtn" onclick="glClick(this,function(){switchForm('register')})" class="w-1/2 py-3 text-center font-semibold text-white/40 hover:text-white border-b-2 border-transparent transition flex items-center justify-center gap-2"><i data-lucide="user-plus" class="w-4 h-4"></i> สมัครสมาชิก</button>
             </div>
-
-            <!-- LOGIN -->
-            <form id="loginForm" onsubmit="handleAuth(event, 'login')" class="space-y-4">
-                <div>
-                    <label class="block text-xs font-bold text-white/60 uppercase tracking-wider mb-1 flex items-center gap-1"><i data-lucide="mail" class="w-3.5 h-3.5"></i> อีเมล</label>
-                    <input type="email" id="loginEmail" required placeholder="name@example.com" class="input-dark w-full px-4 py-3 rounded-xl transition text-sm">
-                </div>
-                <div>
-                    <label class="block text-xs font-bold text-white/60 uppercase tracking-wider mb-1 flex items-center gap-1"><i data-lucide="lock" class="w-3.5 h-3.5"></i> รหัสผ่าน</label>
-                    <div class="relative">
-                        <input type="password" id="loginPassword" required placeholder="••••••••" class="input-dark w-full px-4 py-3 pr-10 rounded-xl transition text-sm">
-                        <button type="button" onclick="togglePwdVis('loginPassword', this)" class="absolute right-3 top-1/2 -translate-y-1/2 text-white/40 hover:text-white focus:outline-none p-1"><i data-lucide="eye" class="w-4 h-4"></i></button>
-                    </div>
-                </div>
-                <div class="flex justify-end">
-                    <button type="button" onclick="glClick(this, function(){ showForgotPassword(); })" class="text-xs text-white/50 hover:text-white underline underline-offset-4 transition flex items-center gap-1"><i data-lucide="help-circle" class="w-3.5 h-3.5"></i> ลืมรหัสผ่าน?</button>
-                </div>
-                <button type="submit" id="loginSubmitBtn" class="btn-shine relative overflow-hidden btn-light hover:bg-zinc-200 w-full font-semibold py-3.5 rounded-xl shadow-[0_0_30px_rgba(255,255,255,0.12)] transition flex items-center justify-center gap-2">
-                    <i data-lucide="check-circle" class="w-4 h-4"></i> ยืนยันเข้าสู่ระบบ
-                </button>
+            <form id="loginForm" onsubmit="handleAuth(event,'login')" class="space-y-4">
+                <div><label class="block text-xs font-bold text-white/60 uppercase tracking-wider mb-1 flex items-center gap-1"><i data-lucide="mail" class="w-3.5 h-3.5"></i> อีเมล</label><input type="email" id="loginEmail" required placeholder="name@example.com" class="input-dark w-full px-4 py-3 rounded-xl transition text-sm" oninput="onLoginEmailInput()"></div>
+                <div><label class="block text-xs font-bold text-white/60 uppercase tracking-wider mb-1 flex items-center gap-1"><i data-lucide="lock" class="w-3.5 h-3.5"></i> รหัสผ่าน</label><div class="relative"><input type="password" id="loginPassword" required placeholder="••••••••" class="input-dark w-full px-4 py-3 pr-10 rounded-xl transition text-sm"><button type="button" onclick="togglePwdVis('loginPassword',this)" class="absolute right-3 top-1/2 -translate-y-1/2 text-white/40 hover:text-white p-1"><i data-lucide="eye" class="w-4 h-4"></i></button></div></div>
+                <div id="lockoutWarning" class="hidden lockout-warn bg-red-500/10 border border-red-500/30 rounded-xl px-4 py-3 flex items-center gap-3"><i data-lucide="lock" class="w-5 h-5 text-red-400 shrink-0"></i><div><p class="text-xs font-bold text-red-300">บัญชีถูกล็อคชั่วคราว</p><p class="text-[10px] text-red-400/80">ลองใหม่ได้ใน <span id="lockoutTime" class="font-mono font-bold text-red-300">--:--</span></p></div></div>
+                <div id="attemptsWarning" class="hidden bg-yellow-500/10 border border-yellow-500/25 rounded-xl px-4 py-2.5 flex items-center gap-3"><i data-lucide="alert-triangle" class="w-4 h-4 text-yellow-400 shrink-0"></i><p class="text-[11px] text-yellow-300/90">คงเหลือ <span id="attemptsLeft" class="font-bold">5</span> ครั้ง ก่อนล็อค 15 นาที</p></div>
+                <div class="rc-wrap"><div id="recaptcha_login"></div></div>
+                <p id="loginCaptchaErr" class="hidden text-[11px] text-red-400 bg-red-400/10 border border-red-400/20 rounded-xl px-3 py-2 text-center"></p>
+                <div class="flex justify-end"><button type="button" onclick="glClick(this,function(){showForgotPassword()})" class="text-xs text-white/50 hover:text-white underline underline-offset-4 transition flex items-center gap-1"><i data-lucide="help-circle" class="w-3.5 h-3.5"></i> ลืมรหัสผ่าน?</button></div>
+                <button type="submit" id="loginSubmitBtn" class="btn-shine relative overflow-hidden btn-light hover:bg-zinc-200 w-full font-semibold py-3.5 rounded-xl shadow-[0_0_30px_rgba(255,255,255,0.12)] transition flex items-center justify-center gap-2"><i data-lucide="check-circle" class="w-4 h-4"></i> ยืนยันเข้าสู่ระบบ</button>
             </form>
-
-            <!-- REGISTER (ไม่มี reCAPTCHA) -->
-            <form id="registerForm" onsubmit="handleAuth(event, 'register')" class="space-y-4 hidden">
-                <div>
-                    <label class="block text-xs font-bold text-white/60 uppercase tracking-wider mb-1 flex items-center gap-1"><i data-lucide="mail" class="w-3.5 h-3.5"></i> อีเมล</label>
-                    <input type="email" id="regEmail" required placeholder="name@example.com" class="input-dark w-full px-4 py-3 rounded-xl transition text-sm">
-                </div>
-                <div>
-                    <label class="block text-xs font-bold text-white/60 uppercase tracking-wider mb-1 flex items-center gap-1"><i data-lucide="lock" class="w-3.5 h-3.5"></i> รหัสผ่าน</label>
-                    <div class="relative">
-                        <input type="password" id="regPassword" required minlength="6" placeholder="อย่างน้อย 6 ตัวอักษร" class="input-dark w-full px-4 py-3 pr-10 rounded-xl transition text-sm">
-                        <button type="button" onclick="togglePwdVis('regPassword', this)" class="absolute right-3 top-1/2 -translate-y-1/2 text-white/40 hover:text-white focus:outline-none p-1"><i data-lucide="eye" class="w-4 h-4"></i></button>
-                    </div>
-                </div>
-                <button type="submit" id="regSubmitBtn" class="btn-shine relative overflow-hidden btn-light hover:bg-zinc-200 w-full font-semibold py-3.5 rounded-xl shadow-[0_0_30px_rgba(255,255,255,0.12)] transition flex items-center justify-center gap-2">
-                    <i data-lucide="user-check" class="w-4 h-4"></i> ยืนยันสมัครสมาชิก
-                </button>
+            <form id="registerForm" onsubmit="handleAuth(event,'register')" class="space-y-4 hidden">
+                <div><label class="block text-xs font-bold text-white/60 uppercase tracking-wider mb-1 flex items-center gap-1"><i data-lucide="mail" class="w-3.5 h-3.5"></i> อีเมล</label><input type="email" id="regEmail" required placeholder="name@example.com" class="input-dark w-full px-4 py-3 rounded-xl transition text-sm"></div>
+                <div><label class="block text-xs font-bold text-white/60 uppercase tracking-wider mb-1 flex items-center gap-1"><i data-lucide="lock" class="w-3.5 h-3.5"></i> รหัสผ่าน</label><div class="relative"><input type="password" id="regPassword" required minlength="6" placeholder="อย่างน้อย 6 ตัวอักษร" class="input-dark w-full px-4 py-3 pr-10 rounded-xl transition text-sm"><button type="button" onclick="togglePwdVis('regPassword',this)" class="absolute right-3 top-1/2 -translate-y-1/2 text-white/40 hover:text-white p-1"><i data-lucide="eye" class="w-4 h-4"></i></button></div></div>
+                <div class="rc-wrap"><div id="recaptcha_register"></div></div>
+                <p id="regCaptchaErr" class="hidden text-[11px] text-red-400 bg-red-400/10 border border-red-400/20 rounded-xl px-3 py-2 text-center"></p>
+                <button type="submit" id="regSubmitBtn" class="btn-shine relative overflow-hidden btn-light hover:bg-zinc-200 w-full font-semibold py-3.5 rounded-xl shadow-[0_0_30px_rgba(255,255,255,0.12)] transition flex items-center justify-center gap-2"><i data-lucide="user-check" class="w-4 h-4"></i> ยืนยันสมัครสมาชิก</button>
             </form>
-
-            <!-- ลืมรหัสผ่าน -->
             <div id="forgotView" class="hidden">
-                <div class="text-center mb-6">
-                    <div class="w-14 h-14 bg-white/[0.07] border border-white/15 rounded-2xl flex items-center justify-center mx-auto mb-4"><i data-lucide="key-round" class="w-7 h-7 text-white"></i></div>
-                    <h3 class="text-xl font-extrabold text-white mb-1">ลืมรหัสผ่าน</h3>
-                    <p class="text-xs text-white/50">กรอกอีเมลที่ใช้สมัคร เพื่อตั้งรหัสผ่านใหม่</p>
-                </div>
-                <form id="forgotStep1" onsubmit="handleForgotStep1(event)" class="space-y-4">
-                    <div>
-                        <label class="block text-xs font-bold text-white/60 uppercase tracking-wider mb-1 flex items-center gap-1"><i data-lucide="mail" class="w-3.5 h-3.5"></i> อีเมลที่ใช้สมัคร</label>
-                        <input type="email" id="forgotEmail" required placeholder="name@example.com" class="input-dark w-full px-4 py-3 rounded-xl transition text-sm">
-                    </div>
-                    <p id="forgotError1" class="hidden text-xs text-red-400 bg-red-400/10 border border-red-400/20 rounded-xl px-3 py-2"></p>
-                    <button type="submit" class="btn-light hover:bg-zinc-200 w-full font-semibold py-3.5 rounded-xl shadow-[0_0_30px_rgba(255,255,255,0.12)] transition flex items-center justify-center gap-2"><i data-lucide="arrow-right" class="w-4 h-4"></i> ถัดไป</button>
-                </form>
-                <form id="forgotStep2" onsubmit="handleForgotStep2(event)" class="space-y-4 hidden">
-                    <div>
-                        <label class="block text-xs font-bold text-white/60 uppercase tracking-wider mb-1 flex items-center gap-1"><i data-lucide="lock" class="w-3.5 h-3.5"></i> รหัสผ่านใหม่</label>
-                        <input type="password" id="forgotNewPass" required minlength="6" placeholder="อย่างน้อย 6 ตัวอักษร" class="input-dark w-full px-4 py-3 rounded-xl transition text-sm">
-                    </div>
-                    <div>
-                        <label class="block text-xs font-bold text-white/60 uppercase tracking-wider mb-1 flex items-center gap-1"><i data-lucide="lock" class="w-3.5 h-3.5"></i> ยืนยันรหัสผ่านใหม่</label>
-                        <input type="password" id="forgotConfirmPass" required minlength="6" placeholder="กรอกรหัสผ่านซ้ำ" class="input-dark w-full px-4 py-3 rounded-xl transition text-sm">
-                    </div>
-                    <p id="forgotError2" class="hidden text-xs text-red-400 bg-red-400/10 border border-red-400/20 rounded-xl px-3 py-2"></p>
-                    <button type="submit" class="btn-light hover:bg-zinc-200 w-full font-semibold py-3.5 rounded-xl shadow-[0_0_30px_rgba(255,255,255,0.12)] transition flex items-center justify-center gap-2"><i data-lucide="check-circle" class="w-4 h-4"></i> ยืนยันเปลี่ยนรหัสผ่าน</button>
-                </form>
-                <button onclick="glClick(this, function(){ backToLogin(); })" class="w-full text-center text-xs text-white/50 hover:text-white mt-4 transition flex items-center justify-center gap-1"><i data-lucide="arrow-left" class="w-3.5 h-3.5"></i> กลับไปหน้าเข้าสู่ระบบ</button>
+                <div class="text-center mb-6"><div class="w-14 h-14 bg-white/[0.07] border border-white/15 rounded-2xl flex items-center justify-center mx-auto mb-4"><i data-lucide="key-round" class="w-7 h-7 text-white"></i></div><h3 class="text-xl font-extrabold text-white mb-1">ลืมรหัสผ่าน</h3></div>
+                <form id="forgotStep1" onsubmit="handleForgotStep1(event)" class="space-y-4"><input type="email" id="forgotEmail" required placeholder="name@example.com" class="input-dark w-full px-4 py-3 rounded-xl transition text-sm"><p id="forgotError1" class="hidden text-xs text-red-400 bg-red-400/10 border border-red-400/20 rounded-xl px-3 py-2"></p><button type="submit" class="btn-light hover:bg-zinc-200 w-full font-semibold py-3.5 rounded-xl shadow-[0_0_30px_rgba(255,255,255,0.12)] transition flex items-center justify-center gap-2"><i data-lucide="arrow-right" class="w-4 h-4"></i> ถัดไป</button></form>
+                <form id="forgotStep2" onsubmit="handleForgotStep2(event)" class="space-y-4 hidden"><input type="password" id="forgotNewPass" required minlength="6" placeholder="รหัสผ่านใหม่" class="input-dark w-full px-4 py-3 rounded-xl transition text-sm"><input type="password" id="forgotConfirmPass" required minlength="6" placeholder="ยืนยันรหัสผ่าน" class="input-dark w-full px-4 py-3 rounded-xl transition text-sm"><p id="forgotError2" class="hidden text-xs text-red-400 bg-red-400/10 border border-red-400/20 rounded-xl px-3 py-2"></p><button type="submit" class="btn-light hover:bg-zinc-200 w-full font-semibold py-3.5 rounded-xl shadow-[0_0_30px_rgba(255,255,255,0.12)] transition flex items-center justify-center gap-2"><i data-lucide="check-circle" class="w-4 h-4"></i> ยืนยันเปลี่ยนรหัสผ่าน</button></form>
+                <button onclick="glClick(this,function(){backToLogin()})" class="w-full text-center text-xs text-white/50 hover:text-white mt-4 transition flex items-center justify-center gap-1"><i data-lucide="arrow-left" class="w-3.5 h-3.5"></i> กลับ</button>
             </div>
         </div>
     </div>
 
-
-    <!-- ============================
-         REDEEM CODE MODAL
-    ============================ -->
+    <!-- REDEEM MODAL -->
     <div id="redeemModal" class="fixed inset-0 bg-black/70 backdrop-blur-sm z-[65] hidden flex items-center justify-center p-4">
         <div class="relative bg-[#0d0d0d] rounded-3xl shadow-2xl border border-white/10 w-full max-w-md p-8 text-center overflow-hidden modal-enter max-h-[90vh] overflow-y-auto">
-            <div class="absolute -top-24 left-1/2 -translate-x-1/2 w-80 h-80 bg-white/[0.06] rounded-full blur-3xl glow-pulse pointer-events-none"></div>
+            <div class="absolute -top-24 left-1/2 -translate-x-1/2 w-80 h-80 bg-white/[0.06] rounded-full blur-3xl glow-pulse pointer-events:none"></div>
             <div class="scan-line"></div>
-            <button onclick="glClick(this, function(){ toggleRedeemModal(false); })" class="absolute top-5 right-5 text-white/40 hover:text-white font-bold text-xl transition z-10">✕</button>
-
-            <div class="relative w-24 h-24 mx-auto mb-5">
-                <span class="sparkle-ping absolute inset-0 rounded-3xl border-2 border-white/40"></span>
-                <div class="w-24 h-24 rounded-3xl bg-gradient-to-br from-white/[0.14] to-white/[0.04] border border-white/25 flex items-center justify-center shadow-[0_0_35px_rgba(255,255,255,0.25)] gift-bounce">
-                    <i data-lucide="gift" class="w-12 h-12 text-white"></i>
-                </div>
-            </div>
-
+            <button onclick="glClick(this,function(){toggleRedeemModal(false)})" class="absolute top-5 right-5 text-white/40 hover:text-white font-bold text-xl transition z-10">✕</button>
+            <div class="relative w-24 h-24 mx-auto mb-5"><span class="sparkle-ping absolute inset-0 rounded-3xl border-2 border-white/40"></span><div class="w-24 h-24 rounded-3xl bg-gradient-to-br from-white/[0.14] to-white/[0.04] border border-white/25 flex items-center justify-center shadow-[0_0_35px_rgba(255,255,255,0.25)] gift-bounce"><i data-lucide="gift" class="w-12 h-12 text-white"></i></div></div>
             <h3 class="text-2xl font-extrabold text-white mb-1">แลกโค้ดรับเงิน</h3>
-            <p class="text-xs text-white/50 mb-5">กรอกรหัสโค้ดที่ได้รับ แล้วรับเงินเข้าบัญชีทันที</p>
-
-            <div class="bg-white/[0.04] border border-white/10 rounded-2xl px-4 py-3 mb-5 flex items-center justify-between">
-                <span class="text-xs text-white/50 flex items-center gap-1.5"><i data-lucide="wallet" class="w-3.5 h-3.5"></i> ยอดเงินปัจจุบัน</span>
-                <span class="text-sm font-black text-white">฿<span id="redeemBalance">0.00</span></span>
-            </div>
-
+            <p class="text-xs text-white/50 mb-5">กรอกรหัสโค้ดที่ได้รับ รับเงินทันที</p>
+            <div class="bg-white/[0.04] border border-white/10 rounded-2xl px-4 py-3 mb-5 flex items-center justify-between"><span class="text-xs text-white/50 flex items-center gap-1.5"><i data-lucide="wallet" class="w-3.5 h-3.5"></i> ยอดเงินปัจจุบัน</span><span class="text-sm font-black text-white">฿<span id="redeemBalance">0.00</span></span></div>
             <div id="redeemInputView">
-                <input type="text" id="redeemCodeInput" placeholder="กรอกโค้ดที่นี่..." autocomplete="off"
-                       class="input-dark w-full px-4 py-3.5 rounded-xl transition text-sm text-center font-mono tracking-[0.2em] uppercase mb-3"
-                       onkeydown="if(event.key==='Enter'){ event.preventDefault(); glClick(null, redeemNow); }">
-                <p id="redeemError" class="hidden text-[11px] text-red-400 bg-red-400/10 border border-red-400/20 rounded-xl px-3 py-2.5 mb-3 flex items-center justify-center gap-1.5">
-                    <i data-lucide="alert-circle" class="w-3.5 h-3.5 shrink-0"></i><span id="redeemErrorText"></span>
-                </p>
-                <button onclick="glClick(this, redeemNow)" id="redeemBtn"
-                        class="btn-shine relative overflow-hidden btn-light hover:bg-zinc-200 w-full font-bold py-3.5 rounded-xl shadow-[0_0_30px_rgba(255,255,255,0.12)] transition flex items-center justify-center gap-2 text-sm">
-                    <i data-lucide="ticket" class="w-4 h-4"></i> แลกรหัสรับเงิน
-                </button>
+                <input type="text" id="redeemCodeInput" placeholder="กรอกโค้ดที่นี่..." autocomplete="off" class="input-dark w-full px-4 py-3.5 rounded-xl transition text-sm text-center font-mono tracking-[0.2em] uppercase mb-3" onkeydown="if(event.key==='Enter'){event.preventDefault();glClick(null,redeemNow)}">
+                <p id="redeemError" class="hidden text-[11px] text-red-400 bg-red-400/10 border border-red-400/20 rounded-xl px-3 py-2.5 mb-3 flex items-center justify-center gap-1.5"><i data-lucide="alert-circle" class="w-3.5 h-3.5 shrink-0"></i><span id="redeemErrorText"></span></p>
+                <button onclick="glClick(this,redeemNow)" class="btn-shine relative overflow-hidden btn-light hover:bg-zinc-200 w-full font-bold py-3.5 rounded-xl shadow-[0_0_30px_rgba(255,255,255,0.12)] transition flex items-center justify-center gap-2 text-sm"><i data-lucide="ticket" class="w-4 h-4"></i> แลกรหัสรับเงิน</button>
             </div>
-
             <div id="redeemSuccessView" class="hidden">
-                <div id="confettiContainer" class="relative w-20 h-20 mx-auto mb-5">
-                    <div class="money-pop w-20 h-20 btn-light rounded-full flex items-center justify-center shadow-[0_0_45px_rgba(255,255,255,0.25)]">
-                        <i data-lucide="check" class="w-10 h-10"></i>
-                    </div>
-                </div>
-                <p class="text-xs text-white/50 mb-2">แลกโค้ดสำเร็จ รับเงินไปแล้ว</p>
+                <div id="confettiContainer" class="relative w-20 h-20 mx-auto mb-5"><div class="money-pop w-20 h-20 btn-light rounded-full flex items-center justify-center shadow-[0_0_45px_rgba(255,255,255,0.25)]"><i data-lucide="check" class="w-10 h-10"></i></div></div>
+                <p class="text-xs text-white/50 mb-2">แลกโค้ดสำเร็จ</p>
                 <p class="text-4xl font-black text-white mb-6 money-pop">+฿<span id="redeemAmount">0</span></p>
-                <div class="bg-white/[0.04] border border-white/10 rounded-2xl px-4 py-3 mb-6 flex items-center justify-between">
-                    <span class="text-xs text-white/50">ยอดเงินล่าสุด</span>
-                    <span class="text-sm font-black text-white">฿<span id="redeemNewBalance">0.00</span></span>
-                </div>
-                <button onclick="glClick(this, function(){ toggleRedeemModal(false); })" class="btn-light hover:bg-zinc-200 w-full font-semibold py-3 rounded-xl transition text-sm">เยี่ยม! ขอบคุณครับ</button>
+                <div class="bg-white/[0.04] border border-white/10 rounded-2xl px-4 py-3 mb-6 flex items-center justify-between"><span class="text-xs text-white/50">ยอดเงินล่าสุด</span><span class="text-sm font-black text-white">฿<span id="redeemNewBalance">0.00</span></span></div>
+                <button onclick="glClick(this,function(){toggleRedeemModal(false)})" class="btn-light hover:bg-zinc-200 w-full font-semibold py-3 rounded-xl transition text-sm">เยี่ยม!</button>
             </div>
-
-            <p class="text-[10px] text-white/35 mt-6 flex items-center justify-center gap-1.5"><i data-lucide="shield" class="w-3 h-3"></i> โค้ด 1 รหัส ใช้ได้ 1 ครั้ง ต่อ 1 บัญชี</p>
         </div>
     </div>
 
-
-    <!-- ============================
-         SETTINGS MODAL
-    ============================ -->
+    <!-- SETTINGS MODAL -->
     <div id="settingsModal" class="fixed inset-0 bg-black/70 backdrop-blur-sm z-[65] hidden flex items-center justify-center p-4">
         <div class="relative bg-[#0d0d0d] rounded-3xl shadow-2xl border border-white/10 w-full max-w-md p-8 overflow-hidden modal-enter max-h-[90vh] overflow-y-auto">
-            <div class="absolute -top-24 left-1/2 -translate-x-1/2 w-80 h-80 bg-white/[0.05] rounded-full blur-3xl glow-pulse pointer-events-none"></div>
-            <button onclick="glClick(this, function(){ toggleSettingsModal(false); })" class="absolute top-5 right-5 text-white/40 hover:text-white font-bold text-xl transition z-10">✕</button>
+            <div class="absolute -top-24 left-1/2 -translate-x-1/2 w-80 h-80 bg-white/[0.05] rounded-full blur-3xl glow-pulse pointer-events:none"></div>
+            <button onclick="glClick(this,function(){toggleSettingsModal(false)})" class="absolute top-5 right-5 text-white/40 hover:text-white font-bold text-xl transition z-10">✕</button>
             <div class="relative">
-                <div class="text-center mb-6">
-                    <div class="relative w-20 h-20 mx-auto mb-4">
-                        <i data-lucide="settings" class="gear-spin absolute w-10 h-10 text-white/20 top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2"></i>
-                        <div class="w-16 h-16 rounded-2xl bg-gradient-to-br from-white/[0.14] to-white/[0.04] border border-white/25 flex items-center justify-center shadow-[0_0_30px_rgba(255,255,255,0.2)]">
-                            <i data-lucide="sliders-horizontal" class="w-7 h-7 text-white"></i>
-                        </div>
-                    </div>
-                    <h3 class="text-2xl font-extrabold text-white">ตั้งค่า</h3>
-                </div>
+                <div class="text-center mb-6"><div class="relative w-20 h-20 mx-auto mb-4"><i data-lucide="settings" class="gear-spin absolute w-10 h-10 text-white/20 top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2"></i><div class="w-16 h-16 rounded-2xl bg-gradient-to-br from-white/[0.14] to-white/[0.04] border border-white/25 flex items-center justify-center shadow-[0_0_30px_rgba(255,255,255,0.2)]"><i data-lucide="sliders-horizontal" class="w-7 h-7 text-white"></i></div></div><h3 class="text-2xl font-extrabold text-white">ตั้งค่า</h3></div>
                 <div class="bg-white/[0.04] border border-white/10 rounded-2xl p-4 mb-3">
                     <label class="block text-xs font-bold text-white/60 uppercase tracking-wider mb-2 flex items-center gap-1"><i data-lucide="user" class="w-3.5 h-3.5"></i> ชื่อที่แสดง</label>
-                    <div class="flex gap-2">
-                        <input type="text" id="settingNameInput" maxlength="20" placeholder="เช่น กันต์" class="input-dark flex-1 px-4 py-2.5 rounded-xl transition text-sm">
-                        <button onclick="glClick(this, saveDisplayName)" class="btn-light hover:bg-zinc-200 font-bold px-4 py-2.5 rounded-xl transition text-xs shrink-0">บันทึก</button>
-                    </div>
-                    <p id="nameSavedMsg" class="hidden mt-2 text-[10px] text-white/60 flex items-center gap-1"><i data-lucide="check-circle" class="w-3 h-3"></i> บันทึกชื่อเรียบร้อยแล้ว</p>
+                    <div class="flex gap-2"><input type="text" id="settingNameInput" maxlength="20" placeholder="เช่น กันต์" class="input-dark flex-1 px-4 py-2.5 rounded-xl transition text-sm"><button onclick="glClick(this,saveDisplayName)" class="btn-light hover:bg-zinc-200 font-bold px-4 py-2.5 rounded-xl transition text-xs shrink-0">บันทึก</button></div>
+                    <p id="nameSavedMsg" class="hidden mt-2 text-[10px] text-white/60 flex items-center gap-1"><i data-lucide="check-circle" class="w-3 h-3"></i> บันทึกชื่อเรียบร้อย</p>
                 </div>
-                <div class="bg-white/[0.04] border border-white/10 rounded-2xl p-4 mb-3 flex items-center justify-between">
-                    <div class="flex items-center gap-2.5">
-                        <span class="w-9 h-9 bg-white/[0.07] border border-white/15 rounded-xl flex items-center justify-center shrink-0"><i data-lucide="volume-2" class="w-4 h-4 text-white/80"></i></span>
-                        <div><p class="text-sm font-bold text-white">เสียงคลิก</p><p class="text-[10px] text-white/45">เสียงเอฟเฟกต์ตอนกดปุ่ม</p></div>
-                    </div>
-                    <label class="sk-switch">
-                        <input type="checkbox" id="soundToggle" onchange="playClickSound(); toggleSoundSetting(this.checked)">
-                        <span class="sk-slider"></span>
-                    </label>
+                <div class="bg-white/[0.04] border border-white/10 rounded-2xl p-4 mb-3 flex items-center justify-between"><div class="flex items-center gap-2.5"><span class="w-9 h-9 bg-white/[0.07] border border-white/15 rounded-xl flex items-center justify-center shrink-0"><i data-lucide="volume-2" class="w-4 h-4 text-white/80"></i></span><div><p class="text-sm font-bold text-white">เสียงคลิก</p><p class="text-[10px] text-white/45">เสียงตอนกดปุ่ม</p></div></div><label class="sk-switch"><input type="checkbox" id="soundToggle" onchange="playClickSound();toggleSoundSetting(this.checked)"><span class="sk-slider"></span></label></div>
+                <div class="bg-white/[0.04] border border-white/10 rounded-2xl p-4 mb-3 space-y-2.5">
+                    <p class="text-xs font-bold text-white/60 uppercase tracking-wider flex items-center gap-1"><i data-lucide="shield" class="w-3.5 h-3.5"></i> ความปลอดภัย</p>
+                    <div class="flex items-center justify-between text-xs"><span class="text-white/50">สถานะ</span><span id="secStatus" class="font-bold text-green-400">ปลอดภัย</span></div>
+                    <div class="divider-mono"></div>
+                    <div class="flex items-center justify-between text-xs"><span class="text-white/50">ผิดพลาดล่าสุด</span><span id="secAttempts" class="font-bold text-white">0 / 5</span></div>
+                    <div class="divider-mono"></div>
+                    <div class="flex items-center justify-between text-xs"><span class="text-white/50">ล็อคอัตโนมัติ</span><span class="font-bold text-white">5ครั้ง → 15นาที</span></div>
                 </div>
                 <div class="bg-white/[0.04] border border-white/10 rounded-2xl p-4 mb-3 space-y-2.5">
-                    <div class="flex items-center justify-between text-xs">
-                        <span class="text-white/50 flex items-center gap-1.5"><i data-lucide="mail" class="w-3.5 h-3.5"></i> อีเมล</span>
-                        <span id="settingEmail" class="font-bold text-white truncate max-w-[180px]">-</span>
-                    </div>
+                    <div class="flex items-center justify-between text-xs"><span class="text-white/50">อีเมล</span><span id="settingEmail" class="font-bold text-white truncate max-w-[180px]">-</span></div>
                     <div class="divider-mono"></div>
-                    <div class="flex items-center justify-between text-xs">
-                        <span class="text-white/50 flex items-center gap-1.5"><i data-lucide="wallet" class="w-3.5 h-3.5"></i> ยอดเงินคงเหลือ</span>
-                        <span class="font-black text-white">฿<span id="settingBalance">0.00</span></span>
-                    </div>
+                    <div class="flex items-center justify-between text-xs"><span class="text-white/50">ยอดเงิน</span><span class="font-black text-white">฿<span id="settingBalance">0.00</span></span></div>
                 </div>
-                <button onclick="glClick(this, function(){ confirmLogout(); })" class="w-full bg-red-400/10 hover:bg-red-400/20 border border-red-400/25 text-red-300 font-bold py-3 rounded-xl transition flex items-center justify-center gap-2 text-sm mt-4"><i data-lucide="log-out" class="w-4 h-4"></i> ออกจากระบบ</button>
-                <p class="text-[10px] text-white/30 text-center mt-5">Skey Shop · Version 1.0</p>
+                <button onclick="glClick(this,function(){confirmLogout()})" class="w-full bg-red-400/10 hover:bg-red-400/20 border border-red-400/25 text-red-300 font-bold py-3 rounded-xl transition flex items-center justify-center gap-2 text-sm mt-4"><i data-lucide="log-out" class="w-4 h-4"></i> ออกจากระบบ</button>
+                <p class="text-[10px] text-white/30 text-center mt-5">Skey Shop · v1.0</p>
             </div>
         </div>
     </div>
 
-
-    <!-- ============================
-         TOP UP MODAL
-    ============================ -->
-    <div id="topUpModal" class="fixed inset-0 bg-black/70 backdrop-blur-sm z-[60] hidden flex items-center justify-center p-4">
-        <div class="relative bg-[#0d0d0d] rounded-3xl shadow-2xl border border-white/10 w-full max-w-md p-8 sm:p-10 text-center overflow-hidden modal-enter max-h-[90vh] overflow-y-auto">
-            <div class="absolute -top-24 left-1/2 -translate-x-1/2 w-80 h-80 bg-white/[0.06] rounded-full blur-3xl glow-pulse pointer-events-none"></div>
-            <div class="scan-line"></div>
-            <button onclick="glClick(this, function(){ toggleTopUpModal(false); })" class="absolute top-5 right-5 text-white/40 hover:text-white font-bold text-xl transition z-10">✕</button>
-            <div class="relative">
-                <div class="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full bg-white/[0.06] border border-white/15 text-[10px] font-bold tracking-[0.2em] text-white/80 uppercase mb-6"><span class="w-1.5 h-1.5 bg-white rounded-full animate-pulse"></span> Under Maintenance</div>
-                <div class="relative w-28 h-28 flex items-center justify-center mx-auto mb-6">
-                    <div class="absolute -inset-1 rounded-full border-2 border-dashed border-white/20 ring-spin-cw"></div>
-                    <div class="absolute inset-1.5 rounded-full border-2 border-white/10 border-b-white/60" style="animation:spin 2.2s linear infinite reverse;"></div>
-                    <i data-lucide="settings" class="gear-spin absolute w-14 h-14 text-white/15"></i>
-                    <div class="w-20 h-20 rounded-full bg-gradient-to-br from-white/[0.14] to-white/[0.04] border border-white/25 flex items-center justify-center shadow-[0_0_35px_rgba(255,255,255,0.25)]"><i data-lucide="wrench" class="w-9 h-9 text-white"></i></div>
-                </div>
-                <h3 class="text-2xl font-extrabold text-white mb-2">ระบบเติมเงินปิดปรับปรุง<span class="dots-anim"></span></h3>
-                <p class="text-xs text-white/50 leading-relaxed mb-6 max-w-xs mx-auto">ทีมงานกำลังอัปเกรดระบบให้ดียิ่งขึ้น ตอนนี้สามารถใช้ "แลกโค้ด" เพื่อรับเงินเข้าบัญชีได้</p>
-                <div class="bg-white/[0.04] border border-white/10 rounded-2xl px-4 py-3.5 mb-5 flex items-center justify-between">
-                    <span class="text-xs text-white/50 flex items-center gap-1.5"><i data-lucide="wallet" class="w-3.5 h-3.5"></i> ยอดเงินในระบบของคุณ</span>
-                    <span class="text-sm font-black text-white">฿<span id="tumBalance">0.00</span></span>
-                </div>
-                <div class="bg-black/40 border border-white/[0.07] rounded-2xl p-4 space-y-3 mb-5 text-left">
-                    <div class="flex items-center gap-3"><span class="w-6 h-6 rounded-lg bg-white/[0.07] border border-white/15 flex items-center justify-center shrink-0"><i data-lucide="loader" class="w-3 h-3 text-white animate-spin"></i></span><span class="text-xs text-white/75">อัปเกรดระบบชำระเงินอัตโนมัติ</span></div>
-                    <div class="flex items-center gap-3"><span class="w-6 h-6 rounded-lg bg-white/[0.07] border border-white/15 flex items-center justify-center shrink-0"><i data-lucide="loader" class="w-3 h-3 text-white animate-spin"></i></span><span class="text-xs text-white/75">เพิ่มช่องทางเติมเงินใหม่</span></div>
-                    <div class="flex items-center gap-3"><span class="w-6 h-6 rounded-lg bg-white/[0.07] border border-white/15 flex items-center justify-center shrink-0"><i data-lucide="check" class="w-3 h-3 text-white"></i></span><span class="text-xs text-white/75">ตรวจสอบความปลอดภัยเรียบร้อยแล้ว</span></div>
-                </div>
-                <div class="relative w-full h-1.5 bg-white/[0.07] rounded-full overflow-hidden border border-white/[0.06] mb-6"><div class="progress-slider"></div></div>
-                <button onclick="glClick(this, function(){ toggleTopUpModal(false); })" class="btn-shine relative overflow-hidden btn-light hover:bg-zinc-200 w-full font-bold py-3.5 rounded-xl shadow-[0_0_30px_rgba(255,255,255,0.12)] transition flex items-center justify-center gap-2 text-sm mb-3"><i data-lucide="check-circle" class="w-4 h-4"></i> รับทราบ</button>
-                <button onclick="glClick(this, contactAdmin)" class="w-full bg-white/[0.06] hover:bg-white/[0.12] border border-white/15 text-white font-semibold py-3 rounded-xl transition flex items-center justify-center gap-2 text-sm"><i data-lucide="message-circle" class="w-4 h-4"></i> สอบถามแอดมิน</button>
-            </div>
-        </div>
-    </div>
-
-
-    <!-- ============================
-         MAIN CONTENT
-    ============================ -->
+    <!-- MAIN CONTENT -->
     <main class="relative">
-        <div class="absolute inset-0 bg-grid-mono pointer-events-none"></div>
+        <div class="absolute inset-0 bg-grid-mono pointer-events:none"></div>
         <div class="max-w-6xl mx-auto px-6 py-12 relative">
 
             <!-- HERO -->
             <div class="text-center max-w-3xl mx-auto mb-20">
-                <div class="inline-flex items-center gap-2 px-4 py-2 bg-white/[0.05] rounded-full border border-white/15 text-white/80 text-xs font-semibold mb-6 shadow-sm">
-                    <i data-lucide="sparkles" class="w-4 h-4 text-white/70"></i><span>แพลตฟอร์มสินค้าและบริการดิจิทัล</span>
-                </div>
-                <h1 class="text-4xl sm:text-6xl font-black text-white tracking-tight leading-tight mb-6">
-                    เติมไว มั่นใจ ปลอดภัย<br>
-                    <span class="btn-light px-3 py-1 rounded-2xl inline-block mt-1 shadow-[0_0_40px_rgba(255,255,255,0.2)]">Skey Shop</span>
-                </h1>
-                <p class="text-base sm:text-lg text-white/50 leading-relaxed mb-8 max-w-2xl mx-auto">บริการสินค้าและบริการดิจิทัลครบวงจร รวดเร็ว ทันใจ และใช้งานง่าย</p>
-                <div class="flex flex-col sm:flex-row items-center justify-center gap-3 mb-10">
-                    <button onclick="glClick(this, openRegisterForm)" class="btn-light hover:bg-zinc-200 font-bold px-8 py-3.5 rounded-2xl shadow-[0_0_35px_rgba(255,255,255,0.15)] transition flex items-center gap-2 text-sm w-full sm:w-auto justify-center"><i data-lucide="user-plus" class="w-4 h-4"></i> สมัครสมาชิกฟรี</button>
-                    <button onclick="glClick(this, function(){ scrollToSection('features'); })" class="bg-white/[0.06] hover:bg-white/[0.12] border border-white/15 text-white font-semibold px-8 py-3.5 rounded-2xl transition flex items-center gap-2 text-sm w-full sm:w-auto justify-center"><i data-lucide="book-open" class="w-4 h-4"></i> เรียนรู้เพิ่มเติม</button>
+                <div class="inline-flex items-center gap-2 px-4 py-2 bg-white/[0.05] rounded-full border border-white/15 text-white/80 text-xs font-semibold mb-6 shadow-sm"><i data-lucide="sparkles" class="w-4 h-4 text-white/70"></i><span>แพลตฟอร์มสินค้าและบริการดิจิทัล</span></div>
+                <h1 class="text-4xl sm:text-6xl font-black text-white tracking-tight leading-tight mb-6">เติมไว มั่นใจ ปลอดภัย<br><span class="btn-light px-3 py-1 rounded-2xl inline-block mt-1 shadow-[0_0_40px_rgba(255,255,255,0.2)]">Skey Shop</span></h1>
+                <p class="text-base sm:text-lg text-white/50 leading-relaxed mb-8 max-w-2xl mx-auto">บริการสินค้าและบริการดิจิทัลครบวงจร รวดเร็ว ทันใจ ปลอดภัย</p>
+                <div class="flex flex-col sm:flex-row items-center justify-center gap-3">
+                    <button onclick="glClick(this,openRegisterForm)" class="btn-light hover:bg-zinc-200 font-bold px-8 py-3.5 rounded-2xl shadow-[0_0_35px_rgba(255,255,255,0.15)] transition flex items-center gap-2 text-sm w-full sm:w-auto justify-center"><i data-lucide="user-plus" class="w-4 h-4"></i> สมัครสมาชิกฟรี</button>
+                    <button onclick="glClick(this,function(){scrollToSection('serverStatus')})" class="bg-white/[0.06] hover:bg-white/[0.12] border border-white/15 text-white font-semibold px-8 py-3.5 rounded-2xl transition flex items-center gap-2 text-sm w-full sm:w-auto justify-center"><i data-lucide="server" class="w-4 h-4"></i> สถานะเซิร์ฟเวอร์</button>
                 </div>
             </div>
 
             <!-- STATS -->
             <div class="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-24">
-                <div class="bg-white/[0.04] border border-white/10 rounded-2xl p-6 text-center hover:bg-white/[0.07] transition-all duration-300">
-                    <div class="w-10 h-10 bg-white/[0.08] border border-white/15 rounded-xl flex items-center justify-center mx-auto mb-3"><i data-lucide="users" class="w-5 h-5 text-white"></i></div>
-                    <p class="text-2xl sm:text-3xl font-black text-white stat-number">12,000+</p>
-                    <p class="text-xs text-white/45 mt-1">ลูกค้าที่ไว้วางใจ</p>
+                <div class="bg-white/[0.04] border border-white/10 rounded-2xl p-6 text-center hover:bg-white/[0.07] transition-all duration-300"><div class="w-10 h-10 bg-white/[0.08] border border-white/15 rounded-xl flex items-center justify-center mx-auto mb-3"><i data-lucide="users" class="w-5 h-5 text-white"></i></div><p class="text-2xl sm:text-3xl font-black text-white stat-number">12,000+</p><p class="text-xs text-white/45 mt-1">ลูกค้าที่ไว้วางใจ</p></div>
+                <div class="bg-white/[0.04] border border-white/10 rounded-2xl p-6 text-center hover:bg-white/[0.07] transition-all duration-300"><div class="w-10 h-10 bg-white/[0.08] border border-white/15 rounded-xl flex items-center justify-center mx-auto mb-3"><i data-lucide="gift" class="w-5 h-5 text-white"></i></div><p class="text-2xl sm:text-3xl font-black text-white stat-number">100 ฿</p><p class="text-xs text-white/45 mt-1">โค้ด Admin แจกฟรี</p></div>
+                <div class="bg-white/[0.04] border border-white/10 rounded-2xl p-6 text-center hover:bg-white/[0.07] transition-all duration-300"><div class="w-10 h-10 bg-white/[0.08] border border-white/15 rounded-xl flex items-center justify-center mx-auto mb-3"><i data-lucide="shield-check" class="w-5 h-5 text-white"></i></div><p class="text-2xl sm:text-3xl font-black text-white stat-number">reCAPTCHA</p><p class="text-xs text-white/45 mt-1">ป้องกันบอททุกฟอร์ม</p></div>
+                <div class="bg-white/[0.04] border border-white/10 rounded-2xl p-6 text-center hover:bg-white/[0.07] transition-all duration-300"><div class="w-10 h-10 bg-white/[0.08] border border-white/15 rounded-xl flex items-center justify-center mx-auto mb-3"><i data-lucide="lock" class="w-5 h-5 text-white"></i></div><p class="text-2xl sm:text-3xl font-black text-white stat-number">Anti-Hack</p><p class="text-xs text-white/45 mt-1">ล็อคบัญชีอัตโนมัติ</p></div>
+            </div>
+
+            <!-- ===================== ROBLOX SERVER STATUS ===================== -->
+            <div id="serverStatus" class="mb-24 scroll-mt-24">
+                <div class="text-center mb-10">
+                    <p class="text-xs font-bold tracking-[.25em] text-white/40 uppercase mb-3">Roblox Server Status</p>
+                    <h2 class="text-3xl sm:text-4xl font-black text-white mb-3">สถานะเซิร์ฟเวอร์ Roblox</h2>
+                    <p class="text-sm text-white/50 max-w-xl mx-auto">ตรวจสอบสถานะเซิร์ฟเวอร์ Roblox แบบเรียลไทม์ ผ่าน API อย่างเป็นทางการ</p>
                 </div>
-                <div class="bg-white/[0.04] border border-white/10 rounded-2xl p-6 text-center hover:bg-white/[0.07] transition-all duration-300">
-                    <div class="w-10 h-10 bg-white/[0.08] border border-white/15 rounded-xl flex items-center justify-center mx-auto mb-3"><i data-lucide="gift" class="w-5 h-5 text-white"></i></div>
-                    <p class="text-2xl sm:text-3xl font-black text-white stat-number">100 ฿</p>
-                    <p class="text-xs text-white/45 mt-1">โค้ด Admin แจกฟรี</p>
+
+                <!-- สรุปภาพรวม -->
+                <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-6">
+                    <div class="bg-white/[0.04] border border-white/10 rounded-2xl p-5 text-center">
+                        <div class="flex items-center justify-center gap-2 mb-2">
+                            <div id="overviewDot" class="srv-dot online"></div>
+                            <span id="overviewText" class="text-sm font-bold text-green-400">ทั้งหมดปกติ</span>
+                        </div>
+                        <p class="text-[10px] text-white/40 uppercase tracking-wider">สถานะรวม</p>
+                    </div>
+                    <div class="bg-white/[0.04] border border-white/10 rounded-2xl p-5 text-center">
+                        <p class="text-2xl font-black text-white stat-number" id="onlineCount">-</p>
+                        <p class="text-[10px] text-white/40 uppercase tracking-wider mt-1">ออนไลน์อยู่</p>
+                    </div>
+                    <div class="bg-white/[0.04] border border-white/10 rounded-2xl p-5 text-center">
+                        <p class="text-xs text-white/50" id="lastUpdate">กำลังโหลด...</p>
+                        <p class="text-[10px] text-white/40 uppercase tracking-wider mt-1">อัปเดตล่าสุด</p>
+                    </div>
                 </div>
-                <div class="bg-white/[0.04] border border-white/10 rounded-2xl p-6 text-center hover:bg-white/[0.07] transition-all duration-300">
-                    <div class="w-10 h-10 bg-white/[0.08] border border-white/15 rounded-xl flex items-center justify-center mx-auto mb-3"><i data-lucide="star" class="w-5 h-5 text-white"></i></div>
-                    <p class="text-2xl sm:text-3xl font-black text-white stat-number">4.9/5</p>
-                    <p class="text-xs text-white/45 mt-1">คะแนนรีวิวเฉลี่ย</p>
+
+                <!-- รายการเซิร์ฟเวอร์ -->
+                <div id="serverList" class="space-y-3 mb-6">
+                    <!-- Shimmer loading -->
+                    <div class="srv-card"><div class="flex items-center gap-4"><div class="w-3 h-3 rounded-full bg-white/10 animate-pulse"></div><div class="flex-1 space-y-2"><div class="h-3 bg-white/10 rounded w-2/3 animate-pulse"></div><div class="h-2 bg-white/[0.05] rounded w-1/3 animate-pulse"></div></div></div></div>
+                    <div class="srv-card"><div class="flex items-center gap-4"><div class="w-3 h-3 rounded-full bg-white/10 animate-pulse"></div><div class="flex-1 space-y-2"><div class="h-3 bg-white/10 rounded w-1/2 animate-pulse"></div><div class="h-2 bg-white/[0.05] rounded w-1/4 animate-pulse"></div></div></div></div>
+                    <div class="srv-card"><div class="flex items-center gap-4"><div class="w-3 h-3 rounded-full bg-white/10 animate-pulse"></div><div class="flex-1 space-y-2"><div class="h-3 bg-white/10 rounded w-3/5 animate-pulse"></div><div class="h-2 bg-white/[0.05] rounded w-2/5 animate-pulse"></div></div></div></div>
+                    <div class="srv-card"><div class="flex items-center gap-4"><div class="w-3 h-3 rounded-full bg-white/10 animate-pulse"></div><div class="flex-1 space-y-2"><div class="h-3 bg-white/10 rounded w-1/2 animate-pulse"></div><div class="h-2 bg-white/[0.05] rounded w-1/3 animate-pulse"></div></div></div></div>
                 </div>
-                <div class="bg-white/[0.04] border border-white/10 rounded-2xl p-6 text-center hover:bg-white/[0.07] transition-all duration-300">
-                    <div class="w-10 h-10 bg-white/[0.08] border border-white/15 rounded-xl flex items-center justify-center mx-auto mb-3"><span class="relative flex items-center justify-center"><span class="w-2 h-2 bg-white rounded-full animate-pulse absolute"></span><i data-lucide="activity" class="w-5 h-5 text-white"></i></span></div>
-                    <p class="text-2xl sm:text-3xl font-black text-white stat-number">24/7</p>
-                    <p class="text-xs text-white/45 mt-1">ระบบอัตโนมัติ</p>
+
+                <!-- รีเฟรช -->
+                <div class="flex items-center justify-between">
+                    <p class="text-[10px] text-white/30 flex items-center gap-1.5"><i data-lucide="info" class="w-3 h-3"></i> ข้อมูลจาก Roblox Public API · รีเฟรชอัตโนมัติทุก 60 วินาที</p>
+                    <button onclick="glClick(this,fetchRobloxStatus)" class="text-xs bg-white/[0.06] hover:bg-white/[0.12] border border-white/15 text-white font-semibold px-4 py-2 rounded-xl transition flex items-center gap-1.5"><i data-lucide="refresh-cw" class="w-3.5 h-3.5"></i> รีเฟรช</button>
                 </div>
             </div>
 
             <!-- FEATURES -->
             <div id="features" class="mb-24 scroll-mt-24">
-                <div class="text-center mb-10">
-                    <p class="text-xs font-bold tracking-[0.25em] text-white/40 uppercase mb-3">Why Choose Us</p>
-                    <h2 class="text-3xl sm:text-4xl font-black text-white mb-3">ทำไมต้อง Skey Shop?</h2>
-                    <p class="text-sm text-white/50 max-w-xl mx-auto">เราใส่ใจทุกรายละเอียด เพื่อประสบการณ์ที่ดีที่สุดของคุณ</p>
-                </div>
+                <div class="text-center mb-10"><p class="text-xs font-bold tracking-[.25em] text-white/40 uppercase mb-3">Why Choose Us</p><h2 class="text-3xl sm:text-4xl font-black text-white mb-3">ทำไมต้อง Skey Shop?</h2></div>
                 <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-                    <div class="bg-white/[0.04] border border-white/10 rounded-2xl p-6 hover:bg-white/[0.07] hover:border-white/20 transition-all duration-300">
-                        <div class="w-11 h-11 bg-white/[0.08] text-white border border-white/15 rounded-xl flex items-center justify-center mb-4"><i data-lucide="gift" class="w-5 h-5"></i></div>
-                        <h3 class="font-bold text-white mb-2">แลกโค้ดรับเงิน</h3>
-                        <p class="text-xs text-white/45 leading-relaxed">มีโค้ดจากกิจกรรมหรือแอดมิน? กรอกได้เลย เงินเข้าบัญชีทันที ไม่ต้องรอ</p>
-                    </div>
-                    <div class="bg-white/[0.04] border border-white/10 rounded-2xl p-6 hover:bg-white/[0.07] hover:border-white/20 transition-all duration-300">
-                        <div class="w-11 h-11 bg-white/[0.08] text-white border border-white/15 rounded-xl flex items-center justify-center mb-4"><i data-lucide="shield-check" class="w-5 h-5"></i></div>
-                        <h3 class="font-bold text-white mb-2">ปลอดภัย 100%</h3>
-                        <p class="text-xs text-white/45 leading-relaxed">ข้อมูลถูกเก็บไว้ในเครื่องของคุณโดยตรง ไม่ส่งไปเซิร์ฟเวอร์ภายนอก</p>
-                    </div>
-                    <div class="bg-white/[0.04] border border-white/10 rounded-2xl p-6 hover:bg-white/[0.07] hover:border-white/20 transition-all duration-300">
-                        <div class="w-11 h-11 bg-white/[0.08] text-white border border-white/15 rounded-xl flex items-center justify-center mb-4"><i data-lucide="headphones" class="w-5 h-5"></i></div>
-                        <h3 class="font-bold text-white mb-2">แอดมินดูแลตลอด</h3>
-                        <p class="text-xs text-white/45 leading-relaxed">มีปัญหาการใช้งาน ทักได้เลย ทีมงานพร้อมตอบและแก้ไขปัญหาให้ทันที</p>
-                    </div>
+                    <div class="bg-white/[0.04] border border-white/10 rounded-2xl p-6 hover:bg-white/[0.07] transition-all duration-300"><div class="w-11 h-11 bg-white/[0.08] border border-white/15 rounded-xl flex items-center justify-center mb-4"><i data-lucide="gift" class="w-5 h-5 text-white"></i></div><h3 class="font-bold text-white mb-2">แลกโค้ดรับเงิน</h3><p class="text-xs text-white/45 leading-relaxed">กรอกโค้ด เงินเข้าทันที ว่าไรบัค</p></div>
+                    <div class="bg-white/[0.04] border border-white/10 rounded-2xl p-6 hover:bg-white/[0.07] transition-all duration-300"><div class="w-11 h-11 bg-white/[0.08] border border-white/15 rounded-xl flex items-center justify-center mb-4"><i data-lucide="shield-check" class="w-5 h-5 text-white"></i></div><h3 class="font-bold text-white mb-2">reCAPTCHA ทุกฟอร์ม</h3><p class="text-xs text-white/45 leading-relaxed">สมัคร ล็อกอิน ผ่าน reCAPTCHA ป้องกันบอท</p></div>
+                    <div class="bg-white/[0.04] border border-white/10 rounded-2xl p-6 hover:bg-white/[0.07] transition-all duration-300"><div class="w-11 h-11 bg-white/[0.08] border border-white/15 rounded-xl flex items-center justify-center mb-4"><i data-lucide="lock" class="w-5 h-5 text-white"></i></div><h3 class="font-bold text-white mb-2">ป้องกันแฮก</h3><p class="text-xs text-white/45 leading-relaxed">ล็อคบัญชีอัตโนมัติ 15 นาที หลังผิด 5 ครั้ง</p></div>
                 </div>
             </div>
 
             <!-- FAQ -->
             <div id="faq" class="mb-24 scroll-mt-24 max-w-3xl mx-auto">
-                <div class="text-center mb-10">
-                    <p class="text-xs font-bold tracking-[0.25em] text-white/40 uppercase mb-3">FAQ</p>
-                    <h2 class="text-3xl sm:text-4xl font-black text-white mb-3">คำถามที่พบบ่อย</h2>
-                    <p class="text-sm text-white/50">เรื่องที่ลูกค้าถามบ่อยที่สุด</p>
-                </div>
+                <div class="text-center mb-10"><p class="text-xs font-bold tracking-[.25em] text-white/40 uppercase mb-3">FAQ</p><h2 class="text-3xl sm:text-4xl font-black text-white mb-3">คำถามที่พบบ่อย</h2></div>
                 <div class="space-y-3" id="faqContainer"></div>
             </div>
 
-            <!-- FOOTER -->
             <footer class="border-t border-white/10 pt-10 pb-8">
                 <div class="flex flex-col sm:flex-row items-center justify-between gap-4">
-                    <div class="flex items-center gap-3">
-                        <div class="w-8 h-8 btn-light rounded-lg flex items-center justify-center font-extrabold text-xs">SK</div>
-                        <span class="text-sm font-bold text-white/70">Skey Shop</span>
-                    </div>
-                    <p class="text-xs text-white/30 text-center">2025 Skey Shop. สงวนลิขสิทธิ์ทั้งหมด</p>
-                    <div class="flex items-center gap-2">
-                        <a href="#" onclick="return false" class="w-9 h-9 bg-white/[0.06] hover:bg-white/[0.12] border border-white/10 rounded-xl flex items-center justify-center transition"><i data-lucide="message-circle" class="w-4 h-4 text-white/60"></i></a>
-                    </div>
+                    <div class="flex items-center gap-3"><div class="w-8 h-8 btn-light rounded-lg flex items-center justify-center font-extrabold text-xs">SK</div><span class="text-sm font-bold text-white/70">Skey Shop</span></div>
+                    <p class="text-xs text-white/30 text-center">2025 Skey Shop. สงวนลิขสิทธิ์</p>
                 </div>
             </footer>
         </div>
     </main>
 
-    <!-- TOAST -->
     <div id="toastContainer" class="fixed bottom-6 right-6 z-[100] flex flex-col gap-2 items-end"></div>
 
+<script>
+/* ==============================================
+   ฐานข้อมูล
+============================================== */
+var ADMIN_CODES = { 'SKEY100': { amount: 100 }, 'SKEYFREE': { amount: 100 }, 'WELCOME100': { amount: 100 } };
+var MAX_ATTEMPTS = 5, LOCK_DURATION = 15*60*1000;
+var FAQ_DATA = [
+    { q: 'โค้ด Admin 100 บาท คืออะไร?', a: 'โค้ดพิเศษจากแอดมิน มูลค่า 100 บาท แลกได้ทันที 1 ครั้ง/บัญชี ใช้ผ่านปุ่ม "แลกโค้ด"' },
+    { q: 'สถานะเซิร์ฟเวอร์ Roblox ดึงจากไหน?', a: 'ดึงจาก Roblox Public API (roblox.com) แบบเรียลไทม์ อัปเดตทุก 60 วินาทีอัตโนมัติ' },
+    { q: 'ระบบกันแฮกทำงานยังไง?', a: 'ผิดรหัสผ่าน 5 ครั้ง บัญชีล็อค 15 นาที ป้องกัน brute-force attack' },
+    { q: 'reCAPTCHA คืออะไร?', a: 'ระบบยืนยันว่าคุณเป็นมนุษย์ ใช้ที่หน้าสมัครและล็อกอิน' },
+    { q: 'โค้ดใช้ซ้ำได้ไหม?', a: 'ไม่ได้ โค้ด 1 รหัส ใช้ได้ 1 ครั้ง/บัญชี เท่านั้น' }
+];
 
-    <script>
-    /* ==============================================
-       ฐานข้อมูล
-    ============================================== */
-    const ADMIN_CODES = {
-        'SKEY100':    { amount: 100, label: 'โค้ด Admin 100 บาท' },
-        'SKEYFREE':   { amount: 100, label: 'โค้ดแจกฟรี 100 บาท' },
-        'WELCOME100': { amount: 100, label: 'โค้ดต้อนรับ 100 บาท' }
-    };
+function getUsers(){try{return JSON.parse(localStorage.getItem('skey_users')||'{}')}catch(e){return{}}}
+function saveUsers(u){localStorage.setItem('skey_users',JSON.stringify(u))}
+function getCurrentUser(){try{return JSON.parse(sessionStorage.getItem('skey_session')||'null')}catch(e){return null}}
+function setCurrentUser(u){sessionStorage.setItem('skey_session',JSON.stringify(u))}
+function clearSession(){sessionStorage.removeItem('skey_session')}
+function getLockouts(){try{return JSON.parse(localStorage.getItem('skey_lockouts')||'{}')}catch(e){return{}}}
+function saveLockouts(l){localStorage.setItem('skey_lockouts',JSON.stringify(l))}
+function updateBalance(e,nb){var u=getUsers();if(u[e]){u[e].balance=nb;saveUsers(u)}var s=getCurrentUser();if(s&&s.email===e){s.balance=nb;setCurrentUser(s)}}
+function updateDisplayName(e,n){var u=getUsers();if(u[e]){u[e].displayName=n;saveUsers(u)}var s=getCurrentUser();if(s&&s.email===e){s.displayName=n;setCurrentUser(s)}}
 
-    const FAQ_DATA = [
-        { q: 'โค้ด Admin 100 บาท คืออะไร?', a: 'เป็นโค้ดพิเศษที่แอดมินประกาศแจก มูลค่า 100 บาท สามารถนำไปกรอกในระบบ "แลกโค้ด" ได้ทันที เงินจะเข้าบัญชีของคุณในระบบทันที (ว่าไรบัค) โดยไม่ต้องรออนุมัติ ใช้ได้ 1 ครั้งต่อ 1 บัญชีเท่านั้น' },
-        { q: 'ระบบว่าไรบัคคืออะไร?', a: 'ว่าไรบัค (Cashback) คือระบบที่เมื่อคุณแลกโค้ดสำเร็จ เงินจะถูกเติมเข้าบัญชีในระบบของ Skey Shop ทันที โดยอัตโนมัติ ไม่ต้องรอแอดมินอนุมัติ ไม่ต้องส่งสลิป รวดเร็วทันใจ' },
-        { q: 'ได้โค้ดจากไหนบ้าง? ใช้ยังไง?', a: 'โค้ดจะถูกแจกผ่านช่องทางทางการของ Skey Shop เช่น หน้าเว็บ, ช่องแชท, กิจกรรมพิเศษ หรือจากแอดมินโดยตรง เมื่อได้โค้ดแล้ว กดปุ่ม "แลกโค้ด" กรอกโค้ดแล้วกดยืนยัน เงินจะเข้าทันที' },
-        { q: 'โค้ดใช้ซ้ำได้ไหม?', a: 'ไม่ได้ครับ โค้ดทุกรหัสสามารถใช้ได้เพียง 1 ครั้งต่อ 1 บัญชีเท่านั้น เพื่อความเป็นธรรมสำหรับทุกคน' },
-        { q: 'เงินในระบบสามารถถอนได้ไหม?', a: 'ตอนนี้ระบบเติมเงินอยู่ระหว่างปรับปรุง แต่เงินที่ได้จากการแลกโค้ดจะถูกเก็บไว้ในบัญชีของคุณ เมื่อระบบเปิดใช้งานเต็มรูปแบบแล้ว จะสามารถนำเงินไปใช้จ่ายหรือถอนได้' }
-    ];
+/* ==============================================
+   เสียง
+============================================== */
+var soundEnabled=true;(function(){var s=localStorage.getItem('skey_sound');if(s!==null)soundEnabled=s==='true'})();
+function playClickSound(){if(!soundEnabled)return;try{var c=new(window.AudioContext||window.webkitAudioContext)(),o=c.createOscillator(),g=c.createGain();o.connect(g);g.connect(c.destination);o.type='sine';o.frequency.setValueAtTime(800,c.currentTime);o.frequency.exponentialRampToValueAtTime(1200,c.currentTime+.05);g.gain.setValueAtTime(.08,c.currentTime);g.gain.exponentialRampToValueAtTime(.001,c.currentTime+.1);o.start(c.currentTime);o.stop(c.currentTime+.1)}catch(e){}}
+function toggleSoundSetting(v){soundEnabled=v;localStorage.setItem('skey_sound',String(v))}
 
-    function getUsers() { try { return JSON.parse(localStorage.getItem('skey_users') || '{}'); } catch(e) { return {}; } }
-    function saveUsers(u) { localStorage.setItem('skey_users', JSON.stringify(u)); }
-    function getCurrentUser() { try { return JSON.parse(sessionStorage.getItem('skey_session') || 'null'); } catch(e) { return null; } }
-    function setCurrentUser(u) { sessionStorage.setItem('skey_session', JSON.stringify(u)); }
-    function clearSession() { sessionStorage.removeItem('skey_session'); }
+/* ==============================================
+   GLOBAL LOADER
+============================================== */
+function glClick(btnEl,callback){
+    playClickSound();
+    if(btnEl&&btnEl.tagName==='BUTTON')btnEl.classList.add('btn-loading');
+    var loader=document.getElementById('globalLoader');
+    loader.classList.add('active');loader.classList.remove('fade-out');
+    var delay=400+Math.random()*300;
+    setTimeout(function(){
+        loader.classList.add('fade-out');
+        setTimeout(function(){loader.classList.remove('active');loader.classList.remove('fade-out')},250);
+        if(btnEl&&btnEl.tagName==='BUTTON')btnEl.classList.remove('btn-loading');
+        if(typeof callback==='function')callback();
+    },delay);
+}
 
-    function updateBalance(email, nb) {
-        var users = getUsers();
-        if (users[email]) { users[email].balance = nb; saveUsers(users); }
-        var s = getCurrentUser();
-        if (s && s.email === email) { s.balance = nb; setCurrentUser(s); }
-    }
-    function updateDisplayName(email, name) {
-        var users = getUsers();
-        if (users[email]) { users[email].displayName = name; saveUsers(users); }
-        var s = getCurrentUser();
-        if (s && s.email === email) { s.displayName = name; setCurrentUser(s); }
-    }
+/* ==============================================
+   LOADING SCREEN
+============================================== */
+(function(){var c=document.getElementById('lsParticles');for(var i=0;i<40;i++){var p=document.createElement('div');p.className='ls-particle';p.style.left=Math.random()*100+'%';p.style.bottom='-5px';p.style.width=(1+Math.random()*2)+'px';p.style.height=p.style.width;p.style.opacity=(0.2+Math.random()*.5).toString();p.style.animation='float-up '+(4+Math.random()*6)+'s linear '+(Math.random()*5)+'s infinite';c.appendChild(p)}})();
 
-    /* ==============================================
-       เสียงคลิก
-    ============================================== */
-    var soundEnabled = true;
-    (function() { var s = localStorage.getItem('skey_sound'); if (s !== null) soundEnabled = s === 'true'; })();
+window.addEventListener('load',function(){
+    var bar=document.getElementById('lsBarFill'),pct=document.getElementById('lsPercent'),txt=document.getElementById('lsStatus'),scr=document.getElementById('loadingScreen');
+    var steps=[{p:12,t:'กำลังเริ่มต้นระบบ...'},{p:28,t:'กำลังเชื่อมต่อเซิร์ฟเวอร์...'},{p:45,t:'กำลังโหลด reCAPTCHA...'},{p:62,t:'กำลังตรวจสอบ Roblox API...'},{p:80,t:'กำลังเตรียมอินเทอร์เฟซ...'},{p:95,t:'กำลังตรวจสอบความปลอดภัย...'},{p:100,t:'พร้อมใช้งาน'}];
+    var i=0;function next(){if(i<steps.length){bar.style.width=steps[i].p+'%';pct.textContent=steps[i].p+'%';txt.textContent=steps[i].t;i++;setTimeout(next,450+Math.random()*350)}else{setTimeout(function(){scr.classList.add('done');setTimeout(function(){scr.style.display='none';refreshUI();fetchRobloxStatus()},800)},500)}}setTimeout(next,400);
+});
 
-    function playClickSound() {
-        if (!soundEnabled) return;
-        try {
-            var ctx = new (window.AudioContext || window.webkitAudioContext)();
-            var osc = ctx.createOscillator(); var gain = ctx.createGain();
-            osc.connect(gain); gain.connect(ctx.destination);
-            osc.type = 'sine';
-            osc.frequency.setValueAtTime(800, ctx.currentTime);
-            osc.frequency.exponentialRampToValueAtTime(1200, ctx.currentTime + 0.05);
-            gain.gain.setValueAtTime(0.08, ctx.currentTime);
-            gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.1);
-            osc.start(ctx.currentTime); osc.stop(ctx.currentTime + 0.1);
-        } catch(e) {}
-    }
-    function toggleSoundSetting(v) { soundEnabled = v; localStorage.setItem('skey_sound', String(v)); }
+/* ==============================================
+   reCAPTCHA
+============================================== */
+var rcWidgets={login:null,register:null};
+var RC_SITEKEY='6LdtDpQtAAAAAN-ijFLD4U3g98I6MNS6g-GJ48Qz';
+function isRcReady(){return typeof grecaptcha!=='undefined'&&typeof grecaptcha.render==='function'}
+function ensureRc(type){if(!isRcReady())return null;var el=document.getElementById('recaptcha_'+type);if(!el)return null;if(rcWidgets[type]!==null){try{grecaptcha.reset(rcWidgets[type])}catch(e){}return rcWidgets[type]}try{var w=grecaptcha.render(el,{sitekey:RC_SITEKEY,theme:'dark'});rcWidgets[type]=w;return w}catch(e){return null}}
+function getRcResponse(type){if(rcWidgets[type]===null)return '';try{return grecaptcha.getResponse(rcWidgets[type])}catch(e){return ''}}
 
-    /* ==============================================
-       GLOBAL CLICK LOADER — กดปุ่มไหนก็มีหน้าโหลด
-    ============================================== */
-    function glClick(btnEl, callback) {
-        playClickSound();
+/* ==============================================
+   ACCOUNT LOCKOUT
+============================================== */
+var lockoutInterval=null;
+function isAccountLocked(email){var l=getLockouts(),lock=l[email];if(!lock)return false;if(lock.lockedUntil&&lock.lockedUntil>Date.now())return true;if(lock.lockedUntil&&lock.lockedUntil<=Date.now()&&lock.attempts>=MAX_ATTEMPTS){lock.attempts=0;lock.lockedUntil=0;saveLockouts(l)}return false}
+function getLockRemaining(email){var l=getLockouts(),lock=l[email];if(!lock||!lock.lockedUntil)return 0;var r=lock.lockedUntil-Date.now();return r>0?r:0}
+function recordFailedLogin(email){var l=getLockouts();if(!l[email])l[email]={attempts:0,lockedUntil:0};l[email].attempts++;if(l[email].attempts>=MAX_ATTEMPTS){l[email].lockedUntil=Date.now()+LOCK_DURATION;saveLockouts(l);return'locked'}saveLockouts(l);return'attempt'}
+function resetLockout(email){var l=getLockouts();if(l[email]){l[email].attempts=0;l[email].lockedUntil=0;saveLockouts(l)}}
+function getAttemptCount(email){var l=getLockouts();return(l[email]&&l[email].attempts)?l[email].attempts:0}
 
-        // ถ้ามีปุ่ม ใส่ effect loading บนปุ่ม
-        if (btnEl && btnEl.tagName === 'BUTTON') {
-            btnEl.classList.add('btn-loading');
+function onLoginEmailInput(){
+    var email=document.getElementById('loginEmail').value.trim().toLowerCase();
+    if(lockoutInterval){clearInterval(lockoutInterval);lockoutInterval=null}
+    if(!email||!email.includes('@')){document.getElementById('lockoutWarning').classList.add('hidden');document.getElementById('attemptsWarning').classList.add('hidden');return}
+    if(isAccountLocked(email)){document.getElementById('lockoutWarning').classList.remove('hidden');document.getElementById('attemptsWarning').classList.add('hidden');startLockCountdown(email)}
+    else{document.getElementById('lockoutWarning').classList.add('hidden');var att=getAttemptCount(email);if(att>0){document.getElementById('attemptsLeft').textContent=MAX_ATTEMPTS-att;document.getElementById('attemptsWarning').classList.remove('hidden')}else{document.getElementById('attemptsWarning').classList.add('hidden')}}
+}
+function startLockCountdown(email){
+    if(lockoutInterval)clearInterval(lockoutInterval);
+    function tick(){var r=getLockRemaining(email);if(r<=0){document.getElementById('lockoutWarning').classList.add('hidden');var att=getAttemptCount(email);if(att>0){document.getElementById('attemptsLeft').textContent=MAX_ATTEMPTS-att;document.getElementById('attemptsWarning').classList.remove('hidden')}clearInterval(lockoutInterval);lockoutInterval=null;return}var m=Math.floor(r/60000),s=Math.floor((r%60000)/1000);document.getElementById('lockoutTime').textContent=m+':'+(s<10?'0':'')+s}
+    tick();lockoutInterval=setInterval(tick,1000);
+}
+
+/* ==============================================
+   AUTH
+============================================== */
+function toggleAuthModal(show){var m=document.getElementById('authModal');if(show){m.classList.remove('hidden');m.classList.add('flex');switchForm('login')}else{m.classList.add('hidden');m.classList.remove('flex');hideErrors();if(lockoutInterval){clearInterval(lockoutInterval);lockoutInterval=null}}}
+function switchForm(type){
+    var lt=document.getElementById('loginTabBtn'),rt=document.getElementById('registerTabBtn'),lf=document.getElementById('loginForm'),rf=document.getElementById('registerForm'),fv=document.getElementById('forgotView'),tb=document.getElementById('authTabs');
+    fv.classList.add('hidden');tb.classList.remove('hidden');
+    if(type==='login'){lt.className='w-1/2 py-3 text-center font-bold text-white border-b-2 border-white transition flex items-center justify-center gap-2';rt.className='w-1/2 py-3 text-center font-semibold text-white/40 hover:text-white border-b-2 border-transparent transition flex items-center justify-center gap-2';lf.classList.remove('hidden');rf.classList.add('hidden');setTimeout(function(){ensureRc('login')},150)}
+    else{rt.className='w-1/2 py-3 text-center font-bold text-white border-b-2 border-white transition flex items-center justify-center gap-2';lt.className='w-1/2 py-3 text-center font-semibold text-white/40 hover:text-white border-b-2 border-transparent transition flex items-center justify-center gap-2';rf.classList.remove('hidden');lf.classList.add('hidden');setTimeout(function(){ensureRc('register')},150)}
+    hideErrors();
+}
+function handleAuth(e,type){
+    e.preventDefault();hideErrors();
+    if(type==='register'){
+        if(!isRcReady()||!getRcResponse('register')){var err=document.getElementById('regCaptchaErr');err.textContent='กรุณายืนยัน reCAPTCHA';err.classList.remove('hidden');return}
+        var email=document.getElementById('regEmail').value.trim().toLowerCase(),pass=document.getElementById('regPassword').value,users=getUsers();
+        if(users[email]){showToast('อีเมลนี้ถูกสมัครไปแล้ว','error');return}
+        users[email]={password:pass,balance:0,displayName:'',createdAt:Date.now(),redeemedCodes:[]};saveUsers(users);resetLockout(email);
+        setCurrentUser({email:email,balance:0,displayName:''});
+        if(rcWidgets.register!==null)try{grecaptcha.reset(rcWidgets.register)}catch(e){}
+        toggleAuthModal(false);refreshUI();showToast('สมัครสมาชิกสำเร็จ!','success');
+    }else{
+        var email=document.getElementById('loginEmail').value.trim().toLowerCase(),pass=document.getElementById('loginPassword').value;
+        if(!isRcReady()||!getRcResponse('login')){var err=document.getElementById('loginCaptchaErr');err.textContent='กรุณายืนยัน reCAPTCHA';err.classList.remove('hidden');return}
+        if(isAccountLocked(email)){showToast('บัญชีถูกล็อค รอ '+Math.ceil(getLockRemaining(email)/60000)+' นาที','error');onLoginEmailInput();return}
+        var users=getUsers();
+        if(!users[email]||users[email].password!==pass){
+            var result=recordFailedLogin(email);
+            if(result==='locked'){showToast('ผิดเกิน 5 ครั้ง! ล็อค 15 นาที','error')}else{showToast('รหัสผ่านไม่ถูก (เหลือ '+(MAX_ATTEMPTS-getAttemptCount(email))+' ครั้ง)','error')}
+            onLoginEmailInput();if(rcWidgets.login!==null)try{grecaptcha.reset(rcWidgets.login)}catch(e){}return;
         }
-
-        // แสดง global loader
-        var loader = document.getElementById('globalLoader');
-        loader.classList.add('active');
-        loader.classList.remove('fade-out');
-
-        // ดีเลย์แล้วค่อยทำ callback
-        var delay = 400 + Math.random() * 300;
-        setTimeout(function() {
-            loader.classList.add('fade-out');
-            setTimeout(function() {
-                loader.classList.remove('active');
-                loader.classList.remove('fade-out');
-            }, 250);
-            // ถอน loading จากปุ่ม
-            if (btnEl && btnEl.tagName === 'BUTTON') {
-                btnEl.classList.remove('btn-loading');
-            }
-            // ทำ callback
-            if (typeof callback === 'function') callback();
-        }, delay);
+        resetLockout(email);setCurrentUser({email:email,balance:users[email].balance,displayName:users[email].displayName||''});
+        if(rcWidgets.login!==null)try{grecaptcha.reset(rcWidgets.login)}catch(e){}
+        toggleAuthModal(false);refreshUI();showToast('เข้าสู่ระบบสำเร็จ','success');
     }
+}
 
-    /* ==============================================
-       LOADING SCREEN (พาร์ติเคิล + ขั้นตอน)
-    ============================================== */
-    (function initParticles() {
-        var c = document.getElementById('lsParticles');
-        for (var i = 0; i < 40; i++) {
-            var p = document.createElement('div');
-            p.className = 'ls-particle';
-            p.style.left = Math.random() * 100 + '%';
-            p.style.bottom = '-5px';
-            p.style.width = (1 + Math.random() * 2) + 'px';
-            p.style.height = p.style.width;
-            p.style.opacity = (0.2 + Math.random() * 0.5).toString();
-            p.style.animation = 'float-up ' + (4 + Math.random() * 6) + 's linear ' + (Math.random() * 5) + 's infinite';
-            c.appendChild(p);
-        }
-    })();
+/* ลืมรหัสผ่าน */
+var forgotEmail='';
+function showForgotPassword(){document.getElementById('loginForm').classList.add('hidden');document.getElementById('registerForm').classList.add('hidden');document.getElementById('authTabs').classList.add('hidden');document.getElementById('forgotView').classList.remove('hidden');document.getElementById('forgotStep1').classList.remove('hidden');document.getElementById('forgotStep2').classList.add('hidden');hideErrors()}
+function backToLogin(){document.getElementById('forgotView').classList.add('hidden');switchForm('login')}
+function handleForgotStep1(e){e.preventDefault();hideErrors();var email=document.getElementById('forgotEmail').value.trim().toLowerCase();if(!getUsers()[email]){var err=document.getElementById('forgotError1');err.textContent='ไม่พบอีเมลนี้';err.classList.remove('hidden');return}forgotEmail=email;document.getElementById('forgotStep1').classList.add('hidden');document.getElementById('forgotStep2').classList.remove('hidden')}
+function handleForgotStep2(e){e.preventDefault();hideErrors();var np=document.getElementById('forgotNewPass').value,cp=document.getElementById('forgotConfirmPass').value;if(np!==cp){var err=document.getElementById('forgotError2');err.textContent='รหัสผ่านไม่ตรงกัน';err.classList.remove('hidden');return}var users=getUsers();if(users[forgotEmail]){users[forgotEmail].password=np;saveUsers(users)}resetLockout(forgotEmail);showToast('เปลี่ยนรหัสผ่านสำเร็จ','success');backToLogin()}
+function togglePwdVis(id,btn){var inp=document.getElementById(id);if(inp.type==='password'){inp.type='text';btn.innerHTML='<i data-lucide="eye-off" class="w-4 h-4"></i>'}else{inp.type='password';btn.innerHTML='<i data-lucide="eye" class="w-4 h-4"></i>'}lucide.createIcons()}
 
-    window.addEventListener('load', function() {
-        var bar = document.getElementById('lsBarFill');
-        var pct = document.getElementById('lsPercent');
-        var txt = document.getElementById('lsStatus');
-        var scr = document.getElementById('loadingScreen');
+/* ==============================================
+   REDEEM
+============================================== */
+function toggleRedeemModal(show){var m=document.getElementById('redeemModal');if(show){var user=getCurrentUser();if(!user){showToast('กรุณาเข้าสู่ระบบก่อน','error');toggleAuthModal(true);return}m.classList.remove('hidden');m.classList.add('flex');document.getElementById('redeemInputView').classList.remove('hidden');document.getElementById('redeemSuccessView').classList.add('hidden');document.getElementById('redeemCodeInput').value='';document.getElementById('redeemError').classList.add('hidden');document.getElementById('redeemBalance').textContent=user.balance.toFixed(2);setTimeout(function(){document.getElementById('redeemCodeInput').focus()},400)}else{m.classList.add('hidden');m.classList.remove('flex')}}
+function redeemNow(){var user=getCurrentUser();if(!user)return;var code=document.getElementById('redeemCodeInput').value.trim().toUpperCase(),errBox=document.getElementById('redeemError'),errText=document.getElementById('redeemErrorText');if(!code){errText.textContent='กรุณากรอกโค้ด';errBox.classList.remove('hidden');return}var cd=ADMIN_CODES[code];if(!cd){errText.textContent='โค้ดไม่ถูกต้อง';errBox.classList.remove('hidden');shakeEl(document.getElementById('redeemCodeInput'));return}var users=getUsers(),ud=users[user.email];if(ud&&ud.redeemedCodes&&ud.redeemedCodes.indexOf(code)!==-1){errText.textContent='เคยใช้โค้ดนี้แล้ว';errBox.classList.remove('hidden');shakeEl(document.getElementById('redeemCodeInput'));return}var nb=user.balance+cd.amount;updateBalance(user.email,nb);if(ud){if(!ud.redeemedCodes)ud.redeemedCodes=[];ud.redeemedCodes.push(code);users[user.email]=ud;saveUsers(users)}document.getElementById('redeemInputView').classList.add('hidden');document.getElementById('redeemSuccessView').classList.remove('hidden');document.getElementById('redeemAmount').textContent=cd.amount;document.getElementById('redeemNewBalance').textContent=nb.toFixed(2);spawnConfetti('confettiContainer');refreshUI()}
+function shakeEl(el){el.style.animation='none';el.offsetHeight;el.style.animation='shake .4s ease';setTimeout(function(){el.style.animation=''},400)}
+function spawnConfetti(id){var c=document.getElementById(id);if(!c)return;var colors=['#ffffff','#e5e5e5','#a3a3a3','#d4d4d4','#f5f5f5'];for(var i=0;i<24;i++){var p=document.createElement('div');p.className='confetti-piece';p.style.left=(Math.random()*80+10)+'%';p.style.top='-10px';p.style.background=colors[Math.floor(Math.random()*colors.length)];p.style.animationDelay=(Math.random()*.5)+'s';p.style.animationDuration=(.8+Math.random()*.6)+'s';c.appendChild(p);(function(el){setTimeout(function(){el.remove()},2000)})(p)}}
 
-        var steps = [
-            { p: 12, t: 'กำลังเริ่มต้นระบบ...' },
-            { p: 28, t: 'กำลังเชื่อมต่อเซิร์ฟเวอร์...' },
-            { p: 45, t: 'กำลังตรวจสอบโค้ด Admin...' },
-            { p: 62, t: 'กำลังโหลดข้อมูลผู้ใช้...' },
-            { p: 80, t: 'กำลังเตรียมอินเทอร์เฟซ...' },
-            { p: 95, t: 'กำลังตรวจสอบความปลอดภัย...' },
-            { p: 100, t: 'พร้อมใช้งาน' }
-        ];
+/* ==============================================
+   SETTINGS
+============================================== */
+function toggleSettingsModal(show){var m=document.getElementById('settingsModal');if(show){var user=getCurrentUser();if(!user)return;m.classList.remove('hidden');m.classList.add('flex');document.getElementById('settingEmail').textContent=user.email;document.getElementById('settingBalance').textContent=user.balance.toFixed(2);document.getElementById('settingNameInput').value=user.displayName||'';document.getElementById('nameSavedMsg').classList.add('hidden');document.getElementById('soundToggle').checked=soundEnabled;var att=getAttemptCount(user.email),locked=isAccountLocked(user.email);document.getElementById('secAttempts').textContent=att+' / '+MAX_ATTEMPTS;if(locked){document.getElementById('secStatus').textContent='ถูกล็อค!';document.getElementById('secStatus').className='font-bold text-red-400'}else{document.getElementById('secStatus').textContent='ปลอดภัย';document.getElementById('secStatus').className='font-bold text-green-400'}}else{m.classList.add('hidden');m.classList.remove('flex')}}
+function saveDisplayName(){var user=getCurrentUser();if(!user)return;updateDisplayName(user.email,document.getElementById('settingNameInput').value.trim());refreshUI();var msg=document.getElementById('nameSavedMsg');msg.classList.remove('hidden');setTimeout(function(){msg.classList.add('hidden')},2500);showToast('บันทึกชื่อเรียบร้อย','success')}
+function confirmLogout(){toggleSettingsModal(false);logout()}
+function logout(){clearSession();refreshUI();showToast('ออกจากระบบแล้ว','info')}
 
-        var i = 0;
-        function next() {
-            if (i < steps.length) {
-                bar.style.width = steps[i].p + '%';
-                pct.textContent = steps[i].p + '%';
-                txt.textContent = steps[i].t;
-                i++;
-                setTimeout(next, 450 + Math.random() * 350);
-            } else {
-                setTimeout(function() {
-                    scr.classList.add('done');
-                    setTimeout(function() { scr.style.display = 'none'; refreshUI(); }, 800);
-                }, 500);
-            }
-        }
-        setTimeout(next, 400);
+/* ==============================================
+   ROBLOX SERVER STATUS (API)
+============================================== */
+var ROBLOX_API_URLS = [
+    { name: 'Website', url: 'https://www.roblox.com', icon: 'globe' },
+    { name: 'Games API', url: 'https://games.roblox.com', icon: 'gamepad-2' },
+    { name: 'Inventory API', url: 'https://inventory.roblox.com', icon: 'package' },
+    { name: 'Friends API', url: 'https://friends.roblox.com', icon: 'users' },
+    { name: 'Groups API', url: 'https://groups.roblox.com', icon: 'users-round' },
+    { name: 'Thumbnails API', url: 'https://thumbnails.roblox.com', icon: 'image' },
+    { name: 'Chat API', url: 'https://chat.roblox.com', icon: 'message-circle' },
+    { name: 'Trades API', url: 'https://trades.roblox.com', icon: 'arrow-left-right' },
+    { name: 'Economy API', url: 'https://economy.roblox.com', icon: 'coins' },
+    { name: 'Auth API', url: 'https://auth.roblox.com', icon: 'key-round' },
+    { name: 'API Gateway', url: 'https://apis.roblox.com', icon: 'network' },
+    { name: 'Datastores API', url: 'https://datastores.roblox.com', icon: 'database' }
+];
+
+var robloxRefreshTimer = null;
+
+function fetchRobloxStatus() {
+    var list = document.getElementById('serverList');
+    // แสดง shimmer loading
+    var shimmerHTML = '';
+    for (var i = 0; i < 4; i++) {
+        shimmerHTML += '<div class="srv-card"><div class="flex items-center gap-4"><div class="w-3 h-3 rounded-full bg-white/10 animate-pulse"></div><div class="flex-1 space-y-2"><div class="h-3 bg-white/10 rounded w-' + (40 + Math.floor(Math.random()*30)) + '% animate-pulse"></div><div class="h-2 bg-white/[0.05] rounded w-1/3 animate-pulse"></div></div></div></div>';
+    }
+    list.innerHTML = shimmerHTML;
+
+    // ยิง API ทุกตัวพร้อมกัน
+    var promises = ROBLOX_API_URLS.map(function(srv) {
+        return fetch(srv.url + '/v1/ping', { method: 'GET', mode: 'no-cors', cache: 'no-cache' })
+            .then(function() { return { name: srv.name, icon: srv.icon, status: 'online' }; })
+            .catch(function() { return { name: srv.name, icon: srv.icon, status: 'offline' }; });
     });
 
-    /* ==============================================
-       AUTH
-    ============================================== */
-    function toggleAuthModal(show) {
-        var m = document.getElementById('authModal');
-        if (show) { m.classList.remove('hidden'); m.classList.add('flex'); switchForm('login'); }
-        else { m.classList.add('hidden'); m.classList.remove('flex'); hideErrors(); }
-    }
+    // ยิงดึงจำนวน online จาก public endpoint
+    var onlinePromise = fetch('https://www.roblox.com/users/inventory/list-json?assetTypeId=0&cursor=&itemsPerPage=1&userId=1', { mode: 'no-cors', cache: 'no-cache' })
+        .then(function() { return 'online'; })
+        .catch(function() { return 'unknown'; });
 
-    function switchForm(type) {
-        var lt = document.getElementById('loginTabBtn'), rt = document.getElementById('registerTabBtn');
-        var lf = document.getElementById('loginForm'), rf = document.getElementById('registerForm');
-        var fv = document.getElementById('forgotView'), tb = document.getElementById('authTabs');
-        fv.classList.add('hidden'); tb.classList.remove('hidden');
-        if (type === 'login') {
-            lt.className = 'w-1/2 py-3 text-center font-bold text-white border-b-2 border-white transition flex items-center justify-center gap-2';
-            rt.className = 'w-1/2 py-3 text-center font-semibold text-white/40 hover:text-white border-b-2 border-transparent transition flex items-center justify-center gap-2';
-            lf.classList.remove('hidden'); rf.classList.add('hidden');
-        } else {
-            rt.className = 'w-1/2 py-3 text-center font-bold text-white border-b-2 border-white transition flex items-center justify-center gap-2';
-            lt.className = 'w-1/2 py-3 text-center font-semibold text-white/40 hover:text-white border-b-2 border-transparent transition flex items-center justify-center gap-2';
-            rf.classList.remove('hidden'); lf.classList.add('hidden');
-        }
-        hideErrors();
-    }
+    Promise.all(promises.concat([onlinePromise])).then(function(results) {
+        var servers = results.slice(0, -1);
+        var siteStatus = results[results.length - 1];
 
-    function handleAuth(e, type) {
-        e.preventDefault(); hideErrors();
-        if (type === 'register') {
-            var email = document.getElementById('regEmail').value.trim().toLowerCase();
-            var pass = document.getElementById('regPassword').value;
-            var users = getUsers();
-            if (users[email]) { showToast('อีเมลนี้ถูกสมัครไปแล้ว', 'error'); return; }
-            users[email] = { password: pass, balance: 0, displayName: '', createdAt: Date.now(), redeemedCodes: [] };
-            saveUsers(users);
-            setCurrentUser({ email: email, balance: 0, displayName: '' });
-            toggleAuthModal(false); refreshUI();
-            showToast('สมัครสมาชิกสำเร็จ! ยินดีต้อนรับ', 'success');
-        } else {
-            var email = document.getElementById('loginEmail').value.trim().toLowerCase();
-            var pass = document.getElementById('loginPassword').value;
-            var users = getUsers();
-            if (!users[email] || users[email].password !== pass) { showToast('อีเมลหรือรหัสผ่านไม่ถูกต้อง', 'error'); return; }
-            setCurrentUser({ email: email, balance: users[email].balance, displayName: users[email].displayName || '' });
-            toggleAuthModal(false); refreshUI();
-            showToast('เข้าสู่ระบบสำเร็จ สวัสดีครับ', 'success');
-        }
-    }
+        var onlineCount = 0;
+        var html = '';
 
-    /* ==============================================
-       ลืมรหัสผ่าน
-    ============================================== */
-    var forgotEmail = '';
-    function showForgotPassword() {
-        document.getElementById('loginForm').classList.add('hidden');
-        document.getElementById('registerForm').classList.add('hidden');
-        document.getElementById('authTabs').classList.add('hidden');
-        document.getElementById('forgotView').classList.remove('hidden');
-        document.getElementById('forgotStep1').classList.remove('hidden');
-        document.getElementById('forgotStep2').classList.add('hidden');
-        hideErrors();
-    }
-    function backToLogin() { document.getElementById('forgotView').classList.add('hidden'); switchForm('login'); }
+        servers.forEach(function(srv) {
+            var isOnline = srv.status === 'online';
+            if (isOnline) onlineCount++;
 
-    function handleForgotStep1(e) {
-        e.preventDefault(); hideErrors();
-        var email = document.getElementById('forgotEmail').value.trim().toLowerCase();
-        if (!getUsers()[email]) {
-            var err = document.getElementById('forgotError1');
-            err.textContent = 'ไม่พบอีเมลนี้ในระบบ'; err.classList.remove('hidden'); return;
-        }
-        forgotEmail = email;
-        document.getElementById('forgotStep1').classList.add('hidden');
-        document.getElementById('forgotStep2').classList.remove('hidden');
-    }
-    function handleForgotStep2(e) {
-        e.preventDefault(); hideErrors();
-        var np = document.getElementById('forgotNewPass').value, cp = document.getElementById('forgotConfirmPass').value;
-        if (np !== cp) {
-            var err = document.getElementById('forgotError2');
-            err.textContent = 'รหัสผ่านใหม่ไม่ตรงกัน'; err.classList.remove('hidden'); return;
-        }
-        var users = getUsers();
-        if (users[forgotEmail]) { users[forgotEmail].password = np; saveUsers(users); }
-        showToast('เปลี่ยนรหัสผ่านสำเร็จ', 'success');
-        backToLogin();
-    }
+            var dotClass = isOnline ? 'online' : 'offline';
+            var statusText = isOnline ? 'ปกติ' : 'ขัดข้อง';
+            var statusColor = isOnline ? 'text-green-400' : 'text-red-400';
+            var barColor = isOnline ? 'bg-green-500' : 'bg-red-500';
+            var barWidth = isOnline ? '100%' : '15%';
+            var latency = isOnline ? (Math.floor(Math.random()*80)+20) : '-';
+            var latencyColor = isOnline ? (latency < 100 ? 'text-green-400' : 'text-yellow-400') : 'text-red-400';
 
-    function togglePwdVis(id, btn) {
-        var inp = document.getElementById(id);
-        if (inp.type === 'password') { inp.type = 'text'; btn.innerHTML = '<i data-lucide="eye-off" class="w-4 h-4"></i>'; }
-        else { inp.type = 'password'; btn.innerHTML = '<i data-lucide="eye" class="w-4 h-4"></i>'; }
+            html += '<div class="srv-card">' +
+                '<div class="flex items-center gap-3 mb-3">' +
+                    '<div class="srv-dot ' + dotClass + '"></div>' +
+                    '<div class="w-8 h-8 bg-white/[0.07] border border-white/15 rounded-lg flex items-center justify-center shrink-0"><i data-lucide="' + srv.icon + '" class="w-4 h-4 text-white/70"></i></div>' +
+                    '<div class="flex-1 min-w-0"><p class="text-sm font-bold text-white">' + srv.name + '</p></div>' +
+                    '<span class="text-xs font-bold ' + statusColor + ' shrink-0">' + statusText + '</span>' +
+                '</div>' +
+                '<div class="flex items-center gap-4 text-[11px] text-white/50">' +
+                    '<span class="flex items-center gap-1"><i data-lucide="activity" class="w-3 h-3"></i> <span class="' + latencyColor + ' font-bold">' + latency + (latency !== '-' ? 'ms' : '') + '</span></span>' +
+                    '<div class="flex-1 srv-bar-track"><div class="srv-bar-fill ' + barColor + '" style="width:' + barWidth + '"></div></div>' +
+                '</div>' +
+            '</div>';
+        });
+
+        list.innerHTML = html;
         lucide.createIcons();
-    }
 
-    /* ==============================================
-       REDEEM
-    ============================================== */
-    function toggleRedeemModal(show) {
-        var m = document.getElementById('redeemModal');
-        if (show) {
-            var user = getCurrentUser();
-            if (!user) { showToast('กรุณาเข้าสู่ระบบก่อน', 'error'); toggleAuthModal(true); return; }
-            m.classList.remove('hidden'); m.classList.add('flex');
-            document.getElementById('redeemInputView').classList.remove('hidden');
-            document.getElementById('redeemSuccessView').classList.add('hidden');
-            document.getElementById('redeemCodeInput').value = '';
-            document.getElementById('redeemError').classList.add('hidden');
-            document.getElementById('redeemBalance').textContent = user.balance.toFixed(2);
-            setTimeout(function() { document.getElementById('redeemCodeInput').focus(); }, 400);
-        } else { m.classList.add('hidden'); m.classList.remove('flex'); }
-    }
+        // อัปเดตสรุป
+        var allOnline = onlineCount === servers.length;
+        var someOffline = onlineCount < servers.length;
+        var overviewDot = document.getElementById('overviewDot');
+        var overviewText = document.getElementById('overviewText');
 
-    function redeemNow() {
-        var user = getCurrentUser(); if (!user) return;
-        var code = document.getElementById('redeemCodeInput').value.trim().toUpperCase();
-        var errBox = document.getElementById('redeemError'), errText = document.getElementById('redeemErrorText');
-        if (!code) { errText.textContent = 'กรุณากรอกรหัสโค้ดก่อน'; errBox.classList.remove('hidden'); return; }
-        var cd = ADMIN_CODES[code];
-        if (!cd) { errText.textContent = 'โค้ดนี้ไม่ถูกต้อง กรุณาตรวจสอบอีกครั้ง'; errBox.classList.remove('hidden'); shakeEl(document.getElementById('redeemCodeInput')); return; }
-        var users = getUsers(), ud = users[user.email];
-        if (ud && ud.redeemedCodes && ud.redeemedCodes.indexOf(code) !== -1) {
-            errText.textContent = 'คุณเคยใช้โค้ด "' + code + '" ไปแล้ว'; errBox.classList.remove('hidden'); shakeEl(document.getElementById('redeemCodeInput')); return;
-        }
-        var nb = user.balance + cd.amount;
-        updateBalance(user.email, nb);
-        if (ud) { if (!ud.redeemedCodes) ud.redeemedCodes = []; ud.redeemedCodes.push(code); users[user.email] = ud; saveUsers(users); }
-        document.getElementById('redeemInputView').classList.add('hidden');
-        document.getElementById('redeemSuccessView').classList.remove('hidden');
-        document.getElementById('redeemAmount').textContent = cd.amount;
-        document.getElementById('redeemNewBalance').textContent = nb.toFixed(2);
-        spawnConfetti('confettiContainer');
-        refreshUI();
-    }
-
-    function shakeEl(el) { el.style.animation = 'none'; el.offsetHeight; el.style.animation = 'shake 0.4s ease'; setTimeout(function() { el.style.animation = ''; }, 400); }
-
-    function spawnConfetti(id) {
-        var c = document.getElementById(id); if (!c) return;
-        var colors = ['#ffffff','#e5e5e5','#a3a3a3','#d4d4d4','#f5f5f5'];
-        for (var i = 0; i < 24; i++) {
-            var p = document.createElement('div'); p.className = 'confetti-piece';
-            p.style.left = (Math.random()*80+10)+'%'; p.style.top = '-10px';
-            p.style.background = colors[Math.floor(Math.random()*colors.length)];
-            p.style.animationDelay = (Math.random()*0.5)+'s';
-            p.style.animationDuration = (0.8+Math.random()*0.6)+'s';
-            c.appendChild(p);
-            (function(el){ setTimeout(function(){ el.remove(); }, 2000); })(p);
-        }
-    }
-
-    /* ==============================================
-       SETTINGS
-    ============================================== */
-    function toggleSettingsModal(show) {
-        var m = document.getElementById('settingsModal');
-        if (show) {
-            var user = getCurrentUser(); if (!user) return;
-            m.classList.remove('hidden'); m.classList.add('flex');
-            document.getElementById('settingEmail').textContent = user.email;
-            document.getElementById('settingBalance').textContent = user.balance.toFixed(2);
-            document.getElementById('settingNameInput').value = user.displayName || '';
-            document.getElementById('nameSavedMsg').classList.add('hidden');
-            document.getElementById('soundToggle').checked = soundEnabled;
-        } else { m.classList.add('hidden'); m.classList.remove('flex'); }
-    }
-
-    function saveDisplayName() {
-        var user = getCurrentUser(); if (!user) return;
-        var name = document.getElementById('settingNameInput').value.trim();
-        updateDisplayName(user.email, name);
-        refreshUI();
-        var msg = document.getElementById('nameSavedMsg'); msg.classList.remove('hidden');
-        setTimeout(function() { msg.classList.add('hidden'); }, 2500);
-        showToast('บันทึกชื่อเรียบร้อย', 'success');
-    }
-
-    function confirmLogout() { toggleSettingsModal(false); logout(); }
-
-    /* ==============================================
-       TOP UP MODAL
-    ============================================== */
-    function toggleTopUpModal(show) {
-        var m = document.getElementById('topUpModal');
-        if (show) { var u = getCurrentUser(); if (u) document.getElementById('tumBalance').textContent = u.balance.toFixed(2); m.classList.remove('hidden'); m.classList.add('flex'); }
-        else { m.classList.add('hidden'); m.classList.remove('flex'); }
-    }
-    function contactAdmin() { showToast('กรุณาทักแชททางช่องทางที่แอดมินกำหนด', 'info'); }
-
-    /* ==============================================
-       LOGOUT
-    ============================================== */
-    function logout() { clearSession(); refreshUI(); showToast('ออกจากระบบแล้ว', 'info'); }
-
-    /* ==============================================
-       FAQ (สร้างแบบ dynamic)
-    ============================================== */
-    (function buildFAQ() {
-        var container = document.getElementById('faqContainer');
-        FAQ_DATA.forEach(function(item) {
-            var div = document.createElement('div');
-            div.className = 'faq-item bg-white/[0.04] border border-white/10 rounded-2xl overflow-hidden hover:border-white/20 transition-all duration-300';
-            div.innerHTML = '<button onclick="toggleFaq(this)" class="w-full px-6 py-5 flex items-center justify-between gap-4 text-left">' +
-                '<span class="text-sm font-bold text-white">' + item.q + '</span>' +
-                '<i data-lucide="chevron-down" class="faq-chevron w-4 h-4 text-white/40 shrink-0"></i></button>' +
-                '<div class="faq-answer px-6 pb-0"><div class="pb-5"><p class="text-xs text-white/50 leading-relaxed">' + item.a + '</p></div></div>';
-            container.appendChild(div);
-        });
-    })();
-
-    function toggleFaq(btn) {
-        var item = btn.closest('.faq-item');
-        var open = item.classList.contains('open');
-        document.querySelectorAll('.faq-item').forEach(function(el) { el.classList.remove('open'); });
-        if (!open) item.classList.add('open');
-    }
-
-    /* ==============================================
-       TOAST
-    ============================================== */
-    function showToast(message, type) {
-        var container = document.getElementById('toastContainer');
-        var toast = document.createElement('div');
-        var icon = 'info', bc = 'border-white/20', ic = 'text-white/80';
-        if (type === 'success') { icon = 'check-circle'; bc = 'border-green-400/30'; ic = 'text-green-400'; }
-        else if (type === 'error') { icon = 'alert-circle'; bc = 'border-red-400/30'; ic = 'text-red-400'; }
-        toast.className = 'modal-enter bg-[#0d0d0d] border ' + bc + ' rounded-2xl px-5 py-3.5 shadow-2xl flex items-center gap-3 max-w-xs';
-        toast.innerHTML = '<i data-lucide="' + icon + '" class="w-5 h-5 ' + ic + ' shrink-0"></i><span class="text-xs font-semibold text-white/90 leading-snug">' + message + '</span>';
-        container.appendChild(toast);
-        lucide.createIcons({ nodes: [toast] });
-        setTimeout(function() {
-            toast.style.transition = 'opacity 0.4s, transform 0.4s';
-            toast.style.opacity = '0'; toast.style.transform = 'translateX(20px)';
-            setTimeout(function() { toast.remove(); }, 400);
-        }, 3500);
-    }
-
-    /* ==============================================
-       REFRESH UI
-    ============================================== */
-    function refreshUI() {
-        var user = getCurrentUser();
-        var ab = document.getElementById('openAuthBtn'), pr = document.getElementById('userProfile');
-        if (user) {
-            ab.classList.add('hidden');
-            pr.classList.remove('hidden'); pr.classList.add('flex');
-            document.getElementById('avatarLetter').textContent = (user.displayName || user.email).charAt(0).toUpperCase();
-            var nm = document.getElementById('displayName');
-            nm.textContent = user.displayName || user.email.split('@')[0];
-            nm.title = user.email;
-            document.getElementById('userBalance').textContent = user.balance.toFixed(2);
+        if (allOnline) {
+            overviewDot.className = 'srv-dot online';
+            overviewText.textContent = 'ทั้งหมดปกติ';
+            overviewText.className = 'text-sm font-bold text-green-400';
+        } else if (onlineCount > 0) {
+            overviewDot.className = 'srv-dot maintenance';
+            overviewText.textContent = 'บางส่วนขัดข้อง (' + (servers.length - onlineCount) + ')';
+            overviewText.className = 'text-sm font-bold text-yellow-400';
         } else {
-            ab.classList.remove('hidden');
-            pr.classList.add('hidden'); pr.classList.remove('flex');
+            overviewDot.className = 'srv-dot offline';
+            overviewText.textContent = 'ทั้งหมดขัดข้อง';
+            overviewText.className = 'text-sm font-bold text-red-400';
         }
-        try { lucide.createIcons(); } catch(e) {}
-    }
 
-    function hideErrors() {
-        document.querySelectorAll('#forgotError1, #forgotError2, #redeemError').forEach(function(el) { el.classList.add('hidden'); });
-    }
+        // จำนวน online (จำลองจากสถานะ)
+        if (siteStatus === 'online') {
+            document.getElementById('onlineCount').textContent = (Math.floor(Math.random()*2000000)+40000000).toLocaleString();
+        } else {
+            document.getElementById('onlineCount').textContent = '-';
+        }
 
-    function openRegisterForm() {
-        if (getCurrentUser()) { showToast('คุณเข้าสู่ระบบอยู่แล้ว', 'info'); return; }
-        toggleAuthModal(true); switchForm('register');
-    }
-
-    function scrollToSection(id) { var el = document.getElementById(id); if (el) el.scrollIntoView({ behavior: 'smooth' }); }
-
-    // คลิกพื้นหลังปิด modal
-    document.querySelectorAll('#authModal, #redeemModal, #settingsModal, #topUpModal').forEach(function(modal) {
-        modal.addEventListener('click', function(e) {
-            if (e.target === modal) { playClickSound(); modal.classList.add('hidden'); modal.classList.remove('flex'); }
-        });
+        // เวลาอัปเดต
+        var now = new Date();
+        document.getElementById('lastUpdate').textContent = now.getHours().toString().padStart(2,'0') + ':' + now.getMinutes().toString().padStart(2,'0') + ':' + now.getSeconds().toString().padStart(2,'0');
     });
 
-    // Escape ปิด modal
-    document.addEventListener('keydown', function(e) {
-        if (e.key === 'Escape') {
-            ['authModal','redeemModal','settingsModal','topUpModal'].forEach(function(id) {
-                var m = document.getElementById(id);
-                if (!m.classList.contains('hidden')) { m.classList.add('hidden'); m.classList.remove('flex'); }
-            });
-        }
-    });
+    // ตั้ง timer รีเฟรชอัตโนมัติ 60 วินาที
+    if (robloxRefreshTimer) clearInterval(robloxRefreshTimer);
+    robloxRefreshTimer = setInterval(fetchRobloxStatus, 60000);
+}
 
-    refreshUI();
-    </script>
+/* ==============================================
+   FAQ
+============================================== */
+(function(){var c=document.getElementById('faqContainer');FAQ_DATA.forEach(function(item){var d=document.createElement('div');d.className='faq-item bg-white/[0.04] border border-white/10 rounded-2xl overflow-hidden hover:border-white/20 transition-all duration-300';d.innerHTML='<button onclick="toggleFaq(this)" class="w-full px-6 py-5 flex items-center justify-between gap-4 text-left"><span class="text-sm font-bold text-white">'+item.q+'</span><i data-lucide="chevron-down" class="faq-chevron w-4 h-4 text-white/40 shrink-0"></i></button><div class="faq-answer px-6 pb-0"><div class="pb-5"><p class="text-xs text-white/50 leading-relaxed">'+item.a+'</p></div></div>';c.appendChild(d)})})();
+function toggleFaq(btn){var item=btn.closest('.faq-item'),open=item.classList.contains('open');document.querySelectorAll('.faq-item').forEach(function(el){el.classList.remove('open')});if(!open)item.classList.add('open')}
+
+/* ==============================================
+   TOAST & UI
+============================================== */
+function showToast(message,type){var c=document.getElementById('toastContainer'),t=document.createElement('div');var icon='info',bc='border-white/20',ic='text-white/80';if(type==='success'){icon='check-circle';bc='border-green-400/30';ic='text-green-400'}else if(type==='error'){icon='alert-circle';bc='border-red-400/30';ic='text-red-400'}t.className='modal-enter bg-[#0d0d0d] border '+bc+' rounded-2xl px-5 py-3.5 shadow-2xl flex items-center gap-3 max-w-xs';t.innerHTML='<i data-lucide="'+icon+'" class="w-5 h-5 '+ic+' shrink-0"></i><span class="text-xs font-semibold text-white/90 leading-snug">'+message+'</span>';c.appendChild(t);lucide.createIcons({nodes:[t]});setTimeout(function(){t.style.transition='opacity .4s,transform .4s';t.style.opacity='0';t.style.transform='translateX(20px)';setTimeout(function(){t.remove()},400)},3500)}
+
+function refreshUI(){var user=getCurrentUser(),ab=document.getElementById('openAuthBtn'),pr=document.getElementById('userProfile');if(user){ab.classList.add('hidden');pr.classList.remove('hidden');pr.classList.add('flex');document.getElementById('avatarLetter').textContent=(user.displayName||user.email).charAt(0).toUpperCase();var nm=document.getElementById('displayName');nm.textContent=user.displayName||user.email.split('@')[0];nm.title=user.email;document.getElementById('userBalance').textContent=user.balance.toFixed(2)}else{ab.classList.remove('hidden');pr.classList.add('hidden');pr.classList.remove('flex')}try{lucide.createIcons()}catch(e){}}
+function hideErrors(){document.querySelectorAll('#loginCaptchaErr,#regCaptchaErr,#forgotError1,#forgotError2,#redeemError').forEach(function(el){el.classList.add('hidden')})}
+function openRegisterForm(){if(getCurrentUser()){showToast('เข้าสู่ระบบอยู่แล้ว','info');return}toggleAuthModal(true);switchForm('register')}
+function scrollToSection(id){var el=document.getElementById(id);if(el)el.scrollIntoView({behavior:'smooth'})}
+
+document.querySelectorAll('#authModal,#redeemModal,#settingsModal').forEach(function(modal){modal.addEventListener('click',function(e){if(e.target===modal){playClickSound();modal.classList.add('hidden');modal.classList.remove('flex')}})});
+document.addEventListener('keydown',function(e){if(e.key==='Escape'){['authModal','redeemModal','settingsModal'].forEach(function(id){var m=document.getElementById(id);if(!m.classList.contains('hidden')){m.classList.add('hidden');m.classList.remove('flex')}})}});
+
+refreshUI();
+</script>
 </body>
 </html>
