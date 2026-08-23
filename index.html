@@ -15,60 +15,31 @@
             font-family: 'Kanit', sans-serif; 
             background-color: #F8FAFC; 
         } 
-        /* Loading Animations */
-        .ring-spin-cw {
-            animation: spin 4s linear infinite;
-        }
-        .ring-spin-ccw {
-            animation: spin-reverse 3s linear infinite;
-        }
-        .glow-pulse {
-            animation: pulse-glow 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
-        }
-        @keyframes spin {
-            from { transform: rotate(0deg); }
-            to { transform: rotate(360deg); }
-        }
-        @keyframes spin-reverse {
-            from { transform: rotate(360deg); }
-            to { transform: rotate(0deg); }
-        }
-        @keyframes pulse-glow {
-            0%, 100% { opacity: 0.3; transform: scale(0.95); }
-            50% { opacity: 0.8; transform: scale(1.1); }
-        }
+        .ring-spin-cw { animation: spin 4s linear infinite; }
+        .ring-spin-ccw { animation: spin-reverse 3s linear infinite; }
+        .glow-pulse { animation: pulse-glow 2s cubic-bezier(0.4, 0, 0.6, 1) infinite; }
+        @keyframes spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+        @keyframes spin-reverse { from { transform: rotate(360deg); } to { transform: rotate(0deg); } }
+        @keyframes pulse-glow { 0%, 100% { opacity: 0.3; transform: scale(0.95); } 50% { opacity: 0.8; transform: scale(1.1); } }
     </style>
 </head>
 <body class="min-h-screen flex flex-col justify-between text-slate-800">
 
     <!-- ANIME STYLE LOADING SCREEN -->
     <div id="loadingScreen" class="fixed inset-0 bg-slate-950 z-50 flex flex-col items-center justify-center p-6 transition-opacity duration-700">
-        <!-- Background Ambient Glow -->
         <div class="absolute w-80 h-80 bg-emerald-500/15 rounded-full blur-3xl glow-pulse pointer-events-none"></div>
-
-        <!-- Anime Character Circle Frame -->
         <div class="relative w-36 h-36 flex items-center justify-center mb-6">
-            <!-- Outer Neon Orbit Ring -->
             <div class="absolute -inset-1 border-2 border-emerald-500/30 border-t-emerald-400 border-r-cyan-400 rounded-full ring-spin-cw shadow-[0_0_15px_rgba(52,211,153,0.3)]"></div>
-            <!-- Inner Cyan Orbit Ring -->
             <div class="absolute inset-1 border-2 border-cyan-500/20 border-b-cyan-400 border-l-teal-300 rounded-full ring-spin-ccw"></div>
-            
-            <!-- Character Avatar Box -->
             <div class="w-28 h-28 bg-slate-900 border-2 border-slate-700 rounded-full overflow-hidden shadow-2xl z-10 p-1 relative">
                 <img src="https://i.pinimg.com/564x/8e/3c/37/8e3c3757dbd74fa1f9712ee4df2a8dc4.jpg" alt="Anime Character" class="w-full h-full object-cover rounded-full">
             </div>
         </div>
-        
-        <!-- App Title -->
         <h2 class="text-2xl font-black tracking-widest text-white mb-1">GPS SHOP</h2>
-        
-        <!-- Animated Loading Status Text -->
         <div class="flex items-center gap-2 mb-4">
             <p id="loadingStatusText" class="text-xs font-semibold tracking-wider text-emerald-400 uppercase">กำลังเชื่อมต่อระบบ...</p>
             <span id="loadingPercent" class="text-xs font-mono font-bold text-cyan-400">0%</span>
         </div>
-        
-        <!-- Progress Bar -->
         <div class="w-64 bg-slate-900/90 h-2 rounded-full overflow-hidden p-0.5 border border-slate-800 shadow-inner relative">
             <div id="progressBar" class="bg-gradient-to-r from-emerald-400 via-teal-400 to-cyan-400 h-full rounded-full w-0 transition-all duration-[3000ms] ease-out shadow-[0_0_12px_rgba(52,211,153,0.6)]"></div>
         </div>
@@ -90,14 +61,14 @@
                     <span>เข้าสู่ระบบ / สมัครสมาชิก</span>
                 </button>
 
-                <!-- USER PROFILE & BALANCE -->
+                <!-- USER PROFILE -->
                 <div id="userProfile" class="hidden flex items-center gap-2.5 bg-slate-50 border border-slate-200 p-1.5 pl-3 rounded-2xl shadow-sm max-w-[280px] sm:max-w-sm">
                     <div id="emailAvatar" class="w-9 h-9 bg-black text-white rounded-xl flex items-center justify-center font-bold text-base uppercase shadow-sm shrink-0 overflow-hidden">
                         <span id="avatarLetter">U</span>
                         <img id="avatarImg" class="w-full h-full object-cover hidden" alt="Discord Avatar">
                     </div>
                     <div class="text-left min-w-0 flex-1">
-                        <p id="displayEmail" class="text-xs font-bold text-slate-900 leading-tight truncate max-w-[100px] sm:max-w-[130px]" title="user@email.com">user@email.com</p>
+                        <p id="displayEmail" class="text-xs font-bold text-slate-900 leading-tight truncate max-w-[100px] sm:max-w-[130px]" title="User">User</p>
                         <div class="flex items-center gap-1.5 mt-0.5">
                             <span class="text-xs font-extrabold text-emerald-600 truncate">฿<span id="userBalance">0.00</span></span>
                             <button onclick="playClickSound(); toggleTopUpModal(true)" class="text-[10px] bg-amber-100 text-amber-700 hover:bg-amber-200 font-bold px-2 py-0.5 rounded-md transition flex items-center gap-1 shrink-0">
@@ -117,22 +88,6 @@
     <div id="authModal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
         <div class="bg-white rounded-3xl shadow-2xl border border-slate-100 w-full max-w-md p-6 sm:p-8 relative">
             <button onclick="playClickSound(); toggleAuthModal(false)" class="absolute top-5 right-5 text-slate-400 hover:text-black font-bold text-xl">✕</button>
-
-            <!-- Discord Login Button Prompt -->
-            <div class="mb-5">
-                <a href="https://discord.com/oauth2/authorize?client_id=1532644387639660627&response_type=code&redirect_uri=https%3A%2F%2Fdhaf-shop.onrender.com%2F&scope=identify" onclick="playClickSound()" class="w-full bg-[#5865F2] hover:bg-[#4752C4] text-white font-bold py-3 px-4 rounded-xl shadow-md transition active:scale-95 flex items-center justify-center gap-3 text-sm">
-                    <svg class="w-5 h-5 fill-current" viewBox="0 0 127.14 96.36">
-                        <path d="M107.7,8.07A105.15,105.15,0,0,0,81.47,0a72.06,72.06,0,0,0-3.36,6.83A97.68,97.68,0,0,0,49,6.83,72.37,72.37,0,0,0,45.64,0,105.89,105.89,0,0,0,19.39,8.09C2.79,32.65-1.71,56.6.54,80.21h0A105.73,105.73,0,0,0,32.71,96.36,77.7,77.7,0,0,0,39.6,85.25a68.42,68.42,0,0,1-10.85-5.18c.91-.66,1.8-1.34,2.66-2a75.57,75.57,0,0,0,64.32,0c.87.71,1.76,1.39,2.66,2a68.68,68.68,0,0,1-10.87,5.19,77,77,0,0,0,6.89,11.1,105.25,105.25,0,0,0,32.19-16.14c2.64-27.38-4.51-51.11-18.91-72.15ZM42.45,65.69C36.18,65.69,31,60,31,53s5-12.74,11.43-12.74S54,45.91,53.87,53,48.83,65.69,42.45,65.69Zm42.24,0C78.41,65.69,73.25,60,73.25,53s5-12.74,11.44-12.74S96.23,45.91,96.1,53,91.08,65.69,84.69,65.69Z"/>
-                    </svg>
-                    <span>เข้าสู่ระบบด้วย Discord</span>
-                </a>
-            </div>
-
-            <div class="relative flex py-2 items-center mb-4">
-                <div class="flex-grow border-t border-slate-200"></div>
-                <span class="flex-shrink mx-4 text-xs font-semibold text-slate-400 uppercase">หรือใช้อีเมล</span>
-                <div class="flex-grow border-t border-slate-200"></div>
-            </div>
 
             <!-- Tab Switch -->
             <div class="flex border-b border-slate-100 mb-6">
@@ -164,7 +119,6 @@
                     </div>
                 </div>
 
-                <!-- Google reCAPTCHA LOGIN -->
                 <div class="flex justify-center my-2">
                     <div class="g-recaptcha" id="loginRecaptcha" data-sitekey="6LdE2ZMtAAAAAOTuFBh816eZmvZ8L1pO1g8Z_Vso"></div>
                 </div>
@@ -194,7 +148,6 @@
                     </div>
                 </div>
 
-                <!-- Google reCAPTCHA REGISTER -->
                 <div class="flex justify-center my-2">
                     <div class="g-recaptcha" id="registerRecaptcha" data-sitekey="6LdE2ZMtAAAAAOTuFBh816eZmvZ8L1pO1g8Z_Vso"></div>
                 </div>
@@ -203,32 +156,41 @@
                     <i data-lucide="user-check" class="w-4 h-4"></i> ยืนยันสมัครสมาชิก
                 </button>
             </form>
+
+            <!-- Separator Line -->
+            <div class="relative flex py-2 items-center my-4">
+                <div class="flex-grow border-t border-slate-200"></div>
+                <span class="flex-shrink mx-4 text-xs font-semibold text-slate-400 uppercase">หรือ</span>
+                <div class="flex-grow border-t border-slate-200"></div>
+            </div>
+
+            <!-- Discord Login Button (อยู่ล่างสุด) -->
+            <div>
+                <a href="https://discord.com/oauth2/authorize?client_id=1532644387639660627&response_type=code&redirect_uri=https%3A%2F%2Fdhaf-shop.onrender.com%2F&scope=identify" onclick="playClickSound()" class="w-full bg-[#5865F2] hover:bg-[#4752C4] text-white font-bold py-3 px-4 rounded-xl shadow-md transition active:scale-95 flex items-center justify-center gap-3 text-sm">
+                    <svg class="w-5 h-5 fill-current" viewBox="0 0 127.14 96.36">
+                        <path d="M107.7,8.07A105.15,105.15,0,0,0,81.47,0a72.06,72.06,0,0,0-3.36,6.83A97.68,97.68,0,0,0,49,6.83,72.37,72.37,0,0,0,45.64,0,105.89,105.89,0,0,0,19.39,8.09C2.79,32.65-1.71,56.6.54,80.21h0A105.73,105.73,0,0,0,32.71,96.36,77.7,77.7,0,0,0,39.6,85.25a68.42,68.42,0,0,1-10.85-5.18c.91-.66,1.8-1.34,2.66-2a75.57,75.57,0,0,0,64.32,0c.87.71,1.76,1.39,2.66,2a68.68,68.68,0,0,1-10.87,5.19,77,77,0,0,0,6.89,11.1,105.25,105.25,0,0,0,32.19-16.14c2.64-27.38-4.51-51.11-18.91-72.15ZM42.45,65.69C36.18,65.69,31,60,31,53s5-12.74,11.43-12.74S54,45.91,53.87,53,48.83,65.69,42.45,65.69Zm42.24,0C78.41,65.69,73.25,60,73.25,53s5-12.74,11.44-12.74S96.23,45.91,96.1,53,91.08,65.69,84.69,65.69Z"/>
+                    </svg>
+                    <span>เข้าสู่ระบบด้วย Discord</span>
+                </a>
+            </div>
         </div>
     </div>
 
-    <!-- TOP-UP MODAL (ปิดระบบเติมเงินชั่วคราว) -->
+    <!-- TOP-UP MODAL -->
     <div id="topUpModal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
         <div class="bg-white rounded-3xl shadow-2xl border border-slate-100 w-full max-w-md p-6 sm:p-8 relative text-center">
             <button onclick="playClickSound(); toggleTopUpModal(false)" class="absolute top-5 right-5 text-slate-400 hover:text-black font-bold text-xl">✕</button>
-
             <div class="w-16 h-16 bg-amber-100 text-amber-600 rounded-2xl flex items-center justify-center mx-auto mb-4">
                 <i data-lucide="alert-triangle" class="w-8 h-8"></i>
             </div>
-            
             <h3 class="text-xl font-bold text-slate-900 mb-2">ปิดปรับปรุงระบบเติมเงิน</h3>
-            <p class="text-slate-500 text-sm leading-relaxed mb-6">
-                ระบบเติมเงินชั่วคราวอยู่ระหว่างการพัฒนาระบบ ขออภัยในความไม่สะดวกครับ
-            </p>
-
-            <button onclick="playClickSound(); toggleTopUpModal(false)" class="w-full bg-slate-900 hover:bg-black text-white font-semibold py-3 rounded-xl transition active:scale-95">
-                รับทราบ
-            </button>
+            <p class="text-slate-500 text-sm leading-relaxed mb-6">ระบบเติมเงินชั่วคราวอยู่ระหว่างการพัฒนาระบบ ขออภัยในความไม่สะดวกครับ</p>
+            <button onclick="playClickSound(); toggleTopUpModal(false)" class="w-full bg-slate-900 hover:bg-black text-white font-semibold py-3 rounded-xl transition active:scale-95">รับทราบ</button>
         </div>
     </div>
 
     <!-- MAIN CONTENT -->
     <main class="max-w-6xl mx-auto px-6 py-12">
-        <!-- Hero Section -->
         <div class="text-center max-w-3xl mx-auto mb-20">
             <div class="inline-flex items-center gap-2 px-4 py-2 bg-slate-100 rounded-full border border-slate-200 text-slate-700 text-xs font-semibold mb-6 shadow-sm">
                 <i data-lucide="sparkles" class="w-4 h-4 text-amber-500"></i>
@@ -240,55 +202,7 @@
             <p class="text-base sm:text-lg text-slate-600 leading-relaxed mb-8 max-w-2xl mx-auto">
                 บริการเติมเงินเกมและสินค้าดิจิทัลครบวงจร ด้วยระบบจัดส่งอัตโนมัติ 24 ชั่วโมง รวดเร็ว ทันใจ ในราคาที่คุ้มค่าที่สุด
             </p>
-            <div class="flex flex-col sm:flex-row gap-4 justify-center items-center">
-                <a href="#services" onclick="playClickSound()" class="w-full sm:w-auto bg-black hover:bg-slate-800 text-white font-semibold text-base px-8 py-3.5 rounded-2xl shadow-lg hover:shadow-xl transition active:scale-95 flex items-center justify-center gap-2">
-                    <i data-lucide="shopping-bag" class="w-5 h-5"></i>
-                    <span>เลือกชมสินค้าทั้งหมด</span>
-                </a>
-                <a href="#features" onclick="playClickSound()" class="w-full sm:w-auto bg-white hover:bg-slate-100 text-slate-700 border border-slate-200 font-semibold text-base px-8 py-3.5 rounded-2xl transition active:scale-95 flex items-center justify-center gap-2">
-                    <i data-lucide="info" class="w-5 h-5"></i>
-                    <span>ทำไมต้องเลือกเรา?</span>
-                </a>
-            </div>
         </div>
-
-        <!-- Features Grid -->
-        <section id="features" class="grid sm:grid-cols-2 md:grid-cols-3 gap-6 my-16">
-            <div class="bg-white p-6 rounded-3xl border border-slate-200/80 shadow-sm hover:shadow-md transition">
-                <div class="w-12 h-12 bg-slate-100 text-slate-900 rounded-2xl flex items-center justify-center font-bold text-xl mb-5">
-                    <i data-lucide="zap" class="w-6 h-6 text-amber-500"></i>
-                </div>
-                <h3 class="text-lg font-bold text-slate-900 mb-2">จัดส่งระบบอัตโนมัติ</h3>
-                <p class="text-slate-500 text-sm leading-relaxed">ทำรายการรวดเร็วทันใจ ไร้การรอคอย ระบบประมวลผลจัดส่งสินค้าเข้าบัญชีทันทีหลังชำระเงินสำเร็จ</p>
-            </div>
-
-            <div class="bg-white p-6 rounded-3xl border border-slate-200/80 shadow-sm hover:shadow-md transition">
-                <div class="w-12 h-12 bg-slate-100 text-slate-900 rounded-2xl flex items-center justify-center font-bold text-xl mb-5">
-                    <i data-lucide="shield-check" class="w-6 h-6 text-emerald-500"></i>
-                </div>
-                <h3 class="text-lg font-bold text-slate-900 mb-2">ปลอดภัย 100%</h3>
-                <p class="text-slate-500 text-sm leading-relaxed">การันตีความปลอดภัยทุกขั้นตอนการทำรายการ ข้อมูลลูกค้าถูกปกป้องด้วยระบบการเข้ารหัสขั้นสูง</p>
-            </div>
-
-            <div class="bg-white p-6 rounded-3xl border border-slate-200/80 shadow-sm hover:shadow-md transition sm:col-span-2 md:col-span-1">
-                <div class="w-12 h-12 bg-slate-100 text-slate-900 rounded-2xl flex items-center justify-center font-bold text-xl mb-5">
-                    <i data-lucide="headphones" class="w-6 h-6 text-blue-500"></i>
-                </div>
-                <h3 class="text-lg font-bold text-slate-900 mb-2">บริการดูแล 24 ชม.</h3>
-                <p class="text-slate-500 text-sm leading-relaxed">ทีมงานมืออาชีพพร้อมให้คำปรึกษา แนะนำ และช่วยเหลือแก้ไขปัญหาให้คุณตลอดเวลาไม่มีวันหยุด</p>
-            </div>
-        </section>
-
-        <!-- Product Preview Placeholder Section -->
-        <section id="services" class="my-16 bg-white border border-slate-200/80 rounded-3xl p-8 sm:p-12 text-center">
-            <div class="max-w-md mx-auto">
-                <div class="w-16 h-16 bg-slate-100 text-slate-700 rounded-3xl flex items-center justify-center mx-auto mb-4">
-                    <i data-lucide="package-search" class="w-8 h-8"></i>
-                </div>
-                <h3 class="text-2xl font-bold text-slate-900 mb-2">หมวดหมู่สินค้าและบริการ</h3>
-                <p class="text-slate-500 text-sm mb-6">กำลังเตรียมรายการสินค้าใหม่ล่าสุดสำหรับคุณ สามารถติดตามและเลือกซื้อได้เร็วๆ นี้</p>
-            </div>
-        </section>
     </main>
 
     <footer class="w-full border-t border-slate-200 bg-white py-6 text-center text-xs font-medium text-slate-500">
@@ -302,31 +216,21 @@
                 const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
                 const osc = audioCtx.createOscillator();
                 const gain = audioCtx.createGain();
-
                 osc.type = 'sine';
                 osc.frequency.setValueAtTime(600, audioCtx.currentTime);
                 osc.frequency.exponentialRampToValueAtTime(120, audioCtx.currentTime + 0.08);
-
                 gain.gain.setValueAtTime(0.15, audioCtx.currentTime);
                 gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.08);
-
                 osc.connect(gain);
                 gain.connect(audioCtx.destination);
-
                 osc.start();
                 osc.stop(audioCtx.currentTime + 0.08);
-            } catch (e) {
-                console.log('Audio error:', e);
-            }
+            } catch (e) {}
         }
 
         window.addEventListener('DOMContentLoaded', () => {
             lucide.createIcons();
-
-            // Auto Check Saved Login Status First
             checkPersistedLogin();
-
-            // Check Discord OAuth Redirect Code
             handleDiscordCallback();
 
             // Loading Screen Handler
@@ -339,7 +243,6 @@
             const interval = setInterval(() => {
                 percent += Math.floor(Math.random() * 8) + 2;
                 if (percent > 100) percent = 100;
-                
                 if (percentText) percentText.innerText = percent + '%';
                 
                 if (percent >= 35 && percent < 75) {
@@ -352,10 +255,7 @@
                 }
             }, 120);
 
-            setTimeout(() => {
-                if (progressBar) progressBar.style.width = '100%';
-            }, 100);
-
+            setTimeout(() => { if (progressBar) progressBar.style.width = '100%'; }, 100);
             setTimeout(() => {
                 if (loadingScreen) {
                     loadingScreen.style.opacity = '0';
@@ -364,28 +264,30 @@
             }, 3600);
         });
 
-        // Discord OAuth Callback Handler
+        // ดึง Profile จริงผ่าน Backend API
         async function handleDiscordCallback() {
             const urlParams = new URLSearchParams(window.location.search);
             const code = urlParams.get('code');
 
             if (code) {
-                // Clear URL code param cleanly
                 window.history.replaceState({}, document.title, window.location.pathname);
                 
                 try {
-                    // Send code to backend if available or process payload
-                    // Example mock response fallback for client-side representation
-                    const discordName = "Discord User";
-                    const avatarUrl = ""; 
-
-                    localStorage.setItem('user_email', discordName);
-                    localStorage.setItem('user_avatar', avatarUrl);
-                    if (localStorage.getItem('user_balance') === null) {
-                        localStorage.setItem('user_balance', '0');
-                    }
+                    const res = await fetch('/api/discord-login', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ code })
+                    });
                     
-                    updateProfileUI(discordName, avatarUrl);
+                    const data = await res.json();
+                    if (data.username) {
+                        localStorage.setItem('user_email', data.username);
+                        localStorage.setItem('user_avatar', data.avatar);
+                        if (!localStorage.getItem('user_balance')) {
+                            localStorage.setItem('user_balance', '0');
+                        }
+                        updateProfileUI(data.username, data.avatar);
+                    }
                 } catch (err) {
                     console.error("Discord Login Error:", err);
                 }
@@ -434,7 +336,6 @@
 
         function handleAuth(e, formType) {
             e.preventDefault();
-
             const widgetId = formType === 'login' ? 0 : 1;
             const response = grecaptcha.getResponse(widgetId);
 
@@ -443,14 +344,14 @@
                 return;
             }
 
-            const loginEmail = document.getElementById('loginEmail').value;
-            const regEmail = document.getElementById('regEmail').value;
-            const email = formType === 'login' ? loginEmail : regEmail;
+            const email = formType === 'login' 
+                ? document.getElementById('loginEmail').value 
+                : document.getElementById('regEmail').value;
 
             if (email) {
                 localStorage.setItem('user_email', email);
                 localStorage.removeItem('user_avatar');
-                if (localStorage.getItem('user_balance') === null) {
+                if (!localStorage.getItem('user_balance')) {
                     localStorage.setItem('user_balance', '0');
                 }
                 updateProfileUI(email, null);
