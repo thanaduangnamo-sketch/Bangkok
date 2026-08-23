@@ -3,281 +3,683 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>GPS Shop - ร้านค้าออนไลน์อย่างเป็นทางการ</title>
-    <!-- ใช้ Tailwind CSS Production CDN -->
-    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+
+    <title>Skey Shop - ร้านค้าออนไลน์อย่างเป็นทางการ</title>
+
+    <!-- Favicon ตัวอักษร S พื้นดำ -->
+    <link rel="icon"
+          href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='20' fill='black'/><text x='50' y='68' font-size='55' text-anchor='middle' fill='white' font-family='Arial' font-weight='bold'>S</text></svg>">
+
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- Google Font -->
     <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+
     <!-- Lucide Icons -->
     <script src="https://unpkg.com/lucide@latest"></script>
-    <!-- Google reCAPTCHA API -->
+
+    <!-- Google reCAPTCHA -->
     <script src="https://www.google.com/recaptcha/api.js" async defer></script>
-    <style> 
-        body { 
-            font-family: 'Kanit', sans-serif; 
-            background-color: #F8FAFC; 
-        } 
+
+    <style>
+        body {
+            font-family: 'Kanit', sans-serif;
+            background-color: #F8FAFC;
+        }
+
         .ring-spin-cw { animation: spin 4s linear infinite; }
         .ring-spin-ccw { animation: spin-reverse 3s linear infinite; }
         .glow-pulse { animation: pulse-glow 2s cubic-bezier(0.4, 0, 0.6, 1) infinite; }
-        @keyframes spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
-        @keyframes spin-reverse { from { transform: rotate(360deg); } to { transform: rotate(0deg); } }
-        @keyframes pulse-glow { 0%, 100% { opacity: 0.3; transform: scale(0.95); } 50% { opacity: 0.8; transform: scale(1.1); } }
+
+        @keyframes spin {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+
+        @keyframes spin-reverse {
+            from { transform: rotate(360deg); }
+            to { transform: rotate(0deg); }
+        }
+
+        @keyframes pulse-glow {
+            0%, 100% { opacity: 0.3; transform: scale(0.95); }
+            50% { opacity: 0.8; transform: scale(1.1); }
+        }
+
+        /* =========================
+           ✨ SECURITY PAGE EFFECTS
+        ========================== */
+
+        /* พื้นหลังตารางวิ่งได้ */
+        .security-grid {
+            background-image:
+                linear-gradient(rgba(52, 211, 153, 0.06) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(52, 211, 153, 0.06) 1px, transparent 1px);
+            background-size: 44px 44px;
+            animation: grid-move 22s linear infinite;
+            -webkit-mask-image: radial-gradient(ellipse at center, black 25%, transparent 72%);
+            mask-image: radial-gradient(ellipse at center, black 25%, transparent 72%);
+        }
+
+        @keyframes grid-move {
+            from { background-position: 0 0; }
+            to { background-position: 44px 44px; }
+        }
+
+        /* การ์ดเด้งขึ้นตอนเปิด */
+        @keyframes modal-in {
+            from { opacity: 0; transform: translateY(30px) scale(0.95); }
+            to { opacity: 1; transform: translateY(0) scale(1); }
+        }
+
+        .modal-enter { animation: modal-in 0.7s cubic-bezier(0.16, 1, 0.3, 1) both; }
+
+        /* แสงวิ่งผ่านปุ่ม */
+        @keyframes shine {
+            0% { transform: translateX(-150%) skewX(-15deg); }
+            60%, 100% { transform: translateX(350%) skewX(-15deg); }
+        }
+
+        .btn-shine::after {
+            content: '';
+            position: absolute;
+            top: 0; left: 0;
+            width: 35%; height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.4), transparent);
+            animation: shine 3.2s ease-in-out infinite;
+            pointer-events: none;
+        }
+
+        /* เส้นสแกนกวาดการ์ด */
+        @keyframes scanline {
+            0% { top: -5%; opacity: 0; }
+            15% { opacity: 1; }
+            85% { opacity: 1; }
+            100% { top: 105%; opacity: 0; }
+        }
+
+        .scan-line {
+            position: absolute;
+            left: 8%; right: 8%;
+            height: 2px;
+            background: linear-gradient(90deg, transparent, rgba(52,211,153,0.9), transparent);
+            box-shadow: 0 0 12px rgba(52,211,153,0.6);
+            animation: scanline 3.5s ease-in-out infinite;
+            pointer-events: none;
+        }
+
+        /* อนุภาคลอยขึ้น */
+        @keyframes float-up {
+            0% { transform: translateY(0); opacity: 0; }
+            12% { opacity: 0.7; }
+            88% { opacity: 0.7; }
+            100% { transform: translateY(-105vh); opacity: 0; }
+        }
+
+        .security-particle {
+            position: absolute;
+            bottom: -12px;
+            width: 4px; height: 4px;
+            border-radius: 50%;
+            background: rgba(52, 211, 153, 0.8);
+            box-shadow: 0 0 8px rgba(52, 211, 153, 0.8);
+            animation: float-up 10s linear infinite;
+            pointer-events: none;
+        }
     </style>
 </head>
+
 <body class="min-h-screen flex flex-col justify-between text-slate-800">
 
-    <!-- INITIAL SECURITY RECAPTCHA MODAL (ปุ่มพื้นหลังสีขาว เรียบง่าย) -->
-    <div id="initialSecurityModal" class="fixed inset-0 bg-slate-950/80 backdrop-blur-md z-50 flex items-center justify-center p-4 transition-all duration-500">
-        <div class="bg-white rounded-3xl shadow-2xl border border-slate-100 w-full max-w-sm p-8 text-center relative overflow-hidden">
-            
-            <div class="w-16 h-16 bg-slate-100 text-slate-800 rounded-2xl flex items-center justify-center mx-auto mb-4 border border-slate-200 shadow-sm">
-                <i data-lucide="shield-check" class="w-8 h-8 text-emerald-600"></i>
+    <!-- =========================
+         SECURITY CAPTCHA MODAL (NEW DESIGN)
+    ========================== -->
+    <div id="initialSecurityModal"
+         class="fixed inset-0 z-50 flex items-center justify-center p-4 transition-all duration-500">
+
+        <!-- พื้นหลังดำ -->
+        <div class="absolute inset-0 bg-slate-950"></div>
+
+        <!-- ตารางไซไฟเคลื่อนไหว -->
+        <div class="absolute inset-0 security-grid"></div>
+
+        <!-- ลูกบอลเรืองแสง -->
+        <div class="absolute -top-20 -left-20 w-[28rem] h-[28rem] bg-emerald-500/15 rounded-full blur-3xl glow-pulse pointer-events-none"></div>
+        <div class="absolute -bottom-24 -right-24 w-[26rem] h-[26rem] bg-cyan-500/10 rounded-full blur-3xl glow-pulse pointer-events-none" style="animation-delay: 1.2s;"></div>
+
+        <!-- อนุภาคลอยขึ้น -->
+        <div class="security-particle" style="left: 8%;  animation-delay: 0s;   animation-duration: 11s;"></div>
+        <div class="security-particle" style="left: 20%; animation-delay: 2.5s; animation-duration: 13s;"></div>
+        <div class="security-particle" style="left: 35%; animation-delay: 5s;   animation-duration: 10s;"></div>
+        <div class="security-particle" style="left: 52%; animation-delay: 1.5s; animation-duration: 14s;"></div>
+        <div class="security-particle" style="left: 68%; animation-delay: 4s;   animation-duration: 11s;"></div>
+        <div class="security-particle" style="left: 80%; animation-delay: 0.8s; animation-duration: 12s;"></div>
+        <div class="security-particle" style="left: 92%; animation-delay: 3.2s; animation-duration: 10s;"></div>
+
+        <!-- การ์ดกระจกฝ้า -->
+        <div id="securityCard"
+             class="modal-enter relative overflow-hidden bg-white/[0.06] backdrop-blur-2xl border border-white/10 rounded-3xl w-full max-w-md p-8 text-center shadow-[0_25px_80px_rgba(0,0,0,0.6)]">
+
+            <!-- เส้นสแกนกวาด -->
+            <div class="scan-line"></div>
+
+            <!-- ป้ายด้านบน -->
+            <div class="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full bg-emerald-500/10 border border-emerald-400/20 text-[10px] font-bold tracking-[0.2em] text-emerald-300 uppercase mb-6">
+                <span class="w-1.5 h-1.5 bg-emerald-400 rounded-full animate-pulse"></span>
+                Security Verification
             </div>
 
-            <h3 class="text-xl font-extrabold text-slate-900 mb-6">ระบบตรวจสอบความปลอดภัย</h3>
-
-            <!-- reCAPTCHA Widget -->
-            <div class="flex justify-center mb-6">
-                <div class="g-recaptcha" id="initialRecaptcha" data-sitekey="6LdE2ZMtAAAAAOTuFBh816eZmvZ8L1pO1g8Z_Vso" data-callback="onInitialCaptchaSuccess"></div>
+            <!-- โล่หมุน -->
+            <div class="relative w-28 h-28 flex items-center justify-center mx-auto mb-6">
+                <div class="absolute -inset-1 rounded-full border-2 border-dashed border-emerald-500/25 ring-spin-cw"></div>
+                <div class="absolute inset-1.5 rounded-full border-2 border-cyan-500/20 border-b-cyan-400/70 ring-spin-ccw"></div>
+                <div class="w-20 h-20 rounded-full bg-gradient-to-br from-emerald-500/25 to-cyan-500/15 border border-emerald-400/30 flex items-center justify-center shadow-[0_0_35px_rgba(52,211,153,0.45)]">
+                    <i data-lucide="shield-check" class="w-10 h-10 text-emerald-400"></i>
+                </div>
             </div>
 
-            <!-- ปุ่มสีขาว ยืนยันตัวตนเพื่อความปลอดภัย -->
-            <button onclick="playClickSound(); triggerCaptchaClick()" class="w-full bg-white hover:bg-slate-50 text-slate-900 font-bold py-3.5 px-4 rounded-2xl border border-slate-300 shadow-sm transition active:scale-95 flex items-center justify-center gap-2 text-sm">
-                <i data-lucide="lock" class="w-4 h-4 text-slate-600"></i>
+            <!-- หัวข้อ -->
+            <h3 class="text-2xl font-extrabold text-white mb-2">
+                ระบบตรวจสอบความปลอดภัย
+            </h3>
+
+            <p class="text-xs text-slate-400 mb-6 leading-relaxed">
+                กรุณายืนยันตัวตนเพื่อป้องกันบอท<br>และเข้าสู่เว็บไซต์อย่างปลอดภัย
+            </p>
+
+            <!-- สถานะความปลอดภัย -->
+            <div class="bg-black/25 border border-white/5 rounded-2xl p-4 space-y-3 mb-5 text-left">
+
+                <div class="flex items-center gap-3">
+                    <span class="w-6 h-6 rounded-lg bg-emerald-500/15 border border-emerald-400/20 flex items-center justify-center shrink-0">
+                        <i data-lucide="lock" class="w-3 h-3 text-emerald-400"></i>
+                    </span>
+                    <span class="text-xs text-slate-300">การเชื่อมต่อถูกเข้ารหัส (SSL/TLS)</span>
+                    <i data-lucide="check" class="w-3.5 h-3.5 text-emerald-400 ml-auto shrink-0"></i>
+                </div>
+
+                <div class="flex items-center gap-3">
+                    <span class="w-6 h-6 rounded-lg bg-cyan-500/15 border border-cyan-400/20 flex items-center justify-center shrink-0">
+                        <i data-lucide="server" class="w-3 h-3 text-cyan-400"></i>
+                    </span>
+                    <span class="text-xs text-slate-300">เซิร์ฟเวอร์ปลอดภัย · ตรวจสอบแล้ว</span>
+                    <i data-lucide="check" class="w-3.5 h-3.5 text-emerald-400 ml-auto shrink-0"></i>
+                </div>
+
+                <div class="flex items-center gap-3">
+                    <span class="w-6 h-6 rounded-lg bg-teal-500/15 border border-teal-400/20 flex items-center justify-center shrink-0">
+                        <i data-lucide="fingerprint" class="w-3 h-3 text-teal-400"></i>
+                    </span>
+                    <span class="text-xs text-slate-300">ป้องกันบอทและโปรแกรมอัตโนมัติ</span>
+                    <i data-lucide="check" class="w-3.5 h-3.5 text-emerald-400 ml-auto shrink-0"></i>
+                </div>
+
+            </div>
+
+            <!-- reCAPTCHA -->
+            <div class="bg-white rounded-2xl p-3.5 flex justify-center mb-5 shadow-[0_10px_35px_rgba(0,0,0,0.35)]">
+                <div class="g-recaptcha"
+                     id="initialRecaptcha"
+                     data-sitekey="6LdE2ZMtAAAAAOTuFBh816eZmvZ8L1pO1g8Z_Vso"
+                     data-callback="onInitialCaptchaSuccess">
+                </div>
+            </div>
+
+            <!-- ปุ่มยืนยัน -->
+            <button
+                onclick="playClickSound(); triggerCaptchaClick()"
+                class="btn-shine relative overflow-hidden w-full bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-400 hover:to-teal-400 text-white font-bold py-3.5 px-4 rounded-2xl shadow-[0_10px_30px_rgba(16,185,129,0.35)] transition-all duration-300 active:scale-95 flex items-center justify-center gap-2 text-sm">
+
+                <i data-lucide="fingerprint" class="w-4 h-4"></i>
+
                 <span>ยืนยันตัวตนเพื่อความปลอดภัย</span>
+
+            </button>
+
+            <!-- ท้ายการ์ด -->
+            <p class="text-[10px] text-slate-500 mt-6 flex items-center justify-center gap-1.5">
+                <i data-lucide="shield" class="w-3 h-3"></i>
+                คุ้มครองโดยระบบรักษาความปลอดภัยของ Skey Shop
+            </p>
+
+        </div>
+    </div>
+
+
+    <!-- =========================
+         LOADING SCREEN
+    ========================== -->
+    <div id="loadingScreen"
+         class="fixed inset-0 bg-slate-950 z-40 hidden flex-col items-center justify-center p-6 transition-opacity duration-700">
+
+        <div class="absolute w-80 h-80 bg-emerald-500/15 rounded-full blur-3xl glow-pulse pointer-events-none"></div>
+
+        <div class="relative w-36 h-36 flex items-center justify-center mb-6">
+
+            <div class="absolute -inset-1 border-2 border-emerald-500/30 border-t-emerald-400 border-r-cyan-400 rounded-full ring-spin-cw shadow-[0_0_15px_rgba(52,211,153,0.3)]"></div>
+
+            <div class="absolute inset-1 border-2 border-cyan-500/20 border-b-cyan-400 border-l-teal-300 rounded-full ring-spin-ccw"></div>
+
+            <div class="w-28 h-28 bg-slate-900 border-2 border-slate-700 rounded-full overflow-hidden shadow-2xl z-10 p-1 relative">
+                <img
+                    src="https://i.pinimg.com/564x/8e/3c/37/8e3c3757dbd74fa1f9712ee4df2a8dc4.jpg"
+                    alt="Skey Shop"
+                    class="w-full h-full object-cover rounded-full">
+            </div>
+        </div>
+
+        <h2 class="text-2xl font-black tracking-widest text-white mb-1">
+            Skey Shop
+        </h2>
+
+        <div class="flex items-center gap-2 mb-4">
+            <p id="loadingStatusText"
+               class="text-xs font-semibold tracking-wider text-emerald-400 uppercase">
+                กำลังเชื่อมต่อระบบ...
+            </p>
+            <span id="loadingPercent" class="text-xs font-mono font-bold text-cyan-400">
+                0%
+            </span>
+        </div>
+
+        <div class="w-64 bg-slate-900/90 h-2 rounded-full overflow-hidden p-0.5 border border-slate-800 shadow-inner relative">
+            <div id="progressBar"
+                 class="bg-gradient-to-r from-emerald-400 via-teal-400 to-cyan-400 h-full rounded-full w-0 transition-all duration-[3000ms] ease-out shadow-[0_0_12px_rgba(52,211,153,0.6)]">
+            </div>
+        </div>
+
+    </div>
+
+
+    <!-- =========================
+         NAVBAR
+    ========================== -->
+    <header class="w-full bg-white/90 backdrop-blur-md border-b border-slate-200/80 sticky top-0 z-30">
+
+        <div class="max-w-6xl mx-auto px-4 sm:px-6 h-20 flex items-center justify-between gap-4">
+
+            <!-- LOGO -->
+            <div class="flex items-center gap-3 shrink-0">
+                <div class="w-10 h-10 bg-black rounded-xl flex items-center justify-center font-extrabold text-white text-sm tracking-wider shadow-sm">
+                    SK
+                </div>
+                <span class="text-xl font-extrabold tracking-tight text-slate-900">
+                    Skey Shop
+                </span>
+            </div>
+
+
+            <!-- AUTH -->
+            <div id="authContainer" class="flex items-center gap-2 sm:gap-3">
+
+                <!-- CAPTCHA BUTTON -->
+                <button
+                    onclick="playClickSound(); reVerifyCaptcha()"
+                    class="bg-slate-100 hover:bg-slate-200 text-slate-700 font-semibold px-3 py-2 rounded-xl text-xs transition flex items-center gap-1.5 border border-slate-200"
+                    title="ตรวจสอบความปลอดภัย">
+                    <i data-lucide="shield-check" class="w-4 h-4 text-emerald-600"></i>
+                    <span class="hidden sm:inline">reCAPTCHA</span>
+                </button>
+
+
+                <!-- LOGIN BUTTON -->
+                <button
+                    id="openAuthBtn"
+                    onclick="playClickSound(); toggleAuthModal(true)"
+                    class="bg-black hover:bg-slate-800 text-white font-semibold px-4 sm:px-5 py-2.5 rounded-xl shadow-sm transition active:scale-95 text-xs sm:text-sm flex items-center gap-2">
+                    <i data-lucide="log-in" class="w-4 h-4"></i>
+                    <span>เข้าสู่ระบบ / สมัครสมาชิก</span>
+                </button>
+
+
+                <!-- USER PROFILE -->
+                <div id="userProfile"
+                     class="hidden flex items-center gap-2.5 bg-slate-50 border border-slate-200 p-1.5 pl-3 rounded-2xl shadow-sm max-w-[280px] sm:max-w-sm">
+
+                    <div id="emailAvatar"
+                         class="w-9 h-9 bg-black text-white rounded-xl flex items-center justify-center font-bold text-base uppercase shadow-sm shrink-0 overflow-hidden">
+                        <span id="avatarLetter">U</span>
+                    </div>
+
+                    <div class="text-left min-w-0 flex-1">
+                        <p id="displayEmail"
+                           class="text-xs font-bold text-slate-900 leading-tight truncate max-w-[100px] sm:max-w-[130px]"
+                           title="User">
+                            User
+                        </p>
+
+                        <div class="flex items-center gap-1.5 mt-0.5">
+                            <span class="text-xs font-extrabold text-emerald-600 truncate">
+                                ฿<span id="userBalance">0.00</span>
+                            </span>
+                            <button
+                                onclick="playClickSound(); toggleTopUpModal(true)"
+                                class="text-[10px] bg-amber-100 text-amber-700 hover:bg-amber-200 font-bold px-2 py-0.5 rounded-md transition flex items-center gap-1 shrink-0">
+                                <i data-lucide="wallet" class="w-3 h-3"></i>
+                                เติมเงิน
+                            </button>
+                        </div>
+                    </div>
+
+
+                    <!-- LOGOUT -->
+                    <button
+                        onclick="playClickSound(); logout()"
+                        class="text-xs text-red-500 hover:text-red-700 bg-red-50 hover:bg-red-100 font-medium p-2 rounded-xl transition shrink-0"
+                        title="ออกจากระบบ">
+                        <i data-lucide="log-out" class="w-4 h-4"></i>
+                    </button>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </header>
+
+
+    <!-- =========================
+         AUTH MODAL
+    ========================== -->
+    <div id="authModal"
+         class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
+
+        <div class="bg-white rounded-3xl shadow-2xl border border-slate-100 w-full max-w-md p-6 sm:p-8 relative">
+
+            <!-- CLOSE -->
+            <button onclick="playClickSound(); toggleAuthModal(false)"
+                    class="absolute top-5 right-5 text-slate-400 hover:text-black font-bold text-xl">
+                ✕
+            </button>
+
+
+            <!-- TABS -->
+            <div class="flex border-b border-slate-100 mb-6">
+
+                <button
+                    id="loginTabBtn"
+                    onclick="playClickSound(); switchForm('login')"
+                    class="w-1/2 py-3 text-center font-bold text-black border-b-2 border-black transition flex items-center justify-center gap-2">
+                    <i data-lucide="key-round" class="w-4 h-4"></i>
+                    เข้าสู่ระบบ
+                </button>
+
+                <button
+                    id="registerTabBtn"
+                    onclick="playClickSound(); switchForm('register')"
+                    class="w-1/2 py-3 text-center font-semibold text-slate-400 hover:text-black border-b-2 border-transparent transition flex items-center justify-center gap-2">
+                    <i data-lucide="user-plus" class="w-4 h-4"></i>
+                    สมัครสมาชิก
+                </button>
+
+            </div>
+
+
+            <!-- LOGIN FORM -->
+            <form id="loginForm" onsubmit="handleAuth(event, 'login')" class="space-y-4">
+
+                <div>
+                    <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1 flex items-center gap-1">
+                        <i data-lucide="mail" class="w-3.5 h-3.5"></i>
+                        อีเมล
+                    </label>
+                    <input type="email" id="loginEmail" required placeholder="name@example.com"
+                           class="w-full px-4 py-3 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-black transition text-sm">
+                </div>
+
+                <div>
+                    <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1 flex items-center gap-1">
+                        <i data-lucide="lock" class="w-3.5 h-3.5"></i>
+                        รหัสผ่าน
+                    </label>
+                    <div class="relative">
+                        <input type="password" id="loginPassword" required placeholder="••••••••"
+                               class="w-full px-4 py-3 pr-10 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-black transition text-sm">
+                        <button type="button"
+                                onclick="playClickSound(); togglePasswordVisibility('loginPassword', this)"
+                                class="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-black focus:outline-none p-1">
+                            <i data-lucide="eye" class="w-4 h-4"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <button type="submit" onclick="playClickSound()"
+                        class="w-full bg-black hover:bg-slate-800 text-white font-semibold py-3.5 rounded-xl shadow-md transition active:scale-95 flex items-center justify-center gap-2">
+                    <i data-lucide="check-circle" class="w-4 h-4"></i>
+                    ยืนยันเข้าสู่ระบบ
+                </button>
+
+            </form>
+
+
+            <!-- REGISTER FORM -->
+            <form id="registerForm" onsubmit="handleAuth(event, 'register')" class="space-y-4 hidden">
+
+                <div>
+                    <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1 flex items-center gap-1">
+                        <i data-lucide="mail" class="w-3.5 h-3.5"></i>
+                        อีเมล
+                    </label>
+                    <input type="email" id="regEmail" required placeholder="name@example.com"
+                           class="w-full px-4 py-3 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-black transition text-sm">
+                </div>
+
+                <div>
+                    <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1 flex items-center gap-1">
+                        <i data-lucide="lock" class="w-3.5 h-3.5"></i>
+                        รหัสผ่าน
+                    </label>
+                    <div class="relative">
+                        <input type="password" id="regPassword" required minlength="6" placeholder="อย่างน้อย 6 ตัวอักษร"
+                               class="w-full px-4 py-3 pr-10 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-black transition text-sm">
+                        <button type="button"
+                                onclick="playClickSound(); togglePasswordVisibility('regPassword', this)"
+                                class="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-black focus:outline-none p-1">
+                            <i data-lucide="eye" class="w-4 h-4"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <button type="submit" onclick="playClickSound()"
+                        class="w-full bg-black hover:bg-slate-800 text-white font-semibold py-3.5 rounded-xl shadow-md transition active:scale-95 flex items-center justify-center gap-2">
+                    <i data-lucide="user-check" class="w-4 h-4"></i>
+                    ยืนยันสมัครสมาชิก
+                </button>
+
+            </form>
+
+        </div>
+    </div>
+
+
+    <!-- =========================
+         TOP UP MODAL
+    ========================== -->
+    <div id="topUpModal"
+         class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
+
+        <div class="bg-white rounded-3xl shadow-2xl border border-slate-100 w-full max-w-md p-6 sm:p-8 relative text-center">
+
+            <button onclick="playClickSound(); toggleTopUpModal(false)"
+                    class="absolute top-5 right-5 text-slate-400 hover:text-black font-bold text-xl">
+                ✕
+            </button>
+
+            <div class="w-16 h-16 bg-amber-100 text-amber-600 rounded-2xl flex items-center justify-center mx-auto mb-4">
+                <i data-lucide="alert-triangle" class="w-8 h-8"></i>
+            </div>
+
+            <h3 class="text-xl font-bold text-slate-900 mb-2">
+                ปิดปรับปรุงระบบเติมเงิน
+            </h3>
+
+            <p class="text-slate-500 text-sm leading-relaxed mb-6">
+                ระบบเติมเงินชั่วคราวอยู่ระหว่างการพัฒนาระบบ
+                ขออภัยในความไม่สะดวกครับ
+            </p>
+
+            <button onclick="playClickSound(); toggleTopUpModal(false)"
+                    class="w-full bg-slate-900 hover:bg-black text-white font-semibold py-3 rounded-xl transition active:scale-95">
+                รับทราบ
             </button>
 
         </div>
     </div>
 
-    <!-- ANIME STYLE LOADING SCREEN -->
-    <div id="loadingScreen" class="fixed inset-0 bg-slate-950 z-40 hidden flex-col items-center justify-center p-6 transition-opacity duration-700">
-        <div class="absolute w-80 h-80 bg-emerald-500/15 rounded-full blur-3xl glow-pulse pointer-events-none"></div>
-        <div class="relative w-36 h-36 flex items-center justify-center mb-6">
-            <div class="absolute -inset-1 border-2 border-emerald-500/30 border-t-emerald-400 border-r-cyan-400 rounded-full ring-spin-cw shadow-[0_0_15px_rgba(52,211,153,0.3)]"></div>
-            <div class="absolute inset-1 border-2 border-cyan-500/20 border-b-cyan-400 border-l-teal-300 rounded-full ring-spin-ccw"></div>
-            <div class="w-28 h-28 bg-slate-900 border-2 border-slate-700 rounded-full overflow-hidden shadow-2xl z-10 p-1 relative">
-                <img src="https://i.pinimg.com/564x/8e/3c/37/8e3c3757dbd74fa1f9712ee4df2a8dc4.jpg" alt="Anime Character" class="w-full h-full object-cover rounded-full">
-            </div>
-        </div>
-        <h2 class="text-2xl font-black tracking-widest text-white mb-1">GPS SHOP</h2>
-        <div class="flex items-center gap-2 mb-4">
-            <p id="loadingStatusText" class="text-xs font-semibold tracking-wider text-emerald-400 uppercase">กำลังเชื่อมต่อระบบ...</p>
-            <span id="loadingPercent" class="text-xs font-mono font-bold text-cyan-400">0%</span>
-        </div>
-        <div class="w-64 bg-slate-900/90 h-2 rounded-full overflow-hidden p-0.5 border border-slate-800 shadow-inner relative">
-            <div id="progressBar" class="bg-gradient-to-r from-emerald-400 via-teal-400 to-cyan-400 h-full rounded-full w-0 transition-all duration-[3000ms] ease-out shadow-[0_0_12px_rgba(52,211,153,0.6)]"></div>
-        </div>
-    </div>
 
-    <!-- NAVBAR -->
-    <header class="w-full bg-white/90 backdrop-blur-md border-b border-slate-200/80 sticky top-0 z-30">
-        <div class="max-w-6xl mx-auto px-4 sm:px-6 h-20 flex items-center justify-between gap-4">
-            <div class="flex items-center gap-3 shrink-0">
-                <div class="w-10 h-10 bg-black rounded-xl flex items-center justify-center font-extrabold text-white text-sm tracking-wider shadow-sm">
-                    GPS
-                </div>
-                <span class="text-xl font-extrabold tracking-tight text-slate-900">GPS SHOP</span>
-            </div>
-
-            <div id="authContainer" class="flex items-center gap-2 sm:gap-3">
-                <button onclick="playClickSound(); reVerifyCaptcha()" class="bg-slate-100 hover:bg-slate-200 text-slate-700 font-semibold px-3 py-2 rounded-xl text-xs transition flex items-center gap-1.5 border border-slate-200" title="ตรวจสอบความปลอดภัย reCAPTCHA">
-                    <i data-lucide="shield-check" class="w-4 h-4 text-emerald-600"></i>
-                    <span class="hidden sm:inline">reCAPTCHA</span>
-                </button>
-
-                <button id="openAuthBtn" onclick="playClickSound(); toggleAuthModal(true)" class="bg-black hover:bg-slate-800 text-white font-semibold px-4 sm:px-5 py-2.5 rounded-xl shadow-sm transition active:scale-95 text-xs sm:text-sm flex items-center gap-2">
-                    <i data-lucide="log-in" class="w-4 h-4"></i>
-                    <span>เข้าสู่ระบบ / สมัครสมาชิก</span>
-                </button>
-
-                <!-- USER PROFILE -->
-                <div id="userProfile" class="hidden flex items-center gap-2.5 bg-slate-50 border border-slate-200 p-1.5 pl-3 rounded-2xl shadow-sm max-w-[280px] sm:max-w-sm">
-                    <div id="emailAvatar" class="w-9 h-9 bg-black text-white rounded-xl flex items-center justify-center font-bold text-base uppercase shadow-sm shrink-0 overflow-hidden">
-                        <span id="avatarLetter">U</span>
-                        <img id="avatarImg" class="w-full h-full object-cover hidden" alt="Discord Avatar">
-                    </div>
-                    <div class="text-left min-w-0 flex-1">
-                        <p id="displayEmail" class="text-xs font-bold text-slate-900 leading-tight truncate max-w-[100px] sm:max-w-[130px]" title="User">User</p>
-                        <div class="flex items-center gap-1.5 mt-0.5">
-                            <span class="text-xs font-extrabold text-emerald-600 truncate">฿<span id="userBalance">0.00</span></span>
-                            <button onclick="playClickSound(); toggleTopUpModal(true)" class="text-[10px] bg-amber-100 text-amber-700 hover:bg-amber-200 font-bold px-2 py-0.5 rounded-md transition flex items-center gap-1 shrink-0">
-                                <i data-lucide="wallet" class="w-3 h-3"></i> เติมเงิน
-                            </button>
-                        </div>
-                    </div>
-                    <button onclick="playClickSound(); logout()" class="text-xs text-red-500 hover:text-red-700 bg-red-50 hover:bg-red-100 font-medium p-2 rounded-xl transition shrink-0" title="ออกจากระบบ">
-                        <i data-lucide="log-out" class="w-4 h-4"></i>
-                    </button>
-                </div>
-            </div>
-        </div>
-    </header>
-
-    <!-- AUTH MODAL -->
-    <div id="authModal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
-        <div class="bg-white rounded-3xl shadow-2xl border border-slate-100 w-full max-w-md p-6 sm:p-8 relative">
-            <button onclick="playClickSound(); toggleAuthModal(false)" class="absolute top-5 right-5 text-slate-400 hover:text-black font-bold text-xl">✕</button>
-
-            <div class="flex border-b border-slate-100 mb-6">
-                <button id="loginTabBtn" onclick="playClickSound(); switchForm('login')" class="w-1/2 py-3 text-center font-bold text-black border-b-2 border-black transition flex items-center justify-center gap-2">
-                    <i data-lucide="key-round" class="w-4 h-4"></i> เข้าสู่ระบบ
-                </button>
-                <button id="registerTabBtn" onclick="playClickSound(); switchForm('register')" class="w-1/2 py-3 text-center font-semibold text-slate-400 hover:text-black border-b-2 border-transparent transition flex items-center justify-center gap-2">
-                    <i data-lucide="user-plus" class="w-4 h-4"></i> สมัครสมาชิก
-                </button>
-            </div>
-
-            <!-- Form: เข้าสู่ระบบ -->
-            <form id="loginForm" onsubmit="handleAuth(event, 'login')" class="space-y-4">
-                <div>
-                    <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1 flex items-center gap-1">
-                        <i data-lucide="mail" class="w-3.5 h-3.5"></i> อีเมล
-                    </label>
-                    <input type="email" id="loginEmail" required placeholder="name@example.com" class="w-full px-4 py-3 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-black transition text-sm">
-                </div>
-                <div>
-                    <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1 flex items-center gap-1">
-                        <i data-lucide="lock" class="w-3.5 h-3.5"></i> รหัสผ่าน
-                    </label>
-                    <div class="relative">
-                        <input type="password" id="loginPassword" required placeholder="••••••••" class="w-full px-4 py-3 pr-10 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-black transition text-sm">
-                        <button type="button" onclick="playClickSound(); togglePasswordVisibility('loginPassword', this)" class="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-black focus:outline-none p-1">
-                            <i data-lucide="eye" class="w-4 h-4"></i>
-                        </button>
-                    </div>
-                </div>
-
-                <button type="submit" onclick="playClickSound()" class="w-full bg-black hover:bg-slate-800 text-white font-semibold py-3.5 rounded-xl shadow-md transition active:scale-95 flex items-center justify-center gap-2">
-                    <i data-lucide="check-circle" class="w-4 h-4"></i> ยืนยันเข้าสู่ระบบ
-                </button>
-            </form>
-
-            <!-- Form: สมัครสมาชิก -->
-            <form id="registerForm" onsubmit="handleAuth(event, 'register')" class="space-y-4 hidden">
-                <div>
-                    <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1 flex items-center gap-1">
-                        <i data-lucide="mail" class="w-3.5 h-3.5"></i> อีเมล
-                    </label>
-                    <input type="email" id="regEmail" required placeholder="name@example.com" class="w-full px-4 py-3 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-black transition text-sm">
-                </div>
-                <div>
-                    <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1 flex items-center gap-1">
-                        <i data-lucide="lock" class="w-3.5 h-3.5"></i> รหัสผ่าน
-                    </label>
-                    <div class="relative">
-                        <input type="password" id="regPassword" required placeholder="อย่างน้อย 6 ตัวอักษร" class="w-full px-4 py-3 pr-10 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-black transition text-sm">
-                        <button type="button" onclick="playClickSound(); togglePasswordVisibility('regPassword', this)" class="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-black focus:outline-none p-1">
-                            <i data-lucide="eye" class="w-4 h-4"></i>
-                        </button>
-                    </div>
-                </div>
-
-                <button type="submit" onclick="playClickSound()" class="w-full bg-black hover:bg-slate-800 text-white font-semibold py-3.5 rounded-xl shadow-md transition active:scale-95 flex items-center justify-center gap-2">
-                    <i data-lucide="user-check" class="w-4 h-4"></i> ยืนยันสมัครสมาชิก
-                </button>
-            </form>
-
-            <div class="relative flex py-2 items-center my-4">
-                <div class="flex-grow border-t border-slate-200"></div>
-                <span class="flex-shrink mx-4 text-xs font-semibold text-slate-400 uppercase">หรือ</span>
-                <div class="flex-grow border-t border-slate-200"></div>
-            </div>
-
-            <div>
-                <a href="https://discord.com/oauth2/authorize?client_id=1532644387639660627&response_type=code&redirect_uri=https%3A%2F%2Fdhaf-shop.onrender.com%2F&scope=identify" onclick="playClickSound()" class="w-full bg-[#5865F2] hover:bg-[#4752C4] text-white font-bold py-3 px-4 rounded-xl shadow-md transition active:scale-95 flex items-center justify-center gap-3 text-sm">
-                    <svg class="w-5 h-5 fill-current" viewBox="0 0 127.14 96.36">
-                        <path d="M107.7,8.07A105.15,105.15,0,0,0,81.47,0a72.06,72.06,0,0,0-3.36,6.83A97.68,97.68,0,0,0,49,6.83,72.37,72.37,0,0,0,45.64,0,105.89,105.89,0,0,0,19.39,8.09C2.79,32.65-1.71,56.6.54,80.21h0A105.73,105.73,0,0,0,32.71,96.36,77.7,77.7,0,0,0,39.6,85.25a68.42,68.42,0,0,1-10.85-5.18c.91-.66,1.8-1.34,2.66-2a75.57,75.57,0,0,0,64.32,0c.87.71,1.76,1.39,2.66,2a68.68,68.68,0,0,1-10.87,5.19,77,77,0,0,0,6.89,11.1,105.25,105.25,0,0,0,32.19-16.14c2.64-27.38-4.51-51.11-18.91-72.15ZM42.45,65.69C36.18,65.69,31,60,31,53s5-12.74,11.43-12.74S54,45.91,53.87,53,48.83,65.69,42.45,65.69Zm42.24,0C78.41,65.69,73.25,60,73.25,53s5-12.74,11.44-12.74S96.23,45.91,96.1,53,91.08,65.69,84.69,65.69Z"/>
-                    </svg>
-                    <span>เข้าสู่ระบบด้วย Discord</span>
-                </a>
-            </div>
-        </div>
-    </div>
-
-    <!-- TOP-UP MODAL -->
-    <div id="topUpModal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
-        <div class="bg-white rounded-3xl shadow-2xl border border-slate-100 w-full max-w-md p-6 sm:p-8 relative text-center">
-            <button onclick="playClickSound(); toggleTopUpModal(false)" class="absolute top-5 right-5 text-slate-400 hover:text-black font-bold text-xl">✕</button>
-            <div class="w-16 h-16 bg-amber-100 text-amber-600 rounded-2xl flex items-center justify-center mx-auto mb-4">
-                <i data-lucide="alert-triangle" class="w-8 h-8"></i>
-            </div>
-            <h3 class="text-xl font-bold text-slate-900 mb-2">ปิดปรับปรุงระบบเติมเงิน</h3>
-            <p class="text-slate-500 text-sm leading-relaxed mb-6">ระบบเติมเงินชั่วคราวอยู่ระหว่างการพัฒนาระบบ ขออภัยในความไม่สะดวกครับ</p>
-            <button onclick="playClickSound(); toggleTopUpModal(false)" class="w-full bg-slate-900 hover:bg-black text-white font-semibold py-3 rounded-xl transition active:scale-95">รับทราบ</button>
-        </div>
-    </div>
-
-    <!-- MAIN CONTENT -->
+    <!-- =========================
+         MAIN CONTENT
+    ========================== -->
     <main class="max-w-6xl mx-auto px-6 py-12">
+
         <div class="text-center max-w-3xl mx-auto mb-20">
+
             <div class="inline-flex items-center gap-2 px-4 py-2 bg-slate-100 rounded-full border border-slate-200 text-slate-700 text-xs font-semibold mb-6 shadow-sm">
                 <i data-lucide="sparkles" class="w-4 h-4 text-amber-500"></i>
-                <span>แพลตฟอร์มเติมเกมและไอเทมดิจิทัล อันดับ #1</span>
+                <span>แพลตฟอร์มสินค้าและบริการดิจิทัล</span>
             </div>
+
             <h1 class="text-4xl sm:text-6xl font-black text-slate-900 tracking-tight leading-tight mb-6">
-                เติมไว มั่นใจ ปลอดภัย<br><span class="text-black bg-slate-200/60 px-3 py-1 rounded-2xl inline-block mt-1">GPS SHOP</span>
+                เติมไว มั่นใจ ปลอดภัย
+                <br>
+                <span class="text-black bg-slate-200/60 px-3 py-1 rounded-2xl inline-block mt-1">
+                    Skey Shop
+                </span>
             </h1>
+
             <p class="text-base sm:text-lg text-slate-600 leading-relaxed mb-8 max-w-2xl mx-auto">
-                บริการเติมเงินเกมและสินค้าดิจิทัลครบวงจร ด้วยระบบจัดส่งอัตโนมัติ 24 ชั่วโมง รวดเร็ว ทันใจ ในราคาที่คุ้มค่าที่สุด
+                บริการสินค้าและบริการดิจิทัลครบวงจร
+                รวดเร็ว ทันใจ และใช้งานง่าย
             </p>
+
+
+            <!-- SHOP FEATURES -->
+            <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 mt-10">
+
+                <div class="bg-white border border-slate-200 rounded-2xl p-5 shadow-sm">
+                    <div class="w-11 h-11 bg-emerald-100 text-emerald-600 rounded-xl flex items-center justify-center mx-auto mb-3">
+                        <i data-lucide="zap" class="w-5 h-5"></i>
+                    </div>
+                    <h3 class="font-bold text-slate-900">รวดเร็ว</h3>
+                    <p class="text-xs text-slate-500 mt-1">ระบบทำงานรวดเร็ว</p>
+                </div>
+
+                <div class="bg-white border border-slate-200 rounded-2xl p-5 shadow-sm">
+                    <div class="w-11 h-11 bg-blue-100 text-blue-600 rounded-xl flex items-center justify-center mx-auto mb-3">
+                        <i data-lucide="shield-check" class="w-5 h-5"></i>
+                    </div>
+                    <h3 class="font-bold text-slate-900">ปลอดภัย</h3>
+                    <p class="text-xs text-slate-500 mt-1">ระบบตรวจสอบความปลอดภัย</p>
+                </div>
+
+                <div class="bg-white border border-slate-200 rounded-2xl p-5 shadow-sm">
+                    <div class="w-11 h-11 bg-purple-100 text-purple-600 rounded-xl flex items-center justify-center mx-auto mb-3">
+                        <i data-lucide="headphones" class="w-5 h-5"></i>
+                    </div>
+                    <h3 class="font-bold text-slate-900">ดูแลลูกค้า</h3>
+                    <p class="text-xs text-slate-500 mt-1">พร้อมให้บริการลูกค้า</p>
+                </div>
+
+            </div>
+
         </div>
+
     </main>
 
+
+    <!-- =========================
+         FOOTER
+    ========================== -->
     <footer class="w-full border-t border-slate-200 bg-white py-6 text-center text-xs font-medium text-slate-500">
-        © 2026 GPS SHOP. All rights reserved.
+        © 2026 Skey Shop. All rights reserved.
     </footer>
 
-    <!-- JAVASCRIPT LOGIC -->
+
+    <!-- =========================
+         JAVASCRIPT
+    ========================== -->
     <script>
+
+        /* =========================
+           CLICK SOUND
+        ========================== */
         function playClickSound() {
             try {
-                const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-                const osc = audioCtx.createOscillator();
+                const AudioContext = window.AudioContext || window.webkitAudioContext;
+                const audioCtx = new AudioContext();
+                const oscillator = audioCtx.createOscillator();
                 const gain = audioCtx.createGain();
-                osc.type = 'sine';
-                osc.frequency.setValueAtTime(600, audioCtx.currentTime);
-                osc.frequency.exponentialRampToValueAtTime(120, audioCtx.currentTime + 0.08);
+
+                oscillator.type = 'sine';
+                oscillator.frequency.setValueAtTime(600, audioCtx.currentTime);
+                oscillator.frequency.exponentialRampToValueAtTime(120, audioCtx.currentTime + 0.08);
                 gain.gain.setValueAtTime(0.15, audioCtx.currentTime);
                 gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.08);
-                osc.connect(gain);
+
+                oscillator.connect(gain);
                 gain.connect(audioCtx.destination);
-                osc.start();
-                osc.stop(audioCtx.currentTime + 0.08);
+                oscillator.start();
+                oscillator.stop(audioCtx.currentTime + 0.08);
             } catch (e) {}
         }
 
+
+        /* =========================
+           PAGE LOAD
+        ========================== */
         window.addEventListener('DOMContentLoaded', () => {
             lucide.createIcons();
             checkPersistedLogin();
-            handleDiscordCallback();
         });
 
+
+        /* =========================
+           CAPTCHA
+        ========================== */
         function onInitialCaptchaSuccess() {
-            const initialModal = document.getElementById('initialSecurityModal');
-            initialModal.classList.add('opacity-0', 'pointer-events-none');
+            const modal = document.getElementById('initialSecurityModal');
+            modal.classList.add('opacity-0', 'pointer-events-none');
+
             setTimeout(() => {
-                initialModal.classList.add('hidden');
+                modal.classList.add('hidden');
                 startLoadingScreen();
             }, 400);
         }
+
 
         function triggerCaptchaClick() {
             if (typeof grecaptcha !== 'undefined' && grecaptcha.getResponse().length > 0) {
                 onInitialCaptchaSuccess();
             } else {
-                alert('กรุณาติ๊กช่อง "ฉันไม่ใช่โปรแกรมอัตโนมัติ" ในกล่องด้านบนก่อนครับ');
+                alert('กรุณาติ๊กช่อง "ฉันไม่ใช่โปรแกรมอัตโนมัติ" ก่อนครับ');
             }
         }
+
 
         function reVerifyCaptcha() {
-            const initialModal = document.getElementById('initialSecurityModal');
+            const modal = document.getElementById('initialSecurityModal');
+            const card = document.getElementById('securityCard');
+
             if (typeof grecaptcha !== 'undefined') {
-                grecaptcha.reset();
+                try { grecaptcha.reset(); } catch (e) {}
             }
-            initialModal.classList.remove('hidden', 'opacity-0', 'pointer-events-none');
+
+            modal.classList.remove('hidden', 'opacity-0', 'pointer-events-none');
+
+            /* เล่นอนิเมชันการ์ดเด้งขึ้นใหม่ */
+            if (card) {
+                card.classList.remove('modal-enter');
+                void card.offsetWidth;
+                card.classList.add('modal-enter');
+            }
         }
 
+
+        /* =========================
+           LOADING
+        ========================== */
         function startLoadingScreen() {
             const loadingScreen = document.getElementById('loadingScreen');
             loadingScreen.classList.remove('hidden');
@@ -286,107 +688,88 @@
             const progressBar = document.getElementById('progressBar');
             const statusText = document.getElementById('loadingStatusText');
             const percentText = document.getElementById('loadingPercent');
-            
+
             let percent = 0;
+
             const interval = setInterval(() => {
                 percent += Math.floor(Math.random() * 8) + 2;
                 if (percent > 100) percent = 100;
+
                 if (percentText) percentText.innerText = percent + '%';
-                
+
                 if (percent >= 35 && percent < 75) {
-                    if (statusText) statusText.innerText = "กำลังตรวจสอบความปลอดภัย...";
+                    statusText.innerText = 'กำลังตรวจสอบความปลอดภัย...';
                 } else if (percent >= 75 && percent < 100) {
-                    if (statusText) statusText.innerText = "กำลังโหลดข้อมูลร้านค้า...";
+                    statusText.innerText = 'กำลังโหลดข้อมูลร้านค้า...';
                 } else if (percent === 100) {
-                    if (statusText) statusText.innerText = "พร้อมใช้งานแล้ว!";
+                    statusText.innerText = 'พร้อมใช้งานแล้ว!';
                     clearInterval(interval);
                 }
             }, 120);
 
-            setTimeout(() => { if (progressBar) progressBar.style.width = '100%'; }, 100);
+            setTimeout(() => {
+                if (progressBar) progressBar.style.width = '100%';
+            }, 100);
+
             setTimeout(() => {
                 if (loadingScreen) {
                     loadingScreen.style.opacity = '0';
-                    setTimeout(() => { loadingScreen.classList.add('hidden'); }, 700);
+                    setTimeout(() => {
+                        loadingScreen.classList.add('hidden');
+                        loadingScreen.style.opacity = '1';
+                    }, 700);
                 }
             }, 3600);
         }
 
-        // ปรับปรุงการตรวจสอบ Discord Callback ป้องกัน Crash
-        async function handleDiscordCallback() {
-            const urlParams = new URLSearchParams(window.location.search);
-            const code = urlParams.get('code');
 
-            if (code) {
-                window.history.replaceState({}, document.title, window.location.pathname);
-                
-                try {
-                    const res = await fetch('/api/discord-login', {
-                        method: 'POST',
-                        headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify({ code })
-                    });
-
-                    // เช็คว่า Server ตอบกลับมาสำเร็จหรือไม่
-                    if (!res.ok) {
-                        const errorText = await res.text();
-                        console.error(`Discord Login Server Error (${res.status}):`, errorText);
-                        return;
-                    }
-
-                    // เช็คข้อความดิบก่อนแปลงเป็น JSON
-                    const rawText = await res.text();
-                    if (!rawText) {
-                        console.error("Server ตอบกลับเป็น Body ค่าว่าง (Empty Body)");
-                        return;
-                    }
-
-                    const data = JSON.parse(rawText);
-
-                    if (data && data.username) {
-                        localStorage.setItem('user_email', data.username);
-                        localStorage.setItem('user_avatar', data.avatar || '');
-                        if (!localStorage.getItem('user_balance')) {
-                            localStorage.setItem('user_balance', '0');
-                        }
-                        updateProfileUI(data.username, data.avatar);
-                    }
-                } catch (err) {
-                    console.error("Discord Login Error:", err);
-                }
-            }
-        }
-
+        /* =========================
+           AUTH MODAL
+        ========================== */
         function toggleAuthModal(show) {
             document.getElementById('authModal').classList.toggle('hidden', !show);
         }
+
 
         function toggleTopUpModal(show) {
             document.getElementById('topUpModal').classList.toggle('hidden', !show);
         }
 
+
+        /* =========================
+           LOGIN / REGISTER TAB
+        ========================== */
         function switchForm(type) {
             const loginForm = document.getElementById('loginForm');
             const registerForm = document.getElementById('registerForm');
-            const loginTabBtn = document.getElementById('loginTabBtn');
-            const registerTabBtn = document.getElementById('registerTabBtn');
+            const loginTab = document.getElementById('loginTabBtn');
+            const registerTab = document.getElementById('registerTabBtn');
+
+            const activeClass = 'w-1/2 py-3 text-center font-bold text-black border-b-2 border-black transition flex items-center justify-center gap-2';
+            const inactiveClass = 'w-1/2 py-3 text-center font-semibold text-slate-400 hover:text-black border-b-2 border-transparent transition flex items-center justify-center gap-2';
 
             if (type === 'login') {
                 loginForm.classList.remove('hidden');
                 registerForm.classList.add('hidden');
-                loginTabBtn.className = "w-1/2 py-3 text-center font-bold text-black border-b-2 border-black transition flex items-center justify-center gap-2";
-                registerTabBtn.className = "w-1/2 py-3 text-center font-semibold text-slate-400 hover:text-black border-b-2 border-transparent transition flex items-center justify-center gap-2";
+                loginTab.className = activeClass;
+                registerTab.className = inactiveClass;
             } else {
                 loginForm.classList.add('hidden');
                 registerForm.classList.remove('hidden');
-                registerTabBtn.className = "w-1/2 py-3 text-center font-bold text-black border-b-2 border-black transition flex items-center justify-center gap-2";
-                loginTabBtn.className = "w-1/2 py-3 text-center font-semibold text-slate-400 hover:text-black border-b-2 border-transparent transition flex items-center justify-center gap-2";
+                registerTab.className = activeClass;
+                loginTab.className = inactiveClass;
             }
+
             lucide.createIcons();
         }
 
+
+        /* =========================
+           PASSWORD VISIBILITY
+        ========================== */
         function togglePasswordVisibility(inputId, btn) {
             const input = document.getElementById(inputId);
+
             if (input.type === 'password') {
                 input.type = 'text';
                 btn.innerHTML = '<i data-lucide="eye-off" class="w-4 h-4"></i>';
@@ -394,65 +777,122 @@
                 input.type = 'password';
                 btn.innerHTML = '<i data-lucide="eye" class="w-4 h-4"></i>';
             }
+
             lucide.createIcons();
         }
 
+
+        /* =========================
+           LOGIN / REGISTER
+        ========================== */
         function handleAuth(e, formType) {
             e.preventDefault();
-            const email = formType === 'login' 
-                ? document.getElementById('loginEmail').value 
-                : document.getElementById('regEmail').value;
 
-            if (email) {
-                localStorage.setItem('user_email', email);
-                localStorage.removeItem('user_avatar');
-                if (!localStorage.getItem('user_balance')) {
-                    localStorage.setItem('user_balance', '0');
-                }
-                updateProfileUI(email, null);
-                toggleAuthModal(false);
+            let email, password;
+
+            if (formType === 'login') {
+                email = document.getElementById('loginEmail').value.trim();
+                password = document.getElementById('loginPassword').value;
+            } else {
+                email = document.getElementById('regEmail').value.trim();
+                password = document.getElementById('regPassword').value;
             }
+
+            if (!email || !password) {
+                alert('กรุณากรอกข้อมูลให้ครบ');
+                return;
+            }
+
+            if (formType === 'register' && password.length < 6) {
+                alert('รหัสผ่านต้องมีอย่างน้อย 6 ตัวอักษร');
+                return;
+            }
+
+            localStorage.setItem('user_email', email);
+
+            if (!localStorage.getItem('user_balance')) {
+                localStorage.setItem('user_balance', '0');
+            }
+
+            updateProfileUI(email);
+            toggleAuthModal(false);
         }
 
+
+        /* =========================
+           CHECK LOGIN
+        ========================== */
         function checkPersistedLogin() {
             const savedEmail = localStorage.getItem('user_email');
-            const savedAvatar = localStorage.getItem('user_avatar');
             if (savedEmail) {
-                updateProfileUI(savedEmail, savedAvatar);
+                updateProfileUI(savedEmail);
             }
         }
 
-        function updateProfileUI(email, avatarUrl) {
-            const balance = parseFloat(localStorage.getItem('user_balance') || '0').toFixed(2);
+
+        /* =========================
+           ย่ออีเมล เช่น johndoe@gmail.com → jo***@gmail.com
+        ========================== */
+        function abbreviateEmail(email) {
+            const parts = email.split('@');
+
+            if (parts.length !== 2 || !parts[0]) {
+                return email;
+            }
+
+            const username = parts[0];
+            const domain = parts[1];
+
+            const shortUser = username.length <= 2
+                ? username.charAt(0) + '***'
+                : username.substring(0, 2) + '***';
+
+            return shortUser + '@' + domain;
+        }
+
+
+        /* =========================
+           PROFILE
+        ========================== */
+        function updateProfileUI(email) {
+            const balance =
+                parseFloat(localStorage.getItem('user_balance') || '0').toFixed(2);
+
             document.getElementById('openAuthBtn').classList.add('hidden');
             document.getElementById('userProfile').classList.remove('hidden');
-            
-            const avatarImg = document.getElementById('avatarImg');
-            const avatarLetter = document.getElementById('avatarLetter');
 
-            if (avatarUrl) {
-                avatarImg.src = avatarUrl;
-                avatarImg.classList.remove('hidden');
-                avatarLetter.classList.add('hidden');
-            } else {
-                avatarImg.classList.add('hidden');
-                avatarLetter.classList.remove('hidden');
-                avatarLetter.innerText = email.charAt(0).toUpperCase();
-            }
-            
-            const displayEmailElem = document.getElementById('displayEmail');
-            displayEmailElem.innerText = email;
-            displayEmailElem.title = email;
+            document.getElementById('avatarLetter').innerText =
+                email.charAt(0).toUpperCase();
+
+            document.getElementById('displayEmail').innerText = abbreviateEmail(email);
+            document.getElementById('displayEmail').title = email;
 
             document.getElementById('userBalance').innerText = balance;
+
             lucide.createIcons();
         }
 
+
+        /* =========================
+           LOGOUT
+        ========================== */
         function logout() {
             localStorage.removeItem('user_email');
-            localStorage.removeItem('user_avatar');
             location.reload();
         }
+
+
+        /* =========================
+           ESC KEY
+        ========================== */
+        document.addEventListener('keydown', function (event) {
+            if (event.key === 'Escape') {
+                toggleAuthModal(false);
+                toggleTopUpModal(false);
+            }
+        });
+
     </script>
+
 </body>
 </html>
