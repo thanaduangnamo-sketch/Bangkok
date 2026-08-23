@@ -17,10 +17,10 @@
         } 
         /* Loading Animations */
         .ring-spin-cw {
-            animation: spin 3s linear infinite;
+            animation: spin 4s linear infinite;
         }
         .ring-spin-ccw {
-            animation: spin-reverse 2s linear infinite;
+            animation: spin-reverse 3s linear infinite;
         }
         .glow-pulse {
             animation: pulse-glow 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
@@ -34,36 +34,43 @@
             to { transform: rotate(0deg); }
         }
         @keyframes pulse-glow {
-            0%, 100% { opacity: 0.4; transform: scale(0.95); }
-            50% { opacity: 0.9; transform: scale(1.08); }
+            0%, 100% { opacity: 0.3; transform: scale(0.95); }
+            50% { opacity: 0.8; transform: scale(1.1); }
         }
     </style>
 </head>
 <body class="min-h-screen flex flex-col justify-between text-slate-800">
 
-    <!-- NEW MODERN LOADING SCREEN -->
+    <!-- ANIME STYLE LOADING SCREEN -->
     <div id="loadingScreen" class="fixed inset-0 bg-slate-950 z-50 flex flex-col items-center justify-center p-6 transition-opacity duration-700">
         <!-- Background Ambient Glow -->
-        <div class="absolute w-72 h-72 bg-emerald-500/10 rounded-full blur-3xl glow-pulse pointer-events-none"></div>
+        <div class="absolute w-80 h-80 bg-emerald-500/15 rounded-full blur-3xl glow-pulse pointer-events-none"></div>
 
-        <div class="relative w-28 h-28 flex items-center justify-center mb-8">
-            <!-- Outer Orbit Ring -->
-            <div class="absolute inset-0 border-2 border-slate-800 border-t-emerald-400 rounded-full ring-spin-cw"></div>
-            <!-- Inner Orbit Ring -->
-            <div class="absolute inset-2 border-2 border-slate-800 border-b-cyan-400 rounded-full ring-spin-ccw"></div>
+        <!-- Anime Character Circle Frame -->
+        <div class="relative w-36 h-36 flex items-center justify-center mb-6">
+            <!-- Outer Neon Orbit Ring -->
+            <div class="absolute -inset-1 border-2 border-emerald-500/30 border-t-emerald-400 border-r-cyan-400 rounded-full ring-spin-cw shadow-[0_0_15px_rgba(52,211,153,0.3)]"></div>
+            <!-- Inner Cyan Orbit Ring -->
+            <div class="absolute inset-1 border-2 border-cyan-500/20 border-b-cyan-400 border-l-teal-300 rounded-full ring-spin-ccw"></div>
             
-            <!-- Logo Box -->
-            <div class="w-16 h-16 bg-slate-900 border border-slate-700/80 rounded-2xl flex items-center justify-center shadow-2xl z-10">
-                <span class="font-black text-white text-xl tracking-widest bg-gradient-to-r from-emerald-400 to-cyan-400 bg-clip-text text-transparent">GPS</span>
+            <!-- Character Avatar Box -->
+            <div class="w-28 h-28 bg-slate-900 border-2 border-slate-700 rounded-full overflow-hidden shadow-2xl z-10 p-1 relative">
+                <img src="https://i.pinimg.com/564x/8e/3c/37/8e3c3757dbd74fa1f9712ee4df2a8dc4.jpg" alt="Anime Character" class="w-full h-full object-cover rounded-full">
             </div>
         </div>
         
+        <!-- App Title -->
         <h2 class="text-2xl font-black tracking-widest text-white mb-1">GPS SHOP</h2>
-        <p id="loadingStatusText" class="text-xs font-semibold tracking-wider text-emerald-400/90 mb-6 uppercase animate-pulse">Initializing System...</p>
         
-        <!-- Sleek Progress Bar -->
-        <div class="w-64 bg-slate-900/80 h-1.5 rounded-full overflow-hidden p-0.5 border border-slate-800 shadow-inner">
-            <div id="progressBar" class="bg-gradient-to-r from-emerald-400 via-teal-400 to-cyan-400 h-full rounded-full w-0 transition-all duration-[3000ms] ease-out shadow-[0_0_12px_rgba(52,211,153,0.5)]"></div>
+        <!-- Animated Loading Status Text -->
+        <div class="flex items-center gap-2 mb-4">
+            <p id="loadingStatusText" class="text-xs font-semibold tracking-wider text-emerald-400 uppercase">กำลังเชื่อมต่อระบบ...</p>
+            <span id="loadingPercent" class="text-xs font-mono font-bold text-cyan-400">0%</span>
+        </div>
+        
+        <!-- Progress Bar -->
+        <div class="w-64 bg-slate-900/90 h-2 rounded-full overflow-hidden p-0.5 border border-slate-800 shadow-inner relative">
+            <div id="progressBar" class="bg-gradient-to-r from-emerald-400 via-teal-400 to-cyan-400 h-full rounded-full w-0 transition-all duration-[3000ms] ease-out shadow-[0_0_12px_rgba(52,211,153,0.6)]"></div>
         </div>
     </div>
 
@@ -320,25 +327,35 @@
             const progressBar = document.getElementById('progressBar');
             const loadingScreen = document.getElementById('loadingScreen');
             const statusText = document.getElementById('loadingStatusText');
+            const percentText = document.getElementById('loadingPercent');
             
+            let percent = 0;
+            const interval = setInterval(() => {
+                percent += Math.floor(Math.random() * 8) + 2;
+                if (percent > 100) percent = 100;
+                
+                if (percentText) percentText.innerText = percent + '%';
+                
+                if (percent >= 35 && percent < 75) {
+                    if (statusText) statusText.innerText = "กำลังตรวจสอบความปลอดภัย...";
+                } else if (percent >= 75 && percent < 100) {
+                    if (statusText) statusText.innerText = "กำลังโหลดข้อมูลร้านค้า...";
+                } else if (percent === 100) {
+                    if (statusText) statusText.innerText = "พร้อมใช้งานแล้ว!";
+                    clearInterval(interval);
+                }
+            }, 120);
+
             setTimeout(() => {
                 if (progressBar) progressBar.style.width = '100%';
             }, 100);
-
-            setTimeout(() => {
-                if (statusText) statusText.innerText = "Connecting Security Engine...";
-            }, 1200);
-
-            setTimeout(() => {
-                if (statusText) statusText.innerText = "System Ready";
-            }, 2600);
 
             setTimeout(() => {
                 if (loadingScreen) {
                     loadingScreen.style.opacity = '0';
                     setTimeout(() => { loadingScreen.style.display = 'none'; }, 700);
                 }
-            }, 3500);
+            }, 3600);
         });
 
         function toggleAuthModal(show) {
