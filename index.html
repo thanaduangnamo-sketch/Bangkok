@@ -4,7 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>GPS Shop - ร้านค้าออนไลน์อย่างเป็นทางการ</title>
-    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- ใช้ Tailwind CSS Production CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
     <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <!-- Lucide Icons -->
     <script src="https://unpkg.com/lucide@latest"></script>
@@ -252,7 +253,6 @@
             handleDiscordCallback();
         });
 
-        // Callback เมื่อกดหรือผ่าน reCAPTCHA
         function onInitialCaptchaSuccess() {
             const initialModal = document.getElementById('initialSecurityModal');
             initialModal.classList.add('opacity-0', 'pointer-events-none');
@@ -312,7 +312,7 @@
             }, 3600);
         }
 
-        // ฟังก์ชันดึง Profile จาก Discord (แก้ไขเพื่อป้องกันปัญหา SyntaxError)
+        // ปรับปรุงการตรวจสอบ Discord Callback ป้องกัน Crash
         async function handleDiscordCallback() {
             const urlParams = new URLSearchParams(window.location.search);
             const code = urlParams.get('code');
@@ -327,13 +327,21 @@
                         body: JSON.stringify({ code })
                     });
 
+                    // เช็คว่า Server ตอบกลับมาสำเร็จหรือไม่
                     if (!res.ok) {
                         const errorText = await res.text();
                         console.error(`Discord Login Server Error (${res.status}):`, errorText);
                         return;
                     }
 
-                    const data = await res.json();
+                    // เช็คข้อความดิบก่อนแปลงเป็น JSON
+                    const rawText = await res.text();
+                    if (!rawText) {
+                        console.error("Server ตอบกลับเป็น Body ค่าว่าง (Empty Body)");
+                        return;
+                    }
+
+                    const data = JSON.parse(rawText);
 
                     if (data && data.username) {
                         localStorage.setItem('user_email', data.username);
