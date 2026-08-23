@@ -2,60 +2,85 @@
 <html lang="th">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>GPS SHOP - Discord Login</title>
+    <style>
+        body { font-family: sans-serif; display: flex; justify-content: center; align-items: center; height: 100vh; margin: 0; background: #0f172a; color: white; }
+        .login-btn { background: #5865F2; color: white; padding: 12px 24px; border: none; border-radius: 8px; font-size: 16px; cursor: pointer; text-decoration: none; font-weight: bold; }
+        .login-btn:hover { background: #4752C4; }
+        #status-text { display: none; font-size: 20px; }
+    </style>
 </head>
 <body>
 
-    <h1>กำลังเข้าสู่ระบบ...</h1>
+    <!-- ปุ่มล็อกอิน (จะแสดงเมื่อเปิดเว็บมาปกติ) -->
+    <a id="login-btn" class="login-btn" href="#">เข้าสู่ระบบด้วย Discord</a>
 
-    <!-- วางสคริปต์ไว้ด้านล่างสุดของ body -->
+    <!-- ข้อความกำลังโหลด (จะแสดงเมื่อมี code กลับมาจาก Discord) -->
+    <div id="status-text">กำลังเข้าสู่ระบบ...</div>
+
     <script>
+      // ⚠️ 1. ใส่ Client ID จริงของคุณตรงนี้ (ดูจาก Discord Developer Portal)
+      const DISCORD_CLIENT_ID = 'ใส่_CLIENT_ID_จริงของคุณ';
+      
+      // Redirect URI ที่ตั้งไว้ใน Discord Portal
+      const REDIRECT_URI = encodeURIComponent(window.location.origin + window.location.pathname);
+
+      // สร้าง Link สำหรับกด OAuth2
+      const discordAuthUrl = `https://discord.com/oauth2/authorize?client_id=${DISCORD_CLIENT_ID}&response_type=code&redirect_uri=${REDIRECT_URI}&scope=identify`;
+      
+      // ตั้งค่า href ให้ปุ่มล็อกอิน
+      document.getElementById('login-btn').href = discordAuthUrl;
+
       async function handleDiscordCallback() {
-        // 1. ดึง URL Parameters เพื่อเอา code ที่ Discord ส่งมา
         const urlParams = new URLSearchParams(window.location.search);
         const code = urlParams.get('code');
 
+        // ถ้าไม่มี code ใน URL ให้แสดงปุ่มล็อกอินตามปกติ
         if (!code) {
-          console.log("ไม่พบ Discord Code ใน URL");
+          console.log("ยังไม่ได้ล็อกอิน ให้แสดงปุ่มกดปกติ");
           return;
         }
 
+        // ถ้ามี code แสดงว่าย้อนกลับมาจาก Discord ให้สลับ UI
+        document.getElementById('login-btn').style.display = 'none';
+        document.getElementById('status-text').style.display = 'block';
+
         try {
-          // 2. ยิง API ไปที่ Backend (เปลี่ยน /api/discord-login เป็น URL API จริงของคุณ)
+          // ยิงส่ง code ไปประมวลผลที่ Backend
           const response = await fetch('/api/discord-login', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ code: code })
           });
 
-          // 3. ตรวจสอบว่า HTTP status OK หรือไม่
           if (!response.ok) {
             const errorText = await response.text();
-            throw new Error(`Server ตอบกลับข้อผิดพลาด (${response.status}): ${errorText}`);
+            throw new Error(`Server Error (${response.status}): ${errorText}`);
           }
 
-          // 4. อ่านข้อมูลเป็น Text ก่อน เพื่อป้องกันปัญหา JSON ค่าว่าง
           const responseText = await response.text();
           if (!responseText) {
             throw new Error("Server ส่งข้อมูลกลับมาเป็นค่าว่าง");
           }
 
-          // 5. แปลงเป็น JSON และใช้งานข้อมูลผู้ใช้
           const userData = JSON.parse(responseText);
-          console.log("ล็อกอินสำเร็จ! ข้อมูลผู้ใช้:", userData);
-          alert(`ยินดีต้อนรับ ${userData.username}!`);
-
-          // (ตัวอย่าง) บันทึกข้อมูลลง LocalStorage แล้วย้ายหน้า
-          localStorage.setItem('user', JSON.stringify(userData));
+          console.log("ล็อกอินสำเร็จ:", userData);
+          
+          document.getElementById('status-text').innerText = `ยินดีต้อนรับ ${userData.username}!`;
+          
+          // บันทึก Session และเปลี่ยนหน้า (ถ้าต้องการ)
+          // localStorage.setItem('user', JSON.stringify(userData));
           // window.location.href = '/dashboard.html';
 
         } catch (error) {
           console.error("Discord Login Error:", error);
+          document.getElementById('status-text').innerText = "เกิดข้อผิดพลาดในการล็อกอิน";
           alert("การล็อกอินล้มเหลว: " + error.message);
         }
       }
 
-      // เรียกทำงานทันทีเมื่อโหลดหน้าเว็บ
+      // เรียกทำงานเมื่อโหลดหน้าเว็บ
       window.addEventListener('DOMContentLoaded', handleDiscordCallback);
     </script>
 </body>
