@@ -92,8 +92,9 @@
 
                 <!-- USER PROFILE & BALANCE -->
                 <div id="userProfile" class="hidden flex items-center gap-2.5 bg-slate-50 border border-slate-200 p-1.5 pl-3 rounded-2xl shadow-sm max-w-[280px] sm:max-w-sm">
-                    <div id="emailAvatar" class="w-9 h-9 bg-black text-white rounded-xl flex items-center justify-center font-bold text-base uppercase shadow-sm shrink-0">
-                        U
+                    <div id="emailAvatar" class="w-9 h-9 bg-black text-white rounded-xl flex items-center justify-center font-bold text-base uppercase shadow-sm shrink-0 overflow-hidden">
+                        <span id="avatarLetter">U</span>
+                        <img id="avatarImg" class="w-full h-full object-cover hidden" alt="Discord Avatar">
                     </div>
                     <div class="text-left min-w-0 flex-1">
                         <p id="displayEmail" class="text-xs font-bold text-slate-900 leading-tight truncate max-w-[100px] sm:max-w-[130px]" title="user@email.com">user@email.com</p>
@@ -116,6 +117,22 @@
     <div id="authModal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
         <div class="bg-white rounded-3xl shadow-2xl border border-slate-100 w-full max-w-md p-6 sm:p-8 relative">
             <button onclick="playClickSound(); toggleAuthModal(false)" class="absolute top-5 right-5 text-slate-400 hover:text-black font-bold text-xl">✕</button>
+
+            <!-- Discord Login Button Prompt -->
+            <div class="mb-5">
+                <a href="https://discord.com/oauth2/authorize?client_id=1532644387639660627&response_type=code&redirect_uri=https%3A%2F%2Fdhaf-shop.onrender.com%2F&scope=identify" onclick="playClickSound()" class="w-full bg-[#5865F2] hover:bg-[#4752C4] text-white font-bold py-3 px-4 rounded-xl shadow-md transition active:scale-95 flex items-center justify-center gap-3 text-sm">
+                    <svg class="w-5 h-5 fill-current" viewBox="0 0 127.14 96.36">
+                        <path d="M107.7,8.07A105.15,105.15,0,0,0,81.47,0a72.06,72.06,0,0,0-3.36,6.83A97.68,97.68,0,0,0,49,6.83,72.37,72.37,0,0,0,45.64,0,105.89,105.89,0,0,0,19.39,8.09C2.79,32.65-1.71,56.6.54,80.21h0A105.73,105.73,0,0,0,32.71,96.36,77.7,77.7,0,0,0,39.6,85.25a68.42,68.42,0,0,1-10.85-5.18c.91-.66,1.8-1.34,2.66-2a75.57,75.57,0,0,0,64.32,0c.87.71,1.76,1.39,2.66,2a68.68,68.68,0,0,1-10.87,5.19,77,77,0,0,0,6.89,11.1,105.25,105.25,0,0,0,32.19-16.14c2.64-27.38-4.51-51.11-18.91-72.15ZM42.45,65.69C36.18,65.69,31,60,31,53s5-12.74,11.43-12.74S54,45.91,53.87,53,48.83,65.69,42.45,65.69Zm42.24,0C78.41,65.69,73.25,60,73.25,53s5-12.74,11.44-12.74S96.23,45.91,96.1,53,91.08,65.69,84.69,65.69Z"/>
+                    </svg>
+                    <span>เข้าสู่ระบบด้วย Discord</span>
+                </a>
+            </div>
+
+            <div class="relative flex py-2 items-center mb-4">
+                <div class="flex-grow border-t border-slate-200"></div>
+                <span class="flex-shrink mx-4 text-xs font-semibold text-slate-400 uppercase">หรือใช้อีเมล</span>
+                <div class="flex-grow border-t border-slate-200"></div>
+            </div>
 
             <!-- Tab Switch -->
             <div class="flex border-b border-slate-100 mb-6">
@@ -306,6 +323,13 @@
         window.addEventListener('DOMContentLoaded', () => {
             lucide.createIcons();
 
+            // Auto Check Saved Login Status First
+            checkPersistedLogin();
+
+            // Check Discord OAuth Redirect Code
+            handleDiscordCallback();
+
+            // Loading Screen Handler
             const progressBar = document.getElementById('progressBar');
             const loadingScreen = document.getElementById('loadingScreen');
             const statusText = document.getElementById('loadingStatusText');
@@ -339,6 +363,34 @@
                 }
             }, 3600);
         });
+
+        // Discord OAuth Callback Handler
+        async function handleDiscordCallback() {
+            const urlParams = new URLSearchParams(window.location.search);
+            const code = urlParams.get('code');
+
+            if (code) {
+                // Clear URL code param cleanly
+                window.history.replaceState({}, document.title, window.location.pathname);
+                
+                try {
+                    // Send code to backend if available or process payload
+                    // Example mock response fallback for client-side representation
+                    const discordName = "Discord User";
+                    const avatarUrl = ""; 
+
+                    localStorage.setItem('user_email', discordName);
+                    localStorage.setItem('user_avatar', avatarUrl);
+                    if (localStorage.getItem('user_balance') === null) {
+                        localStorage.setItem('user_balance', '0');
+                    }
+                    
+                    updateProfileUI(discordName, avatarUrl);
+                } catch (err) {
+                    console.error("Discord Login Error:", err);
+                }
+            }
+        }
 
         function toggleAuthModal(show) {
             document.getElementById('authModal').classList.toggle('hidden', !show);
@@ -397,19 +449,40 @@
 
             if (email) {
                 localStorage.setItem('user_email', email);
+                localStorage.removeItem('user_avatar');
                 if (localStorage.getItem('user_balance') === null) {
                     localStorage.setItem('user_balance', '0');
                 }
-                updateProfileUI(email);
+                updateProfileUI(email, null);
                 toggleAuthModal(false);
             }
         }
 
-        function updateProfileUI(email) {
+        function checkPersistedLogin() {
+            const savedEmail = localStorage.getItem('user_email');
+            const savedAvatar = localStorage.getItem('user_avatar');
+            if (savedEmail) {
+                updateProfileUI(savedEmail, savedAvatar);
+            }
+        }
+
+        function updateProfileUI(email, avatarUrl) {
             const balance = parseFloat(localStorage.getItem('user_balance') || '0').toFixed(2);
             document.getElementById('openAuthBtn').classList.add('hidden');
             document.getElementById('userProfile').classList.remove('hidden');
-            document.getElementById('emailAvatar').innerText = email.charAt(0).toUpperCase();
+            
+            const avatarImg = document.getElementById('avatarImg');
+            const avatarLetter = document.getElementById('avatarLetter');
+
+            if (avatarUrl) {
+                avatarImg.src = avatarUrl;
+                avatarImg.classList.remove('hidden');
+                avatarLetter.classList.add('hidden');
+            } else {
+                avatarImg.classList.add('hidden');
+                avatarLetter.classList.remove('hidden');
+                avatarLetter.innerText = email.charAt(0).toUpperCase();
+            }
             
             const displayEmailElem = document.getElementById('displayEmail');
             displayEmailElem.innerText = email;
@@ -421,13 +494,9 @@
 
         function logout() {
             localStorage.removeItem('user_email');
+            localStorage.removeItem('user_avatar');
             location.reload();
         }
-
-        window.addEventListener('DOMContentLoaded', () => {
-            const savedEmail = localStorage.getItem('user_email');
-            if (savedEmail) updateProfileUI(savedEmail);
-        });
     </script>
 </body>
 </html>
