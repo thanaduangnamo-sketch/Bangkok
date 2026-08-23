@@ -3,7 +3,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <!-- ✅ ชื่อแท็บเบราว์เซอร์ -->
     <title>Skey Shop - ร้านค้าออนไลน์อย่างเป็นทางการ</title>
+
+    <!-- ✅ Favicon ตัวอักษร S พื้นดำ -->
+    <link rel="icon"
+          href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='20' fill='black'/><text x='50' y='68' font-size='55' text-anchor='middle' fill='white' font-family='Arial' font-weight='bold'>S</text></svg>">
 
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
@@ -104,7 +110,7 @@
             </div>
         </div>
 
-        <!-- ✅ เปลี่ยนชื่อร้าน -->
+        <!-- ✅ ชื่อร้าน -->
         <h2 class="text-2xl font-black tracking-widest text-white mb-1">
             Skey Shop
         </h2>
@@ -140,7 +146,7 @@
                 <div class="w-10 h-10 bg-black rounded-xl flex items-center justify-center font-extrabold text-white text-sm tracking-wider shadow-sm">
                     SK
                 </div>
-                <!-- ✅ เปลี่ยนชื่อร้าน -->
+                <!-- ✅ ชื่อร้าน -->
                 <span class="text-xl font-extrabold tracking-tight text-slate-900">
                     Skey Shop
                 </span>
@@ -384,7 +390,7 @@
             <h1 class="text-4xl sm:text-6xl font-black text-slate-900 tracking-tight leading-tight mb-6">
                 เติมไว มั่นใจ ปลอดภัย
                 <br>
-                <!-- ✅ เปลี่ยนชื่อร้าน -->
+                <!-- ✅ ชื่อร้าน -->
                 <span class="text-black bg-slate-200/60 px-3 py-1 rounded-2xl inline-block mt-1">
                     Skey Shop
                 </span>
@@ -434,7 +440,7 @@
          FOOTER
     ========================== -->
     <footer class="w-full border-t border-slate-200 bg-white py-6 text-center text-xs font-medium text-slate-500">
-        <!-- ✅ เปลี่ยนชื่อร้าน -->
+        <!-- ✅ ชื่อร้าน -->
         © 2026 Skey Shop. All rights reserved.
     </footer>
 
