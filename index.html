@@ -15,8 +15,16 @@
     <!-- Google Font -->
     <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
 
-    <!-- Lucide Icons -->
+    <!-- Lucide Icons + Fallback สำรอง -->
     <script src="https://unpkg.com/lucide@latest"></script>
+    <script>
+        /* 🛡️ ถ้า unpkg โหลดไม่ได้ สลับไปโหลดจาก jsdelivr แทน */
+        if (!window.lucide) {
+            var _lucideFallback = document.createElement('script');
+            _lucideFallback.src = 'https://cdn.jsdelivr.net/npm/lucide@latest/dist/umd/lucide.min.js';
+            document.head.appendChild(_lucideFallback);
+        }
+    </script>
 
     <!-- Google reCAPTCHA -->
     <script src="https://www.google.com/recaptcha/api.js" async defer></script>
@@ -117,7 +125,7 @@
 <body class="min-h-screen flex flex-col justify-between text-white">
 
     <!-- =========================
-         LOADING SCREEN (เล่นอัตโนมัติตอนเปิดเว็บ)
+         LOADING SCREEN
     ========================== -->
     <div id="loadingScreen"
          class="fixed inset-0 bg-[#050505] z-40 flex flex-col items-center justify-center p-6 transition-opacity duration-700">
@@ -298,7 +306,7 @@
                     </div>
                 </div>
 
-                <!-- ✅ reCAPTCHA ย้ายมาที่นี่ -->
+                <!-- reCAPTCHA -->
                 <div>
                     <div class="bg-white rounded-2xl p-3 flex justify-center shadow-[0_10px_35px_rgba(0,0,0,0.5)]">
                         <div class="g-recaptcha"
@@ -308,7 +316,6 @@
                         </div>
                     </div>
 
-                    <!-- กล่องแจ้ง error -->
                     <p id="regCaptchaError"
                        class="hidden mt-2 text-[11px] text-red-400 bg-red-400/10 border border-red-400/20 rounded-xl px-3 py-2 text-center">
                     </p>
@@ -333,7 +340,7 @@
                     <p class="text-xs text-white/50" id="forgotSubtitle">กรอกอีเมลที่ใช้สมัคร เพื่อตั้งรหัสผ่านใหม่</p>
                 </div>
 
-                <!-- ขั้นตอนที่ 1: กรอกอีเมล -->
+                <!-- ขั้นตอนที่ 1 -->
                 <form id="forgotStep1" onsubmit="handleForgotStep1(event)" class="space-y-4">
                     <div>
                         <label class="block text-xs font-bold text-white/60 uppercase tracking-wider mb-1 flex items-center gap-1">
@@ -353,7 +360,7 @@
                     </button>
                 </form>
 
-                <!-- ขั้นตอนที่ 2: ตั้งรหัสผ่านใหม่ -->
+                <!-- ขั้นตอนที่ 2 -->
                 <form id="forgotStep2" onsubmit="handleForgotStep2(event)" class="space-y-4 hidden">
                     <div>
                         <label class="block text-xs font-bold text-white/60 uppercase tracking-wider mb-1 flex items-center gap-1">
@@ -1018,6 +1025,18 @@
     <script>
 
         /* =========================
+           🛡️ SAFE ICONS (กัน error ถ้า CDN ตาย)
+        ========================== */
+        function safeIcons() {
+            try {
+                if (window.lucide && typeof lucide.createIcons === 'function') {
+                    lucide.createIcons();
+                }
+            } catch (e) {}
+        }
+
+
+        /* =========================
            CLICK SOUND
         ========================== */
         function playClickSound() {
@@ -1196,23 +1215,45 @@
 
 
         /* =========================
-           PAGE LOAD (โหลดเลย → Loading เลย)
+           PAGE LOAD (ป้องกันค้างทุกกรณี)
         ========================== */
         window.addEventListener('DOMContentLoaded', () => {
-            lucide.createIcons();
-            checkPersistedLogin();
-            renderFilterTabs();
-            renderProducts();
-            startLoadingScreen(); /* ✅ เล่นอัตโนมัติ */
+
+            /* ✅ 1. เริ่ม Loading ก่อนเป็นอันดับแรกเสมอ */
+            try {
+                startLoadingScreen();
+            } catch (e) {
+                console.error('Loading error:', e);
+                try { forceHideLoading(); } catch (e2) {}
+            }
+
+            /* ✅ 2. ที่เหลือครอบ try-catch ไว้ พังตรงไหนก็ไม่กระทบกัน */
+            try { safeIcons(); } catch (e) {}
+            try { checkPersistedLogin(); } catch (e) {}
+            try { renderFilterTabs(); } catch (e) {}
+            try { renderProducts(); } catch (e) {}
         });
+
+        /* กันเคส DOMContentLoaded ยิงไปก่อนสคริปต์รัน */
+        if (document.readyState === 'complete' || document.readyState === 'interactive') {
+            setTimeout(() => {
+                try { startLoadingScreen(); } catch (e) {}
+                try { safeIcons(); } catch (e) {}
+                try { checkPersistedLogin(); } catch (e) {}
+                try { renderFilterTabs(); } catch (e) {}
+                try { renderProducts(); } catch (e) {}
+            }, 0);
+        }
 
 
         /* =========================
            SCROLL TO SECTION
         ========================== */
         function scrollToSection(id) {
-            const el = document.getElementById(id);
-            if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            try {
+                const el = document.getElementById(id);
+                if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            } catch (e) {}
         }
 
 
@@ -1230,10 +1271,20 @@
 
 
         /* =========================
-           LOADING SCREEN
+           LOADING SCREEN (แกร่งขึ้น + Failsafe)
         ========================== */
         function startLoadingScreen() {
             const loadingScreen = document.getElementById('loadingScreen');
+            if (!loadingScreen) return;
+
+            /* กันเรียกซ้ำ */
+            if (loadingScreen.dataset.started === '1') return;
+            loadingScreen.dataset.started = '1';
+
+            /* แสดงหน้าโหลดให้แน่ใจ */
+            loadingScreen.classList.remove('hidden', 'opacity-0', 'pointer-events-none');
+            loadingScreen.classList.add('flex');
+            loadingScreen.style.opacity = '1';
 
             const progressBar = document.getElementById('progressBar');
             const statusText = document.getElementById('loadingStatusText');
@@ -1242,17 +1293,21 @@
             let percent = 0;
 
             const interval = setInterval(() => {
-                percent += Math.floor(Math.random() * 8) + 2;
-                if (percent > 100) percent = 100;
+                try {
+                    percent += Math.floor(Math.random() * 8) + 2;
+                    if (percent > 100) percent = 100;
 
-                if (percentText) percentText.innerText = percent + '%';
+                    if (percentText) percentText.innerText = percent + '%';
 
-                if (percent >= 35 && percent < 75) {
-                    statusText.innerText = 'กำลังตรวจสอบความปลอดภัย...';
-                } else if (percent >= 75 && percent < 100) {
-                    statusText.innerText = 'กำลังโหลดข้อมูลร้านค้า...';
-                } else if (percent === 100) {
-                    statusText.innerText = 'พร้อมใช้งานแล้ว!';
+                    if (percent >= 35 && percent < 75) {
+                        statusText.innerText = 'กำลังตรวจสอบความปลอดภัย...';
+                    } else if (percent >= 75 && percent < 100) {
+                        statusText.innerText = 'กำลังโหลดข้อมูลร้านค้า...';
+                    } else if (percent === 100) {
+                        statusText.innerText = 'พร้อมใช้งานแล้ว!';
+                        clearInterval(interval);
+                    }
+                } catch (e) {
                     clearInterval(interval);
                 }
             }, 120);
@@ -1261,15 +1316,29 @@
                 if (progressBar) progressBar.style.width = '100%';
             }, 100);
 
+            /* ปิดหน้าโหลดตามปกติ */
             setTimeout(() => {
-                if (loadingScreen) {
-                    loadingScreen.style.opacity = '0';
-                    setTimeout(() => {
-                        loadingScreen.classList.add('hidden');
-                        loadingScreen.style.opacity = '1';
-                    }, 700);
-                }
+                forceHideLoading();
             }, 3600);
+
+            /* 🛡️ FAILSAFE: ไม่ว่าจะเกิดอะไรขึ้น ปิดหน้าโหลดภายใน 8 วินาทีเสมอ */
+            setTimeout(() => {
+                forceHideLoading();
+            }, 8000);
+        }
+
+        /* ปิดหน้าโหลดแบบบังคับ (กันเรียกซ้ำ) */
+        function forceHideLoading() {
+            const loadingScreen = document.getElementById('loadingScreen');
+            if (!loadingScreen || loadingScreen.dataset.done === '1') return;
+            loadingScreen.dataset.done = '1';
+
+            loadingScreen.style.opacity = '0';
+            setTimeout(() => {
+                loadingScreen.classList.add('hidden');
+                loadingScreen.classList.remove('flex');
+                loadingScreen.style.opacity = '1';
+            }, 700);
         }
 
 
@@ -1344,7 +1413,7 @@
             }
 
             hideRegCaptchaError();
-            lucide.createIcons();
+            safeIcons();
         }
 
         /* เปิดหน้าต่างสมัครสมาชิกโดยตรง (ปุ่ม CTA) */
@@ -1393,7 +1462,7 @@
             document.getElementById('forgotError2').classList.add('hidden');
             document.getElementById('forgotSubtitle').innerText = 'กรอกอีเมลที่ใช้สมัคร เพื่อตั้งรหัสผ่านใหม่';
 
-            lucide.createIcons();
+            safeIcons();
         }
 
         function backToLogin(silent) {
@@ -1420,7 +1489,7 @@
             loginForm.classList.remove('hidden');
             registerForm.classList.add('hidden');
 
-            lucide.createIcons();
+            safeIcons();
         }
 
         function showForgotError(elementId, message) {
@@ -1488,12 +1557,12 @@
                 btn.innerHTML = '<i data-lucide="eye" class="w-4 h-4"></i>';
             }
 
-            lucide.createIcons();
+            safeIcons();
         }
 
 
         /* =========================
-           LOGIN / REGISTER (สมัครต้องผ่าน reCAPTCHA)
+           LOGIN / REGISTER
         ========================== */
         function handleAuth(e, formType) {
             e.preventDefault();
@@ -1529,7 +1598,12 @@
                 /* ✅ ตรวจสอบ reCAPTCHA ก่อนสมัคร */
                 hideRegCaptchaError();
 
-                if (typeof grecaptcha === 'undefined' || !grecaptcha.getResponse()) {
+                let captchaOk = false;
+                try {
+                    captchaOk = (typeof grecaptcha !== 'undefined' && grecaptcha.getResponse());
+                } catch (err) {}
+
+                if (!captchaOk) {
                     showRegCaptchaError('กรุณาติ๊ก ✓ "ฉันไม่ใช่โปรแกรมอัตโนมัติ" ก่อนสมัครสมาชิกครับ');
                     return;
                 }
@@ -1619,7 +1693,7 @@
             refreshTopUpModal();
             if (currentProduct) refreshProductModal();
 
-            lucide.createIcons();
+            safeIcons();
         }
 
 
@@ -1691,7 +1765,7 @@
                                 <p class="text-[10px] text-white/40">เริ่มต้น</p>
                                 <p class="text-sm font-black text-white">฿${minPrice}</p>
                             </div>
-                            <span class="bg-white/[0.08] group-hover:btn-light group-hover:font-bold border border-white/15 text-white group-hover:text-black text-[11px] font-semibold px-3.5 py-2 rounded-xl transition-all duration-300 flex items-center gap-1.5">
+                            <span class="bg-white/[0.08] border border-white/15 text-white group-hover:bg-white group-hover:text-black text-[11px] font-semibold px-3.5 py-2 rounded-xl transition-all duration-300 flex items-center gap-1.5">
                                 ซื้อเลย
                                 <i data-lucide="arrow-right" class="w-3.5 h-3.5"></i>
                             </span>
@@ -1700,7 +1774,7 @@
                 </div>`;
             }).join('');
 
-            lucide.createIcons();
+            safeIcons();
         }
 
 
@@ -1733,7 +1807,7 @@
             hideBuyError();
 
             toggleProductModal(true);
-            lucide.createIcons();
+            safeIcons();
         }
 
         function renderPackages() {
@@ -1819,7 +1893,7 @@
 
             toggleProductModal(false);
             toggleSuccessModal(true);
-            lucide.createIcons();
+            safeIcons();
         }
 
 
@@ -1851,7 +1925,7 @@
         function updateTopUpButton() {
             document.getElementById('topUpConfirmBtn').innerHTML =
                 `<i data-lucide="check-circle" class="w-4 h-4"></i> ยืนยันการเติมเงิน ฿${selectedTopUpAmount}`;
-            lucide.createIcons();
+            safeIcons();
         }
 
         function refreshTopUpModal() {
@@ -1883,7 +1957,7 @@
                 toggleTopUpModal(false);
             }, 1300);
 
-            lucide.createIcons();
+            safeIcons();
         }
 
 
