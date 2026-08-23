@@ -171,6 +171,41 @@
             border-color: rgba(255,255,255,0.5);
             box-shadow: 0 0 0 2px rgba(255,255,255,0.15);
         }
+
+        /* =========================
+           📄 MAIN PAGE EXTRAS
+        ========================== */
+
+        /* ตัวเลขสถิตินับขึ้น */
+        .stat-number {
+            font-variant-numeric: tabular-nums;
+            letter-spacing: -0.02em;
+        }
+
+        /* FAQ เปิด-ปิด */
+        .faq-answer {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.4s ease, padding 0.4s ease;
+        }
+
+        .faq-item.open .faq-answer {
+            max-height: 300px;
+        }
+
+        .faq-item.open .faq-chevron {
+            transform: rotate(180deg);
+        }
+
+        .faq-chevron {
+            transition: transform 0.3s ease;
+        }
+
+        /* เส้นคั่นตกแต่ง */
+        .divider-mono {
+            height: 1px;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+        }
     </style>
 </head>
 
@@ -182,17 +217,13 @@
     <div id="initialSecurityModal"
          class="fixed inset-0 z-50 flex items-center justify-center p-4 transition-all duration-500">
 
-        <!-- พื้นหลังดำ -->
         <div class="absolute inset-0 bg-[#050505]"></div>
 
-        <!-- กริดขาวเคลื่อนไหว -->
         <div class="absolute inset-0 security-grid"></div>
 
-        <!-- ลูกบอลเรืองขาวจาง -->
         <div class="absolute -top-20 -left-20 w-[28rem] h-[28rem] bg-white/[0.06] rounded-full blur-3xl glow-pulse pointer-events-none"></div>
         <div class="absolute -bottom-24 -right-24 w-[26rem] h-[26rem] bg-white/[0.04] rounded-full blur-3xl glow-pulse pointer-events-none" style="animation-delay: 1.2s;"></div>
 
-        <!-- อนุภาคขาวลอยขึ้น -->
         <div class="security-particle" style="left: 8%;  animation-delay: 0s;   animation-duration: 11s;"></div>
         <div class="security-particle" style="left: 20%; animation-delay: 2.5s; animation-duration: 13s;"></div>
         <div class="security-particle" style="left: 35%; animation-delay: 5s;   animation-duration: 10s;"></div>
@@ -201,20 +232,16 @@
         <div class="security-particle" style="left: 80%; animation-delay: 0.8s; animation-duration: 12s;"></div>
         <div class="security-particle" style="left: 92%; animation-delay: 3.2s; animation-duration: 10s;"></div>
 
-        <!-- การ์ดกระจกดำ -->
         <div id="securityCard"
              class="modal-enter relative overflow-hidden bg-white/[0.04] backdrop-blur-2xl border border-white/10 rounded-3xl w-full max-w-md p-8 text-center shadow-[0_25px_80px_rgba(0,0,0,0.8),inset_0_1px_0_rgba(255,255,255,0.08)]">
 
-            <!-- เส้นสแกนขาว -->
             <div class="scan-line"></div>
 
-            <!-- ป้ายด้านบน -->
             <div class="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full bg-white/[0.06] border border-white/15 text-[10px] font-bold tracking-[0.2em] text-white/80 uppercase mb-6">
                 <span class="w-1.5 h-1.5 bg-white rounded-full animate-pulse"></span>
                 Security Verification
             </div>
 
-            <!-- โล่หมุนโทนขาว -->
             <div class="relative w-28 h-28 flex items-center justify-center mx-auto mb-6">
                 <div class="absolute -inset-1 rounded-full border-2 border-dashed border-white/20 ring-spin-cw"></div>
                 <div class="absolute inset-1.5 rounded-full border-2 border-white/10 border-b-white/60 ring-spin-ccw"></div>
@@ -223,7 +250,6 @@
                 </div>
             </div>
 
-            <!-- หัวข้อ -->
             <h3 class="text-2xl font-extrabold text-white mb-2">
                 ระบบตรวจสอบความปลอดภัย
             </h3>
@@ -232,7 +258,6 @@
                 กรุณายืนยันตัวตนเพื่อป้องกันบอท<br>และเข้าสู่เว็บไซต์อย่างปลอดภัย
             </p>
 
-            <!-- สถานะความปลอดภัย -->
             <div class="bg-black/40 border border-white/[0.07] rounded-2xl p-4 space-y-3 mb-5 text-left">
 
                 <div class="flex items-center gap-3">
@@ -261,7 +286,6 @@
 
             </div>
 
-            <!-- reCAPTCHA -->
             <div class="bg-white rounded-2xl p-3.5 flex justify-center mb-5 shadow-[0_10px_35px_rgba(0,0,0,0.5)]">
                 <div class="g-recaptcha"
                      id="initialRecaptcha"
@@ -270,18 +294,15 @@
                 </div>
             </div>
 
-            <!-- ปุ่มยืนยัน -->
             <button
                 onclick="playClickSound(); triggerCaptchaClick()"
                 class="btn-shine relative overflow-hidden w-full btn-light font-bold py-3.5 px-4 rounded-2xl shadow-[0_10px_30px_rgba(255,255,255,0.15)] transition-all duration-300 active:scale-95 flex items-center justify-center gap-2 text-sm">
 
                 <i data-lucide="fingerprint" class="w-4 h-4"></i>
-
                 <span>ยืนยันตัวตนเพื่อความปลอดภัย</span>
 
             </button>
 
-            <!-- ท้ายการ์ด -->
             <p class="text-[10px] text-white/35 mt-6 flex items-center justify-center gap-1.5">
                 <i data-lucide="shield" class="w-3 h-3"></i>
                 คุ้มครองโดยระบบรักษาความปลอดภัยของ Skey Shop
@@ -343,7 +364,6 @@
 
         <div class="max-w-6xl mx-auto px-4 sm:px-6 h-20 flex items-center justify-between gap-4">
 
-            <!-- LOGO -->
             <div class="flex items-center gap-3 shrink-0">
                 <div class="w-10 h-10 btn-light rounded-xl flex items-center justify-center font-extrabold text-sm tracking-wider shadow-[0_0_20px_rgba(255,255,255,0.15)]">
                     SK
@@ -354,10 +374,8 @@
             </div>
 
 
-            <!-- AUTH -->
             <div id="authContainer" class="flex items-center gap-2 sm:gap-3">
 
-                <!-- CAPTCHA BUTTON -->
                 <button
                     onclick="playClickSound(); reVerifyCaptcha()"
                     class="bg-white/[0.06] hover:bg-white/[0.12] text-white font-semibold px-3 py-2 rounded-xl text-xs transition flex items-center gap-1.5 border border-white/15"
@@ -367,7 +385,6 @@
                 </button>
 
 
-                <!-- LOGIN BUTTON -->
                 <button
                     id="openAuthBtn"
                     onclick="playClickSound(); toggleAuthModal(true)"
@@ -377,7 +394,6 @@
                 </button>
 
 
-                <!-- USER PROFILE -->
                 <div id="userProfile"
                      class="hidden flex items-center gap-2.5 bg-white/[0.05] border border-white/10 p-1.5 pl-3 rounded-2xl shadow-sm max-w-[280px] sm:max-w-sm">
 
@@ -407,7 +423,6 @@
                     </div>
 
 
-                    <!-- LOGOUT -->
                     <button
                         onclick="playClickSound(); logout()"
                         class="text-xs text-white/60 hover:text-white bg-white/[0.06] hover:bg-white/[0.12] font-medium p-2 rounded-xl transition shrink-0"
@@ -432,14 +447,12 @@
 
         <div class="bg-[#0d0d0d] rounded-3xl shadow-2xl border border-white/10 w-full max-w-md p-6 sm:p-8 relative">
 
-            <!-- CLOSE -->
             <button onclick="playClickSound(); toggleAuthModal(false)"
                     class="absolute top-5 right-5 text-white/40 hover:text-white font-bold text-xl transition">
                 ✕
             </button>
 
 
-            <!-- TABS -->
             <div class="flex border-b border-white/10 mb-6">
 
                 <button
@@ -461,7 +474,6 @@
             </div>
 
 
-            <!-- LOGIN FORM -->
             <form id="loginForm" onsubmit="handleAuth(event, 'login')" class="space-y-4">
 
                 <div>
@@ -498,7 +510,6 @@
             </form>
 
 
-            <!-- REGISTER FORM -->
             <form id="registerForm" onsubmit="handleAuth(event, 'register')" class="space-y-4 hidden">
 
                 <div>
@@ -574,59 +585,613 @@
 
 
     <!-- =========================
-         MAIN CONTENT
+         MAIN CONTENT (-expanded-)
     ========================== -->
-    <main class="max-w-6xl mx-auto px-6 py-12 relative">
+    <main class="relative">
 
-        <!-- กริดขาวจางพื้นหลัง -->
         <div class="absolute inset-0 bg-grid-mono pointer-events-none"></div>
 
-        <div class="text-center max-w-3xl mx-auto mb-20 relative">
+        <div class="max-w-6xl mx-auto px-6 py-12 relative">
 
-            <div class="inline-flex items-center gap-2 px-4 py-2 bg-white/[0.05] rounded-full border border-white/15 text-white/80 text-xs font-semibold mb-6 shadow-sm">
-                <i data-lucide="sparkles" class="w-4 h-4 text-white/70"></i>
-                <span>แพลตฟอร์มสินค้าและบริการดิจิทัล</span>
+            <!-- ============ HERO ============ -->
+            <div class="text-center max-w-3xl mx-auto mb-20">
+
+                <div class="inline-flex items-center gap-2 px-4 py-2 bg-white/[0.05] rounded-full border border-white/15 text-white/80 text-xs font-semibold mb-6 shadow-sm">
+                    <i data-lucide="sparkles" class="w-4 h-4 text-white/70"></i>
+                    <span>แพลตฟอร์มสินค้าและบริการดิจิทัล</span>
+                </div>
+
+                <h1 class="text-4xl sm:text-6xl font-black text-white tracking-tight leading-tight mb-6">
+                    เติมไว มั่นใจ ปลอดภัย
+                    <br>
+                    <span class="btn-light px-3 py-1 rounded-2xl inline-block mt-1 shadow-[0_0_40px_rgba(255,255,255,0.2)]">
+                        Skey Shop
+                    </span>
+                </h1>
+
+                <p class="text-base sm:text-lg text-white/50 leading-relaxed mb-8 max-w-2xl mx-auto">
+                    บริการสินค้าและบริการดิจิทัลครบวงจร
+                    รวดเร็ว ทันใจ และใช้งานง่าย
+                    พร้อมระบบส่งของอัตโนมัติ 24 ชั่วโมง
+                </p>
+
+                <!-- ปุ่ม CTA -->
+                <div class="flex flex-col sm:flex-row items-center justify-center gap-3 mb-10">
+                    <button
+                        onclick="playClickSound(); scrollToSection('categories')"
+                        class="btn-light hover:bg-zinc-200 font-bold px-8 py-3.5 rounded-2xl shadow-[0_0_35px_rgba(255,255,255,0.15)] transition active:scale-95 flex items-center gap-2 text-sm w-full sm:w-auto justify-center">
+                        <i data-lucide="shopping-bag" class="w-4 h-4"></i>
+                        เลือกซื้อสินค้า
+                    </button>
+
+                    <button
+                        onclick="playClickSound(); scrollToSection('howto')"
+                        class="bg-white/[0.06] hover:bg-white/[0.12] border border-white/15 text-white font-semibold px-8 py-3.5 rounded-2xl transition active:scale-95 flex items-center gap-2 text-sm w-full sm:w-auto justify-center">
+                        <i data-lucide="book-open" class="w-4 h-4"></i>
+                        วิธีการสั่งซื้อ
+                    </button>
+                </div>
+
             </div>
 
-            <h1 class="text-4xl sm:text-6xl font-black text-white tracking-tight leading-tight mb-6">
-                เติมไว มั่นใจ ปลอดภัย
-                <br>
-                <span class="btn-light px-3 py-1 rounded-2xl inline-block mt-1 shadow-[0_0_40px_rgba(255,255,255,0.2)]">
-                    Skey Shop
-                </span>
-            </h1>
 
-            <p class="text-base sm:text-lg text-white/50 leading-relaxed mb-8 max-w-2xl mx-auto">
-                บริการสินค้าและบริการดิจิทัลครบวงจร
-                รวดเร็ว ทันใจ และใช้งานง่าย
-            </p>
+            <!-- ============ STATS ============ -->
+            <div class="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-24">
 
-
-            <!-- SHOP FEATURES -->
-            <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 mt-10">
-
-                <div class="bg-white/[0.04] border border-white/10 rounded-2xl p-5 shadow-sm hover:bg-white/[0.07] hover:border-white/20 transition-all duration-300">
-                    <div class="w-11 h-11 bg-white/[0.08] text-white border border-white/15 rounded-xl flex items-center justify-center mx-auto mb-3">
-                        <i data-lucide="zap" class="w-5 h-5"></i>
+                <div class="bg-white/[0.04] border border-white/10 rounded-2xl p-6 text-center hover:bg-white/[0.07] transition-all duration-300">
+                    <div class="w-10 h-10 bg-white/[0.08] border border-white/15 rounded-xl flex items-center justify-center mx-auto mb-3">
+                        <i data-lucide="users" class="w-5 h-5 text-white"></i>
                     </div>
-                    <h3 class="font-bold text-white">รวดเร็ว</h3>
-                    <p class="text-xs text-white/45 mt-1">ระบบทำงานรวดเร็ว</p>
+                    <p class="text-2xl sm:text-3xl font-black text-white stat-number">12,000+</p>
+                    <p class="text-xs text-white/45 mt-1">ลูกค้าที่ไว้วางใจ</p>
                 </div>
 
-                <div class="bg-white/[0.04] border border-white/10 rounded-2xl p-5 shadow-sm hover:bg-white/[0.07] hover:border-white/20 transition-all duration-300">
-                    <div class="w-11 h-11 bg-white/[0.08] text-white border border-white/15 rounded-xl flex items-center justify-center mx-auto mb-3">
-                        <i data-lucide="shield-check" class="w-5 h-5"></i>
+                <div class="bg-white/[0.04] border border-white/10 rounded-2xl p-6 text-center hover:bg-white/[0.07] transition-all duration-300">
+                    <div class="w-10 h-10 bg-white/[0.08] border border-white/15 rounded-xl flex items-center justify-center mx-auto mb-3">
+                        <i data-lucide="shopping-cart" class="w-5 h-5 text-white"></i>
                     </div>
-                    <h3 class="font-bold text-white">ปลอดภัย</h3>
-                    <p class="text-xs text-white/45 mt-1">ระบบตรวจสอบความปลอดภัย</p>
+                    <p class="text-2xl sm:text-3xl font-black text-white stat-number">85,000+</p>
+                    <p class="text-xs text-white/45 mt-1">ออเดอร์สำเร็จ</p>
                 </div>
 
-                <div class="bg-white/[0.04] border border-white/10 rounded-2xl p-5 shadow-sm hover:bg-white/[0.07] hover:border-white/20 transition-all duration-300">
-                    <div class="w-11 h-11 bg-white/[0.08] text-white border border-white/15 rounded-xl flex items-center justify-center mx-auto mb-3">
-                        <i data-lucide="headphones" class="w-5 h-5"></i>
+                <div class="bg-white/[0.04] border border-white/10 rounded-2xl p-6 text-center hover:bg-white/[0.07] transition-all duration-300">
+                    <div class="w-10 h-10 bg-white/[0.08] border border-white/15 rounded-xl flex items-center justify-center mx-auto mb-3">
+                        <i data-lucide="star" class="w-5 h-5 text-white"></i>
                     </div>
-                    <h3 class="font-bold text-white">ดูแลลูกค้า</h3>
-                    <p class="text-xs text-white/45 mt-1">พร้อมให้บริการลูกค้า</p>
+                    <p class="text-2xl sm:text-3xl font-black text-white stat-number">4.9/5</p>
+                    <p class="text-xs text-white/45 mt-1">คะแนนรีวิวเฉลี่ย</p>
+                </div>
+
+                <div class="bg-white/[0.04] border border-white/10 rounded-2xl p-6 text-center hover:bg-white/[0.07] transition-all duration-300">
+                    <div class="w-10 h-10 bg-white/[0.08] border border-white/15 rounded-xl flex items-center justify-center mx-auto mb-3">
+                        <span class="relative flex items-center justify-center">
+                            <span class="w-2 h-2 bg-white rounded-full animate-pulse absolute"></span>
+                            <i data-lucide="activity" class="w-5 h-5 text-white"></i>
+                        </span>
+                    </div>
+                    <p class="text-2xl sm:text-3xl font-black text-white stat-number">24/7</p>
+                    <p class="text-xs text-white/45 mt-1">ระบบอัตโนมัติ</p>
+                </div>
+
+            </div>
+
+
+            <!-- ============ CATEGORIES ============ -->
+            <div id="categories" class="mb-24 scroll-mt-24">
+
+                <div class="text-center mb-10">
+                    <p class="text-xs font-bold tracking-[0.25em] text-white/40 uppercase mb-3">Categories</p>
+                    <h2 class="text-3xl sm:text-4xl font-black text-white mb-3">หมวดหมู่สินค้า</h2>
+                    <p class="text-sm text-white/50 max-w-xl mx-auto">
+                        เลือกหมวดหมู่ที่ต้องการ ครบทุกความต้องการในที่เดียว
+                    </p>
+                </div>
+
+                <div class="grid grid-cols-2 lg:grid-cols-3 gap-4">
+
+                    <div class="group bg-white/[0.04] border border-white/10 rounded-2xl p-6 hover:bg-white/[0.08] hover:border-white/25 transition-all duration-300 cursor-pointer">
+                        <div class="w-12 h-12 bg-white/[0.08] border border-white/15 rounded-xl flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
+                            <i data-lucide="gamepad-2" class="w-6 h-6 text-white"></i>
+                        </div>
+                        <h3 class="font-bold text-white mb-1">เติมเกม</h3>
+                        <p class="text-xs text-white/45 leading-relaxed">เติมเงินเกมดังมากมาย ราคาถูก ส่งไวภายในไม่กี่วินาที</p>
+                        <p class="text-xs font-bold text-white/70 mt-3 flex items-center gap-1">
+                            30+ เกม
+                            <i data-lucide="arrow-right" class="w-3.5 h-3.5 group-hover:translate-x-1 transition-transform"></i>
+                        </p>
+                    </div>
+
+                    <div class="group bg-white/[0.04] border border-white/10 rounded-2xl p-6 hover:bg-white/[0.08] hover:border-white/25 transition-all duration-300 cursor-pointer">
+                        <div class="w-12 h-12 bg-white/[0.08] border border-white/15 rounded-xl flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
+                            <i data-lucide="smartphone" class="w-6 h-6 text-white"></i>
+                        </div>
+                        <h3 class="font-bold text-white mb-1">ซอฟต์แวร์ & License</h3>
+                        <p class="text-xs text-white/45 leading-relaxed">คีย์แท้ถูกกฎหมาย Windows, Office และอีกมากมาย</p>
+                        <p class="text-xs font-bold text-white/70 mt-3 flex items-center gap-1">
+                            50+ รายการ
+                            <i data-lucide="arrow-right" class="w-3.5 h-3.5 group-hover:translate-x-1 transition-transform"></i>
+                        </p>
+                    </div>
+
+                    <div class="group bg-white/[0.04] border border-white/10 rounded-2xl p-6 hover:bg-white/[0.08] hover:border-white/25 transition-all duration-300 cursor-pointer">
+                        <div class="w-12 h-12 bg-white/[0.08] border border-white/15 rounded-xl flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
+                            <i data-lucide="gift" class="w-6 h-6 text-white"></i>
+                        </div>
+                        <h3 class="font-bold text-white mb-1">บัตรกำนันลด</h3>
+                        <p class="text-xs text-white/45 leading-relaxed">Gift Card ชั้นนำจากทั่วโลก ส่งรหัสถึงมือคุณทันที</p>
+                        <p class="text-xs font-bold text-white/70 mt-3 flex items-center gap-1">
+                            20+ แบรนด์
+                            <i data-lucide="arrow-right" class="w-3.5 h-3.5 group-hover:translate-x-1 transition-transform"></i>
+                        </p>
+                    </div>
+
+                    <div class="group bg-white/[0.04] border border-white/10 rounded-2xl p-6 hover:bg-white/[0.08] hover:border-white/25 transition-all duration-300 cursor-pointer">
+                        <div class="w-12 h-12 bg-white/[0.08] border border-white/15 rounded-xl flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
+                            <i data-lucide="music" class="w-6 h-6 text-white"></i>
+                        </div>
+                        <h3 class="font-bold text-white mb-1">บริการดิจิทัล</h3>
+                        <p class="text-xs text-white/45 leading-relaxed">สมาชิกเพลง หนัง และบริการสตรีมมิ่งราคาพิเศษ</p>
+                        <p class="text-xs font-bold text-white/70 mt-3 flex items-center gap-1">
+                            15+ บริการ
+                            <i data-lucide="arrow-right" class="w-3.5 h-3.5 group-hover:translate-x-1 transition-transform"></i>
+                        </p>
+                    </div>
+
+                    <div class="group bg-white/[0.04] border border-white/10 rounded-2xl p-6 hover:bg-white/[0.08] hover:border-white/25 transition-all duration-300 cursor-pointer">
+                        <div class="w-12 h-12 bg-white/[0.08] border border-white/15 rounded-xl flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
+                            <i data-lucide="message-circle" class="w-6 h-6 text-white"></i>
+                        </div>
+                        <h3 class="font-bold text-white mb-1">ไอดี & โซเชียล</h3>
+                        <p class="text-xs text-white/45 leading-relaxed">บริการเกี่ยวกับโซเชียลมีเดีย ครบจบในที่เดียว</p>
+                        <p class="text-xs font-bold text-white/70 mt-3 flex items-center gap-1">
+                            10+ บริการ
+                            <i data-lucide="arrow-right" class="w-3.5 h-3.5 group-hover:translate-x-1 transition-transform"></i>
+                        </p>
+                    </div>
+
+                    <div class="group bg-white/[0.04] border border-white/10 rounded-2xl p-6 hover:bg-white/[0.08] hover:border-white/25 transition-all duration-300 cursor-pointer">
+                        <div class="w-12 h-12 bg-white/[0.08] border border-white/15 rounded-xl flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
+                            <i data-lucide="package" class="w-6 h-6 text-white"></i>
+                        </div>
+                        <h3 class="font-bold text-white mb-1">อื่นๆ</h3>
+                        <p class="text-xs text-white/45 leading-relaxed">สินค้าและบริการพิเศษที่คัดสรรมาให้เฉพาะคุณ</p>
+                        <p class="text-xs font-bold text-white/70 mt-3 flex items-center gap-1">
+                            อัปเดตรายสัปดาห์
+                            <i data-lucide="arrow-right" class="w-3.5 h-3.5 group-hover:translate-x-1 transition-transform"></i>
+                        </p>
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <!-- ============ HOW TO BUY ============ -->
+            <div id="howto" class="mb-24 scroll-mt-24">
+
+                <div class="text-center mb-10">
+                    <p class="text-xs font-bold tracking-[0.25em] text-white/40 uppercase mb-3">How To Order</p>
+                    <h2 class="text-3xl sm:text-4xl font-black text-white mb-3">ขั้นตอนการสั่งซื้อ</h2>
+                    <p class="text-sm text-white/50 max-w-xl mx-auto">
+                        ง่ายๆ แค่ 4 ขั้นตอน ก็ได้สินค้าถึงมือคุณ
+                    </p>
+                </div>
+
+                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+
+                    <div class="relative bg-white/[0.04] border border-white/10 rounded-2xl p-6 hover:bg-white/[0.07] transition-all duration-300">
+                        <span class="absolute -top-3 -left-2 btn-light w-8 h-8 rounded-full flex items-center justify-center font-black text-sm shadow-lg">1</span>
+                        <div class="w-12 h-12 bg-white/[0.08] border border-white/15 rounded-xl flex items-center justify-center mb-4">
+                            <i data-lucide="user-plus" class="w-6 h-6 text-white"></i>
+                        </div>
+                        <h3 class="font-bold text-white mb-2">สมัครสมาชิก</h3>
+                        <p class="text-xs text-white/45 leading-relaxed">
+                            กรอกอีเมลและรหัสผ่าน สมัครฟรี
+                            ใช้เวลาไม่ถึง 1 นาที
+                        </p>
+                    </div>
+
+                    <div class="relative bg-white/[0.04] border border-white/10 rounded-2xl p-6 hover:bg-white/[0.07] transition-all duration-300">
+                        <span class="absolute -top-3 -left-2 btn-light w-8 h-8 rounded-full flex items-center justify-center font-black text-sm shadow-lg">2</span>
+                        <div class="w-12 h-12 bg-white/[0.08] border border-white/15 rounded-xl flex items-center justify-center mb-4">
+                            <i data-lucide="wallet" class="w-6 h-6 text-white"></i>
+                        </div>
+                        <h3 class="font-bold text-white mb-2">เติมเงินเข้าระบบ</h3>
+                        <p class="text-xs text-white/45 leading-relaxed">
+                            เลือกช่องทางที่สะดวก
+                            เงินเข้าบัญชีภายในไม่กี่นาที
+                        </p>
+                    </div>
+
+                    <div class="relative bg-white/[0.04] border border-white/10 rounded-2xl p-6 hover:bg-white/[0.07] transition-all duration-300">
+                        <span class="absolute -top-3 -left-2 btn-light w-8 h-8 rounded-full flex items-center justify-center font-black text-sm shadow-lg">3</span>
+                        <div class="w-12 h-12 bg-white/[0.08] border border-white/15 rounded-xl flex items-center justify-center mb-4">
+                            <i data-lucide="mouse-pointer-click" class="w-6 h-6 text-white"></i>
+                        </div>
+                        <h3 class="font-bold text-white mb-2">เลือกสินค้าที่ต้องการ</h3>
+                        <p class="text-xs text-white/45 leading-relaxed">
+                            เลือกสินค้า ใส่รายละเอียด
+                            แล้วกดยืนยันการสั่งซื้อ
+                        </p>
+                    </div>
+
+                    <div class="relative bg-white/[0.04] border border-white/10 rounded-2xl p-6 hover:bg-white/[0.07] transition-all duration-300">
+                        <span class="absolute -top-3 -left-2 btn-light w-8 h-8 rounded-full flex items-center justify-center font-black text-sm shadow-lg">4</span>
+                        <div class="w-12 h-12 bg-white/[0.08] border border-white/15 rounded-xl flex items-center justify-center mb-4">
+                            <i data-lucide="package-check" class="w-6 h-6 text-white"></i>
+                        </div>
+                        <h3 class="font-bold text-white mb-2">รับสินค้าทันที</h3>
+                        <p class="text-xs text-white/45 leading-relaxed">
+                            ระบบส่งของอัตโนมัติ
+                            สินค้าถึงมือคุณในไม่กี่วินาที
+                        </p>
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <!-- ============ WHY CHOOSE US ============ -->
+            <div class="mb-24">
+
+                <div class="text-center mb-10">
+                    <p class="text-xs font-bold tracking-[0.25em] text-white/40 uppercase mb-3">Why Choose Us</p>
+                    <h2 class="text-3xl sm:text-4xl font-black text-white mb-3">ทำไมต้อง Skey Shop?</h2>
+                    <p class="text-sm text-white/50 max-w-xl mx-auto">
+                        เราใส่ใจทุกรายละเอียด เพื่อประสบการณ์ที่ดีที่สุดของคุณ
+                    </p>
+                </div>
+
+                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+
+                    <div class="bg-white/[0.04] border border-white/10 rounded-2xl p-6 hover:bg-white/[0.07] hover:border-white/20 transition-all duration-300">
+                        <div class="w-11 h-11 bg-white/[0.08] text-white border border-white/15 rounded-xl flex items-center justify-center mb-4">
+                            <i data-lucide="zap" class="w-5 h-5"></i>
+                        </div>
+                        <h3 class="font-bold text-white mb-2">ระบบส่งของอัตโนมัติ</h3>
+                        <p class="text-xs text-white/45 leading-relaxed">
+                            สั่งซื้อตอนไหนก็ได้ แม้ตีสาม
+                            ระบบทำงานอัตโนมัติ ส่งของถึงมือคุณในไม่กี่วินาที ไม่ต้องรอแอดมิน
+                        </p>
+                    </div>
+
+                    <div class="bg-white/[0.04] border border-white/10 rounded-2xl p-6 hover:bg-white/[0.07] hover:border-white/20 transition-all duration-300">
+                        <div class="w-11 h-11 bg-white/[0.08] text-white border border-white/15 rounded-xl flex items-center justify-center mb-4">
+                            <i data-lucide="shield-check" class="w-5 h-5"></i>
+                        </div>
+                        <h3 class="font-bold text-white mb-2">ปลอดภัย 100%</h3>
+                        <p class="text-xs text-white/45 leading-relaxed">
+                            ผ่านการตรวจสอบความปลอดภัยด้วย SSL/TLS
+                            พร้อมระบบยืนยันตัวตน ป้องกันบอทและการโกงทุกรูปแบบ
+                        </p>
+                    </div>
+
+                    <div class="bg-white/[0.04] border border-white/10 rounded-2xl p-6 hover:bg-white/[0.07] hover:border-white/20 transition-all duration-300">
+                        <div class="w-11 h-11 bg-white/[0.08] text-white border border-white/15 rounded-xl flex items-center justify-center mb-4">
+                            <i data-lucide="badge-percent" class="w-5 h-5"></i>
+                        </div>
+                        <h3 class="font-bold text-white mb-2">ราคาถูกที่สุด</h3>
+                        <p class="text-xs text-white/45 leading-relaxed">
+                            เราคัดสรรสินค้าราคาส่งตรงถึงลูกค้า
+                            การันตีราคาถูกกว่าที่อื่น พร้อมโปรโมชั่นทุกเดือน
+                        </p>
+                    </div>
+
+                    <div class="bg-white/[0.04] border border-white/10 rounded-2xl p-6 hover:bg-white/[0.07] hover:border-white/20 transition-all duration-300">
+                        <div class="w-11 h-11 bg-white/[0.08] text-white border border-white/15 rounded-xl flex items-center justify-center mb-4">
+                            <i data-lucide="headphones" class="w-5 h-5"></i>
+                        </div>
+                        <h3 class="font-bold text-white mb-2">แอดมินดูแลตลอด</h3>
+                        <p class="text-xs text-white/45 leading-relaxed">
+                            มีปัญหาการใช้งาน ทักแชทได้เลย
+                            ทีมงานพร้อมตอบและแก้ไขปัญหาให้ทันที
+                        </p>
+                    </div>
+
+                    <div class="bg-white/[0.04] border border-white/10 rounded-2xl p-6 hover:bg-white/[0.07] hover:border-white/20 transition-all duration-300">
+                        <div class="w-11 h-11 bg-white/[0.08] text-white border border-white/15 rounded-xl flex items-center justify-center mb-4">
+                            <i data-lucide="refresh-ccw" class="w-5 h-5"></i>
+                        </div>
+                        <h3 class="font-bold text-white mb-2">รับประกันสินค้า</h3>
+                        <p class="text-xs text-white/45 leading-relaxed">
+                            สินค้ามีปัญหา ใช้งานไม่ได้
+                            เปลี่ยนใหม่หรือคืนเงินเต็มจำนวน ไม่มีเงื่อนไขซับซ้อน
+                        </p>
+                    </div>
+
+                    <div class="bg-white/[0.04] border border-white/10 rounded-2xl p-6 hover:bg-white/[0.07] hover:border-white/20 transition-all duration-300">
+                        <div class="w-11 h-11 bg-white/[0.08] text-white border border-white/15 rounded-xl flex items-center justify-center mb-4">
+                            <i data-lucide="star" class="w-5 h-5"></i>
+                        </div>
+                        <h3 class="font-bold text-white mb-2">เชื่อถือได้</h3>
+                        <p class="text-xs text-white/45 leading-relaxed">
+                            มียอดลูกค้ากว่า 12,000 คน
+                            และออเดอร์สำเร็จมากกว่า 85,000 ออเดอร์
+                            รีวิวเฉลี่ย 4.9/5 ดาว
+                        </p>
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <!-- ============ TESTIMONIALS ============ -->
+            <div class="mb-24">
+
+                <div class="text-center mb-10">
+                    <p class="text-xs font-bold tracking-[0.25em] text-white/40 uppercase mb-3">Reviews</p>
+                    <h2 class="text-3xl sm:text-4xl font-black text-white mb-3">รีวิวจากลูกค้า</h2>
+                    <p class="text-sm text-white/50 max-w-xl mx-auto">
+                        เสียงจากลูกค้าจริงที่ไว้วางใจเรา
+                    </p>
+                </div>
+
+                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+
+                    <div class="bg-white/[0.04] border border-white/10 rounded-2xl p-6 hover:bg-white/[0.07] transition-all duration-300">
+                        <div class="flex items-center gap-1 mb-3">
+                            <i data-lucide="star" class="w-4 h-4 text-white"></i>
+                            <i data-lucide="star" class="w-4 h-4 text-white"></i>
+                            <i data-lucide="star" class="w-4 h-4 text-white"></i>
+                            <i data-lucide="star" class="w-4 h-4 text-white"></i>
+                            <i data-lucide="star" class="w-4 h-4 text-white"></i>
+                        </div>
+                        <p class="text-sm text-white/70 leading-relaxed mb-4">
+                            "สั่งเติมเกมตีสอง ของมาภายใน 10 วินาที
+                            ระบบอัตโนมัติเร็วมากครับ ประทับใจมาก"
+                        </p>
+                        <div class="flex items-center gap-3">
+                            <div class="w-9 h-9 btn-light rounded-full flex items-center justify-center font-black text-xs">ก</div>
+                            <div>
+                                <p class="text-xs font-bold text-white">กันต์ ★ Verified</p>
+                                <p class="text-[10px] text-white/40">ลูกค้าประจำ</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="bg-white/[0.04] border border-white/10 rounded-2xl p-6 hover:bg-white/[0.07] transition-all duration-300">
+                        <div class="flex items-center gap-1 mb-3">
+                            <i data-lucide="star" class="w-4 h-4 text-white"></i>
+                            <i data-lucide="star" class="w-4 h-4 text-white"></i>
+                            <i data-lucide="star" class="w-4 h-4 text-white"></i>
+                            <i data-lucide="star" class="w-4 h-4 text-white"></i>
+                            <i data-lucide="star" class="w-4 h-4 text-white"></i>
+                        </div>
+                        <p class="text-sm text-white/70 leading-relaxed mb-4">
+                            "ซื้อคีย์ Windows มา ราคาถูกกว่าที่อื่นเยอะ
+                            ใช้งานได้ปกติ ไม่มีปัญหาเลยค่ะ แนะนำเลย"
+                        </p>
+                        <div class="flex items-center gap-3">
+                            <div class="w-9 h-9 btn-light rounded-full flex items-center justify-center font-black text-xs">น</div>
+                            <div>
+                                <p class="text-xs font-bold text-white">น้ำฝน ★ Verified</p>
+                                <p class="text-[10px] text-white/40">ลูกค้าใหม่</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="bg-white/[0.04] border border-white/10 rounded-2xl p-6 hover:bg-white/[0.07] transition-all duration-300">
+                        <div class="flex items-center gap-1 mb-3">
+                            <i data-lucide="star" class="w-4 h-4 text-white"></i>
+                            <i data-lucide="star" class="w-4 h-4 text-white"></i>
+                            <i data-lucide="star" class="w-4 h-4 text-white"></i>
+                            <i data-lucide="star" class="w-4 h-4 text-white"></i>
+                            <i data-lucide="star" class="w-4 h-4 text-white"></i>
+                        </div>
+                        <p class="text-sm text-white/70 leading-relaxed mb-4">
+                            "เว็บสวยใช้งานง่าย ชอบธีมดำๆ มินิมอลมากครับ
+                            เติมเงินง่าย ได้ของไว จะกลับมาซื้ออีกแน่นอน"
+                        </p>
+                        <div class="flex items-center gap-3">
+                            <div class="w-9 h-9 btn-light rounded-full flex items-center justify-center font-black text-xs">ภ</div>
+                            <div>
+                                <p class="text-xs font-bold text-white">ภูมิ ★ Verified</p>
+                                <p class="text-[10px] text-white/40">ลูกค้าประจำ</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="bg-white/[0.04] border border-white/10 rounded-2xl p-6 hover:bg-white/[0.07] transition-all duration-300">
+                        <div class="flex items-center gap-1 mb-3">
+                            <i data-lucide="star" class="w-4 h-4 text-white"></i>
+                            <i data-lucide="star" class="w-4 h-4 text-white"></i>
+                            <i data-lucide="star" class="w-4 h-4 text-white"></i>
+                            <i data-lucide="star" class="w-4 h-4 text-white"></i>
+                            <i data-lucide="star" class="w-4 h-4 text-white"></i>
+                        </div>
+                        <p class="text-sm text-white/70 leading-relaxed mb-4">
+                            "มีปัญหาสินค้าตอนแรก ทักแอดมินแล้วแก้ให้ทันทีเลยค่ะ
+                            บริการดีเกินราคา ร้านนี้ซื้อได้อุ่นใจมากๆ"
+                        </p>
+                        <div class="flex items-center gap-3">
+                            <div class="w-9 h-9 btn-light rounded-full flex items-center justify-center font-black text-xs">จ</div>
+                            <div>
+                                <p class="text-xs font-bold text-white">จีัน ★ Verified</p>
+                                <p class="text-[10px] text-white/40">ลูกค้าประจำ</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="bg-white/[0.04] border border-white/10 rounded-2xl p-6 hover:bg-white/[0.07] transition-all duration-300">
+                        <div class="flex items-center gap-1 mb-3">
+                            <i data-lucide="star" class="w-4 h-4 text-white"></i>
+                            <i data-lucide="star" class="w-4 h-4 text-white"></i>
+                            <i data-lucide="star" class="w-4 h-4 text-white"></i>
+                            <i data-lucide="star" class="w-4 h-4 text-white"></i>
+                            <i data-lucide="star" class="w-4 h-4 text-white"></i>
+                        </div>
+                        <p class="text-sm text-white/70 leading-relaxed mb-4">
+                            "เทียบราคาหลายเว็บแล้วเว็บนี้ถูกสุดจริงๆ
+                            ของแท้ ส่งไว ตั้งแต่สมัครก็ไม่ถึงนาที"
+                        </p>
+                        <div class="flex items-center gap-3">
+                            <div class="w-9 h-9 btn-light rounded-full flex items-center justify-center font-black text-xs">ต</div>
+                            <div>
+                                <p class="text-xs font-bold text-white">ต้น ★ Verified</p>
+                                <p class="text-[10px] text-white/40">ลูกค้าใหม่</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="bg-white/[0.04] border border-white/10 rounded-2xl p-6 hover:bg-white/[0.07] transition-all duration-300">
+                        <div class="flex items-center gap-1 mb-3">
+                            <i data-lucide="star" class="w-4 h-4 text-white"></i>
+                            <i data-lucide="star" class="w-4 h-4 text-white"></i>
+                            <i data-lucide="star" class="w-4 h-4 text-white"></i>
+                            <i data-lucide="star" class="w-4 h-4 text-white"></i>
+                            <i data-lucide="star" class="w-4 h-4 text-white"></i>
+                        </div>
+                        <p class="text-sm text-white/70 leading-relaxed mb-4">
+                            "ซื้อ Gift Card ประจำที่นี่ครับ
+                            โค้ดใช้ได้ทุกลูก ไม่เคยมีปัญหาเลยสักครั้ง"
+                        </p>
+                        <div class="flex items-center gap-3">
+                            <div class="w-9 h-9 btn-light rounded-full flex items-center justify-center font-black text-xs">บ</div>
+                            <div>
+                                <p class="text-xs font-bold text-white">บอส ★ Verified</p>
+                                <p class="text-[10px] text-white/40">ลูกค้า VIP</p>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <!-- ============ FAQ ============ -->
+            <div id="faq" class="mb-24 scroll-mt-24 max-w-3xl mx-auto">
+
+                <div class="text-center mb-10">
+                    <p class="text-xs font-bold tracking-[0.25em] text-white/40 uppercase mb-3">FAQ</p>
+                    <h2 class="text-3xl sm:text-4xl font-black text-white mb-3">คำถามที่พบบ่อย</h2>
+                    <p class="text-sm text-white/50">
+                        เรื่องที่ลูกค้าถามบ่อยที่สุด เก็บรวบรวมไว้ให้แล้ว
+                    </p>
+                </div>
+
+                <div class="space-y-3">
+
+                    <!-- FAQ 1 -->
+                    <div class="faq-item bg-white/[0.04] border border-white/10 rounded-2xl overflow-hidden hover:border-white/20 transition-all duration-300">
+                        <button onclick="playClickSound(); toggleFaq(this)" class="w-full px-6 py-5 flex items-center justify-between gap-4 text-left">
+                            <span class="text-sm font-bold text-white">สั่งซื้อแล้วของมาช้าสุดกี่นาที?</span>
+                            <i data-lucide="chevron-down" class="faq-chevron w-5 h-5 text-white/50 shrink-0"></i>
+                        </button>
+                        <div class="faq-answer px-6">
+                            <p class="text-xs text-white/50 leading-relaxed pb-5">
+                                โดยปกติระบบส่งของอัตโนมัติภายใน 1-5 นาที หลังจากชำระเงินสำเร็จ
+                                แต่ในบางกรณีที่มีปัญหาเทคนิค อาจใช้เวลาไม่เกิน 30 นาที
+                                หากเกินกว่านั้นสามารถทักแอดมินได้ทันที เราจะตรวจสอบให้โดยเร็วที่สุดครับ
+                            </p>
+                        </div>
+                    </div>
+
+                    <!-- FAQ 2 -->
+                    <div class="faq-item bg-white/[0.04] border border-white/10 rounded-2xl overflow-hidden hover:border-white/20 transition-all duration-300">
+                        <button onclick="playClickSound(); toggleFaq(this)" class="w-full px-6 py-5 flex items-center justify-between gap-4 text-left">
+                            <span class="text-sm font-bold text-white">ระบบเติมเงินรับช่องทางอะไรบ้าง?</span>
+                            <i data-lucide="chevron-down" class="faq-chevron w-5 h-5 text-white/50 shrink-0"></i>
+                        </button>
+                        <div class="faq-answer px-6">
+                            <p class="text-xs text-white/50 leading-relaxed pb-5">
+                                ปัจจุบันรองรับการเติมเงินผ่าน PromptPay, TrueMoney Wallet
+                                และบัตรเครดิต/เดบิต ทั้งนี้ระบบเติมเงินอยู่ระหว่างการปรับปรุง
+                                เพื่อเพิ่มช่องทางใหม่ๆ ให้บริการที่หลากหลายยิ่งขึ้นครับ
+                            </p>
+                        </div>
+                    </div>
+
+                    <!-- FAQ 3 -->
+                    <div class="faq-item bg-white/[0.04] border border-white/10 rounded-2xl overflow-hidden hover:border-white/20 transition-all duration-300">
+                        <button onclick="playClickSound(); toggleFaq(this)" class="w-full px-6 py-5 flex items-center justify-between gap-4 text-left">
+                            <span class="text-sm font-bold text-white">สินค้ามีปัญหา ใช้งานไม่ได้ ทำอย่างไร?</span>
+                            <i data-lucide="chevron-down" class="faq-chevron w-5 h-5 text-white/50 shrink-0"></i>
+                        </button>
+                        <div class="faq-answer px-6">
+                            <p class="text-xs text-white/50 leading-relaxed pb-5">
+                                สามารถแจ้งแอดมินได้ทันทีพร้อมหลักฐานการสั่งซื้อ
+                                เรารับประกันสินค้าทุกชิ้น หากตรวจสอบพบว่าสินค้ามีปัญหาจริง
+                                เราจะเปลี่ยนสินค้าใหม่ให้ทันที หรือคืนเงินเต็มจำนวนครับ
+                            </p>
+                        </div>
+                    </div>
+
+                    <!-- FAQ 4 -->
+                    <div class="faq-item bg-white/[0.04] border border-white/10 rounded-2xl overflow-hidden hover:border-white/20 transition-all duration-300">
+                        <button onclick="playClickSound(); toggleFaq(this)" class="w-full px-6 py-5 flex items-center justify-between gap-4 text-left">
+                            <span class="text-sm font-bold text-white">เงินในระบบเติมไปแล้วใช้ยังไง?</span>
+                            <i data-lucide="chevron-down" class="faq-chevron w-5 h-5 text-white/50 shrink-0"></i>
+                        </button>
+                        <div class="faq-answer px-6">
+                            <p class="text-xs text-white/50 leading-relaxed pb-5">
+                                เมื่อเติมเงินเข้าระบบสำเร็จ ยอดเงินจะแสดงที่มุมขวาบนของเว็บไซต์
+                                (ตรงชื่อบัญชีของคุณ) สามารถนำยอดเงินนี้ไปใช้ซื้อสินค้าได้ทันที
+                                โดยไม่ต้องกรอกข้อมูลบัตรทุกครั้ง
+                            </p>
+                        </div>
+                    </div>
+
+                    <!-- FAQ 5 -->
+                    <div class="faq-item bg-white/[0.04] border border-white/10 rounded-2xl overflow-hidden hover:border-white/20 transition-all duration-300">
+                        <button onclick="playClickSound(); toggleFaq(this)" class="w-full px-6 py-5 flex items-center justify-between gap-4 text-left">
+                            <span class="text-sm font-bold text-white">ลืมรหัสผ่านทำอย่างไร?</span>
+                            <i data-lucide="chevron-down" class="faq-chevron w-5 h-5 text-white/50 shrink-0"></i>
+                        </button>
+                        <div class="faq-answer px-6">
+                            <p class="text-xs text-white/50 leading-relaxed pb-5">
+                                ทักแอดมินพร้อมอีเมลที่ใช้สมัคร ทีมงานจะทำการตรวจสอบ
+                                และช่วยกู้คืนบัญชีให้โดยเร็วที่สุดครับ
+                            </p>
+                        </div>
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <!-- ============ CTA ============ -->
+            <div class="mb-4">
+
+                <div class="relative overflow-hidden bg-white/[0.04] border border-white/10 rounded-3xl p-10 sm:p-14 text-center">
+
+                    <div class="absolute -top-16 -left-16 w-64 h-64 bg-white/[0.05] rounded-full blur-3xl glow-pulse pointer-events-none"></div>
+                    <div class="absolute -bottom-16 -right-16 w-64 h-64 bg-white/[0.04] rounded-full blur-3xl glow-pulse pointer-events-none" style="animation-delay: 1s;"></div>
+
+                    <div class="relative">
+                        <div class="w-16 h-16 btn-light rounded-2xl flex items-center justify-center mx-auto mb-6 shadow-[0_0_40px_rgba(255,255,255,0.2)]">
+                            <i data-lucide="rocket" class="w-8 h-8"></i>
+                        </div>
+
+                        <h2 class="text-3xl sm:text-4xl font-black text-white mb-4">
+                            พร้อมเริ่มใช้งานหรือยัง?
+                        </h2>
+
+                        <p class="text-sm sm:text-base text-white/50 leading-relaxed mb-8 max-w-lg mx-auto">
+                            สมัครสมาชิกวันนี้ รับส่วนลดสำหรับการซื้อครั้งแรก
+                            พร้อมสัมผัสประสบการณ์ช้อปปิ้งที่รวดเร็วที่สุด
+                        </p>
+
+                        <div class="flex flex-col sm:flex-row items-center justify-center gap-3">
+                            <button
+                                onclick="playClickSound(); toggleAuthModal(true)"
+                                class="btn-shine relative overflow-hidden btn-light font-bold px-8 py-3.5 rounded-2xl shadow-[0_0_35px_rgba(255,255,255,0.15)] transition active:scale-95 flex items-center gap-2 text-sm w-full sm:w-auto justify-center">
+                                <i data-lucide="user-plus" class="w-4 h-4"></i>
+                                สมัครสมาชิกฟรี
+                            </button>
+
+                            <button
+                                onclick="playClickSound(); scrollToSection('categories')"
+                                class="bg-white/[0.06] hover:bg-white/[0.12] border border-white/15 text-white font-semibold px-8 py-3.5 rounded-2xl transition active:scale-95 flex items-center gap-2 text-sm w-full sm:w-auto justify-center">
+                                <i data-lucide="eye" class="w-4 h-4"></i>
+                                ดูสินค้าก่อน
+                            </button>
+                        </div>
+                    </div>
+
                 </div>
 
             </div>
@@ -637,10 +1202,99 @@
 
 
     <!-- =========================
-         FOOTER
+         FOOTER (Expanded)
     ========================== -->
-    <footer class="w-full border-t border-white/10 bg-black py-6 text-center text-xs font-medium text-white/40">
-        © 2026 Skey Shop. All rights reserved.
+    <footer class="w-full border-t border-white/10 bg-black relative">
+
+        <div class="max-w-6xl mx-auto px-6 py-12">
+
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-10 mb-10">
+
+                <!-- About -->
+                <div>
+                    <div class="flex items-center gap-3 mb-4">
+                        <div class="w-9 h-9 btn-light rounded-xl flex items-center justify-center font-extrabold text-xs tracking-wider">
+                            SK
+                        </div>
+                        <span class="text-lg font-extrabold text-white">Skey Shop</span>
+                    </div>
+                    <p class="text-xs text-white/45 leading-relaxed mb-4">
+                        แพลตฟอร์มสินค้าและบริการดิจิทัลครบวงจร
+                        ส่งของอัตโนมัติ 24 ชั่วโมง
+                        ปลอดภัย รวดเร็ว และเชื่อถือได้
+                    </p>
+                    <div class="flex items-center gap-2">
+                        <span class="inline-flex items-center gap-1.5 text-[10px] font-bold text-white/60 bg-white/[0.06] border border-white/10 px-2.5 py-1 rounded-full">
+                            <span class="w-1.5 h-1.5 bg-white rounded-full animate-pulse"></span>
+                            เซิร์ฟเวอร์ออนไลน์
+                        </span>
+                    </div>
+                </div>
+
+                <!-- Links -->
+                <div>
+                    <h4 class="text-xs font-bold text-white uppercase tracking-wider mb-4">เมนูด่วน</h4>
+                    <ul class="space-y-2.5">
+                        <li><a onclick="playClickSound(); scrollToSection('categories')" class="text-xs text-white/45 hover:text-white transition cursor-pointer">หมวดหมู่สินค้า</a></li>
+                        <li><a onclick="playClickSound(); scrollToSection('howto')" class="text-xs text-white/45 hover:text-white transition cursor-pointer">วิธีการสั่งซื้อ</a></li>
+                        <li><a onclick="playClickSound(); scrollToSection('faq')" class="text-xs text-white/45 hover:text-white transition cursor-pointer">คำถามที่พบบ่อย</a></li>
+                        <li><a onclick="playClickSound(); reVerifyCaptcha()" class="text-xs text-white/45 hover:text-white transition cursor-pointer">ยืนยันความปลอดภัย</a></li>
+                    </ul>
+                </div>
+
+                <!-- Contact -->
+                <div>
+                    <h4 class="text-xs font-bold text-white uppercase tracking-wider mb-4">ติดต่อเรา</h4>
+                    <ul class="space-y-2.5">
+                        <li class="flex items-center gap-2 text-xs text-white/45">
+                            <i data-lucide="mail" class="w-3.5 h-3.5"></i>
+                            support@skeyshop.com
+                        </li>
+                        <li class="flex items-center gap-2 text-xs text-white/45">
+                            <i data-lucide="clock" class="w-3.5 h-3.5"></i>
+                            แอดมินตอบ 09:00 - 24:00
+                        </li>
+                        <li class="flex items-center gap-2 text-xs text-white/45">
+                            <i data-lucide="message-circle" class="w-3.5 h-3.5"></i>
+                            ทักแชทผ่านหน้าเว็บได้เลย
+                        </li>
+                    </ul>
+                </div>
+
+                <!-- Trust -->
+                <div>
+                    <h4 class="text-xs font-bold text-white uppercase tracking-wider mb-4">ความปลอดภัย</h4>
+                    <div class="space-y-2.5">
+                        <div class="flex items-center gap-2 text-xs text-white/45">
+                            <i data-lucide="shield-check" class="w-3.5 h-3.5 text-white/70"></i>
+                            เข้ารหัส SSL/TLS
+                        </div>
+                        <div class="flex items-center gap-2 text-xs text-white/45">
+                            <i data-lucide="lock" class="w-3.5 h-3.5 text-white/70"></i>
+                            ป้องกันบอท reCAPTCHA
+                        </div>
+                        <div class="flex items-center gap-2 text-xs text-white/45">
+                            <i data-lucide="check-circle" class="w-3.5 h-3.5 text-white/70"></i>
+                            รับประกันสินค้าทุกชิ้น
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+            <div class="divider-mono mb-6"></div>
+
+            <div class="flex flex-col sm:flex-row items-center justify-between gap-3">
+                <p class="text-[10px] text-white/35">
+                    © 2026 Skey Shop. All rights reserved.
+                </p>
+                <p class="text-[10px] text-white/35 flex items-center gap-1.5">
+                    Made with <i data-lucide="heart" class="w-3 h-3 text-white/60"></i> for our customers
+                </p>
+            </div>
+
+        </div>
+
     </footer>
 
 
@@ -683,6 +1337,36 @@
 
 
         /* =========================
+           SCROLL TO SECTION
+        ========================== */
+        function scrollToSection(id) {
+            const el = document.getElementById(id);
+            if (el) {
+                el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            }
+        }
+
+
+        /* =========================
+           FAQ TOGGLE
+        ========================== */
+        function toggleFaq(btn) {
+            const item = btn.closest('.faq-item');
+            const isOpen = item.classList.contains('open');
+
+            /* ปิดทุกอันก่อน */
+            document.querySelectorAll('.faq-item').forEach(faq => {
+                faq.classList.remove('open');
+            });
+
+            /* เปิดอันที่คลิก (ถ้าเดิมไม่ได้เปิดอยู่) */
+            if (!isOpen) {
+                item.classList.add('open');
+            }
+        }
+
+
+        /* =========================
            CAPTCHA
         ========================== */
         function onInitialCaptchaSuccess() {
@@ -715,7 +1399,6 @@
 
             modal.classList.remove('hidden', 'opacity-0', 'pointer-events-none');
 
-            /* เล่นอนิเมชันการ์ดเด้งขึ้นใหม่ */
             if (card) {
                 card.classList.remove('modal-enter');
                 void card.offsetWidth;
@@ -878,7 +1561,7 @@
 
 
         /* =========================
-           ย่ออีเมล เช่น johndoe@gmail.com → jo***@gmail.com
+           ย่ออีเมล
         ========================== */
         function abbreviateEmail(email) {
             const parts = email.split('@');
