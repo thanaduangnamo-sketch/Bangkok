@@ -25,23 +25,27 @@
 </head>
 <body class="min-h-screen flex flex-col justify-between text-slate-800">
 
-    <!-- INITIAL SECURITY RECAPTCHA MODAL (เด้งตรวจทันทีที่เข้าเว็บ) -->
+    <!-- INITIAL SECURITY RECAPTCHA MODAL (ปุ่มพื้นหลังสีขาว เรียบง่าย) -->
     <div id="initialSecurityModal" class="fixed inset-0 bg-slate-950/80 backdrop-blur-md z-50 flex items-center justify-center p-4 transition-all duration-500">
-        <div class="bg-white rounded-3xl shadow-2xl border border-slate-100 w-full max-w-md p-6 sm:p-8 text-center relative overflow-hidden">
-            <div class="absolute -right-10 -top-10 w-32 h-32 bg-emerald-500/10 rounded-full blur-2xl"></div>
+        <div class="bg-white rounded-3xl shadow-2xl border border-slate-100 w-full max-w-sm p-8 text-center relative overflow-hidden">
             
-            <div class="w-16 h-16 bg-emerald-50 text-emerald-600 rounded-2xl flex items-center justify-center mx-auto mb-4 border border-emerald-100">
-                <i data-lucide="shield-check" class="w-8 h-8"></i>
+            <div class="w-16 h-16 bg-slate-100 text-slate-800 rounded-2xl flex items-center justify-center mx-auto mb-4 border border-slate-200 shadow-sm">
+                <i data-lucide="shield-check" class="w-8 h-8 text-emerald-600"></i>
             </div>
 
-            <h3 class="text-2xl font-black text-slate-900 mb-1">ระบบยืนยันความปลอดภัย</h3>
-            <p class="text-xs text-slate-500 mb-6">กรุณายืนยันตัวตนเพื่อเข้าใช้งานเว็บไซต์ GPS SHOP</p>
+            <h3 class="text-xl font-extrabold text-slate-900 mb-6">ระบบตรวจสอบความปลอดภัย</h3>
 
+            <!-- reCAPTCHA Widget -->
             <div class="flex justify-center mb-6">
                 <div class="g-recaptcha" id="initialRecaptcha" data-sitekey="6LdE2ZMtAAAAAOTuFBh816eZmvZ8L1pO1g8Z_Vso" data-callback="onInitialCaptchaSuccess"></div>
             </div>
 
-            <p class="text-[11px] text-slate-400">ระบบป้องกันการโจมตีอัตโนมัติ (DDoS & Bot Protection)</p>
+            <!-- ปุ่มสีขาว ยืนยันตัวตนเพื่อความปลอดภัย -->
+            <button onclick="playClickSound(); triggerCaptchaClick()" class="w-full bg-white hover:bg-slate-50 text-slate-900 font-bold py-3.5 px-4 rounded-2xl border border-slate-300 shadow-sm transition active:scale-95 flex items-center justify-center gap-2 text-sm">
+                <i data-lucide="lock" class="w-4 h-4 text-slate-600"></i>
+                <span>ยืนยันตัวตนเพื่อความปลอดภัย</span>
+            </button>
+
         </div>
     </div>
 
@@ -76,7 +80,6 @@
             </div>
 
             <div id="authContainer" class="flex items-center gap-2 sm:gap-3">
-                <!-- reCAPTCHA Verify Status Button -->
                 <button onclick="playClickSound(); reVerifyCaptcha()" class="bg-slate-100 hover:bg-slate-200 text-slate-700 font-semibold px-3 py-2 rounded-xl text-xs transition flex items-center gap-1.5 border border-slate-200" title="ตรวจสอบความปลอดภัย reCAPTCHA">
                     <i data-lucide="shield-check" class="w-4 h-4 text-emerald-600"></i>
                     <span class="hidden sm:inline">reCAPTCHA</span>
@@ -115,7 +118,6 @@
         <div class="bg-white rounded-3xl shadow-2xl border border-slate-100 w-full max-w-md p-6 sm:p-8 relative">
             <button onclick="playClickSound(); toggleAuthModal(false)" class="absolute top-5 right-5 text-slate-400 hover:text-black font-bold text-xl">✕</button>
 
-            <!-- Tab Switch -->
             <div class="flex border-b border-slate-100 mb-6">
                 <button id="loginTabBtn" onclick="playClickSound(); switchForm('login')" class="w-1/2 py-3 text-center font-bold text-black border-b-2 border-black transition flex items-center justify-center gap-2">
                     <i data-lucide="key-round" class="w-4 h-4"></i> เข้าสู่ระบบ
@@ -175,14 +177,12 @@
                 </button>
             </form>
 
-            <!-- Separator Line -->
             <div class="relative flex py-2 items-center my-4">
                 <div class="flex-grow border-t border-slate-200"></div>
                 <span class="flex-shrink mx-4 text-xs font-semibold text-slate-400 uppercase">หรือ</span>
                 <div class="flex-grow border-t border-slate-200"></div>
             </div>
 
-            <!-- Discord Login Button -->
             <div>
                 <a href="https://discord.com/oauth2/authorize?client_id=1532644387639660627&response_type=code&redirect_uri=https%3A%2F%2Fdhaf-shop.onrender.com%2F&scope=identify" onclick="playClickSound()" class="w-full bg-[#5865F2] hover:bg-[#4752C4] text-white font-bold py-3 px-4 rounded-xl shadow-md transition active:scale-95 flex items-center justify-center gap-3 text-sm">
                     <svg class="w-5 h-5 fill-current" viewBox="0 0 127.14 96.36">
@@ -252,14 +252,23 @@
             handleDiscordCallback();
         });
 
-        // reCAPTCHA Callback เมื่อผ่านด่านแรก
+        // Callback เมื่อกดหรือผ่าน reCAPTCHA
         function onInitialCaptchaSuccess() {
             const initialModal = document.getElementById('initialSecurityModal');
             initialModal.classList.add('opacity-0', 'pointer-events-none');
             setTimeout(() => {
                 initialModal.classList.add('hidden');
                 startLoadingScreen();
-            }, 500);
+            }, 400);
+        }
+
+        function triggerCaptchaClick() {
+            // ถ้ายืนยัน reCAPTCHA แล้ว ให้เข้าสู่หน้าเว็บทันที
+            if (typeof grecaptcha !== 'undefined' && grecaptcha.getResponse().length > 0) {
+                onInitialCaptchaSuccess();
+            } else {
+                alert('กรุณาติ๊กช่อง "ฉันไม่ใช่โปรแกรมอัตโนมัติ" ในกล่องด้านบนก่อนครับ');
+            }
         }
 
         function reVerifyCaptcha() {
@@ -304,7 +313,6 @@
             }, 3600);
         }
 
-        // ดึง Profile จริงผ่าน Backend API
         async function handleDiscordCallback() {
             const urlParams = new URLSearchParams(window.location.search);
             const code = urlParams.get('code');
