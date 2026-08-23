@@ -15,14 +15,13 @@
     <!-- Google Font -->
     <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
 
-    <!-- Lucide Icons + Fallback สำรอง -->
+    <!-- Lucide Icons (มี CDN สำรอง) -->
     <script src="https://unpkg.com/lucide@latest"></script>
     <script>
-        /* 🛡️ ถ้า unpkg โหลดไม่ได้ สลับไปโหลดจาก jsdelivr แทน */
         if (!window.lucide) {
-            var _lucideFallback = document.createElement('script');
-            _lucideFallback.src = 'https://cdn.jsdelivr.net/npm/lucide@latest/dist/umd/lucide.min.js';
-            document.head.appendChild(_lucideFallback);
+            var s = document.createElement('script');
+            s.src = 'https://cdn.jsdelivr.net/npm/lucide@latest/dist/umd/lucide.min.js';
+            document.head.appendChild(s);
         }
     </script>
 
@@ -66,13 +65,6 @@
             -webkit-mask-image: radial-gradient(ellipse 80% 60% at 50% 40%, black 30%, transparent 75%);
             mask-image: radial-gradient(ellipse 80% 60% at 50% 40%, black 30%, transparent 75%);
         }
-
-        @keyframes modal-in {
-            from { opacity: 0; transform: translateY(30px) scale(0.95); }
-            to { opacity: 1; transform: translateY(0) scale(1); }
-        }
-
-        .modal-enter { animation: modal-in 0.7s cubic-bezier(0.16, 1, 0.3, 1) both; }
 
         @keyframes shine {
             0% { transform: translateX(-150%) skewX(-15deg); }
@@ -125,7 +117,7 @@
 <body class="min-h-screen flex flex-col justify-between text-white">
 
     <!-- =========================
-         LOADING SCREEN
+         LOADING SCREEN (เปิดมาโชว์เลย)
     ========================== -->
     <div id="loadingScreen"
          class="fixed inset-0 bg-[#050505] z-40 flex flex-col items-center justify-center p-6 transition-opacity duration-700">
@@ -262,7 +254,6 @@
                     </div>
                 </div>
 
-                <!-- ปุ่มลืมรหัสผ่าน -->
                 <div class="flex justify-end">
                     <button type="button" onclick="playClickSound(); showForgotPassword()"
                             class="text-xs text-white/50 hover:text-white underline underline-offset-4 transition flex items-center gap-1">
@@ -306,7 +297,6 @@
                     </div>
                 </div>
 
-                <!-- reCAPTCHA -->
                 <div>
                     <div class="bg-white rounded-2xl p-3 flex justify-center shadow-[0_10px_35px_rgba(0,0,0,0.5)]">
                         <div class="g-recaptcha"
@@ -340,7 +330,6 @@
                     <p class="text-xs text-white/50" id="forgotSubtitle">กรอกอีเมลที่ใช้สมัคร เพื่อตั้งรหัสผ่านใหม่</p>
                 </div>
 
-                <!-- ขั้นตอนที่ 1 -->
                 <form id="forgotStep1" onsubmit="handleForgotStep1(event)" class="space-y-4">
                     <div>
                         <label class="block text-xs font-bold text-white/60 uppercase tracking-wider mb-1 flex items-center gap-1">
@@ -360,7 +349,6 @@
                     </button>
                 </form>
 
-                <!-- ขั้นตอนที่ 2 -->
                 <form id="forgotStep2" onsubmit="handleForgotStep2(event)" class="space-y-4 hidden">
                     <div>
                         <label class="block text-xs font-bold text-white/60 uppercase tracking-wider mb-1 flex items-center gap-1">
@@ -442,113 +430,7 @@
 
 
     <!-- =========================
-         PRODUCT DETAIL MODAL
-    ========================== -->
-    <div id="productModal"
-         class="fixed inset-0 bg-black/70 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
-
-        <div class="bg-[#0d0d0d] rounded-3xl shadow-2xl border border-white/10 w-full max-w-md p-6 sm:p-8 relative">
-
-            <button onclick="playClickSound(); toggleProductModal(false)"
-                    class="absolute top-5 right-5 text-white/40 hover:text-white font-bold text-xl transition">✕</button>
-
-            <div class="flex items-center gap-4 mb-6 mt-2">
-                <div id="pmEmoji" class="w-16 h-16 bg-white/[0.07] border border-white/15 rounded-2xl flex items-center justify-center text-3xl shrink-0">🎮</div>
-                <div class="min-w-0">
-                    <h3 id="pmName" class="text-lg font-extrabold text-white leading-tight">ชื่อสินค้า</h3>
-                    <p id="pmDesc" class="text-xs text-white/50 mt-0.5">รายละเอียดสินค้า</p>
-                </div>
-            </div>
-
-            <div id="pmIdField" class="mb-5">
-                <label id="pmIdLabel" class="block text-xs font-bold text-white/60 uppercase tracking-wider mb-1 flex items-center gap-1">
-                    <i data-lucide="user" class="w-3.5 h-3.5"></i>
-                    ไอดีเกม
-                </label>
-                <input type="text" id="productIdInput" placeholder="กรอกไอดี"
-                       class="input-dark w-full px-4 py-3 rounded-xl transition text-sm">
-            </div>
-
-            <p class="text-xs font-bold text-white/60 uppercase tracking-wider mb-2 flex items-center gap-1">
-                <i data-lucide="package" class="w-3.5 h-3.5"></i>
-                เลือกแพ็กเกจ
-            </p>
-            <div id="packageList" class="space-y-2 mb-5"></div>
-
-            <div class="flex items-center justify-between bg-white/[0.04] border border-white/10 rounded-xl px-4 py-3 mb-4">
-                <p class="text-xs text-white/50">ยอดเงินคงเหลือ</p>
-                <div class="text-right">
-                    <p class="text-xs font-bold text-white">฿<span id="pmBalance">0.00</span></p>
-                    <p class="text-[10px] text-white/40">รวมทั้งสิ้น ฿<span id="pmTotal">0</span></p>
-                </div>
-            </div>
-
-            <div id="buyError" class="hidden bg-red-400/10 border border-red-400/20 rounded-xl px-4 py-3 mb-4 flex items-center justify-between gap-3">
-                <p id="buyErrorText" class="text-xs text-red-300 leading-relaxed"></p>
-                <button onclick="playClickSound(); toggleTopUpModal(true)"
-                        class="text-[10px] bg-white text-black font-bold px-3 py-1.5 rounded-lg shrink-0 hover:bg-zinc-200 transition">
-                    เติมเงิน
-                </button>
-            </div>
-
-            <button onclick="playClickSound(); buyProduct()"
-                    class="btn-shine relative overflow-hidden btn-light hover:bg-zinc-200 w-full font-bold py-3.5 rounded-xl shadow-[0_0_30px_rgba(255,255,255,0.12)] transition active:scale-95 flex items-center justify-center gap-2 text-sm">
-                <i data-lucide="shopping-cart" class="w-4 h-4"></i>
-                ยืนยันการสั่งซื้อ
-            </button>
-
-        </div>
-    </div>
-
-
-    <!-- =========================
-         PURCHASE SUCCESS MODAL
-    ========================== -->
-    <div id="successModal"
-         class="fixed inset-0 bg-black/70 backdrop-blur-sm z-[70] hidden flex items-center justify-center p-4">
-
-        <div class="bg-[#0d0d0d] rounded-3xl shadow-2xl border border-white/10 w-full max-w-sm p-8 relative text-center modal-enter">
-
-            <div class="w-20 h-20 btn-light rounded-full flex items-center justify-center mx-auto mb-5 shadow-[0_0_45px_rgba(255,255,255,0.25)]">
-                <i data-lucide="check" class="w-10 h-10"></i>
-            </div>
-
-            <h3 class="text-2xl font-black text-white mb-1">สั่งซื้อสำเร็จ!</h3>
-            <p class="text-xs text-white/50 mb-6">ระบบกำลังดำเนินการส่งสินค้าให้คุณ</p>
-
-            <div class="bg-white/[0.04] border border-white/10 rounded-2xl p-4 space-y-2.5 text-left mb-6">
-                <div class="flex justify-between text-xs">
-                    <span class="text-white/50">เลขออเดอร์</span>
-                    <span id="smOrderId" class="font-bold text-white font-mono">SK00000000</span>
-                </div>
-                <div class="flex justify-between text-xs">
-                    <span class="text-white/50">สินค้า</span>
-                    <span id="smProduct" class="font-bold text-white">-</span>
-                </div>
-                <div class="flex justify-between text-xs">
-                    <span class="text-white/50">แพ็กเกจ</span>
-                    <span id="smPackage" class="font-bold text-white">-</span>
-                </div>
-                <div class="flex justify-between text-xs">
-                    <span class="text-white/50">ยอดชำระ</span>
-                    <span id="smPrice" class="font-bold text-white">฿0</span>
-                </div>
-                <div class="flex justify-between text-xs">
-                    <span class="text-white/50">ยอดเงินคงเหลือ</span>
-                    <span id="smBalance" class="font-bold text-white">฿0.00</span>
-                </div>
-            </div>
-
-            <button onclick="playClickSound(); toggleSuccessModal(false)"
-                    class="btn-light hover:bg-zinc-200 w-full font-semibold py-3 rounded-xl transition active:scale-95 text-sm">
-                เยี่ยม! รับทราบ
-            </button>
-        </div>
-    </div>
-
-
-    <!-- =========================
-         MAIN CONTENT
+         MAIN CONTENT (ลบร้านค้าแล้ว)
     ========================== -->
     <main class="relative">
         <div class="absolute inset-0 bg-grid-mono pointer-events-none"></div>
@@ -570,19 +452,19 @@
 
                 <p class="text-base sm:text-lg text-white/50 leading-relaxed mb-8 max-w-2xl mx-auto">
                     บริการสินค้าและบริการดิจิทัลครบวงจร
-                    รวดเร็ว ทันใจ และใช้งานง่าย พร้อมระบบส่งของอัตโนมัติ 24 ชั่วโมง
+                    รวดเร็ว ทันใจ และใช้งานง่าย
                 </p>
 
                 <div class="flex flex-col sm:flex-row items-center justify-center gap-3 mb-10">
-                    <button onclick="playClickSound(); scrollToSection('products')"
+                    <button onclick="playClickSound(); openRegisterForm()"
                             class="btn-light hover:bg-zinc-200 font-bold px-8 py-3.5 rounded-2xl shadow-[0_0_35px_rgba(255,255,255,0.15)] transition active:scale-95 flex items-center gap-2 text-sm w-full sm:w-auto justify-center">
-                        <i data-lucide="shopping-bag" class="w-4 h-4"></i>
-                        เลือกซื้อสินค้า
+                        <i data-lucide="user-plus" class="w-4 h-4"></i>
+                        สมัครสมาชิกฟรี
                     </button>
-                    <button onclick="playClickSound(); scrollToSection('howto')"
+                    <button onclick="playClickSound(); scrollToSection('features')"
                             class="bg-white/[0.06] hover:bg-white/[0.12] border border-white/15 text-white font-semibold px-8 py-3.5 rounded-2xl transition active:scale-95 flex items-center gap-2 text-sm w-full sm:w-auto justify-center">
                         <i data-lucide="book-open" class="w-4 h-4"></i>
-                        วิธีการสั่งซื้อ
+                        เรียนรู้เพิ่มเติม
                     </button>
                 </div>
             </div>
@@ -624,147 +506,8 @@
             </div>
 
 
-            <!-- ============ CATEGORIES ============ -->
-            <div id="categories" class="mb-24 scroll-mt-24">
-                <div class="text-center mb-10">
-                    <p class="text-xs font-bold tracking-[0.25em] text-white/40 uppercase mb-3">Categories</p>
-                    <h2 class="text-3xl sm:text-4xl font-black text-white mb-3">หมวดหมู่สินค้า</h2>
-                    <p class="text-sm text-white/50 max-w-xl mx-auto">เลือกหมวดหมู่ที่ต้องการ ครบทุกความต้องการในที่เดียว</p>
-                </div>
-
-                <div class="grid grid-cols-2 lg:grid-cols-3 gap-4">
-                    <div onclick="playClickSound(); filterProducts('game')" class="group bg-white/[0.04] border border-white/10 rounded-2xl p-6 hover:bg-white/[0.08] hover:border-white/25 transition-all duration-300 cursor-pointer">
-                        <div class="w-12 h-12 bg-white/[0.08] border border-white/15 rounded-xl flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
-                            <i data-lucide="gamepad-2" class="w-6 h-6 text-white"></i>
-                        </div>
-                        <h3 class="font-bold text-white mb-1">เติมเกม</h3>
-                        <p class="text-xs text-white/45 leading-relaxed">เติมเงินเกมดังมากมาย ราคาถูก ส่งไวภายในไม่กี่วินาที</p>
-                        <p class="text-xs font-bold text-white/70 mt-3 flex items-center gap-1">
-                            ดูสินค้า <i data-lucide="arrow-right" class="w-3.5 h-3.5 group-hover:translate-x-1 transition-transform"></i>
-                        </p>
-                    </div>
-
-                    <div onclick="playClickSound(); filterProducts('software')" class="group bg-white/[0.04] border border-white/10 rounded-2xl p-6 hover:bg-white/[0.08] hover:border-white/25 transition-all duration-300 cursor-pointer">
-                        <div class="w-12 h-12 bg-white/[0.08] border border-white/15 rounded-xl flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
-                            <i data-lucide="monitor" class="w-6 h-6 text-white"></i>
-                        </div>
-                        <h3 class="font-bold text-white mb-1">ซอฟต์แวร์ & License</h3>
-                        <p class="text-xs text-white/45 leading-relaxed">คีย์แท้ Windows, Office และอีกมากมาย ราคาพิเศษ</p>
-                        <p class="text-xs font-bold text-white/70 mt-3 flex items-center gap-1">
-                            ดูสินค้า <i data-lucide="arrow-right" class="w-3.5 h-3.5 group-hover:translate-x-1 transition-transform"></i>
-                        </p>
-                    </div>
-
-                    <div onclick="playClickSound(); filterProducts('giftcard')" class="group bg-white/[0.04] border border-white/10 rounded-2xl p-6 hover:bg-white/[0.08] hover:border-white/25 transition-all duration-300 cursor-pointer">
-                        <div class="w-12 h-12 bg-white/[0.08] border border-white/15 rounded-xl flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
-                            <i data-lucide="gift" class="w-6 h-6 text-white"></i>
-                        </div>
-                        <h3 class="font-bold text-white mb-1">บัตรกำนัล</h3>
-                        <p class="text-xs text-white/45 leading-relaxed">Gift Card ชั้นนำจากทั่วโลก ส่งรหัสถึงมือคุณทันที</p>
-                        <p class="text-xs font-bold text-white/70 mt-3 flex items-center gap-1">
-                            ดูสินค้า <i data-lucide="arrow-right" class="w-3.5 h-3.5 group-hover:translate-x-1 transition-transform"></i>
-                        </p>
-                    </div>
-
-                    <div onclick="playClickSound(); filterProducts('streaming')" class="group bg-white/[0.04] border border-white/10 rounded-2xl p-6 hover:bg-white/[0.08] hover:border-white/25 transition-all duration-300 cursor-pointer">
-                        <div class="w-12 h-12 bg-white/[0.08] border border-white/15 rounded-xl flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
-                            <i data-lucide="play-circle" class="w-6 h-6 text-white"></i>
-                        </div>
-                        <h3 class="font-bold text-white mb-1">บริการดิจิทัล</h3>
-                        <p class="text-xs text-white/45 leading-relaxed">สมาชิกเพลง หนัง และบริการสตรีมมิ่งราคาพิเศษ</p>
-                        <p class="text-xs font-bold text-white/70 mt-3 flex items-center gap-1">
-                            ดูสินค้า <i data-lucide="arrow-right" class="w-3.5 h-3.5 group-hover:translate-x-1 transition-transform"></i>
-                        </p>
-                    </div>
-
-                    <div onclick="playClickSound(); filterProducts('social')" class="group bg-white/[0.04] border border-white/10 rounded-2xl p-6 hover:bg-white/[0.08] hover:border-white/25 transition-all duration-300 cursor-pointer">
-                        <div class="w-12 h-12 bg-white/[0.08] border border-white/15 rounded-xl flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
-                            <i data-lucide="message-circle" class="w-6 h-6 text-white"></i>
-                        </div>
-                        <h3 class="font-bold text-white mb-1">ไอดี & โซเชียล</h3>
-                        <p class="text-xs text-white/45 leading-relaxed">บริการเกี่ยวกับโซเชียลมีเดีย ครบจบในที่เดียว</p>
-                        <p class="text-xs font-bold text-white/70 mt-3 flex items-center gap-1">
-                            ดูสินค้า <i data-lucide="arrow-right" class="w-3.5 h-3.5 group-hover:translate-x-1 transition-transform"></i>
-                        </p>
-                    </div>
-
-                    <div onclick="playClickSound(); filterProducts('all')" class="group bg-white/[0.04] border border-white/10 rounded-2xl p-6 hover:bg-white/[0.08] hover:border-white/25 transition-all duration-300 cursor-pointer">
-                        <div class="w-12 h-12 bg-white/[0.08] border border-white/15 rounded-xl flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
-                            <i data-lucide="layout-grid" class="w-6 h-6 text-white"></i>
-                        </div>
-                        <h3 class="font-bold text-white mb-1">ดูทั้งหมด</h3>
-                        <p class="text-xs text-white/45 leading-relaxed">สินค้าและบริการพิเศษที่คัดสรรมาให้เฉพาะคุณ</p>
-                        <p class="text-xs font-bold text-white/70 mt-3 flex items-center gap-1">
-                            ดูสินค้า <i data-lucide="arrow-right" class="w-3.5 h-3.5 group-hover:translate-x-1 transition-transform"></i>
-                        </p>
-                    </div>
-                </div>
-            </div>
-
-
-            <!-- ============ PRODUCTS ============ -->
-            <div id="products" class="mb-24 scroll-mt-24">
-
-                <div class="text-center mb-8">
-                    <p class="text-xs font-bold tracking-[0.25em] text-white/40 uppercase mb-3">Products</p>
-                    <h2 class="text-3xl sm:text-4xl font-black text-white mb-3">สินค้าทั้งหมด</h2>
-                    <p class="text-sm text-white/50 max-w-xl mx-auto">กดเลือกสินค้าเพื่อดูแพ็กเกจและราคา</p>
-                </div>
-
-                <div id="filterTabs" class="flex flex-wrap items-center justify-center gap-2 mb-8"></div>
-
-                <div id="productsGrid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4"></div>
-
-            </div>
-
-
-            <!-- ============ HOW TO BUY ============ -->
-            <div id="howto" class="mb-24 scroll-mt-24">
-                <div class="text-center mb-10">
-                    <p class="text-xs font-bold tracking-[0.25em] text-white/40 uppercase mb-3">How To Order</p>
-                    <h2 class="text-3xl sm:text-4xl font-black text-white mb-3">ขั้นตอนการสั่งซื้อ</h2>
-                    <p class="text-sm text-white/50 max-w-xl mx-auto">ง่ายๆ แค่ 4 ขั้นตอน ก็ได้สินค้าถึงมือคุณ</p>
-                </div>
-
-                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-                    <div class="relative bg-white/[0.04] border border-white/10 rounded-2xl p-6 hover:bg-white/[0.07] transition-all duration-300">
-                        <span class="absolute -top-3 -left-2 btn-light w-8 h-8 rounded-full flex items-center justify-center font-black text-sm shadow-lg">1</span>
-                        <div class="w-12 h-12 bg-white/[0.08] border border-white/15 rounded-xl flex items-center justify-center mb-4">
-                            <i data-lucide="user-plus" class="w-6 h-6 text-white"></i>
-                        </div>
-                        <h3 class="font-bold text-white mb-2">สมัครสมาชิก</h3>
-                        <p class="text-xs text-white/45 leading-relaxed">กรอกอีเมล รหัสผ่าน และยืนยัน reCAPTCHA ใช้เวลาไม่ถึง 1 นาที</p>
-                    </div>
-                    <div class="relative bg-white/[0.04] border border-white/10 rounded-2xl p-6 hover:bg-white/[0.07] transition-all duration-300">
-                        <span class="absolute -top-3 -left-2 btn-light w-8 h-8 rounded-full flex items-center justify-center font-black text-sm shadow-lg">2</span>
-                        <div class="w-12 h-12 bg-white/[0.08] border border-white/15 rounded-xl flex items-center justify-center mb-4">
-                            <i data-lucide="wallet" class="w-6 h-6 text-white"></i>
-                        </div>
-                        <h3 class="font-bold text-white mb-2">เติมเงินเข้าระบบ</h3>
-                        <p class="text-xs text-white/45 leading-relaxed">เลือกยอดเติมที่สะดวก เงินเข้าบัญชีทันที</p>
-                    </div>
-                    <div class="relative bg-white/[0.04] border border-white/10 rounded-2xl p-6 hover:bg-white/[0.07] transition-all duration-300">
-                        <span class="absolute -top-3 -left-2 btn-light w-8 h-8 rounded-full flex items-center justify-center font-black text-sm shadow-lg">3</span>
-                        <div class="w-12 h-12 bg-white/[0.08] border border-white/15 rounded-xl flex items-center justify-center mb-4">
-                            <i data-lucide="mouse-pointer-click" class="w-6 h-6 text-white"></i>
-                        </div>
-                        <h3 class="font-bold text-white mb-2">เลือกสินค้าที่ต้องการ</h3>
-                        <p class="text-xs text-white/45 leading-relaxed">เลือกแพ็กเกจ ใส่ไอดีเกม แล้วกดยืนยันการสั่งซื้อ</p>
-                    </div>
-                    <div class="relative bg-white/[0.04] border border-white/10 rounded-2xl p-6 hover:bg-white/[0.07] transition-all duration-300">
-                        <span class="absolute -top-3 -left-2 btn-light w-8 h-8 rounded-full flex items-center justify-center font-black text-sm shadow-lg">4</span>
-                        <div class="w-12 h-12 bg-white/[0.08] border border-white/15 rounded-xl flex items-center justify-center mb-4">
-                            <i data-lucide="package-check" class="w-6 h-6 text-white"></i>
-                        </div>
-                        <h3 class="font-bold text-white mb-2">รับสินค้าทันที</h3>
-                        <p class="text-xs text-white/45 leading-relaxed">ระบบส่งของอัตโนมัติ สินค้าถึงมือคุณในไม่กี่วินาที</p>
-                    </div>
-                </div>
-            </div>
-
-
-            <!-- ============ WHY CHOOSE US ============ -->
-            <div class="mb-24">
+            <!-- ============ FEATURES ============ -->
+            <div id="features" class="mb-24 scroll-mt-24">
                 <div class="text-center mb-10">
                     <p class="text-xs font-bold tracking-[0.25em] text-white/40 uppercase mb-3">Why Choose Us</p>
                     <h2 class="text-3xl sm:text-4xl font-black text-white mb-3">ทำไมต้อง Skey Shop?</h2>
@@ -776,8 +519,8 @@
                         <div class="w-11 h-11 bg-white/[0.08] text-white border border-white/15 rounded-xl flex items-center justify-center mb-4">
                             <i data-lucide="zap" class="w-5 h-5"></i>
                         </div>
-                        <h3 class="font-bold text-white mb-2">ระบบส่งของอัตโนมัติ</h3>
-                        <p class="text-xs text-white/45 leading-relaxed">สั่งซื้อตอนไหนก็ได้ แม้ตีสาม ระบบทำงานอัตโนมัติ ส่งของถึงมือคุณในไม่กี่วินาที</p>
+                        <h3 class="font-bold text-white mb-2">ระบบอัตโนมัติ</h3>
+                        <p class="text-xs text-white/45 leading-relaxed">ใช้งานตอนไหนก็ได้ แม้ตีสาม ระบบทำงานรวดเร็ว ตอบสนองภายในไม่กี่วินาที</p>
                     </div>
                     <div class="bg-white/[0.04] border border-white/10 rounded-2xl p-6 hover:bg-white/[0.07] hover:border-white/20 transition-all duration-300">
                         <div class="w-11 h-11 bg-white/[0.08] text-white border border-white/15 rounded-xl flex items-center justify-center mb-4">
@@ -788,31 +531,10 @@
                     </div>
                     <div class="bg-white/[0.04] border border-white/10 rounded-2xl p-6 hover:bg-white/[0.07] hover:border-white/20 transition-all duration-300">
                         <div class="w-11 h-11 bg-white/[0.08] text-white border border-white/15 rounded-xl flex items-center justify-center mb-4">
-                            <i data-lucide="badge-percent" class="w-5 h-5"></i>
-                        </div>
-                        <h3 class="font-bold text-white mb-2">ราคาถูกที่สุด</h3>
-                        <p class="text-xs text-white/45 leading-relaxed">เราคัดสรรสินค้าราคาส่งตรงถึงลูกค้า การันตีราคาถูกกว่าที่อื่น</p>
-                    </div>
-                    <div class="bg-white/[0.04] border border-white/10 rounded-2xl p-6 hover:bg-white/[0.07] hover:border-white/20 transition-all duration-300">
-                        <div class="w-11 h-11 bg-white/[0.08] text-white border border-white/15 rounded-xl flex items-center justify-center mb-4">
                             <i data-lucide="headphones" class="w-5 h-5"></i>
                         </div>
                         <h3 class="font-bold text-white mb-2">แอดมินดูแลตลอด</h3>
                         <p class="text-xs text-white/45 leading-relaxed">มีปัญหาการใช้งาน ทักได้เลย ทีมงานพร้อมตอบและแก้ไขปัญหาให้ทันที</p>
-                    </div>
-                    <div class="bg-white/[0.04] border border-white/10 rounded-2xl p-6 hover:bg-white/[0.07] hover:border-white/20 transition-all duration-300">
-                        <div class="w-11 h-11 bg-white/[0.08] text-white border border-white/15 rounded-xl flex items-center justify-center mb-4">
-                            <i data-lucide="refresh-ccw" class="w-5 h-5"></i>
-                        </div>
-                        <h3 class="font-bold text-white mb-2">รับประกันสินค้า</h3>
-                        <p class="text-xs text-white/45 leading-relaxed">สินค้ามีปัญหา ใช้งานไม่ได้ เปลี่ยนใหม่หรือคืนเงินเต็มจำนวน</p>
-                    </div>
-                    <div class="bg-white/[0.04] border border-white/10 rounded-2xl p-6 hover:bg-white/[0.07] hover:border-white/20 transition-all duration-300">
-                        <div class="w-11 h-11 bg-white/[0.08] text-white border border-white/15 rounded-xl flex items-center justify-center mb-4">
-                            <i data-lucide="star" class="w-5 h-5"></i>
-                        </div>
-                        <h3 class="font-bold text-white mb-2">เชื่อถือได้</h3>
-                        <p class="text-xs text-white/45 leading-relaxed">มียอดลูกค้ากว่า 12,000 คน และออเดอร์สำเร็จมากกว่า 85,000 ออเดอร์</p>
                     </div>
                 </div>
             </div>
@@ -831,7 +553,7 @@
                         <div class="flex items-center gap-1 mb-3">
                             <i data-lucide="star" class="w-4 h-4 text-white"></i><i data-lucide="star" class="w-4 h-4 text-white"></i><i data-lucide="star" class="w-4 h-4 text-white"></i><i data-lucide="star" class="w-4 h-4 text-white"></i><i data-lucide="star" class="w-4 h-4 text-white"></i>
                         </div>
-                        <p class="text-sm text-white/70 leading-relaxed mb-4">"สั่งเติมเกมตีสอง ของมาภายใน 10 วินาที ระบบอัตโนมัติเร็วมากครับ ประทับใจมาก"</p>
+                        <p class="text-sm text-white/70 leading-relaxed mb-4">"ใช้บริการตีสอง ระบบตอบสนองภายใน 10 วินาที เร็วมากครับ ประทับใจมาก"</p>
                         <div class="flex items-center gap-3">
                             <div class="w-9 h-9 btn-light rounded-full flex items-center justify-center font-black text-xs">ก</div>
                             <div>
@@ -845,7 +567,7 @@
                         <div class="flex items-center gap-1 mb-3">
                             <i data-lucide="star" class="w-4 h-4 text-white"></i><i data-lucide="star" class="w-4 h-4 text-white"></i><i data-lucide="star" class="w-4 h-4 text-white"></i><i data-lucide="star" class="w-4 h-4 text-white"></i><i data-lucide="star" class="w-4 h-4 text-white"></i>
                         </div>
-                        <p class="text-sm text-white/70 leading-relaxed mb-4">"ซื้อคีย์ Windows มา ราคาถูกกว่าที่อื่นเยอะ ใช้งานได้ปกติ ไม่มีปัญหาเลยค่ะ"</p>
+                        <p class="text-sm text-white/70 leading-relaxed mb-4">"เว็บสวยใช้งานง่าย ชอบธีมดำๆ มินิมอลมากครับ เติมเงินง่าย สะดวกดี"</p>
                         <div class="flex items-center gap-3">
                             <div class="w-9 h-9 btn-light rounded-full flex items-center justify-center font-black text-xs">น</div>
                             <div>
@@ -859,7 +581,7 @@
                         <div class="flex items-center gap-1 mb-3">
                             <i data-lucide="star" class="w-4 h-4 text-white"></i><i data-lucide="star" class="w-4 h-4 text-white"></i><i data-lucide="star" class="w-4 h-4 text-white"></i><i data-lucide="star" class="w-4 h-4 text-white"></i><i data-lucide="star" class="w-4 h-4 text-white"></i>
                         </div>
-                        <p class="text-sm text-white/70 leading-relaxed mb-4">"เว็บสวยใช้งานง่าย ชอบธีมดำๆ มินิมอลมากครับ เติมเงินง่าย ได้ของไว"</p>
+                        <p class="text-sm text-white/70 leading-relaxed mb-4">"มีปัญหาการใช้งานตอนแรก ทักแอดมินแล้วแก้ให้ทันทีเลยค่ะ บริการดีเกินราคา"</p>
                         <div class="flex items-center gap-3">
                             <div class="w-9 h-9 btn-light rounded-full flex items-center justify-center font-black text-xs">ภ</div>
                             <div>
@@ -883,16 +605,6 @@
                 <div class="space-y-3">
                     <div class="faq-item bg-white/[0.04] border border-white/10 rounded-2xl overflow-hidden hover:border-white/20 transition-all duration-300">
                         <button onclick="playClickSound(); toggleFaq(this)" class="w-full px-6 py-5 flex items-center justify-between gap-4 text-left">
-                            <span class="text-sm font-bold text-white">สั่งซื้อแล้วของมาช้าสุดกี่นาที?</span>
-                            <i data-lucide="chevron-down" class="faq-chevron w-5 h-5 text-white/50 shrink-0"></i>
-                        </button>
-                        <div class="faq-answer px-6">
-                            <p class="text-xs text-white/50 leading-relaxed pb-5">โดยปกติระบบส่งของอัตโนมัติภายใน 1-5 นาที หลังจากชำระเงินสำเร็จ หากเกิน 30 นาที สามารถทักแอดมินได้ทันทีครับ</p>
-                        </div>
-                    </div>
-
-                    <div class="faq-item bg-white/[0.04] border border-white/10 rounded-2xl overflow-hidden hover:border-white/20 transition-all duration-300">
-                        <button onclick="playClickSound(); toggleFaq(this)" class="w-full px-6 py-5 flex items-center justify-between gap-4 text-left">
                             <span class="text-sm font-bold text-white">ตอนสมัครสมาชิกต้องทำอะไรบ้าง?</span>
                             <i data-lucide="chevron-down" class="faq-chevron w-5 h-5 text-white/50 shrink-0"></i>
                         </button>
@@ -903,21 +615,21 @@
 
                     <div class="faq-item bg-white/[0.04] border border-white/10 rounded-2xl overflow-hidden hover:border-white/20 transition-all duration-300">
                         <button onclick="playClickSound(); toggleFaq(this)" class="w-full px-6 py-5 flex items-center justify-between gap-4 text-left">
-                            <span class="text-sm font-bold text-white">สินค้ามีปัญหา ใช้งานไม่ได้ ทำอย่างไร?</span>
-                            <i data-lucide="chevron-down" class="faq-chevron w-5 h-5 text-white/50 shrink-0"></i>
-                        </button>
-                        <div class="faq-answer px-6">
-                            <p class="text-xs text-white/50 leading-relaxed pb-5">แจ้งแอดมินพร้อมเลขออเดอร์ได้ทันที เรารับประกันสินค้าทุกชิ้น เปลี่ยนใหม่หรือคืนเงินเต็มจำนวนครับ</p>
-                        </div>
-                    </div>
-
-                    <div class="faq-item bg-white/[0.04] border border-white/10 rounded-2xl overflow-hidden hover:border-white/20 transition-all duration-300">
-                        <button onclick="playClickSound(); toggleFaq(this)" class="w-full px-6 py-5 flex items-center justify-between gap-4 text-left">
                             <span class="text-sm font-bold text-white">ลืมรหัสผ่านทำอย่างไร?</span>
                             <i data-lucide="chevron-down" class="faq-chevron w-5 h-5 text-white/50 shrink-0"></i>
                         </button>
                         <div class="faq-answer px-6">
                             <p class="text-xs text-white/50 leading-relaxed pb-5">กดปุ่ม "ลืมรหัสผ่าน?" ใต้ช่องรหัสผ่านในหน้าเข้าสู่ระบบ แล้วกรอกอีเมลเพื่อตั้งรหัสผ่านใหม่ได้ทันทีครับ</p>
+                        </div>
+                    </div>
+
+                    <div class="faq-item bg-white/[0.04] border border-white/10 rounded-2xl overflow-hidden hover:border-white/20 transition-all duration-300">
+                        <button onclick="playClickSound(); toggleFaq(this)" class="w-full px-6 py-5 flex items-center justify-between gap-4 text-left">
+                            <span class="text-sm font-bold text-white">เว็บไซต์นี้ปลอดภัยแค่ไหน?</span>
+                            <i data-lucide="chevron-down" class="faq-chevron w-5 h-5 text-white/50 shrink-0"></i>
+                        </button>
+                        <div class="faq-answer px-6">
+                            <p class="text-xs text-white/50 leading-relaxed pb-5">เว็บไซต์ใช้การเชื่อมต่อแบบเข้ารหัส SSL/TLS และมีระบบ reCAPTCHA ป้องกันบอท ทำให้บัญชีและข้อมูลของคุณปลอดภัยครับ</p>
                         </div>
                     </div>
                 </div>
@@ -936,7 +648,7 @@
                         </div>
                         <h2 class="text-3xl sm:text-4xl font-black text-white mb-4">พร้อมเริ่มใช้งานหรือยัง?</h2>
                         <p class="text-sm sm:text-base text-white/50 leading-relaxed mb-8 max-w-lg mx-auto">
-                            สมัครสมาชิกวันนี้ พร้อมสัมผัสประสบการณ์ช้อปปิ้งที่รวดเร็วที่สุด
+                            สมัครสมาชิกวันนี้ ฟรี! ใช้เวลาไม่ถึง 1 นาที
                         </p>
                         <div class="flex flex-col sm:flex-row items-center justify-center gap-3">
                             <button onclick="playClickSound(); openRegisterForm()"
@@ -944,10 +656,10 @@
                                 <i data-lucide="user-plus" class="w-4 h-4"></i>
                                 สมัครสมาชิกฟรี
                             </button>
-                            <button onclick="playClickSound(); scrollToSection('products')"
+                            <button onclick="playClickSound(); toggleAuthModal(true)"
                                     class="bg-white/[0.06] hover:bg-white/[0.12] border border-white/15 text-white font-semibold px-8 py-3.5 rounded-2xl transition active:scale-95 flex items-center gap-2 text-sm w-full sm:w-auto justify-center">
-                                <i data-lucide="eye" class="w-4 h-4"></i>
-                                ดูสินค้าก่อน
+                                <i data-lucide="log-in" class="w-4 h-4"></i>
+                                เข้าสู่ระบบ
                             </button>
                         </div>
                     </div>
@@ -970,7 +682,7 @@
                         <span class="text-lg font-extrabold text-white">Skey Shop</span>
                     </div>
                     <p class="text-xs text-white/45 leading-relaxed mb-4">
-                        แพลตฟอร์มสินค้าและบริการดิจิทัลครบวงจร ส่งของอัตโนมัติ 24 ชั่วโมง ปลอดภัย รวดเร็ว และเชื่อถือได้
+                        แพลตฟอร์มสินค้าและบริการดิจิทัลครบวงจร ปลอดภัย รวดเร็ว และเชื่อถือได้
                     </p>
                     <span class="inline-flex items-center gap-1.5 text-[10px] font-bold text-white/60 bg-white/[0.06] border border-white/10 px-2.5 py-1 rounded-full">
                         <span class="w-1.5 h-1.5 bg-white rounded-full animate-pulse"></span>
@@ -981,9 +693,7 @@
                 <div>
                     <h4 class="text-xs font-bold text-white uppercase tracking-wider mb-4">เมนูด่วน</h4>
                     <ul class="space-y-2.5">
-                        <li><a onclick="playClickSound(); scrollToSection('products')" class="text-xs text-white/45 hover:text-white transition cursor-pointer">สินค้าทั้งหมด</a></li>
-                        <li><a onclick="playClickSound(); scrollToSection('categories')" class="text-xs text-white/45 hover:text-white transition cursor-pointer">หมวดหมู่สินค้า</a></li>
-                        <li><a onclick="playClickSound(); scrollToSection('howto')" class="text-xs text-white/45 hover:text-white transition cursor-pointer">วิธีการสั่งซื้อ</a></li>
+                        <li><a onclick="playClickSound(); scrollToSection('features')" class="text-xs text-white/45 hover:text-white transition cursor-pointer">ทำไมต้องเรา</a></li>
                         <li><a onclick="playClickSound(); scrollToSection('faq')" class="text-xs text-white/45 hover:text-white transition cursor-pointer">คำถามที่พบบ่อย</a></li>
                     </ul>
                 </div>
@@ -1002,7 +712,7 @@
                     <div class="space-y-2.5">
                         <div class="flex items-center gap-2 text-xs text-white/45"><i data-lucide="shield-check" class="w-3.5 h-3.5 text-white/70"></i> เข้ารหัส SSL/TLS</div>
                         <div class="flex items-center gap-2 text-xs text-white/45"><i data-lucide="lock" class="w-3.5 h-3.5 text-white/70"></i> reCAPTCHA ป้องกันบอทตอนสมัคร</div>
-                        <div class="flex items-center gap-2 text-xs text-white/45"><i data-lucide="check-circle" class="w-3.5 h-3.5 text-white/70"></i> รับประกันสินค้าทุกชิ้น</div>
+                        <div class="flex items-center gap-2 text-xs text-white/45"><i data-lucide="check-circle" class="w-3.5 h-3.5 text-white/70"></i> ดูแลข้อมูลลูกค้าอย่างดีที่สุด</div>
                     </div>
                 </div>
             </div>
@@ -1025,7 +735,7 @@
     <script>
 
         /* =========================
-           🛡️ SAFE ICONS (กัน error ถ้า CDN ตาย)
+           SAFE ICONS (กันพังถ้า CDN ตาย)
         ========================== */
         function safeIcons() {
             try {
@@ -1061,228 +771,20 @@
 
 
         /* =========================
-           PRODUCT DATA
+           LOADING SCREEN
         ========================== */
-        const PRODUCTS = [
-            {
-                id: 'robux', name: 'Robux (ROBLOX)', desc: 'เติม Robux ส่งไว ปลอดภัย 100%',
-                emoji: '🎮', category: 'game', badge: 'HOT',
-                needId: true, idLabel: 'Username ROBLOX', idPlaceholder: 'กรอก Username ROBLOX',
-                packages: [
-                    { label: 'Robux 400', price: 95 },
-                    { label: 'Robux 800', price: 185 },
-                    { label: 'Robux 1,700', price: 369 },
-                    { label: 'Robux 4,500', price: 949 }
-                ]
-            },
-            {
-                id: 'freefire', name: 'Diamond Free Fire', desc: 'เพชร Free Fire ราคาถูก ส่งอัตโนมัติ',
-                emoji: '💎', category: 'game', badge: 'HOT',
-                needId: true, idLabel: 'Player ID', idPlaceholder: 'กรอก Player ID',
-                packages: [
-                    { label: 'เพชร 50 ดวง', price: 25 },
-                    { label: 'เพชร 115 ดวง', price: 49 },
-                    { label: 'เพชร 240 ดวง', price: 99 },
-                    { label: 'เพชร 610 ดวง', price: 249 }
-                ]
-            },
-            {
-                id: 'rov', name: 'เพชร RoV', desc: 'เติมเพชร RoV ทันที ไม่ต้องรอ',
-                emoji: '⚔️', category: 'game',
-                needId: true, idLabel: 'Player ID', idPlaceholder: 'กรอก Player ID',
-                packages: [
-                    { label: 'เพชร 60 ดวง', price: 20 },
-                    { label: 'เพชร 310 ดวง', price: 99 },
-                    { label: 'เพชร 530 ดวง', price: 169 },
-                    { label: 'เพชร 1,070 ดวง', price: 329 }
-                ]
-            },
-            {
-                id: 'pubg', name: 'UC PUBG Mobile', desc: 'เติม UC PUBG ส่งไวภายในไม่กี่วินาที',
-                emoji: '🔫', category: 'game',
-                needId: true, idLabel: 'Player ID', idPlaceholder: 'กรอก Player ID',
-                packages: [
-                    { label: 'UC 60', price: 25 },
-                    { label: 'UC 325', price: 129 },
-                    { label: 'UC 660', price: 259 },
-                    { label: 'UC 1,800', price: 649 }
-                ]
-            },
-            {
-                id: 'genshin', name: 'Genesis Crystals', desc: 'เติมพลอย Genshin Impact ทุกเซิร์ฟเวอร์',
-                emoji: '✨', category: 'game',
-                needId: true, idLabel: 'UID เกม', idPlaceholder: 'กรอก UID 9 หลัก',
-                packages: [
-                    { label: 'พลอย 60 เม็ด', price: 35 },
-                    { label: 'พลอย 330 เม็ด', price: 169 },
-                    { label: 'พลอย 1,090 เม็ด', price: 529 },
-                    { label: 'พลอย 3,880 เม็ด', price: 1,790 }
-                ]
-            },
-            {
-                id: 'googleplay', name: 'Google Play Gift Card', desc: 'โค้ดส่งทันที ใช้ได้ทุกประเทศ',
-                emoji: '🎁', category: 'giftcard', badge: 'ส่งไว',
-                needId: false,
-                packages: [
-                    { label: 'บัตร ฿50', price: 52 },
-                    { label: 'บัตร ฿100', price: 100 },
-                    { label: 'บัตร ฿250', price: 248 },
-                    { label: 'บัตร ฿500', price: 495 }
-                ]
-            },
-            {
-                id: 'steam', name: 'Steam Wallet Code', desc: 'เติมกระเป๋า Steam ได้ทันที',
-                emoji: '🕹️', category: 'giftcard',
-                needId: false,
-                packages: [
-                    { label: 'Wallet ฿100', price: 102 },
-                    { label: 'Wallet ฿250', price: 250 },
-                    { label: 'Wallet ฿500', price: 498 },
-                    { label: 'Wallet ฿1,000', price: 990 }
-                ]
-            },
-            {
-                id: 'netflix', name: 'Netflix Premium', desc: 'บัญชีแท้ รับประกันตลอดอายุ',
-                emoji: '🍿', category: 'streaming', badge: 'HOT',
-                needId: true, idLabel: 'อีเมลรับบัญชี', idPlaceholder: 'กรอกอีเมลของคุณ',
-                packages: [
-                    { label: '1 เดือน (4K)', price: 99 },
-                    { label: '3 เดือน (4K)', price: 269 },
-                    { label: '1 ปี (4K)', price: 899 }
-                ]
-            },
-            {
-                id: 'youtube', name: 'YouTube Premium', desc: 'ดูไร้โฆษณา ฟังเพลงเบื้องหลัง',
-                emoji: '▶️', category: 'streaming',
-                needId: true, idLabel: 'อีเมลรับบัญชี', idPlaceholder: 'กรอกอีเมลของคุณ',
-                packages: [
-                    { label: '1 เดือน', price: 89 },
-                    { label: '3 เดือน', price: 239 },
-                    { label: '1 ปี', price: 799 }
-                ]
-            },
-            {
-                id: 'spotify', name: 'Spotify Premium', desc: 'ฟังเพลงไม่จำกัด ไม่มีโฆษณา',
-                emoji: '🎧', category: 'streaming',
-                needId: true, idLabel: 'อีเมลรับบัญชี', idPlaceholder: 'กรอกอีเมลของคุณ',
-                packages: [
-                    { label: '1 เดือน', price: 69 },
-                    { label: '3 เดือน', price: 189 },
-                    { label: '1 ปี', price: 599 }
-                ]
-            },
-            {
-                id: 'win11', name: 'Windows 11 Pro Key', desc: 'คีย์แท้ ใช้ได้ตลอดชีพ',
-                emoji: '💻', category: 'software',
-                needId: true, idLabel: 'อีเมลรับคีย์', idPlaceholder: 'กรอกอีเมลของคุณ',
-                packages: [
-                    { label: 'Windows 11 Pro', price: 390 },
-                    { label: 'Windows 10 Pro', price: 350 }
-                ]
-            },
-            {
-                id: 'office', name: 'Office 2021 Pro Plus', desc: 'คีย์แท้ ติดตั้งง่าย ใช้ได้ตลอดชีพ',
-                emoji: '📄', category: 'software',
-                needId: true, idLabel: 'อีเมลรับคีย์', idPlaceholder: 'กรอกอีเมลของคุณ',
-                packages: [
-                    { label: 'Office 2021 Pro Plus', price: 590 },
-                    { label: 'Office 2019 Pro Plus', price: 490 }
-                ]
-            },
-            {
-                id: 'nitro', name: 'Discord Nitro', desc: 'โค้ดส่งทันที ใช้ได้ทั่วโลก',
-                emoji: '💬', category: 'social', badge: 'ส่งไว',
-                needId: false,
-                packages: [
-                    { label: 'Nitro 1 เดือน', price: 179 },
-                    { label: 'Nitro 1 ปี', price: 1,590 }
-                ]
-            }
-        ];
+        let loadingStarted = false;
+        let loadingDone = false;
 
-        const CATEGORIES = [
-            { id: 'all', name: 'ทั้งหมด' },
-            { id: 'game', name: 'เติมเกม' },
-            { id: 'giftcard', name: 'บัตรกำนัล' },
-            { id: 'streaming', name: 'บริการดิจิทัล' },
-            { id: 'software', name: 'ซอฟต์แวร์' },
-            { id: 'social', name: 'โซเชียล' }
-        ];
-
-        let activeFilter = 'all';
-        let currentProduct = null;
-        let selectedPackage = 0;
-
-
-        /* =========================
-           PAGE LOAD (ป้องกันค้างทุกกรณี)
-        ========================== */
-        window.addEventListener('DOMContentLoaded', () => {
-
-            /* ✅ 1. เริ่ม Loading ก่อนเป็นอันดับแรกเสมอ */
-            try {
-                startLoadingScreen();
-            } catch (e) {
-                console.error('Loading error:', e);
-                try { forceHideLoading(); } catch (e2) {}
-            }
-
-            /* ✅ 2. ที่เหลือครอบ try-catch ไว้ พังตรงไหนก็ไม่กระทบกัน */
-            try { safeIcons(); } catch (e) {}
-            try { checkPersistedLogin(); } catch (e) {}
-            try { renderFilterTabs(); } catch (e) {}
-            try { renderProducts(); } catch (e) {}
-        });
-
-        /* กันเคส DOMContentLoaded ยิงไปก่อนสคริปต์รัน */
-        if (document.readyState === 'complete' || document.readyState === 'interactive') {
-            setTimeout(() => {
-                try { startLoadingScreen(); } catch (e) {}
-                try { safeIcons(); } catch (e) {}
-                try { checkPersistedLogin(); } catch (e) {}
-                try { renderFilterTabs(); } catch (e) {}
-                try { renderProducts(); } catch (e) {}
-            }, 0);
-        }
-
-
-        /* =========================
-           SCROLL TO SECTION
-        ========================== */
-        function scrollToSection(id) {
-            try {
-                const el = document.getElementById(id);
-                if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
-            } catch (e) {}
-        }
-
-
-        /* =========================
-           FAQ TOGGLE
-        ========================== */
-        function toggleFaq(btn) {
-            const item = btn.closest('.faq-item');
-            const isOpen = item.classList.contains('open');
-
-            document.querySelectorAll('.faq-item').forEach(faq => faq.classList.remove('open'));
-
-            if (!isOpen) item.classList.add('open');
-        }
-
-
-        /* =========================
-           LOADING SCREEN (แกร่งขึ้น + Failsafe)
-        ========================== */
         function startLoadingScreen() {
+            if (loadingStarted) return;
+            loadingStarted = true;
+
             const loadingScreen = document.getElementById('loadingScreen');
             if (!loadingScreen) return;
 
-            /* กันเรียกซ้ำ */
-            if (loadingScreen.dataset.started === '1') return;
-            loadingScreen.dataset.started = '1';
-
             /* แสดงหน้าโหลดให้แน่ใจ */
-            loadingScreen.classList.remove('hidden', 'opacity-0', 'pointer-events-none');
+            loadingScreen.classList.remove('hidden');
             loadingScreen.classList.add('flex');
             loadingScreen.style.opacity = '1';
 
@@ -1293,21 +795,17 @@
             let percent = 0;
 
             const interval = setInterval(() => {
-                try {
-                    percent += Math.floor(Math.random() * 8) + 2;
-                    if (percent > 100) percent = 100;
+                percent += Math.floor(Math.random() * 8) + 2;
+                if (percent > 100) percent = 100;
 
-                    if (percentText) percentText.innerText = percent + '%';
+                if (percentText) percentText.innerText = percent + '%';
 
-                    if (percent >= 35 && percent < 75) {
-                        statusText.innerText = 'กำลังตรวจสอบความปลอดภัย...';
-                    } else if (percent >= 75 && percent < 100) {
-                        statusText.innerText = 'กำลังโหลดข้อมูลร้านค้า...';
-                    } else if (percent === 100) {
-                        statusText.innerText = 'พร้อมใช้งานแล้ว!';
-                        clearInterval(interval);
-                    }
-                } catch (e) {
+                if (percent >= 35 && percent < 75) {
+                    if (statusText) statusText.innerText = 'กำลังตรวจสอบความปลอดภัย...';
+                } else if (percent >= 75 && percent < 100) {
+                    if (statusText) statusText.innerText = 'กำลังโหลดข้อมูล...';
+                } else if (percent === 100) {
+                    if (statusText) statusText.innerText = 'พร้อมใช้งานแล้ว!';
                     clearInterval(interval);
                 }
             }, 120);
@@ -1316,22 +814,19 @@
                 if (progressBar) progressBar.style.width = '100%';
             }, 100);
 
-            /* ปิดหน้าโหลดตามปกติ */
-            setTimeout(() => {
-                forceHideLoading();
-            }, 3600);
+            /* ปิดหน้าโหลดตามปกติ ~3.6 วิ */
+            setTimeout(forceHideLoading, 3600);
 
-            /* 🛡️ FAILSAFE: ไม่ว่าจะเกิดอะไรขึ้น ปิดหน้าโหลดภายใน 8 วินาทีเสมอ */
-            setTimeout(() => {
-                forceHideLoading();
-            }, 8000);
+            /* 🛡️ FAILSAFE: ปิดบังคับภายใน 8 วิ เสมอ */
+            setTimeout(forceHideLoading, 8000);
         }
 
-        /* ปิดหน้าโหลดแบบบังคับ (กันเรียกซ้ำ) */
         function forceHideLoading() {
+            if (loadingDone) return;
+            loadingDone = true;
+
             const loadingScreen = document.getElementById('loadingScreen');
-            if (!loadingScreen || loadingScreen.dataset.done === '1') return;
-            loadingScreen.dataset.done = '1';
+            if (!loadingScreen) return;
 
             loadingScreen.style.opacity = '0';
             setTimeout(() => {
@@ -1377,12 +872,24 @@
             }
         }
 
-        function toggleProductModal(show) {
-            document.getElementById('productModal').classList.toggle('hidden', !show);
+
+        /* =========================
+           SCROLL / FAQ
+        ========================== */
+        function scrollToSection(id) {
+            try {
+                const el = document.getElementById(id);
+                if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            } catch (e) {}
         }
 
-        function toggleSuccessModal(show) {
-            document.getElementById('successModal').classList.toggle('hidden', !show);
+        function toggleFaq(btn) {
+            const item = btn.closest('.faq-item');
+            const isOpen = item.classList.contains('open');
+
+            document.querySelectorAll('.faq-item').forEach(faq => faq.classList.remove('open'));
+
+            if (!isOpen) item.classList.add('open');
         }
 
 
@@ -1416,7 +923,6 @@
             safeIcons();
         }
 
-        /* เปิดหน้าต่างสมัครสมาชิกโดยตรง (ปุ่ม CTA) */
         function openRegisterForm() {
             toggleAuthModal(true);
             switchForm('register');
@@ -1436,7 +942,6 @@
             document.getElementById('regCaptchaError').classList.add('hidden');
         }
 
-        /* ติ๊กแล้วหมดอายุ (เกิน 2 นาที) */
         function onRegCaptchaExpired() {
             showRegCaptchaError('การยืนยันหมดอายุแล้ว กรุณาติ๊ก ✓ ใหม่อีกครั้ง');
         }
@@ -1454,7 +959,6 @@
 
             const forgotView = document.getElementById('forgotView');
             forgotView.classList.remove('hidden');
-            forgotView.classList.add('modal-enter');
 
             document.getElementById('forgotStep1').classList.remove('hidden');
             document.getElementById('forgotStep2').classList.add('hidden');
@@ -1470,7 +974,6 @@
 
             if (forgotView) {
                 forgotView.classList.add('hidden');
-                forgotView.classList.remove('modal-enter');
                 document.getElementById('forgotStep1').classList.remove('hidden');
                 document.getElementById('forgotStep2').classList.add('hidden');
                 document.getElementById('forgotError1').classList.add('hidden');
@@ -1595,7 +1098,7 @@
                     return;
                 }
 
-                /* ✅ ตรวจสอบ reCAPTCHA ก่อนสมัคร */
+                /* ตรวจสอบ reCAPTCHA ก่อนสมัคร */
                 hideRegCaptchaError();
 
                 let captchaOk = false;
@@ -1611,7 +1114,7 @@
                 users[email] = password;
                 saveUsers(users);
 
-                /* รีเซ็ต captcha สำหรับการสมัครครั้งถัดไป */
+                /* รีเซ็ต captcha รอการสมัครครั้งถัดไป */
                 try { grecaptcha.reset(); } catch (err) {}
 
             } else {
@@ -1691,8 +1194,6 @@
             document.getElementById('userBalance').innerText = balance;
 
             refreshTopUpModal();
-            if (currentProduct) refreshProductModal();
-
             safeIcons();
         }
 
@@ -1703,197 +1204,6 @@
         function logout() {
             localStorage.removeItem('user_email');
             location.reload();
-        }
-
-
-        /* =========================
-           FILTER + RENDER PRODUCTS
-        ========================== */
-        function renderFilterTabs() {
-            const tabsEl = document.getElementById('filterTabs');
-
-            tabsEl.innerHTML = CATEGORIES.map(cat => {
-                const isActive = cat.id === activeFilter;
-                const cls = isActive
-                    ? 'btn-light font-bold px-4 py-2 rounded-xl text-xs transition active:scale-95'
-                    : 'bg-white/[0.05] hover:bg-white/[0.12] border border-white/15 text-white/70 hover:text-white font-semibold px-4 py-2 rounded-xl text-xs transition active:scale-95';
-
-                return `<button onclick="playClickSound(); filterProducts('${cat.id}')" class="${cls}">${cat.name}</button>`;
-            }).join('');
-        }
-
-        function filterProducts(categoryId) {
-            activeFilter = categoryId;
-            renderFilterTabs();
-            renderProducts();
-            scrollToSection('products');
-        }
-
-        function renderProducts() {
-            const grid = document.getElementById('productsGrid');
-            const list = PRODUCTS.filter(p => activeFilter === 'all' || p.category === activeFilter);
-
-            if (list.length === 0) {
-                grid.innerHTML = `
-                    <div class="col-span-full text-center py-16 text-white/40 text-sm">
-                        ไม่พบสินค้าในหมวดหมู่นี้
-                    </div>`;
-                return;
-            }
-
-            grid.innerHTML = list.map(p => {
-                const minPrice = Math.min(...p.packages.map(x => x.price));
-                const badge = p.badge
-                    ? `<span class="absolute top-3 right-3 btn-light text-[9px] font-black px-2 py-1 rounded-lg tracking-wider">${p.badge}</span>`
-                    : '';
-
-                return `
-                <div onclick="playClickSound(); openProductModal('${p.id}')"
-                     class="group bg-white/[0.04] border border-white/10 rounded-2xl overflow-hidden hover:bg-white/[0.07] hover:border-white/25 transition-all duration-300 cursor-pointer hover:-translate-y-1">
-
-                    <div class="relative h-32 bg-gradient-to-br from-white/[0.08] to-transparent flex items-center justify-center border-b border-white/[0.06]">
-                        <span class="text-5xl group-hover:scale-125 transition-transform duration-300">${p.emoji}</span>
-                        ${badge}
-                    </div>
-
-                    <div class="p-5">
-                        <h3 class="font-bold text-white mb-1 truncate">${p.name}</h3>
-                        <p class="text-xs text-white/45 leading-relaxed mb-4">${p.desc}</p>
-
-                        <div class="flex items-center justify-between">
-                            <div>
-                                <p class="text-[10px] text-white/40">เริ่มต้น</p>
-                                <p class="text-sm font-black text-white">฿${minPrice}</p>
-                            </div>
-                            <span class="bg-white/[0.08] border border-white/15 text-white group-hover:bg-white group-hover:text-black text-[11px] font-semibold px-3.5 py-2 rounded-xl transition-all duration-300 flex items-center gap-1.5">
-                                ซื้อเลย
-                                <i data-lucide="arrow-right" class="w-3.5 h-3.5"></i>
-                            </span>
-                        </div>
-                    </div>
-                </div>`;
-            }).join('');
-
-            safeIcons();
-        }
-
-
-        /* =========================
-           PRODUCT MODAL
-        ========================== */
-        function openProductModal(id) {
-            currentProduct = PRODUCTS.find(p => p.id === id);
-            if (!currentProduct) return;
-
-            selectedPackage = 0;
-
-            document.getElementById('pmEmoji').innerText = currentProduct.emoji;
-            document.getElementById('pmName').innerText = currentProduct.name;
-            document.getElementById('pmDesc').innerText = currentProduct.desc;
-
-            const idField = document.getElementById('pmIdField');
-            if (currentProduct.needId) {
-                idField.classList.remove('hidden');
-                document.getElementById('pmIdLabel').innerHTML =
-                    `<i data-lucide="user" class="w-3.5 h-3.5"></i> ${currentProduct.idLabel}`;
-                document.getElementById('productIdInput').placeholder = currentProduct.idPlaceholder;
-                document.getElementById('productIdInput').value = '';
-            } else {
-                idField.classList.add('hidden');
-            }
-
-            renderPackages();
-            refreshProductModal();
-            hideBuyError();
-
-            toggleProductModal(true);
-            safeIcons();
-        }
-
-        function renderPackages() {
-            const listEl = document.getElementById('packageList');
-
-            listEl.innerHTML = currentProduct.packages.map((pk, i) => {
-                const cls = i === selectedPackage
-                    ? 'w-full flex items-center justify-between px-4 py-3 rounded-xl border text-sm font-bold transition bg-white text-black border-white'
-                    : 'w-full flex items-center justify-between px-4 py-3 rounded-xl border text-sm font-semibold transition bg-white/[0.04] text-white border-white/10 hover:border-white/30';
-
-                return `<button type="button" onclick="playClickSound(); selectPackage(${i})" class="${cls}">
-                    <span>${pk.label}</span>
-                    <span>฿${pk.price}</span>
-                </button>`;
-            }).join('');
-        }
-
-        function selectPackage(i) {
-            selectedPackage = i;
-            renderPackages();
-            refreshProductModal();
-        }
-
-        function refreshProductModal() {
-            const balance = parseFloat(localStorage.getItem('user_balance') || '0').toFixed(2);
-            const price = currentProduct.packages[selectedPackage].price;
-
-            document.getElementById('pmBalance').innerText = balance;
-            document.getElementById('pmTotal').innerText = price;
-        }
-
-        function showBuyError(message) {
-            document.getElementById('buyErrorText').innerText = message;
-            document.getElementById('buyError').classList.remove('hidden');
-        }
-
-        function hideBuyError() {
-            document.getElementById('buyError').classList.add('hidden');
-        }
-
-
-        /* =========================
-           BUY PRODUCT
-        ========================== */
-        function buyProduct() {
-            const email = localStorage.getItem('user_email');
-
-            if (!email) {
-                toggleProductModal(false);
-                toggleAuthModal(true);
-                alert('กรุณาเข้าสู่ระบบก่อนทำการสั่งซื้อครับ');
-                return;
-            }
-
-            if (currentProduct.needId) {
-                const idValue = document.getElementById('productIdInput').value.trim();
-                if (!idValue) {
-                    showBuyError('กรุณากรอก' + currentProduct.idLabel + 'ก่อนสั่งซื้อครับ');
-                    return;
-                }
-            }
-
-            const pkg = currentProduct.packages[selectedPackage];
-            const balance = parseFloat(localStorage.getItem('user_balance') || '0');
-
-            if (balance < pkg.price) {
-                const missing = (pkg.price - balance).toFixed(2);
-                showBuyError('ยอดเงินไม่พอ (ขาดอีก ฿' + missing + ') กรุณาเติมเงินก่อนครับ');
-                return;
-            }
-
-            const newBalance = (balance - pkg.price).toFixed(2);
-            localStorage.setItem('user_balance', newBalance);
-            updateProfileUI(email);
-
-            const orderId = 'SK' + Date.now().toString().slice(-8);
-
-            document.getElementById('smOrderId').innerText = orderId;
-            document.getElementById('smProduct').innerText = currentProduct.name;
-            document.getElementById('smPackage').innerText = pkg.label;
-            document.getElementById('smPrice').innerText = '฿' + pkg.price;
-            document.getElementById('smBalance').innerText = '฿' + newBalance;
-
-            toggleProductModal(false);
-            toggleSuccessModal(true);
-            safeIcons();
         }
 
 
@@ -1911,7 +1221,7 @@
                     ? 'btn-light font-black py-3 rounded-xl text-sm transition border border-white'
                     : 'bg-white/[0.04] hover:bg-white/[0.1] border border-white/15 text-white font-bold py-3 rounded-xl text-sm transition';
 
-                return `<button onclick="playClickSound(); selectTopUpAmount(${amount})" class="${cls}">฿${amount}</button>`;
+                return '<button onclick="playClickSound(); selectTopUpAmount(' + amount + ')" class="' + cls + '">฿' + amount + '</button>';
             }).join('');
 
             updateTopUpButton();
@@ -1924,7 +1234,7 @@
 
         function updateTopUpButton() {
             document.getElementById('topUpConfirmBtn').innerHTML =
-                `<i data-lucide="check-circle" class="w-4 h-4"></i> ยืนยันการเติมเงิน ฿${selectedTopUpAmount}`;
+                '<i data-lucide="check-circle" class="w-4 h-4"></i> ยืนยันการเติมเงิน ฿' + selectedTopUpAmount;
             safeIcons();
         }
 
@@ -1968,10 +1278,20 @@
             if (event.key === 'Escape') {
                 toggleAuthModal(false);
                 toggleTopUpModal(false);
-                toggleProductModal(false);
-                toggleSuccessModal(false);
             }
         });
+
+
+        /* =========================
+           ✅ เริ่มระบบทันที (script อยู่ท้าย body = DOM พร้อมแล้ว)
+        ========================== */
+        startLoadingScreen();
+        safeIcons();
+        checkPersistedLogin();
+
+        /* เผื่อ CDN สำรองโหลดช้า ลองสร้างไอคอนซ้ำ */
+        setTimeout(safeIcons, 1500);
+        setTimeout(safeIcons, 3000);
 
     </script>
 
