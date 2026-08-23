@@ -66,6 +66,13 @@
             mask-image: radial-gradient(ellipse 80% 60% at 50% 40%, black 30%, transparent 75%);
         }
 
+        @keyframes modal-in {
+            from { opacity: 0; transform: translateY(30px) scale(0.95); }
+            to { opacity: 1; transform: translateY(0) scale(1); }
+        }
+
+        .modal-enter { animation: modal-in 0.7s cubic-bezier(0.16, 1, 0.3, 1) both; }
+
         @keyframes shine {
             0% { transform: translateX(-150%) skewX(-15deg); }
             60%, 100% { transform: translateX(350%) skewX(-15deg); }
@@ -111,13 +118,71 @@
             height: 1px;
             background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
         }
+
+        /* =========================
+           🔧 MAINTENANCE MODAL EFFECTS
+        ========================== */
+
+        /* จุดสามจุดวิ่งหลังข้อความ */
+        .dots-anim::after {
+            content: '';
+            display: inline-block;
+            width: 1.2em;
+            text-align: left;
+            animation: dots 1.4s steps(4, end) infinite;
+        }
+
+        @keyframes dots {
+            0% { content: ''; }
+            25% { content: '.'; }
+            50% { content: '..'; }
+            75% { content: '...'; }
+            100% { content: ''; }
+        }
+
+        /* เกียร์หมุน */
+        .gear-spin { animation: spin 6s linear infinite; }
+        .gear-spin-slow { animation: spin 9s linear infinite reverse; }
+
+        /* สายสแกนกวาดการ์ด */
+        @keyframes scanline {
+            0% { top: -5%; opacity: 0; }
+            15% { opacity: 1; }
+            85% { opacity: 1; }
+            100% { top: 105%; opacity: 0; }
+        }
+
+        .scan-line {
+            position: absolute;
+            left: 8%; right: 8%;
+            height: 2px;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.9), transparent);
+            box-shadow: 0 0 14px rgba(255,255,255,0.55);
+            animation: scanline 3.5s ease-in-out infinite;
+            pointer-events: none;
+        }
+
+        /* แถบความคืบหน้าอนินิเดต (แบบไม่รู้จบ) */
+        @keyframes progress-slide {
+            0% { left: -35%; }
+            100% { left: 105%; }
+        }
+
+        .progress-slider {
+            position: absolute;
+            top: 0; bottom: 0;
+            width: 35%;
+            border-radius: 9999px;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.85), transparent);
+            animation: progress-slide 2.2s ease-in-out infinite;
+        }
     </style>
 </head>
 
 <body class="min-h-screen flex flex-col justify-between text-white">
 
     <!-- =========================
-         LOADING SCREEN (เปิดมาโชว์เลย)
+         LOADING SCREEN
     ========================== -->
     <div id="loadingScreen"
          class="fixed inset-0 bg-[#050505] z-40 flex flex-col items-center justify-center p-6 transition-opacity duration-700">
@@ -389,48 +454,123 @@
 
 
     <!-- =========================
-         TOP UP MODAL
+         🔧 MAINTENANCE MODAL (ระบบเติมเงินปิดปรับปรุง - ดีไซน์ใหม่)
     ========================== -->
     <div id="topUpModal"
          class="fixed inset-0 bg-black/70 backdrop-blur-sm z-[60] hidden flex items-center justify-center p-4">
 
-        <div class="bg-[#0d0d0d] rounded-3xl shadow-2xl border border-white/10 w-full max-w-md p-6 sm:p-8 relative text-center">
+        <div class="relative bg-[#0d0d0d] rounded-3xl shadow-2xl border border-white/10 w-full max-w-md p-8 sm:p-10 text-center overflow-hidden modal-enter max-h-[90vh] overflow-y-auto">
 
+            <!-- แสงเรืองเต้นหลังการ์ด -->
+            <div class="absolute -top-24 left-1/2 -translate-x-1/2 w-80 h-80 bg-white/[0.06] rounded-full blur-3xl glow-pulse pointer-events-none"></div>
+            <div class="absolute -bottom-24 -right-16 w-64 h-64 bg-white/[0.04] rounded-full blur-3xl glow-pulse pointer-events-none" style="animation-delay: 1.1s;"></div>
+
+            <!-- เส้นสแกนกวาด -->
+            <div class="scan-line"></div>
+
+            <!-- ปุ่มปิด -->
             <button onclick="playClickSound(); toggleTopUpModal(false)"
-                    class="absolute top-5 right-5 text-white/40 hover:text-white font-bold text-xl transition">✕</button>
+                    class="absolute top-5 right-5 text-white/40 hover:text-white font-bold text-xl transition z-10">✕</button>
 
-            <div class="w-14 h-14 btn-light rounded-2xl flex items-center justify-center mx-auto mb-4 shadow-[0_0_30px_rgba(255,255,255,0.15)]">
-                <i data-lucide="wallet" class="w-7 h-7"></i>
-            </div>
+            <div class="relative">
 
-            <h3 class="text-xl font-bold text-white mb-1">เติมเงินเข้าระบบ</h3>
-            <p class="text-xs text-white/50 mb-5">ยอดเงินปัจจุบัน <span id="tumBalance" class="font-extrabold text-white">฿0.00</span></p>
+                <!-- ป้าย Under Maintenance -->
+                <div class="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full bg-white/[0.06] border border-white/15 text-[10px] font-bold tracking-[0.2em] text-white/80 uppercase mb-6">
+                    <span class="w-1.5 h-1.5 bg-white rounded-full animate-pulse"></span>
+                    Under Maintenance
+                </div>
 
-            <div id="topUpAmounts" class="grid grid-cols-3 gap-2.5 mb-4"></div>
+                <!-- ไอคอนประแจ + เกียร์หมุน -->
+                <div class="relative w-28 h-28 flex items-center justify-center mx-auto mb-6">
+                    <div class="absolute -inset-1 rounded-full border-2 border-dashed border-white/20 ring-spin-cw"></div>
+                    <div class="absolute inset-1.5 rounded-full border-2 border-white/10 border-b-white/60 ring-spin-ccw"></div>
 
-            <p class="text-[10px] text-white/35 mb-5 leading-relaxed">
-                * ระบบสาธิต (Demo) — กดยืนยันเพื่อเติมเงินเข้าระบบทันที โดยไม่มีการชำระเงินจริง
-            </p>
+                    <!-- เกียร์หลัง -->
+                    <i data-lucide="settings" class="gear-spin absolute w-14 h-14 text-white/15"></i>
 
-            <button id="topUpConfirmBtn" onclick="playClickSound(); topUpNow()"
-                    class="btn-light hover:bg-zinc-200 w-full font-bold py-3.5 rounded-xl shadow-[0_0_30px_rgba(255,255,255,0.12)] transition active:scale-95 flex items-center justify-center gap-2 text-sm">
-                <i data-lucide="check-circle" class="w-4 h-4"></i>
-                ยืนยันการเติมเงิน ฿100
-            </button>
+                    <!-- ประแจหน้า -->
+                    <div class="w-20 h-20 rounded-full bg-gradient-to-br from-white/[0.14] to-white/[0.04] border border-white/25 flex items-center justify-center shadow-[0_0_35px_rgba(255,255,255,0.25)]">
+                        <i data-lucide="wrench" class="w-9 h-9 text-white"></i>
+                    </div>
+                </div>
 
-            <div id="topUpSuccess" class="hidden mt-4 bg-white/[0.06] border border-white/15 rounded-xl px-4 py-3">
-                <p class="text-xs font-bold text-white flex items-center justify-center gap-1.5">
-                    <i data-lucide="check-circle" class="w-4 h-4"></i>
-                    เติมเงินสำเร็จ! ยอดเงินอัปเดตแล้ว
+                <!-- หัวข้อ -->
+                <h3 class="text-2xl font-extrabold text-white mb-2">
+                    ระบบเติมเงินปิดปรับปรุง<span class="dots-anim"></span>
+                </h3>
+
+                <p class="text-xs text-white/50 leading-relaxed mb-6 max-w-xs mx-auto">
+                    ทีมงานกำลังอัปเกรดระบบให้ดียิ่งขึ้น
+                    เพื่อประสบการณ์ที่รวดเร็วและปลอดภัยกว่าเดิม
+                    ขออภัยในความไม่สะดวกครับ
                 </p>
-            </div>
 
+                <!-- ยอดเงินปัจจุบัน -->
+                <div class="bg-white/[0.04] border border-white/10 rounded-2xl px-4 py-3.5 mb-5 flex items-center justify-between">
+                    <span class="text-xs text-white/50 flex items-center gap-1.5">
+                        <i data-lucide="wallet" class="w-3.5 h-3.5"></i>
+                        ยอดเงินในระบบของคุณ
+                    </span>
+                    <span class="text-sm font-black text-white">฿<span id="tumBalance">0.00</span></span>
+                </div>
+
+                <!-- เช็คลิสต์งานซ่อม -->
+                <div class="bg-black/40 border border-white/[0.07] rounded-2xl p-4 space-y-3 mb-5 text-left">
+
+                    <div class="flex items-center gap-3">
+                        <span class="w-6 h-6 rounded-lg bg-white/[0.07] border border-white/15 flex items-center justify-center shrink-0">
+                            <i data-lucide="loader" class="w-3 h-3 text-white animate-spin"></i>
+                        </span>
+                        <span class="text-xs text-white/75">อัปเกรดระบบชำระเงินอัตโนมัติ</span>
+                    </div>
+
+                    <div class="flex items-center gap-3">
+                        <span class="w-6 h-6 rounded-lg bg-white/[0.07] border border-white/15 flex items-center justify-center shrink-0">
+                            <i data-lucide="loader" class="w-3 h-3 text-white animate-spin"></i>
+                        </span>
+                        <span class="text-xs text-white/75">เพิ่มช่องทางเติมเงินใหม่</span>
+                    </div>
+
+                    <div class="flex items-center gap-3">
+                        <span class="w-6 h-6 rounded-lg bg-white/[0.07] border border-white/15 flex items-center justify-center shrink-0">
+                            <i data-lucide="check" class="w-3 h-3 text-white"></i>
+                        </span>
+                        <span class="text-xs text-white/75">ตรวจสอบความปลอดภัยเรียบร้อยแล้ว</span>
+                    </div>
+
+                </div>
+
+                <!-- แถบความคืบหน้าวิ่งไม่รู้จบ -->
+                <div class="relative w-full h-1.5 bg-white/[0.07] rounded-full overflow-hidden border border-white/[0.06] mb-6">
+                    <div class="progress-slider"></div>
+                </div>
+
+                <!-- ปุ่ม -->
+                <button onclick="playClickSound(); toggleTopUpModal(false)"
+                        class="btn-shine relative overflow-hidden btn-light hover:bg-zinc-200 w-full font-bold py-3.5 rounded-xl shadow-[0_0_30px_rgba(255,255,255,0.12)] transition active:scale-95 flex items-center justify-center gap-2 text-sm mb-3">
+                    <i data-lucide="check-circle" class="w-4 h-4"></i>
+                    รับทราบ
+                </button>
+
+                <button onclick="playClickSound(); contactAdmin()"
+                        class="w-full bg-white/[0.06] hover:bg-white/[0.12] border border-white/15 text-white font-semibold py-3 rounded-xl transition active:scale-95 flex items-center justify-center gap-2 text-sm">
+                    <i data-lucide="message-circle" class="w-4 h-4"></i>
+                    สอบถามแอดมิน
+                </button>
+
+                <!-- ท้ายการ์ด -->
+                <p class="text-[10px] text-white/35 mt-6 flex items-center justify-center gap-1.5">
+                    <i data-lucide="clock" class="w-3 h-3"></i>
+                    คาดว่าจะเปิดใช้งานอีกครั้งเร็วๆ นี้
+                </p>
+
+            </div>
         </div>
     </div>
 
 
     <!-- =========================
-         MAIN CONTENT (ลบร้านค้าแล้ว)
+         MAIN CONTENT
     ========================== -->
     <main class="relative">
         <div class="absolute inset-0 bg-grid-mono pointer-events-none"></div>
@@ -567,7 +707,7 @@
                         <div class="flex items-center gap-1 mb-3">
                             <i data-lucide="star" class="w-4 h-4 text-white"></i><i data-lucide="star" class="w-4 h-4 text-white"></i><i data-lucide="star" class="w-4 h-4 text-white"></i><i data-lucide="star" class="w-4 h-4 text-white"></i><i data-lucide="star" class="w-4 h-4 text-white"></i>
                         </div>
-                        <p class="text-sm text-white/70 leading-relaxed mb-4">"เว็บสวยใช้งานง่าย ชอบธีมดำๆ มินิมอลมากครับ เติมเงินง่าย สะดวกดี"</p>
+                        <p class="text-sm text-white/70 leading-relaxed mb-4">"เว็บสวยใช้งานง่าย ชอบธีมดำๆ มินิมอลมากครับ สะดวกดี"</p>
                         <div class="flex items-center gap-3">
                             <div class="w-9 h-9 btn-light rounded-full flex items-center justify-center font-black text-xs">น</div>
                             <div>
@@ -615,21 +755,21 @@
 
                     <div class="faq-item bg-white/[0.04] border border-white/10 rounded-2xl overflow-hidden hover:border-white/20 transition-all duration-300">
                         <button onclick="playClickSound(); toggleFaq(this)" class="w-full px-6 py-5 flex items-center justify-between gap-4 text-left">
-                            <span class="text-sm font-bold text-white">ลืมรหัสผ่านทำอย่างไร?</span>
+                            <span class="text-sm font-bold text-white">ระบบเติมเงินไปทำอะไรอยู่?</span>
                             <i data-lucide="chevron-down" class="faq-chevron w-5 h-5 text-white/50 shrink-0"></i>
                         </button>
                         <div class="faq-answer px-6">
-                            <p class="text-xs text-white/50 leading-relaxed pb-5">กดปุ่ม "ลืมรหัสผ่าน?" ใต้ช่องรหัสผ่านในหน้าเข้าสู่ระบบ แล้วกรอกอีเมลเพื่อตั้งรหัสผ่านใหม่ได้ทันทีครับ</p>
+                            <p class="text-xs text-white/50 leading-relaxed pb-5">ระบบเติมเงินกำลังปิดปรับปรุงเพื่ออัปเกรดระบบชำระเงินและเพิ่มช่องทางการเติมเงินใหม่ คาดว่าจะกลับมาให้บริการอีกครั้งเร็วๆ นี้ครับ</p>
                         </div>
                     </div>
 
                     <div class="faq-item bg-white/[0.04] border border-white/10 rounded-2xl overflow-hidden hover:border-white/20 transition-all duration-300">
                         <button onclick="playClickSound(); toggleFaq(this)" class="w-full px-6 py-5 flex items-center justify-between gap-4 text-left">
-                            <span class="text-sm font-bold text-white">เว็บไซต์นี้ปลอดภัยแค่ไหน?</span>
+                            <span class="text-sm font-bold text-white">ลืมรหัสผ่านทำอย่างไร?</span>
                             <i data-lucide="chevron-down" class="faq-chevron w-5 h-5 text-white/50 shrink-0"></i>
                         </button>
                         <div class="faq-answer px-6">
-                            <p class="text-xs text-white/50 leading-relaxed pb-5">เว็บไซต์ใช้การเชื่อมต่อแบบเข้ารหัส SSL/TLS และมีระบบ reCAPTCHA ป้องกันบอท ทำให้บัญชีและข้อมูลของคุณปลอดภัยครับ</p>
+                            <p class="text-xs text-white/50 leading-relaxed pb-5">กดปุ่ม "ลืมรหัสผ่าน?" ใต้ช่องรหัสผ่านในหน้าเข้าสู่ระบบ แล้วกรอกอีเมลเพื่อตั้งรหัสผ่านใหม่ได้ทันทีครับ</p>
                         </div>
                     </div>
                 </div>
@@ -783,7 +923,6 @@
             const loadingScreen = document.getElementById('loadingScreen');
             if (!loadingScreen) return;
 
-            /* แสดงหน้าโหลดให้แน่ใจ */
             loadingScreen.classList.remove('hidden');
             loadingScreen.classList.add('flex');
             loadingScreen.style.opacity = '1';
@@ -814,10 +953,7 @@
                 if (progressBar) progressBar.style.width = '100%';
             }, 100);
 
-            /* ปิดหน้าโหลดตามปกติ ~3.6 วิ */
             setTimeout(forceHideLoading, 3600);
-
-            /* 🛡️ FAILSAFE: ปิดบังคับภายใน 8 วิ เสมอ */
             setTimeout(forceHideLoading, 8000);
         }
 
@@ -861,14 +997,23 @@
             if (!show) backToLogin(true);
         }
 
+        /* เปิด/ปิดหน้าปิดปรับปรุงระบบเติมเงิน */
         function toggleTopUpModal(show) {
             const modal = document.getElementById('topUpModal');
             modal.classList.toggle('hidden', !show);
 
             if (show) {
-                renderTopUpAmounts();
                 refreshTopUpModal();
-                document.getElementById('topUpSuccess').classList.add('hidden');
+
+                /* เล่นอนิเมชันการ์ดเด้งขึ้นใหม่ */
+                const card = modal.querySelector('.modal-enter');
+                if (card) {
+                    card.classList.remove('modal-enter');
+                    void card.offsetWidth;
+                    card.classList.add('modal-enter');
+                }
+
+                safeIcons();
             }
         }
 
@@ -957,8 +1102,7 @@
             document.getElementById('loginForm').classList.add('hidden');
             document.getElementById('registerForm').classList.add('hidden');
 
-            const forgotView = document.getElementById('forgotView');
-            forgotView.classList.remove('hidden');
+            document.getElementById('forgotView').classList.remove('hidden');
 
             document.getElementById('forgotStep1').classList.remove('hidden');
             document.getElementById('forgotStep2').classList.add('hidden');
@@ -1098,7 +1242,6 @@
                     return;
                 }
 
-                /* ตรวจสอบ reCAPTCHA ก่อนสมัคร */
                 hideRegCaptchaError();
 
                 let captchaOk = false;
@@ -1114,7 +1257,6 @@
                 users[email] = password;
                 saveUsers(users);
 
-                /* รีเซ็ต captcha รอการสมัครครั้งถัดไป */
                 try { grecaptcha.reset(); } catch (err) {}
 
             } else {
@@ -1208,66 +1350,18 @@
 
 
         /* =========================
-           TOP UP SYSTEM
+           🔧 TOP UP (ปิดปรับปรุง)
         ========================== */
-        const TOP_UP_AMOUNTS = [50, 100, 200, 300, 500, 1000];
-        let selectedTopUpAmount = 100;
-
-        function renderTopUpAmounts() {
-            const el = document.getElementById('topUpAmounts');
-
-            el.innerHTML = TOP_UP_AMOUNTS.map(amount => {
-                const cls = amount === selectedTopUpAmount
-                    ? 'btn-light font-black py-3 rounded-xl text-sm transition border border-white'
-                    : 'bg-white/[0.04] hover:bg-white/[0.1] border border-white/15 text-white font-bold py-3 rounded-xl text-sm transition';
-
-                return '<button onclick="playClickSound(); selectTopUpAmount(' + amount + ')" class="' + cls + '">฿' + amount + '</button>';
-            }).join('');
-
-            updateTopUpButton();
-        }
-
-        function selectTopUpAmount(amount) {
-            selectedTopUpAmount = amount;
-            renderTopUpAmounts();
-        }
-
-        function updateTopUpButton() {
-            document.getElementById('topUpConfirmBtn').innerHTML =
-                '<i data-lucide="check-circle" class="w-4 h-4"></i> ยืนยันการเติมเงิน ฿' + selectedTopUpAmount;
-            safeIcons();
-        }
-
         function refreshTopUpModal() {
             const el = document.getElementById('tumBalance');
             if (el) {
-                el.innerText = '฿' + parseFloat(localStorage.getItem('user_balance') || '0').toFixed(2);
+                el.innerText = parseFloat(localStorage.getItem('user_balance') || '0').toFixed(2);
             }
         }
 
-        function topUpNow() {
-            const email = localStorage.getItem('user_email');
-
-            if (!email) {
-                toggleTopUpModal(false);
-                toggleAuthModal(true);
-                alert('กรุณาเข้าสู่ระบบก่อนเติมเงินครับ');
-                return;
-            }
-
-            const balance = parseFloat(localStorage.getItem('user_balance') || '0');
-            const newBalance = (balance + selectedTopUpAmount).toFixed(2);
-
-            localStorage.setItem('user_balance', newBalance);
-            updateProfileUI(email);
-
-            document.getElementById('topUpSuccess').classList.remove('hidden');
-
-            setTimeout(() => {
-                toggleTopUpModal(false);
-            }, 1300);
-
-            safeIcons();
+        /* ปุ่มสอบถามแอดมิน */
+        function contactAdmin() {
+            alert('สอบถามเพิ่มเติมติดต่อได้ที่\n\n📧 support@skeyshop.com\n🕐 แอดมินตอบ 09:00 - 24:00');
         }
 
 
@@ -1283,13 +1377,12 @@
 
 
         /* =========================
-           ✅ เริ่มระบบทันที (script อยู่ท้าย body = DOM พร้อมแล้ว)
+           ✅ เริ่มระบบทันที
         ========================== */
         startLoadingScreen();
         safeIcons();
         checkPersistedLogin();
 
-        /* เผื่อ CDN สำรองโหลดช้า ลองสร้างไอคอนซ้ำ */
         setTimeout(safeIcons, 1500);
         setTimeout(safeIcons, 3000);
 
