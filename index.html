@@ -29,13 +29,11 @@
             color: #ffffff;
         }
 
-        /* เลือกข้อความแล้วเป็นขาว-ดำกลับสี */
         ::selection {
             background: #ffffff;
             color: #050505;
         }
 
-        /* สกรอลล์บาร์โทนดำ */
         ::-webkit-scrollbar { width: 10px; }
         ::-webkit-scrollbar-track { background: #050505; }
         ::-webkit-scrollbar-thumb {
@@ -68,7 +66,6 @@
            ✨ WHITE MONOCHROME EFFECTS
         ========================== */
 
-        /* พื้นหลังกริดขาวจางทั้งเว็บ */
         .bg-grid-mono {
             background-image:
                 linear-gradient(rgba(255, 255, 255, 0.035) 1px, transparent 1px),
@@ -78,7 +75,6 @@
             mask-image: radial-gradient(ellipse 80% 60% at 50% 40%, black 30%, transparent 75%);
         }
 
-        /* กริดหน้า Security เคลื่อนไหว */
         .security-grid {
             background-image:
                 linear-gradient(rgba(255, 255, 255, 0.05) 1px, transparent 1px),
@@ -94,7 +90,6 @@
             to { background-position: 44px 44px; }
         }
 
-        /* การ์ดเด้งขึ้น */
         @keyframes modal-in {
             from { opacity: 0; transform: translateY(30px) scale(0.95); }
             to { opacity: 1; transform: translateY(0) scale(1); }
@@ -102,7 +97,6 @@
 
         .modal-enter { animation: modal-in 0.7s cubic-bezier(0.16, 1, 0.3, 1) both; }
 
-        /* แสงขาววิ่งผ่านปุ่ม */
         @keyframes shine {
             0% { transform: translateX(-150%) skewX(-15deg); }
             60%, 100% { transform: translateX(350%) skewX(-15deg); }
@@ -118,7 +112,6 @@
             pointer-events: none;
         }
 
-        /* เส้นสแกนขาวกวาดการ์ด */
         @keyframes scanline {
             0% { top: -5%; opacity: 0; }
             15% { opacity: 1; }
@@ -136,7 +129,6 @@
             pointer-events: none;
         }
 
-        /* อนุภาคขาวลอยขึ้น */
         @keyframes float-up {
             0% { transform: translateY(0); opacity: 0; }
             12% { opacity: 0.6; }
@@ -155,7 +147,6 @@
             pointer-events: none;
         }
 
-        /* ไฟล์ปุ่มดำบนพื้นขาว (ปุ่มหลัก) */
         .btn-light {
             background: #ffffff;
             color: #050505;
@@ -165,7 +156,6 @@
             background: #e5e5e5;
         }
 
-        /* อินพุตธีมดำ */
         .input-dark {
             background: rgba(255,255,255,0.05);
             border: 1px solid rgba(255,255,255,0.12);
@@ -271,16 +261,16 @@
 
             </div>
 
-            <!-- reCAPTCHA (พื้นขาวให้ contrast ชัด) -->
+            <!-- reCAPTCHA -->
             <div class="bg-white rounded-2xl p-3.5 flex justify-center mb-5 shadow-[0_10px_35px_rgba(0,0,0,0.5)]">
                 <div class="g-recaptcha"
                      id="initialRecaptcha"
-                     data-sitekey="6LdE2ZMtAAAAAOTuFBh816eZmvZ8L1pO1g8Z_Vso"
+                     data-sitekey="6LdtDpQtAAAAAN-ijFLD4U3g98I6MNS6g-GJ48Qz"
                      data-callback="onInitialCaptchaSuccess">
                 </div>
             </div>
 
-            <!-- ปุ่มยืนยัน (ขาว-ดำกลับสี) -->
+            <!-- ปุ่มยืนยัน -->
             <button
                 onclick="playClickSound(); triggerCaptchaClick()"
                 class="btn-shine relative overflow-hidden w-full btn-light font-bold py-3.5 px-4 rounded-2xl shadow-[0_10px_30px_rgba(255,255,255,0.15)] transition-all duration-300 active:scale-95 flex items-center justify-center gap-2 text-sm">
@@ -377,7 +367,7 @@
                 </button>
 
 
-                <!-- LOGIN BUTTON (ขาว) -->
+                <!-- LOGIN BUTTON -->
                 <button
                     id="openAuthBtn"
                     onclick="playClickSound(); toggleAuthModal(true)"
