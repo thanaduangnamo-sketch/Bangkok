@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>แสดงสภาพอากาศ — Skey Weather</title>
+<title>แสดงสภาพอากาศ & แจ้งเตือนแผ่นดินไหว — Skey Weather</title>
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='20' fill='%23111'/><text x='50' y='68' font-size='45' text-anchor='middle' fill='white' font-family='Arial' font-weight='bold'>W</text></svg>">
 <script src="https://cdn.tailwindcss.com"></script>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
@@ -42,6 +42,9 @@ body{font-family:'Inter',sans-serif;background:#050509;color:#fff;min-height:100
 .search-box{background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);color:#fff;backdrop-filter:blur(12px);transition:.2s}
 .search-box:focus{outline:none;border-color:rgba(255,255,255,.3);box-shadow:0 0 0 3px rgba(255,255,255,.05)}
 .search-box::placeholder{color:#52525b}
+
+@keyframes pulseGlow{0%,100%{opacity:1}50%{opacity:.6}}
+.pulse-glow{animation:pulseGlow 2s infinite ease-in-out}
 </style>
 </head>
 <body>
@@ -64,14 +67,30 @@ body{font-family:'Inter',sans-serif;background:#050509;color:#fff;min-height:100
         </div>
     </header>
 
-    <!-- ค้นหา (ค้นภาษาไทยหรืออังกฤษก็ได้) -->
-    <div class="px-5 sm:px-8 mb-8 fade-up" style="animation-delay:.1s">
+    <!-- ค้นหา -->
+    <div class="px-5 sm:px-8 mb-6 fade-up" style="animation-delay:.1s">
         <form onsubmit="doSearch(event)" class="max-w-md mx-auto flex gap-2">
             <input id="searchInput" type="text" placeholder="ค้นหาเมือง เช่น กรุงเทพ, พัทยา, Tokyo..." class="search-box flex-1 px-4 py-3 rounded-2xl text-sm font-medium">
             <button type="submit" id="searchBtn" class="bg-white text-black font-bold px-5 py-3 rounded-2xl text-sm hover:bg-zinc-200 active:scale-95 transition flex items-center gap-2 shrink-0">
                 <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><circle cx="6.5" cy="6.5" r="5"/><path d="m10.5 10.5 3 3"/></svg>
             </button>
         </form>
+    </div>
+
+    <!-- แถบแจ้งเตือนแผ่นดินไหวสด -->
+    <div class="px-5 sm:px-8 mb-6 fade-up" style="animation-delay:.15s">
+        <div class="max-w-2xl mx-auto rounded-2xl border border-red-500/20 bg-red-950/30 backdrop-blur-md p-4 text-xs" id="quakeBox">
+            <div class="flex items-center justify-between mb-2 pb-2 border-b border-red-500/10">
+                <div class="flex items-center gap-2 font-bold text-red-400">
+                    <span class="w-2 h-2 rounded-full bg-red-500 pulse-glow"></span>
+                    <span>🚨 รายงานเฝ้าระวังแผ่นดินไหวล่าสุด (USGS Live)</span>
+                </div>
+                <span class="text-[10px] text-zinc-500" id="quakeTime">กำลังอัปเดต...</span>
+            </div>
+            <div id="quakeContent" class="text-zinc-300 leading-relaxed">
+                กำลังดึงข้อมูลเหตุการณ์แผ่นดินไหว...
+            </div>
+        </div>
     </div>
 
     <div class="flex-1 px-5 sm:px-8 pb-10" id="content">
@@ -90,6 +109,53 @@ function updateClock() {
 }
 setInterval(updateClock, 1000);
 updateClock();
+
+// ดึงข้อมูลแผ่นดินไหวล่าสุดจาก USGS API
+async function loadQuakeAlert() {
+    const quakeContent = document.getElementById('quakeContent');
+    const quakeTime = document.getElementById('quakeTime');
+    
+    try {
+        // ดึงข้อมูลแผ่นดินไหวขนาด > 2.5 ริกเตอร์ที่เกิดขึ้นใน 24 ชั่วโมงที่ผ่านมา
+        const res = await fetch('https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/2.5_day.geojson');
+        const data = await res.json();
+        
+        if (data.features && data.features.length > 0) {
+            const latest = data.features[0];
+            const mag = latest.properties.mag.toFixed(1);
+            const place = latest.properties.place || 'ไม่ระบุพื้นที่';
+            const time = new Date(latest.properties.time).toLocaleString('th-TH', {
+                dateStyle: 'short',
+                timeStyle: 'medium'
+            });
+            const depth = latest.geometry.coordinates[2]; // ความลึก (กิโลเมตร)
+
+            // จัดระดับความรุนแรง
+            let alertLevel = 'text-amber-400';
+            if (mag >= 6.0) alertLevel = 'text-red-400 font-extrabold';
+
+            quakeTime.textContent = 'อัปเดตแล้ว';
+            quakeContent.innerHTML = `
+                <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+                    <div>
+                        <span class="font-semibold text-white">สถานที่/ประเทศ:</span> <span class="text-zinc-200">${esc(place)}</span>
+                    </div>
+                    <div class="flex items-center gap-3 shrink-0">
+                        <span>ขนาด: <strong class="${alertLevel}">${mag} M</strong></span>
+                        <span class="text-zinc-400">ลึก: ${depth} กม.</span>
+                    </div>
+                </div>
+                <div class="mt-1 text-[11px] text-zinc-400">
+                    ⏱️ เกิดขึ้นเมื่อ: <span class="text-zinc-300">${time}</span>
+                </div>
+            `;
+        } else {
+            quakeContent.innerHTML = 'ไม่มีรายงานแผ่นดินไหวรุนแรงใน 24 ชั่วโมงที่ผ่านมา';
+        }
+    } catch (e) {
+        quakeContent.innerHTML = '<span class="text-zinc-500">ไม่สามารถเชื่อมต่อข้อมูลแผ่นดินไหวได้</span>';
+    }
+}
 
 function parseWMOCode(code, isDay = 1) {
     if (code === 0) return { icon: isDay ? '☀️' : '🌙', text: isDay ? 'ท้องฟ้าแจ่มใส' : 'ท้องฟ้าโปร่ง', bg: 'clear' };
@@ -126,7 +192,6 @@ async function doSearch(e) {
     btn.disabled = true;
 
     try {
-        // ใช้ Geocoding API ที่ค้นหาภาษาไทยได้ดีขึ้น
         const geoRes = await fetch(`https://geocoding-api.open-meteo.com/v1/search?name=${encodeURIComponent(q)}&count=1&language=th&format=json`).then(r => r.json());
         
         if (!geoRes.results || geoRes.results.length === 0) {
@@ -259,8 +324,10 @@ function errorHTML(msg) {
     </div>`;
 }
 
-// ตรวจจับ IP Location อัตโนมัติทันที
+// เริ่มต้นโหลดแผ่นดินไหว และหาตำแหน่งผู้ใช้งานอัตโนมัติ
 (async function init() {
+    loadQuakeAlert(); // ดึงข้อมูลแผ่นดินไหว
+    
     try {
         const ipRes = await fetch('https://ipapi.co/json/').then(r => r.json());
         if (ipRes && ipRes.latitude && ipRes.longitude) {
@@ -270,7 +337,6 @@ function errorHTML(msg) {
         }
     } catch (e) {}
 
-    // Fallback สำหรับกรุงเทพฯ หากไม่สามารถระบุ IP ได้
     await fetchWeatherByCoords(13.7563, 100.5018, 'กรุงเทพมหานคร', 'TH');
 })();
 </script>
