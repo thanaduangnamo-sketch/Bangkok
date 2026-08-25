@@ -108,7 +108,7 @@ body{font-family:'Plus Jakarta Sans','Noto Sans Thai',sans-serif;background:#030
         <div class="max-w-2xl mx-auto rounded-2xl bg-amber-950/20 border border-amber-500/20 backdrop-blur-md px-4 py-3 flex items-center justify-between text-[11px] text-amber-200/90 shadow-lg">
             <div class="flex items-center gap-2.5">
                 <span class="w-2 h-2 rounded-full bg-amber-400 animate-pulse"></span>
-                <span>ระบบรายงาน Discord (แท็ก @everyone เฉพาะเหตุการณ์สำคัญ)</span>
+                <span>ระบบรายงานอัตโนมัติเข้า Discord (แท็ก @everyone เฉพาะเหตุแผ่นดินไหวใหญ่)</span>
             </div>
             <div class="font-mono text-amber-400 font-bold bg-amber-500/10 px-2.5 py-1 rounded-lg border border-amber-500/20" id="webhookTimer">รอบต่อไป: 60:00</div>
         </div>
@@ -150,7 +150,9 @@ let lastCountryCode = 'TH';
 let latestWeatherData = null;
 let latestQuakeData = null;
 
-let nextUpdateSeconds = 3600;
+// กำหนดระยะเวลาวนรอบ (3600 วินาที = 1 ชั่วโมง)
+const TOTAL_INTERVAL_SECONDS = 3600;
+let nextUpdateSeconds = TOTAL_INTERVAL_SECONDS;
 
 function updateClock() {
     const now = new Date();
@@ -164,16 +166,29 @@ function updateClock() {
 setInterval(updateClock, 1000);
 updateClock();
 
-setInterval(() => {
+// ลูปนับถอยหลังทุก 1 วินาที และเรียกทำงานทันทีเมื่อครบ 1 ชม.
+setInterval(async () => {
     nextUpdateSeconds--;
     if (nextUpdateSeconds <= 0) {
-        nextUpdateSeconds = 3600;
-        manualRefresh();
+        nextUpdateSeconds = TOTAL_INTERVAL_SECONDS;
+        await autoTriggerUpdate();
     }
+    updateTimerUI();
+}, 1000);
+
+function updateTimerUI() {
     const mins = Math.floor(nextUpdateSeconds / 60).toString().padStart(2, '0');
     const secs = (nextUpdateSeconds % 60).toString().padStart(2, '0');
     document.getElementById('webhookTimer').textContent = `รอบต่อไป: ${mins}:${secs}`;
-}, 1000);
+}
+
+async function autoTriggerUpdate() {
+    await Promise.all([
+        loadQuakeAlert(),
+        fetchWeatherByCoords(lastLat, lastLon, lastCityName, lastCountryCode)
+    ]);
+    await sendDiscordNotification();
+}
 
 async function loadQuakeAlert() {
     const quakeContent = document.getElementById('quakeContent');
@@ -249,19 +264,17 @@ async function sendDiscordNotification() {
 
     if (latestQuakeData) {
         quakeMsg = `🚨 **${latestQuakeData.place}**\n• ขนาด: **${latestQuakeData.mag} M** | ลึก: ${latestQuakeData.depth} กม.\n• เวลา: ${latestQuakeData.time}`;
-        // กำหนดเงื่อนไข: หากแผ่นดินไหวขนาดใหญ่กว่าหรือเท่ากับ 5.0 M ให้ตั้งค่าแจ้งเตือนด่วน
         if (latestQuakeData.mag >= 5.0) {
             isSevereQuake = true;
         }
     }
 
-    // เงื่อนไขข้อความ: แท็ก @everyone เฉพาะกรณีแผ่นดินไหวใหญ่
     let mentionText = "📢 **รายงานอัปเดตสถานการณ์ประจำชั่วโมง**";
-    let embedColor = 16753920; // สีส้มทองมาตรฐาน
+    let embedColor = 16753920; 
 
     if (isSevereQuake) {
         mentionText = "@everyone 🚨 **[แจ้งเตือนฉุกเฉิน] ตรวจพบเหตุแผ่นดินไหวรุนแรง!**";
-        embedColor = 15548927; // เปลี่ยนเป็นสีแดงฉุกเฉิน
+        embedColor = 15548927; 
     }
 
     const payload = {
@@ -303,14 +316,12 @@ async function manualRefresh() {
     const icon = document.getElementById('refreshIcon');
     icon.classList.add('spin-active');
     
-    await Promise.all([
-        loadQuakeAlert(),
-        fetchWeatherByCoords(lastLat, lastLon, lastCityName, lastCountryCode)
-    ]);
-
-    await sendDiscordNotification();
+    await autoTriggerUpdate();
     
-    nextUpdateSeconds = 3600;
+    // รีเซ็ตตัวนับเวลากลับเป็น 3,600 วินาที เมื่อกดปุ่มอัปเดตด้วยตนเอง
+    nextUpdateSeconds = TOTAL_INTERVAL_SECONDS;
+    updateTimerUI();
+    
     setTimeout(() => icon.classList.remove('spin-active'), 600);
 }
 
@@ -335,8 +346,9 @@ async function doSearch(e) {
             lastCityName = place.name + (place.admin1 ? `, ${place.admin1}` : '');
             lastCountryCode = place.country_code || 'TH';
             
-            await fetchWeatherByCoords(lastLat, lastLon, lastCityName, lastCountryCode);
-            await sendDiscordNotification();
+            await autoTriggerUpdate();
+            nextUpdateSeconds = TOTAL_INTERVAL_SECONDS;
+            updateTimerUI();
         }
     } catch(err) {
         document.getElementById('content').innerHTML = errorHTML('เกิดข้อผิดพลาดในการเชื่อมต่อ');
@@ -459,8 +471,6 @@ function errorHTML(msg) {
 }
 
 (async function init() {
-    await loadQuakeAlert();
-    
     try {
         const ipRes = await fetch('https://ipapi.co/json/').then(r => r.json());
         if (ipRes && ipRes.latitude && ipRes.longitude) {
@@ -471,8 +481,9 @@ function errorHTML(msg) {
         }
     } catch (e) {}
 
-    await fetchWeatherByCoords(lastLat, lastLon, lastCityName, lastCountryCode);
-    sendDiscordNotification();
+    await autoTriggerUpdate();
+    nextUpdateSeconds = TOTAL_INTERVAL_SECONDS;
+    updateTimerUI();
 })();
 </script>
 </body>
