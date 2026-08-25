@@ -38,44 +38,52 @@ body{font-family:'Inter',sans-serif;background:#050509;color:#fff;min-height:100
 .spinner{width:32px;height:32px;border:3px solid rgba(255,255,255,.1);border-top-color:#fff;border-radius:50%;animation:spin .7s linear infinite}
 
 .flag{width:20px;height:14px;border-radius:2px;object-fit:cover;border:1px solid rgba(255,255,255,.1)}
+
+.search-box{background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);color:#fff;backdrop-filter:blur(12px);transition:.2s}
+.search-box:focus{outline:none;border-color:rgba(255,255,255,.3);box-shadow:0 0 0 3px rgba(255,255,255,.05)}
+.search-box::placeholder{color:#52525b}
 </style>
 </head>
 <body>
 
-<!-- พื้นหลังภาพอากาศ -->
 <div class="bg-scene">
     <img id="bgImg" src="https://images.unsplash.com/photo-1504608524841-42fe6f032b4b?w=1920&q=80" alt="">
     <div class="bg-overlay"></div>
 </div>
 
-<!-- เนื้อหา -->
 <div class="relative z-10 min-h-screen flex flex-col">
 
-    <!-- Header -->
     <header class="flex items-center justify-between px-5 sm:px-8 py-5 fade-in">
         <div class="flex items-center gap-2.5">
             <div class="w-8 h-8 bg-white rounded-lg flex items-center justify-center font-black text-xs text-black">SK</div>
             <span class="text-sm font-bold text-white/70">Weather</span>
         </div>
-        <div class="text-[11px] text-zinc-400 font-medium flex items-center gap-2" id="statusDisplay">
+        <div class="text-[11px] text-zinc-400 font-medium flex items-center gap-2">
             <span class="inline-block w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
             <span id="clockDisplay">--:--</span>
         </div>
     </header>
 
-    <!-- ผลลัพธ์ -->
+    <!-- ค้นหา (ค้นภาษาไทยหรืออังกฤษก็ได้) -->
+    <div class="px-5 sm:px-8 mb-8 fade-up" style="animation-delay:.1s">
+        <form onsubmit="doSearch(event)" class="max-w-md mx-auto flex gap-2">
+            <input id="searchInput" type="text" placeholder="ค้นหาเมือง เช่น กรุงเทพ, พัทยา, Tokyo..." class="search-box flex-1 px-4 py-3 rounded-2xl text-sm font-medium">
+            <button type="submit" id="searchBtn" class="bg-white text-black font-bold px-5 py-3 rounded-2xl text-sm hover:bg-zinc-200 active:scale-95 transition flex items-center gap-2 shrink-0">
+                <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><circle cx="6.5" cy="6.5" r="5"/><path d="m10.5 10.5 3 3"/></svg>
+            </button>
+        </form>
+    </div>
+
     <div class="flex-1 px-5 sm:px-8 pb-10" id="content">
-        <!-- Loading -->
         <div class="flex flex-col items-center justify-center py-32 gap-3">
             <div class="spinner"></div>
-            <p class="text-xs text-zinc-500">กำลังตรวจจับตำแหน่งและโหลดสภาพอากาศ...</p>
+            <p class="text-xs text-zinc-500">กำลังดึงตำแหน่งปัจจุบันของคุณ...</p>
         </div>
     </div>
 
 </div>
 
 <script>
-// อัปเดตนาฬิกา
 function updateClock() {
     const now = new Date();
     document.getElementById('clockDisplay').textContent = now.toLocaleTimeString('th-TH', { hour:'2-digit', minute:'2-digit' });
@@ -83,12 +91,11 @@ function updateClock() {
 setInterval(updateClock, 1000);
 updateClock();
 
-// แปลง WMO Weather Interpretation Codes ของ Open-Meteo
 function parseWMOCode(code, isDay = 1) {
     if (code === 0) return { icon: isDay ? '☀️' : '🌙', text: isDay ? 'ท้องฟ้าแจ่มใส' : 'ท้องฟ้าโปร่ง', bg: 'clear' };
     if (code >= 1 && code <= 3) return { icon: isDay ? '⛅' : '🌙', text: 'มีเมฆบางส่วน', bg: 'clouds' };
     if (code === 45 || code === 48) return { icon: '🌫️', text: 'หมอกหนา', bg: 'mist' };
-    if (code >= 51 && code <= 55) return { icon: '🌦️', text: 'ฝนปรอยๆ', bg: 'drizzle' };
+    if (code >= 51 && code <= 55) return { icon: '🌦️', text: 'ฝนตกเล็กน้อย', bg: 'drizzle' };
     if (code >= 61 && code <= 65) return { icon: '🌧️', text: 'ฝนตก', bg: 'rain' };
     if (code >= 71 && code <= 77) return { icon: '🌨️', text: 'หิมะตก', bg: 'snow' };
     if (code >= 80 && code <= 82) return { icon: '🌧️', text: 'ฝนตกหนัก', bg: 'rain' };
@@ -109,12 +116,39 @@ function bgImage(bg) {
     return imgs[bg] || imgs.clear;
 }
 
+async function doSearch(e) {
+    if (e) e.preventDefault();
+    const q = document.getElementById('searchInput').value.trim();
+    if (!q) return;
+
+    const btn = document.getElementById('searchBtn');
+    btn.innerHTML = '<div class="spinner" style="width:15px;height:15px;border-width:2px"></div>';
+    btn.disabled = true;
+
+    try {
+        // ใช้ Geocoding API ที่ค้นหาภาษาไทยได้ดีขึ้น
+        const geoRes = await fetch(`https://geocoding-api.open-meteo.com/v1/search?name=${encodeURIComponent(q)}&count=1&language=th&format=json`).then(r => r.json());
+        
+        if (!geoRes.results || geoRes.results.length === 0) {
+            document.getElementById('content').innerHTML = errorHTML('ไม่พบข้อมูลเมืองที่คุณค้นหา โปรดตรวจสอบชื่อเมืองอีกครั้ง');
+        } else {
+            const place = geoRes.results[0];
+            const name = place.name + (place.admin1 ? `, ${place.admin1}` : '');
+            await fetchWeatherByCoords(place.latitude, place.longitude, name, place.country_code || 'TH');
+        }
+    } catch(err) {
+        document.getElementById('content').innerHTML = errorHTML('เกิดข้อผิดพลาดในการดึงข้อมูล');
+    }
+
+    btn.innerHTML = '<svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><circle cx="6.5" cy="6.5" r="5"/><path d="m10.5 10.5 3 3"/></svg>';
+    btn.disabled = false;
+}
+
 async function fetchWeatherByCoords(lat, lon, cityName, countryCode) {
     try {
         const url = `https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&current=temperature_2m,relative_humidity_2m,apparent_temperature,is_day,weather_code,surface_pressure,wind_speed_10m&hourly=temperature_2m,weather_code,is_day&daily=weather_code,temperature_2m_max,temperature_2m_min,sunrise,sunset&timezone=auto`;
         const res = await fetch(url);
         const data = await res.json();
-
         render(data, cityName, countryCode, lat, lon);
     } catch(e) {
         document.getElementById('content').innerHTML = errorHTML('ไม่สามารถดึงข้อมูลอากาศได้ กรุณาลองใหม่อีกครั้ง');
@@ -136,12 +170,10 @@ function render(data, city, cc, lat, lon) {
     const sunrise = daily.sunrise[0] ? new Date(daily.sunrise[0]).toLocaleTimeString('th-TH',{hour:'2-digit',minute:'2-digit'}) : '--:--';
     const sunset = daily.sunset[0] ? new Date(daily.sunset[0]).toLocaleTimeString('th-TH',{hour:'2-digit',minute:'2-digit'}) : '--:--';
 
-    // เปลี่ยนภาพพื้นหลัง
     const bg = document.getElementById('bgImg');
     bg.style.opacity = '0';
     setTimeout(() => { bg.src = bgImage(info.bg); bg.style.opacity = '1'; }, 300);
 
-    // คำนวณสภาพอากาศรายชั่วโมง (24 ชม. ถัดไป)
     const nowIndex = new Date().getHours();
     const hourlySlice = hourly.time.slice(nowIndex, nowIndex + 24);
     const tempsSlice = hourly.temperature_2m.slice(nowIndex, nowIndex + 24);
@@ -166,7 +198,6 @@ function render(data, city, cc, lat, lon) {
         </div>`;
     }).join('');
 
-    // คำนวณสภาพอากาศรายวัน (5 วัน)
     const dayNames = ['อาทิตย์', 'จันทร์', 'อังคาร', 'พุธ', 'พฤหัสบดี', 'ศุกร์', 'เสาร์'];
     let dailyHTML = daily.time.slice(0, 5).map((d, i) => {
         const dt = new Date(d);
@@ -184,7 +215,6 @@ function render(data, city, cc, lat, lon) {
     }).join('');
 
     document.getElementById('content').innerHTML = `
-    <!-- อุณหภูมิหลัก -->
     <div class="max-w-2xl mx-auto fade-up">
         <div class="text-center mb-10">
             <div class="flex items-center justify-center gap-3 mb-2">
@@ -199,7 +229,6 @@ function render(data, city, cc, lat, lon) {
             <p class="text-sm text-zinc-400 font-medium -mt-2 mb-1">รู้สึกเหมือน ${feels}°C</p>
         </div>
 
-        <!-- รายละเอียด -->
         <div class="glass rounded-2xl p-5 sm:p-6 mb-6 fade-up" style="animation-delay:.15s">
             <div class="detail-row"><span class="detail-label">ความชื้น</span><span class="detail-val">${hum}%</span></div>
             <div class="detail-row"><span class="detail-label">ความเร็วลม</span><span class="detail-val">${wind} km/h</span></div>
@@ -209,13 +238,11 @@ function render(data, city, cc, lat, lon) {
             <div class="detail-row"><span class="detail-label">พิกัด</span><span class="detail-val font-mono text-[11px]">${lat.toFixed(2)}, ${lon.toFixed(2)}</span></div>
         </div>
 
-        <!-- 24 ชม. -->
         <div class="glass rounded-2xl p-5 sm:p-6 mb-6 fade-up" style="animation-delay:.25s">
             <h3 class="text-xs font-bold text-zinc-400 uppercase tracking-wider mb-4">24 ชั่วโมงข้างหน้า</h3>
             <div class="flex gap-1 overflow-x-auto pb-2" style="-webkit-overflow-scrolling:touch;scrollbar-width:none">${hourlyHTML}</div>
         </div>
 
-        <!-- 5 วัน -->
         <div class="glass rounded-2xl p-5 sm:p-6 fade-up" style="animation-delay:.35s">
             <h3 class="text-xs font-bold text-zinc-400 uppercase tracking-wider mb-4">5 วันข้างหน้า</h3>
             <div class="flex gap-2 overflow-x-auto pb-2" style="-webkit-overflow-scrolling:touch;scrollbar-width:none">${dailyHTML}</div>
@@ -232,37 +259,19 @@ function errorHTML(msg) {
     </div>`;
 }
 
-// เริ่มต้นหาตำแหน่งโดยอัตโนมัติเมื่อเข้าหน้าเว็บ
+// ตรวจจับ IP Location อัตโนมัติทันที
 (async function init() {
-    // 1. พยายามตรวจจาก IP Address เป็นหลัก (รวดเร็วและไม่ต้องรออนุญาต GPS)
     try {
         const ipRes = await fetch('https://ipapi.co/json/').then(r => r.json());
         if (ipRes && ipRes.latitude && ipRes.longitude) {
-            const cityName = ipRes.city || ipRes.region || 'เมืองของคุณ';
-            const countryCode = ipRes.country_code || 'TH';
-            await fetchWeatherByCoords(ipRes.latitude, ipRes.longitude, cityName, countryCode);
+            const cityName = ipRes.city || ipRes.region || 'ตำแหน่งปัจจุบัน';
+            await fetchWeatherByCoords(ipRes.latitude, ipRes.longitude, cityName, ipRes.country_code || 'TH');
             return;
         }
-    } catch (e) {
-        console.log('IP Location fallback...');
-    }
+    } catch (e) {}
 
-    // 2. ถ้า IP Location ล้มเหลว ให้ใช้ Geolocation ของอุปกรณ์
-    if ("geolocation" in navigator) {
-        navigator.geolocation.getCurrentPosition(
-            async (pos) => {
-                await fetchWeatherByCoords(pos.coords.latitude, pos.coords.longitude, 'ตำแหน่งปัจจุบัน', 'TH');
-            },
-            async () => {
-                // 3. กรณีผู้ใช้ปฏิเสธการเข้าถึงตำแหน่ง ให้แสดงกรุงเทพฯ เป็น Default
-                await fetchWeatherByCoords(13.7563, 100.5018, 'Bangkok', 'TH');
-            },
-            { timeout: 5000 }
-        );
-    } else {
-        // Fallback สุดท้ายถ้าเบราว์เซอร์ไม่รองรับ
-        await fetchWeatherByCoords(13.7563, 100.5018, 'Bangkok', 'TH');
-    }
+    // Fallback สำหรับกรุงเทพฯ หากไม่สามารถระบุ IP ได้
+    await fetchWeatherByCoords(13.7563, 100.5018, 'กรุงเทพมหานคร', 'TH');
 })();
 </script>
 </body>
