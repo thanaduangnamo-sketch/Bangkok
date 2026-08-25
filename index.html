@@ -81,7 +81,7 @@ body{font-family:'Plus Jakarta Sans','Noto Sans Thai',sans-serif;background:#030
                 <div class="text-[11px] text-zinc-300 font-semibold" id="dateDisplay">--/--/----</div>
                 <div class="text-[10px] text-zinc-500 font-medium flex items-center justify-end gap-1.5">
                     <span class="inline-block w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span>
-                    <span id="clockDisplay">--:--:--</span>
+                    <span id="clockDisplay">--:--:-- น.</span>
                 </div>
             </div>
 
@@ -110,7 +110,7 @@ body{font-family:'Plus Jakarta Sans','Noto Sans Thai',sans-serif;background:#030
                 <span class="w-2 h-2 rounded-full bg-amber-400 animate-pulse"></span>
                 <span>ระบบรายงานอัตโนมัติเข้า Discord (แท็ก @everyone เฉพาะเหตุแผ่นดินไหวใหญ่)</span>
             </div>
-            <div class="font-mono text-amber-400 font-bold bg-amber-500/10 px-2.5 py-1 rounded-lg border border-amber-500/20" id="webhookTimer">รอบต่อไป: 60:00</div>
+            <div class="font-mono text-amber-400 font-bold bg-amber-500/10 px-2.5 py-1 rounded-lg border border-amber-500/20" id="webhookTimer">รอบต่อไป: --:-- น.</div>
         </div>
     </div>
 
@@ -122,7 +122,7 @@ body{font-family:'Plus Jakarta Sans','Noto Sans Thai',sans-serif;background:#030
                     <span class="w-2 h-2 rounded-full bg-red-500 pulse-glow"></span>
                     <span>ศูนย์เฝ้าระวังแผ่นดินไหวโลก (USGS Real-time)</span>
                 </div>
-                <span class="text-[10px] text-zinc-400 font-mono" id="quakeLastUpdate">อัปเดตล่าสุด: --:--</span>
+                <span class="text-[10px] text-zinc-400 font-mono" id="quakeLastUpdate">อัปเดตล่าสุด: --:-- น.</span>
             </div>
             <div id="quakeContent" class="text-zinc-300 leading-relaxed">
                 กำลังดึงข้อมูลแผ่นดินไหวล่าสุด...
@@ -150,13 +150,25 @@ let lastCountryCode = 'TH';
 let latestWeatherData = null;
 let latestQuakeData = null;
 
-// กำหนดระยะเวลาวนรอบ (3600 วินาที = 1 ชั่วโมง)
-const TOTAL_INTERVAL_SECONDS = 3600;
-let nextUpdateSeconds = TOTAL_INTERVAL_SECONDS;
+// ฟังก์ชันแปลงเวลาให้อยู่ในรูปแบบไทย (เช่น 21:00 น.)
+function formatThaiTime(date) {
+    const hours = date.getHours().toString().padStart(2, '0');
+    const minutes = date.getMinutes().toString().padStart(2, '0');
+    return `${hours}:${minutes} น.`;
+}
+
+// คำนวณเวลาที่จะถึงต้นชั่วโมงถัดไป (เช่น เปิดตอน 20:15 จะคืนค่าเวลาของ 21:00)
+function getNextHourTime() {
+    const next = new Date();
+    next.setHours(next.getHours() + 1, 0, 0, 0);
+    return next;
+}
+
+let targetTime = getNextHourTime();
 
 function updateClock() {
     const now = new Date();
-    document.getElementById('clockDisplay').textContent = now.toLocaleTimeString('th-TH');
+    document.getElementById('clockDisplay').textContent = `${now.getHours().toString().padStart(2, '0')}:${now.getMinutes().toString().padStart(2, '0')}:${now.getSeconds().toString().padStart(2, '0')} น.`;
     document.getElementById('dateDisplay').textContent = now.toLocaleDateString('th-TH', {
         year: 'numeric',
         month: 'short',
@@ -166,20 +178,20 @@ function updateClock() {
 setInterval(updateClock, 1000);
 updateClock();
 
-// ลูปนับถอยหลังทุก 1 วินาที และเรียกทำงานทันทีเมื่อครบ 1 ชม.
+// เช็กเวลาทุกๆ 1 วินาที
 setInterval(async () => {
-    nextUpdateSeconds--;
-    if (nextUpdateSeconds <= 0) {
-        nextUpdateSeconds = TOTAL_INTERVAL_SECONDS;
+    const now = new Date();
+    const diffSeconds = Math.floor((targetTime - now) / 1000);
+
+    if (diffSeconds <= 0) {
         await autoTriggerUpdate();
+        targetTime = getNextHourTime(); // ตั้งเป้าหมายรอบชั่วโมงถัดไป
     }
-    updateTimerUI();
+    updateTimerUI(targetTime);
 }, 1000);
 
-function updateTimerUI() {
-    const mins = Math.floor(nextUpdateSeconds / 60).toString().padStart(2, '0');
-    const secs = (nextUpdateSeconds % 60).toString().padStart(2, '0');
-    document.getElementById('webhookTimer').textContent = `รอบต่อไป: ${mins}:${secs}`;
+function updateTimerUI(nextDate) {
+    document.getElementById('webhookTimer').textContent = `รอบต่อไป: ${formatThaiTime(nextDate)}`;
 }
 
 async function autoTriggerUpdate() {
@@ -202,19 +214,17 @@ async function loadQuakeAlert() {
             const latest = data.features[0];
             const mag = parseFloat(latest.properties.mag.toFixed(1));
             const place = latest.properties.place || 'ไม่ระบุพื้นที่';
-            const time = new Date(latest.properties.time).toLocaleString('th-TH', {
-                dateStyle: 'short',
-                timeStyle: 'medium'
-            });
+            const qDate = new Date(latest.properties.time);
+            const timeStr = `${qDate.toLocaleDateString('th-TH')} เวลา ${formatThaiTime(qDate)}`;
             const depth = latest.geometry.coordinates[2];
 
-            latestQuakeData = { place, mag, depth, time };
+            latestQuakeData = { place, mag, depth, time: timeStr };
 
             let alertLevel = 'text-amber-400';
             if (mag >= 5.0) alertLevel = 'text-red-400 font-extrabold';
 
             const now = new Date();
-            quakeLastUpdate.textContent = `อัปเดต: ${now.toLocaleTimeString('th-TH', {hour:'2-digit', minute:'2-digit'})}`;
+            quakeLastUpdate.textContent = `อัปเดต: ${formatThaiTime(now)}`;
             
             quakeContent.innerHTML = `
                 <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
@@ -227,7 +237,7 @@ async function loadQuakeAlert() {
                     </div>
                 </div>
                 <div class="mt-1 text-[11px] text-zinc-400">
-                    ⏱️ วันเวลาที่เกิดเหตุ: <span class="text-zinc-300">${time}</span>
+                    ⏱️ วันเวลาที่เกิดเหตุ: <span class="text-zinc-300">${timeStr}</span>
                 </div>
             `;
         } else {
@@ -257,7 +267,8 @@ async function sendDiscordNotification() {
     const current = latestWeatherData.current;
     const daily = latestWeatherData.daily;
     const info = parseWMOCode(current.weather_code, current.is_day);
-    const nowStr = new Date().toLocaleString('th-TH', { dateStyle: 'long', timeStyle: 'medium' });
+    const now = new Date();
+    const nowStr = `${now.toLocaleDateString('th-TH', { dateStyle: 'long' })} เวลา ${formatThaiTime(now)}`;
 
     let quakeMsg = "ไม่มีรายงานเหตุการณ์รุนแรง";
     let isSevereQuake = false;
@@ -269,7 +280,7 @@ async function sendDiscordNotification() {
         }
     }
 
-    let mentionText = "📢 **รายงานอัปเดตสถานการณ์ประจำชั่วโมง**";
+    let mentionText = `📢 **รายงานอัปเดตสถานการณ์ประจำชั่วโมง (${formatThaiTime(now)})**`;
     let embedColor = 16753920; 
 
     if (isSevereQuake) {
@@ -291,8 +302,8 @@ async function sendDiscordNotification() {
                     { name: "💧 ความชื้น", value: `${current.relative_humidity_2m}%`, inline: true },
                     { name: "💨 ความเร็วลม", value: `${current.wind_speed_10m} km/h`, inline: true },
                     { name: "⏲️ ความกดอากาศ", value: `${Math.round(current.surface_pressure)} hPa`, inline: true },
-                    { name: "🌅 พระอาทิตย์ขึ้น", value: new Date(daily.sunrise[0]).toLocaleTimeString('th-TH', {hour:'2-digit', minute:'2-digit'}), inline: true },
-                    { name: "🌇 พระอาทิตย์ตก", value: new Date(daily.sunset[0]).toLocaleTimeString('th-TH', {hour:'2-digit', minute:'2-digit'}), inline: true },
+                    { name: "🌅 พระอาทิตย์ขึ้น", value: formatThaiTime(new Date(daily.sunrise[0])), inline: true },
+                    { name: "🌇 พระอาทิตย์ตก", value: formatThaiTime(new Date(daily.sunset[0])), inline: true },
                     { name: "🌍 พิกัดพื้นที่", value: `${lastLat.toFixed(2)}, ${lastLon.toFixed(2)}`, inline: true },
                     { name: "📌 รายงานแผ่นดินไหวล่าสุด (USGS)", value: quakeMsg, inline: false }
                 ],
@@ -317,10 +328,8 @@ async function manualRefresh() {
     icon.classList.add('spin-active');
     
     await autoTriggerUpdate();
-    
-    // รีเซ็ตตัวนับเวลากลับเป็น 3,600 วินาที เมื่อกดปุ่มอัปเดตด้วยตนเอง
-    nextUpdateSeconds = TOTAL_INTERVAL_SECONDS;
-    updateTimerUI();
+    targetTime = getNextHourTime();
+    updateTimerUI(targetTime);
     
     setTimeout(() => icon.classList.remove('spin-active'), 600);
 }
@@ -347,8 +356,8 @@ async function doSearch(e) {
             lastCountryCode = place.country_code || 'TH';
             
             await autoTriggerUpdate();
-            nextUpdateSeconds = TOTAL_INTERVAL_SECONDS;
-            updateTimerUI();
+            targetTime = getNextHourTime();
+            updateTimerUI(targetTime);
         }
     } catch(err) {
         document.getElementById('content').innerHTML = errorHTML('เกิดข้อผิดพลาดในการเชื่อมต่อ');
@@ -382,8 +391,8 @@ function render(data, city, cc, lat, lon) {
     const wind = current.wind_speed_10m;
     const pressure = Math.round(current.surface_pressure);
     
-    const sunrise = daily.sunrise[0] ? new Date(daily.sunrise[0]).toLocaleTimeString('th-TH',{hour:'2-digit',minute:'2-digit'}) : '--:--';
-    const sunset = daily.sunset[0] ? new Date(daily.sunset[0]).toLocaleTimeString('th-TH',{hour:'2-digit',minute:'2-digit'}) : '--:--';
+    const sunrise = daily.sunrise[0] ? formatThaiTime(new Date(daily.sunrise[0])) : '--:-- น.';
+    const sunset = daily.sunset[0] ? formatThaiTime(new Date(daily.sunset[0])) : '--:-- น.';
 
     const nowIndex = new Date().getHours();
     const hourlySlice = hourly.time.slice(nowIndex, nowIndex + 24);
@@ -399,9 +408,9 @@ function render(data, city, cc, lat, lon) {
         const hTemp = Math.round(hourly.temperature_2m[idx]);
         const hInfo = parseWMOCode(code, isDay);
         const pct = Math.max(0, Math.min(100, ((hTemp - minTemp) / tempRange) * 100));
-        const hourLabel = new Date(t).getHours().toString().padStart(2, '0') + ':00';
+        const hourLabel = formatThaiTime(new Date(t));
 
-        return `<div class="flex flex-col items-center gap-2 min-w-[56px] glass-card p-3 rounded-2xl">
+        return `<div class="flex flex-col items-center gap-2 min-w-[64px] glass-card p-3 rounded-2xl">
             <span class="text-[10px] text-zinc-400 font-medium">${hourLabel}</span>
             <span class="text-xl my-0.5">${hInfo.icon}</span>
             <span class="text-xs font-bold text-white">${hTemp}°</span>
@@ -482,8 +491,8 @@ function errorHTML(msg) {
     } catch (e) {}
 
     await autoTriggerUpdate();
-    nextUpdateSeconds = TOTAL_INTERVAL_SECONDS;
-    updateTimerUI();
+    targetTime = getNextHourTime();
+    updateTimerUI(targetTime);
 })();
 </script>
 </body>
