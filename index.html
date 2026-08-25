@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>เสดงสภาพอากาศ — Skey Weather</title>
+<title>แสดงสภาพอากาศ — Skey Weather</title>
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='20' fill='%23111'/><text x='50' y='68' font-size='45' text-anchor='middle' fill='white' font-family='Arial' font-weight='bold'>W</text></svg>">
 <script src="https://cdn.tailwindcss.com"></script>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
@@ -38,10 +38,6 @@ body{font-family:'Inter',sans-serif;background:#050509;color:#fff;min-height:100
 .spinner{width:32px;height:32px;border:3px solid rgba(255,255,255,.1);border-top-color:#fff;border-radius:50%;animation:spin .7s linear infinite}
 
 .flag{width:20px;height:14px;border-radius:2px;object-fit:cover;border:1px solid rgba(255,255,255,.1)}
-
-.search-box{background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);color:#fff;backdrop-filter:blur(12px);transition:.2s}
-.search-box:focus{outline:none;border-color:rgba(255,255,255,.3);box-shadow:0 0 0 3px rgba(255,255,255,.05)}
-.search-box::placeholder{color:#52525b}
 </style>
 </head>
 <body>
@@ -61,38 +57,25 @@ body{font-family:'Inter',sans-serif;background:#050509;color:#fff;min-height:100
             <div class="w-8 h-8 bg-white rounded-lg flex items-center justify-center font-black text-xs text-black">SK</div>
             <span class="text-sm font-bold text-white/70">Weather</span>
         </div>
-        <div class="text-[11px] text-zinc-600 font-medium" id="clockDisplay">--:--</div>
+        <div class="text-[11px] text-zinc-400 font-medium flex items-center gap-2" id="statusDisplay">
+            <span class="inline-block w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
+            <span id="clockDisplay">--:--</span>
+        </div>
     </header>
-
-    <!-- ค้นหา -->
-    <div class="px-5 sm:px-8 mb-8 fade-up" style="animation-delay:.1s">
-        <form onsubmit="doSearch(event)" class="max-w-md mx-auto flex gap-2">
-            <input id="searchInput" type="text" placeholder="ค้นหาเมือง เช่น Bangkok, Tokyo, London..." class="search-box flex-1 px-4 py-3 rounded-2xl text-sm font-medium">
-            <button type="submit" id="searchBtn" class="bg-white text-black font-bold px-5 py-3 rounded-2xl text-sm hover:bg-zinc-200 active:scale-95 transition flex items-center gap-2 shrink-0">
-                <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><circle cx="6.5" cy="6.5" r="5"/><path d="m10.5 10.5 3 3"/></svg>
-            </button>
-        </form>
-    </div>
 
     <!-- ผลลัพธ์ -->
     <div class="flex-1 px-5 sm:px-8 pb-10" id="content">
         <!-- Loading -->
-        <div class="flex items-center justify-center py-32">
+        <div class="flex flex-col items-center justify-center py-32 gap-3">
             <div class="spinner"></div>
+            <p class="text-xs text-zinc-500">กำลังตรวจจับตำแหน่งและโหลดสภาพอากาศ...</p>
         </div>
     </div>
 
 </div>
 
 <script>
-const API_KEY = 'd1f8c3e8b2a944a5a3c2b1d4e6f8a0b2';
-const GEO_API = 'https://api.openweathermap.org/geo/1.0/direct';
-const WEATHER_API = 'https://api.openweathermap.org/data/2.5/weather';
-const FORECAST_API = 'https://api.openweathermap.org/data/2.5/forecast';
-
-let currentData = null;
-
-// นาฬิกา
+// อัปเดตนาฬิกา
 function updateClock() {
     const now = new Date();
     document.getElementById('clockDisplay').textContent = now.toLocaleTimeString('th-TH', { hour:'2-digit', minute:'2-digit' });
@@ -100,110 +83,23 @@ function updateClock() {
 setInterval(updateClock, 1000);
 updateClock();
 
-// ค้นหา
-async function doSearch(e) {
-    e.preventDefault();
-    const q = document.getElementById('searchInput').value.trim();
-    if (!q) return;
-    const btn = document.getElementById('searchBtn');
-    btn.innerHTML = '<div class="spinner" style="width:15px;height:15px;border-width:2px"></div>';
-    btn.disabled = true;
-    document.getElementById('content').innerHTML = '<div class="flex items-center justify-center py-32"><div class="spinner"></div></div>';
-    await loadWeather(q);
-    btn.innerHTML = '<svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><circle cx="6.5" cy="6.5" r="5"/><path d="m10.5 10.5 3 3"/></svg>';
-    btn.disabled = false;
+// แปลง WMO Weather Interpretation Codes ของ Open-Meteo
+function parseWMOCode(code, isDay = 1) {
+    if (code === 0) return { icon: isDay ? '☀️' : '🌙', text: isDay ? 'ท้องฟ้าแจ่มใส' : 'ท้องฟ้าโปร่ง', bg: 'clear' };
+    if (code >= 1 && code <= 3) return { icon: isDay ? '⛅' : '🌙', text: 'มีเมฆบางส่วน', bg: 'clouds' };
+    if (code === 45 || code === 48) return { icon: '🌫️', text: 'หมอกหนา', bg: 'mist' };
+    if (code >= 51 && code <= 55) return { icon: '🌦️', text: 'ฝนปรอยๆ', bg: 'drizzle' };
+    if (code >= 61 && code <= 65) return { icon: '🌧️', text: 'ฝนตก', bg: 'rain' };
+    if (code >= 71 && code <= 77) return { icon: '🌨️', text: 'หิมะตก', bg: 'snow' };
+    if (code >= 80 && code <= 82) return { icon: '🌧️', text: 'ฝนตกหนัก', bg: 'rain' };
+    if (code >= 95) return { icon: '⛈️', text: 'พายุฝนฟ้าคะนอง', bg: 'thunderstorm' };
+    return { icon: '🌡️', text: 'สภาพอากาศทั่วไป', bg: 'clear' };
 }
 
-// โหลดอากาศ
-async function loadWeather(query) {
-    const content = document.getElementById('content');
-    try {
-        // ค้นหาเมือง
-        const geo = await fetch(`${GEO_API}?q=${encodeURIComponent(query)}&limit=1&appid=${API_KEY}`).then(r => r.json());
-        if (!geo || !geo.length) { content.innerHTML = errorHTML('ไม่พบเมืองที่ค้นหา ลองใช้ชื่อภาษาอังกฤษ'); return; }
-
-        const { lat, lon, name, country, state } = geo[0];
-        const cityName = state ? `${name}, ${state}` : name;
-        const countryCode = country.toLowerCase();
-
-        // ดึงข้อมูลพร้อมกัน
-        const [weather, forecast] = await Promise.all([
-            fetch(`${WEATHER_API}?lat=${lat}&lon=${lon}&units=metric&appid=${API_KEY}`).then(r => r.json()),
-            fetch(`${FORECAST_API}?lat=${lat}&lon=${lon}&units=metric&appid=${API_KEY}`).then(r => r.json())
-        ]);
-
-        currentData = { weather, forecast, cityName, countryCode };
-        render(weather, forecast, cityName, countryCode, lat, lon);
-
-    } catch(e) {
-        content.innerHTML = errorHTML('ไม่สามารถดึงข้อมูลอากาศได้ กรุณาลองอีกครั้ง');
-    }
-}
-
-// เวลาของเมืองนั้น
-function localTime(offset) {
-    const now = new Date();
-    const utc = now.getTime() + now.getTimezoneOffset() * 60000;
-    return new Date(utc + offset * 1000).toLocaleTimeString('th-TH', { hour:'2-digit', minute:'2-digit' });
-}
-
-// แปลง condition code เป็นข้อมูล
-function conditionInfo(code, isNight) {
-    const map = {
-        200: { icon: '⛈️', text: 'ฟ้าผ่า', bg: 'thunderstorm' },
-        201: { icon: '⛈️', text: 'ฟ้าผ่าฝนตก', bg: 'thunderstorm' },
-        202: { icon: '⛈️', text: 'ฟ้าผ่าฝนตกหนัก', bg: 'thunderstorm' },
-        210: { icon: '⛈️', text: 'ฟ้าผ่าเบาๆ', bg: 'thunderstorm' },
-        211: { icon: '⛈️', text: 'ฟ้าผ่ากระจาย', bg: 'thunderstorm' },
-        230: { icon: '⛈️', text: 'ฟ้าผ่ามีฝนปน', bg: 'thunderstorm' },
-        231: { icon: '⛈️', text: 'ฟ้าผ่ามีฝนปนหนัก', bg: 'thunderstorm' },
-        300: { icon: '🌦️', text: 'ฝนตกเบาๆ', bg: 'drizzle' },
-        301: { icon: '🌦️', text: 'ฝนตกประปราย', bg: 'drizzle' },
-        302: { icon: '🌧️', text: 'ฝนตกหนัก', bg: 'rain' },
-        310: { icon: '🌧️', text: 'ฝนตกหนักมาก', bg: 'rain' },
-        311: { icon: '🌧️', text: 'ฝนน้ำแข็ง', bg: 'rain' },
-        312: { icon: '🌧️', text: 'ฝนน้ำแข็งหนัก', bg: 'rain' },
-        313: { icon: '🌧️', text: 'ฝนผสมน้ำแข็ง', bg: 'rain' },
-        314: { icon: '🌧️', text: 'ฝนผสมน้ำแข็งหนัก', bg: 'rain' },
-        321: { icon: '🌦️', text: 'ฝนตกเล็กน้อย', bg: 'drizzle' },
-        500: { icon: '🌫️', text: 'หมอกบางๆ', bg: 'mist' },
-        501: { icon: '🌫️', text: 'หมอก', bg: 'mist' },
-        502: { icon: '🌫️', text: 'หมอกหนา', bg: 'mist' },
-        503: { icon: '🌫️', text: 'หมอกละเอียด', bg: 'mist' },
-        504: { icon: '🌫️', text: 'หมอกหนามาก', bg: 'mist' },
-        600: { icon: '🌨️', text: 'หิมะตก', bg: 'snow' },
-        601: { icon: '🌨️', text: 'หิมะตกเล็กน้อย', bg: 'snow' },
-        602: { icon: '🌨️', text: 'หิมะตกหนัก', bg: 'snow' },
-        611: { icon: '🌨️', text: 'หิมะผสมฝน', bg: 'snow' },
-        612: { icon: '🌨️', text: 'หิมะผสมฝนหนัก', bg: 'snow' },
-        615: { icon: '🌨️', text: 'หิมะผสมฝนปน', bg: 'snow' },
-        620: { icon: '🌫️', text: 'หมอกปนหิมะ', bg: 'mist' },
-        621: { icon: '🌫️', text: 'หิมะละเอียด', bg: 'snow' },
-        701: { icon: '🌫️', text: 'หมอกย้อย', bg: 'mist' },
-        711: { icon: '🌫️', text: 'หมอกย้อยเล็กน้อย', bg: 'mist' },
-        721: { icon: '🌫️', text: 'หมอกย้อยกระจาย', bg: 'mist' },
-        731: { icon: '🌫️', text: 'ทรายบิน', bg: 'mist' },
-        741: { icon: '🌫️', text: 'หมอกหมอก', bg: 'mist' },
-        751: { icon: '🌫️', text: 'หมอกธรรมชาติ', bg: 'mist' },
-        761: { icon: '🌫️', text: 'หมอกหนา', bg: 'mist' },
-        762: { icon: '🌫️', text: 'หมอกหนากระจาย', bg: 'mist' },
-        771: { icon: '🌪️', text: 'พายุทอร์นาโด', bg: 'mist' },
-        781: { icon: '🌪️', text: 'ทอร์นาโด', bg: 'mist' },
-        800: { icon: isNight ? '🌙' : '☀️', text: isNight ? 'ท้องฟ้าโปร่งใส' : 'ท้องฟ้าแจ่มใส', bg: 'clear' },
-        801: { icon: isNight ? '🌙' : '🌤️', text: isNight ? 'มีเมฆบางๆ' : 'มีเมฆเล็กน้อย', bg: 'clear' },
-        802: { icon: '⛅', text: 'เมฆกระจาย', bg: 'clouds' },
-        803: { icon: '☁️', text: 'เมฆเป็นส่วนมาก', bg: 'clouds' },
-        804: { icon: '☁️', text: 'เมึกครึ้ม', bg: 'overcast' },
-    };
-    return map[code] || { icon: '🌡️', text: 'ไม่ทราบ', bg: 'clear' };
-}
-
-// ภาพพื้นหลังตามสภาพอากาศ
 function bgImage(bg) {
     const imgs = {
         clear: 'https://images.unsplash.com/photo-1504608524841-42fe6f032b4b?w=1920&q=80',
         clouds: 'https://images.unsplash.com/photo-1534088568595-a066f410bcda?w=1920&q=80',
-        overcast: 'https://images.unsplash.com/photo-1532978379173-423e6e1f7cbb?w=1920&q=80',
         rain: 'https://images.unsplash.com/photo-1515694346937-94d85e41e6f0?w=1920&q=80',
         drizzle: 'https://images.unsplash.com/photo-1527482797697-8795b05a13fe?w=1920&q=80',
         thunderstorm: 'https://images.unsplash.com/photo-1605722616301-6417b5d4e3c2?w=1920&q=80',
@@ -213,71 +109,72 @@ function bgImage(bg) {
     return imgs[bg] || imgs.clear;
 }
 
-// ตรวจกลางคืน
-function isNightTime(timestamp, timezone) {
-    const d = new Date(timestamp * 1000);
-    const utc = d.getTime() + d.getTimezoneOffset() * 60000;
-    const local = new Date(utc + timezone * 1000);
-    const h = local.getHours();
-    return h < 6 || h >= 19;
+async function fetchWeatherByCoords(lat, lon, cityName, countryCode) {
+    try {
+        const url = `https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&current=temperature_2m,relative_humidity_2m,apparent_temperature,is_day,weather_code,surface_pressure,wind_speed_10m&hourly=temperature_2m,weather_code,is_day&daily=weather_code,temperature_2m_max,temperature_2m_min,sunrise,sunset&timezone=auto`;
+        const res = await fetch(url);
+        const data = await res.json();
+
+        render(data, cityName, countryCode, lat, lon);
+    } catch(e) {
+        document.getElementById('content').innerHTML = errorHTML('ไม่สามารถดึงข้อมูลอากาศได้ กรุณาลองใหม่อีกครั้ง');
+    }
 }
 
-// Render
-function render(w, fc, city, cc, lat, lon) {
-    const cond = w.weather[0];
-    const info = conditionInfo(cond.id, isNightTime(w.dt, w.timezone));
-    const temp = Math.round(w.main.temp);
-    const feels = Math.round(w.main.feels_like);
-    const hum = w.main.humidity;
-    const wind = w.wind.speed;
-    const pressure = w.main.pressure;
-    const vis = w.visibility;
-    const sunrise = new Date(w.sys.sunrise * 1000);
-    const sunset = new Date(w.sys.sunset * 1000);
-    const tz = w.timezone;
+function render(data, city, cc, lat, lon) {
+    const current = data.current;
+    const daily = data.daily;
+    const hourly = data.hourly;
+    
+    const info = parseWMOCode(current.weather_code, current.is_day);
+    const temp = Math.round(current.temperature_2m);
+    const feels = Math.round(current.apparent_temperature);
+    const hum = current.relative_humidity_2m;
+    const wind = current.wind_speed_10m;
+    const pressure = Math.round(current.surface_pressure);
+    
+    const sunrise = daily.sunrise[0] ? new Date(daily.sunrise[0]).toLocaleTimeString('th-TH',{hour:'2-digit',minute:'2-digit'}) : '--:--';
+    const sunset = daily.sunset[0] ? new Date(daily.sunset[0]).toLocaleTimeString('th-TH',{hour:'2-digit',minute:'2-digit'}) : '--:--';
 
-    // เปลี่ยนพื้นหลัง
+    // เปลี่ยนภาพพื้นหลัง
     const bg = document.getElementById('bgImg');
     bg.style.opacity = '0';
     setTimeout(() => { bg.src = bgImage(info.bg); bg.style.opacity = '1'; }, 300);
 
-    // ชั่วโมง hourly (24 ชม.)
-    const now = Date.now() / 1000;
-    const hourly = (fc.list || []).filter(f => f.dt > now).slice(0, 24);
-    const maxTemp = Math.max(...hourly.map(h => h.main.temp), temp);
-    const minTemp = Math.min(...hourly.map(h => h.main.temp), temp);
+    // คำนวณสภาพอากาศรายชั่วโมง (24 ชม. ถัดไป)
+    const nowIndex = new Date().getHours();
+    const hourlySlice = hourly.time.slice(nowIndex, nowIndex + 24);
+    const tempsSlice = hourly.temperature_2m.slice(nowIndex, nowIndex + 24);
+    const maxTemp = Math.max(...tempsSlice);
+    const minTemp = Math.min(...tempsSlice);
     const tempRange = maxTemp - minTemp || 1;
 
-    let hourlyHTML = hourly.map(h => {
-        const isN = isNightTime(h.dt, tz);
-        const hi = conditionInfo(h.weather[0].id, isN);
-        const pct = Math.max(0, Math.min(100, ((h.main.temp - minTemp) / tempRange) * 100));
-        const time = new Date(h.dt * 1000);
-        const hr = time.getHours().toString().padStart(2, '0');
+    let hourlyHTML = hourlySlice.map((t, i) => {
+        const idx = nowIndex + i;
+        const code = hourly.weather_code[idx];
+        const isDay = hourly.is_day[idx];
+        const hTemp = Math.round(hourly.temperature_2m[idx]);
+        const hInfo = parseWMOCode(code, isDay);
+        const pct = Math.max(0, Math.min(100, ((hTemp - minTemp) / tempRange) * 100));
+        const hourLabel = new Date(t).getHours().toString().padStart(2, '0') + ':00';
+
         return `<div class="flex flex-col items-center gap-2 min-w-[52px]">
-            <span class="text-[10px] text-zinc-500 font-medium">${hr}:00</span>
-            <span class="text-xl">${hi.icon}</span>
-            <span class="text-xs font-bold text-white">${Math.round(h.main.temp)}°</span>
+            <span class="text-[10px] text-zinc-500 font-medium">${hourLabel}</span>
+            <span class="text-xl">${hInfo.icon}</span>
+            <span class="text-xs font-bold text-white">${hTemp}°</span>
             <div class="hour-bar w-full"><div class="hour-fill" style="width:${pct}%"></div></div>
         </div>`;
     }).join('');
 
-    // 5 วัน
-    const dailyMap = {};
-    (fc.list || []).forEach(f => {
-        const day = f.dt_txt.split(' ')[0];
-        if (!dailyMap[day]) dailyMap[day] = { temps: [], icons: [], cond: f.weather[0] };
-        dailyMap[day].temps.push(f.main.temp);
-    });
-    const days = Object.entries(dailyMap).slice(0, 5);
+    // คำนวณสภาพอากาศรายวัน (5 วัน)
     const dayNames = ['อาทิตย์', 'จันทร์', 'อังคาร', 'พุธ', 'พฤหัสบดี', 'ศุกร์', 'เสาร์'];
-    let dailyHTML = days.map(([date, d], i) => {
-        const dt = new Date(date + 'T12:00:00');
-        const hi = Math.round(Math.max(...d.temps));
-        const lo = Math.round(Math.min(...d.temps));
-        const isN = isNightTime(dt.getTime() / 1000, tz);
-        const ci = conditionInfo(d.cond.id, isN);
+    let dailyHTML = daily.time.slice(0, 5).map((d, i) => {
+        const dt = new Date(d);
+        const hi = Math.round(daily.temperature_2m_max[i]);
+        const lo = Math.round(daily.temperature_2m_min[i]);
+        const ci = parseWMOCode(daily.weather_code[i], 1);
         const dayName = i === 0 ? 'วันนี้' : dayNames[dt.getDay()];
+
         return `<div class="flex flex-col items-center gap-2 min-w-[56px]">
             <span class="text-[10px] text-zinc-500 font-medium">${dayName}</span>
             <span class="text-2xl">${ci.icon}</span>
@@ -291,31 +188,30 @@ function render(w, fc, city, cc, lat, lon) {
     <div class="max-w-2xl mx-auto fade-up">
         <div class="text-center mb-10">
             <div class="flex items-center justify-center gap-3 mb-2">
-                <img src="https://flagcdn.com/w40/${cc}.png" alt="" class="flag" onerror="this.style.display='none'">
+                <img src="https://flagcdn.com/w40/${cc.toLowerCase()}.png" alt="" class="flag" onerror="this.style.display='none'">
                 <h1 class="text-2xl sm:text-3xl font-extrabold text-white">${esc(city)}</h1>
             </div>
-            <p class="text-xs text-zinc-600 mb-6">${info.text} · เวลาท้องถิ่น ${localTime(tz)}</p>
+            <p class="text-xs text-zinc-400 mb-6">${info.text}</p>
 
             <div class="float inline-block mb-2">
                 <span class="temp-big text-white">${temp}°</span>
             </div>
-            <p class="text-sm text-zinc-500 font-medium -mt-2 mb-1">รู้สึกเหมือน ${feels}°C</p>
+            <p class="text-sm text-zinc-400 font-medium -mt-2 mb-1">รู้สึกเหมือน ${feels}°C</p>
         </div>
 
         <!-- รายละเอียด -->
         <div class="glass rounded-2xl p-5 sm:p-6 mb-6 fade-up" style="animation-delay:.15s">
             <div class="detail-row"><span class="detail-label">ความชื้น</span><span class="detail-val">${hum}%</span></div>
-            <div class="detail-row"><span class="detail-label">ลม</span><span class="detail-val">${wind} m/s</span></div>
+            <div class="detail-row"><span class="detail-label">ความเร็วลม</span><span class="detail-val">${wind} km/h</span></div>
             <div class="detail-row"><span class="detail-label">ความกดอากาศ</span><span class="detail-val">${pressure} hPa</span></div>
-            <div class="detail-row"><span class="detail-label">ทัศนวิสัย</span><span class="detail-val">${(vis / 1000).toFixed(1)} km</span></div>
-            <div class="detail-row"><span class="detail-label">พระอาทิตย์ขึ้น</span><span class="detail-val">${sunrise.toLocaleTimeString('th-TH',{hour:'2-digit',minute:'2-digit'})}</span></div>
-            <div class="detail-row"><span class="detail-label">พระอาทิตย์ตก</span><span class="detail-val">${sunset.toLocaleTimeString('th-TH',{hour:'2-digit',minute:'2-digit'})}</span></div>
+            <div class="detail-row"><span class="detail-label">พระอาทิตย์ขึ้น</span><span class="detail-val">${sunrise}</span></div>
+            <div class="detail-row"><span class="detail-label">พระอาทิตย์ตก</span><span class="detail-val">${sunset}</span></div>
             <div class="detail-row"><span class="detail-label">พิกัด</span><span class="detail-val font-mono text-[11px]">${lat.toFixed(2)}, ${lon.toFixed(2)}</span></div>
         </div>
 
         <!-- 24 ชม. -->
         <div class="glass rounded-2xl p-5 sm:p-6 mb-6 fade-up" style="animation-delay:.25s">
-            <h3 class="text-xs font-bold text-zinc-400 uppercase tracking-wider mb-4">24 ชั่วโมง</h3>
+            <h3 class="text-xs font-bold text-zinc-400 uppercase tracking-wider mb-4">24 ชั่วโมงข้างหน้า</h3>
             <div class="flex gap-1 overflow-x-auto pb-2" style="-webkit-overflow-scrolling:touch;scrollbar-width:none">${hourlyHTML}</div>
         </div>
 
@@ -336,22 +232,37 @@ function errorHTML(msg) {
     </div>`;
 }
 
-// โหลดตอนเข้า — ลอง Geolocation ก่อน
+// เริ่มต้นหาตำแหน่งโดยอัตโนมัติเมื่อเข้าหน้าเว็บ
 (async function init() {
+    // 1. พยายามตรวจจาก IP Address เป็นหลัก (รวดเร็วและไม่ต้องรออนุญาต GPS)
     try {
-        const pos = await new Promise((res, rej) => navigator.geolocation.getCurrentPosition(res, rej, { timeout: 5000 }));
-        const { latitude, longitude } = pos.coords;
-        // ยิง reverse geocode ด้วย weather api แบบจุด
-        const r = await fetch(`${WEATHER_API}?lat=${latitude}&lon=${longitude}&units=metric&appid=${API_KEY}`).then(r => r.json());
-        if (r && r.name) {
-            document.getElementById('searchInput').value = r.name;
-            await loadWeather(r.name);
+        const ipRes = await fetch('https://ipapi.co/json/').then(r => r.json());
+        if (ipRes && ipRes.latitude && ipRes.longitude) {
+            const cityName = ipRes.city || ipRes.region || 'เมืองของคุณ';
+            const countryCode = ipRes.country_code || 'TH';
+            await fetchWeatherByCoords(ipRes.latitude, ipRes.longitude, cityName, countryCode);
             return;
         }
-    } catch(e) {}
-    // ถ้าไม่ได้ location ให้ค้นหา Bangkok
-    document.getElementById('searchInput').value = 'Bangkok';
-    await loadWeather('Bangkok');
+    } catch (e) {
+        console.log('IP Location fallback...');
+    }
+
+    // 2. ถ้า IP Location ล้มเหลว ให้ใช้ Geolocation ของอุปกรณ์
+    if ("geolocation" in navigator) {
+        navigator.geolocation.getCurrentPosition(
+            async (pos) => {
+                await fetchWeatherByCoords(pos.coords.latitude, pos.coords.longitude, 'ตำแหน่งปัจจุบัน', 'TH');
+            },
+            async () => {
+                // 3. กรณีผู้ใช้ปฏิเสธการเข้าถึงตำแหน่ง ให้แสดงกรุงเทพฯ เป็น Default
+                await fetchWeatherByCoords(13.7563, 100.5018, 'Bangkok', 'TH');
+            },
+            { timeout: 5000 }
+        );
+    } else {
+        // Fallback สุดท้ายถ้าเบราว์เซอร์ไม่รองรับ
+        await fetchWeatherByCoords(13.7563, 100.5018, 'Bangkok', 'TH');
+    }
 })();
 </script>
 </body>
