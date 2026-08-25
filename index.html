@@ -6,106 +6,118 @@
 <title>ระบบแจ้งเตือนหุ้น & แผ่นดินไหว Discord — Stock & Disaster Alert</title>
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='20' fill='%23111'/><text x='50' y='68' font-size='45' text-anchor='middle' fill='white' font-family='Arial' font-weight='bold'>S</text></svg>">
 <script src="https://cdn.tailwindcss.com"></script>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Noto+Sans+Thai:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
 <style>
 *{box-sizing:border-box;margin:0}
-body{font-family:'Inter',sans-serif;background:#050509;color:#fff;min-height:100vh;overflow-x:hidden}
-::selection{background:#fff;color:#000}
+body{font-family:'Plus Jakarta Sans','Noto Sans Thai',sans-serif;background:#030712;color:#fff;min-height:100vh;overflow-x:hidden}
+::selection{background:#f59e0b;color:#000}
 
-.bg-scene{position:fixed;inset:0;z-index:0;overflow:hidden;pointer-events:none}
-.bg-scene img{width:100%;height:100%;object-fit:cover;filter:brightness(.25) saturate(.6) blur(2px);transition:opacity 1.5s ease}
-.bg-overlay{position:absolute;inset:0;background:linear-gradient(180deg,rgba(5,5,9,.3) 0%,rgba(5,5,9,.6) 40%,rgba(5,5,9,.95) 100%)}
+/* Background Aurora Visual Effects */
+.bg-container{position:fixed;inset:0;z-index:0;overflow:hidden;pointer-events:none}
+.aurora-1{position:absolute;top:-10%;left:-10%;width:60vw;height:60vw;background:radial-gradient(circle,rgba(245,158,11,0.18) 0%,rgba(0,0,0,0) 70%);filter:blur(80px);animation:float1 18s ease-in-out infinite alternate}
+.aurora-2{position:absolute;bottom:-20%;right:-10%;width:70vw;height:70vw;background:radial-gradient(circle,rgba(99,102,241,0.15) 0%,rgba(0,0,0,0) 70%);filter:blur(100px);animation:float2 22s ease-in-out infinite alternate}
+.aurora-3{position:absolute;top:30%;right:20%;width:40vw;height:40vw;background:radial-gradient(circle,rgba(239,68,68,0.12) 0%,rgba(0,0,0,0) 70%);filter:blur(90px);animation:float1 14s ease-in-out infinite alternate-reverse}
 
-.glass{background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.08);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px)}
+@keyframes float1{0%{transform:translate(0,0) scale(1)}100%{transform:translate(8%,10%) scale(1.1)}}
+@keyframes float2{0%{transform:translate(0,0) scale(1)}100%{transform:translate(-10%,-8%) scale(1.15)}}
+
+/* Dot Grid Background Pattern */
+.bg-grid{position:absolute;inset:0;background-image:radial-gradient(rgba(255,255,255,0.07) 1px,transparent 1px);background-size:32px 32px;mask-image:radial-gradient(ellipse at center,black 40%,transparent 80%);-webkit-mask-image:radial-gradient(ellipse at center,black 40%,transparent 80%)}
+
+/* Premium Glassmorphism */
+.glass-panel{background:rgba(17,24,39,0.55);border:1px solid rgba(255,255,255,0.08);backdrop-filter:blur(24px);-webkit-backdrop-filter:blur(24px);box-shadow:0 20px 50px rgba(0,0,0,0.4),inset 0 1px 0 rgba(255,255,255,0.1)}
+.glass-card{background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.06);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);transition:all 0.3s cubic-bezier(0.16,1,0.3,1)}
+.glass-card:hover{border-color:rgba(245,158,11,0.3);transform:translateY(-2px)}
+
 @keyframes fadeUp{from{opacity:0;transform:translateY(24px)}to{opacity:1;transform:translateY(0)}}
 .fade-up{animation:fadeUp .7s cubic-bezier(.16,1,.3,1) both}
-@keyframes fadeIn{from{opacity:0}to{opacity:1}}
-.fade-in{animation:fadeIn 1s ease both}
 
-.temp-big{font-size:clamp(72px,15vw,120px);font-weight:900;line-height:1;letter-spacing:-.04em}
-@keyframes float{0%,100%{transform:translateY(0)}50%{transform:translateY(-8px)}}
-.float{animation:float 4s ease-in-out infinite}
+.temp-big{font-size:clamp(72px,15vw,110px);font-weight:800;line-height:1;letter-spacing:-.04em;background:linear-gradient(180deg,#ffffff 30%,rgba(255,255,255,0.6) 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
 
-.detail-row{display:flex;align-items:center;gap:10px;padding:10px 0;border-bottom:1px solid rgba(255,255,255,.05)}
+.detail-row{display:flex;align-items:center;justify-content:space-between;padding:12px 0;border-bottom:1px solid rgba(255,255,255,.04)}
 .detail-row:last-child{border-bottom:none}
-.detail-label{font-size:12px;color:rgba(255,255,255,.4);width:90px;flex-shrink:0}
-.detail-val{font-size:13px;font-weight:600;color:rgba(255,255,255,.85)}
+.detail-label{font-size:12px;color:rgba(255,255,255,.45);font-weight:500}
+.detail-val{font-size:13px;font-weight:600;color:rgba(255,255,255,.9)}
 
 .hour-bar{width:100%;height:4px;border-radius:99px;background:rgba(255,255,255,.06);overflow:hidden;position:relative}
-.hour-fill{height:100%;border-radius:99px;background:linear-gradient(90deg,#3b82f6,#60a5fa);transition:width 1s ease}
+.hour-fill{height:100%;border-radius:99px;background:linear-gradient(90deg,#f59e0b,#fbbf24);transition:width 1s ease}
 
 @keyframes spin{to{transform:rotate(360deg)}}
-.spinner{width:32px;height:32px;border:3px solid rgba(255,255,255,.1);border-top-color:#fff;border-radius:50%;animation:spin .7s linear infinite}
+.spinner{width:32px;height:32px;border:3px solid rgba(255,255,255,.1);border-top-color:#f59e0b;border-radius:50%;animation:spin .7s linear infinite}
 .spin-active{animation:spin .6s linear infinite}
 
-.flag{width:20px;height:14px;border-radius:2px;object-fit:cover;border:1px solid rgba(255,255,255,.1)}
+.search-box{background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);color:#fff;backdrop-filter:blur(12px);transition:.2s}
+.search-box:focus{outline:none;border-color:rgba(245,158,11,0.5);box-shadow:0 0 20px rgba(245,158,11,0.15)}
+.search-box::placeholder{color:#6b7280}
 
-.search-box{background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);color:#fff;backdrop-filter:blur(12px);transition:.2s}
-.search-box:focus{outline:none;border-color:rgba(255,255,255,.3);box-shadow:0 0 0 3px rgba(255,255,255,.05)}
-.search-box::placeholder{color:#52525b}
-
-@keyframes pulseGlow{0%,100%{opacity:1}50%{opacity:.4}}
+@keyframes pulseGlow{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.4;transform:scale(0.95)}}
 .pulse-glow{animation:pulseGlow 2s infinite ease-in-out}
 </style>
 </head>
 <body>
 
-<div class="bg-scene">
-    <img id="bgImg" src="https://images.unsplash.com/photo-1611974789855-9c2a0a7236a3?w=1920&q=80" alt="">
-    <div class="bg-overlay"></div>
+<!-- Dynamic Background -->
+<div class="bg-container">
+    <div class="aurora-1"></div>
+    <div class="aurora-2"></div>
+    <div class="aurora-3"></div>
+    <div class="bg-grid"></div>
 </div>
 
 <div class="relative z-10 min-h-screen flex flex-col">
 
-    <!-- Header & Action Controls -->
-    <header class="flex items-center justify-between px-5 sm:px-8 py-5 fade-in">
-        <div class="flex items-center gap-2.5">
-            <div class="w-8 h-8 bg-amber-500 rounded-lg flex items-center justify-center font-black text-xs text-black">ST</div>
-            <span class="text-sm font-bold text-white/90">Stock & Quake Alert</span>
+    <!-- Header Controls -->
+    <header class="flex items-center justify-between px-5 sm:px-10 py-6 fade-up">
+        <div class="flex items-center gap-3">
+            <div class="w-9 h-9 bg-gradient-to-tr from-amber-500 to-yellow-300 rounded-xl flex items-center justify-center font-black text-xs text-black shadow-lg shadow-amber-500/20">ST</div>
+            <div>
+                <span class="text-sm font-bold tracking-wide text-white block leading-none">Stock & Quake Alert</span>
+                <span class="text-[10px] text-zinc-500 font-medium">Real-time Dashboard</span>
+            </div>
         </div>
         
-        <div class="flex items-center gap-3">
-            <div class="text-right">
+        <div class="flex items-center gap-4">
+            <div class="text-right hidden sm:block">
                 <div class="text-[11px] text-zinc-300 font-semibold" id="dateDisplay">--/--/----</div>
-                <div class="text-[10px] text-zinc-500 font-medium flex items-center justify-end gap-1">
-                    <span class="inline-block w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></span>
+                <div class="text-[10px] text-zinc-500 font-medium flex items-center justify-end gap-1.5">
+                    <span class="inline-block w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span>
                     <span id="clockDisplay">--:--:--</span>
                 </div>
             </div>
 
-            <button onclick="manualRefresh()" id="refreshBtn" title="อัปเดตข้อมูล & ส่ง Discord (@everyone) ทันที" class="glass p-2.5 rounded-xl hover:bg-white/10 active:scale-95 transition flex items-center justify-center group">
-                <svg id="refreshIcon" class="text-zinc-300 group-hover:text-white transition" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24">
+            <button onclick="manualRefresh()" id="refreshBtn" title="อัปเดตข้อมูล & ส่ง Discord (@everyone) ทันที" class="glass-card p-2.5 rounded-xl hover:bg-white/10 active:scale-95 transition flex items-center justify-center group">
+                <svg id="refreshIcon" class="text-zinc-400 group-hover:text-amber-400 transition" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24">
                     <path d="M21.5 2v6h-6M21.34 15.57a10 10 0 1 1-.57-8.38l5.67-5.67"/>
                 </svg>
             </button>
         </div>
     </header>
 
-    <!-- ค้นหา -->
-    <div class="px-5 sm:px-8 mb-3 fade-up" style="animation-delay:.1s">
+    <!-- Search Form -->
+    <div class="px-5 sm:px-8 mb-4 fade-up" style="animation-delay:.1s">
         <form onsubmit="doSearch(event)" class="max-w-md mx-auto flex gap-2">
-            <input id="searchInput" type="text" placeholder="ค้นหาเมือง เช่น กรุงเทพ, พัทยา, Tokyo..." class="search-box flex-1 px-4 py-3 rounded-2xl text-sm font-medium">
-            <button type="submit" id="searchBtn" class="bg-amber-500 text-black font-bold px-5 py-3 rounded-2xl text-sm hover:bg-amber-400 active:scale-95 transition flex items-center gap-2 shrink-0">
+            <input id="searchInput" type="text" placeholder="ค้นหาเมือง เช่น กรุงเทพ, Tokyo, London..." class="search-box flex-1 px-4 py-3 rounded-2xl text-sm font-medium">
+            <button type="submit" id="searchBtn" class="bg-amber-500 text-black font-bold px-5 py-3 rounded-2xl text-sm hover:bg-amber-400 active:scale-95 transition shadow-lg shadow-amber-500/20 flex items-center gap-2 shrink-0">
                 <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><circle cx="6.5" cy="6.5" r="5"/><path d="m10.5 10.5 3 3"/></svg>
             </button>
         </form>
     </div>
 
-    <!-- แถบแจ้งเตือนสถานะ Discord Auto-Bot -->
-    <div class="px-5 sm:px-8 mb-4 fade-up" style="animation-delay:.12s">
-        <div class="max-w-2xl mx-auto rounded-xl bg-amber-950/40 border border-amber-500/30 px-4 py-2.5 flex items-center justify-between text-[11px] text-amber-200">
-            <div class="flex items-center gap-2">
+    <!-- Status Banner -->
+    <div class="px-5 sm:px-8 mb-5 fade-up" style="animation-delay:.12s">
+        <div class="max-w-2xl mx-auto rounded-2xl bg-amber-950/20 border border-amber-500/20 backdrop-blur-md px-4 py-3 flex items-center justify-between text-[11px] text-amber-200/90 shadow-lg">
+            <div class="flex items-center gap-2.5">
                 <span class="w-2 h-2 rounded-full bg-amber-400 animate-pulse"></span>
-                <span>ระบบตั้งเวลารายงานส่ง Discord Webhook + แท็ก @everyone (ทุก 1 ชม.)</span>
+                <span>ระบบรายงาน Discord Webhook + แท็ก @everyone (ทำงานทุก 1 ชม.)</span>
             </div>
-            <div class="font-mono text-amber-300 font-bold" id="webhookTimer">รอบต่อไป: 60:00</div>
+            <div class="font-mono text-amber-400 font-bold bg-amber-500/10 px-2.5 py-1 rounded-lg border border-amber-500/20" id="webhookTimer">รอบต่อไป: 60:00</div>
         </div>
     </div>
 
-    <!-- แถบเช็คแผ่นดินไหว -->
+    <!-- Earthquake Alert -->
     <div class="px-5 sm:px-8 mb-6 fade-up" style="animation-delay:.15s">
-        <div class="max-w-2xl mx-auto rounded-2xl border border-red-500/20 bg-red-950/25 backdrop-blur-md p-4 text-xs" id="quakeBox">
-            <div class="flex items-center justify-between mb-2 pb-2 border-b border-red-500/10">
+        <div class="max-w-2xl mx-auto rounded-2xl border border-red-500/20 bg-red-950/15 backdrop-blur-md p-4 text-xs shadow-xl" id="quakeBox">
+            <div class="flex items-center justify-between mb-2.5 pb-2 border-b border-red-500/10">
                 <div class="flex items-center gap-2 font-bold text-red-400">
                     <span class="w-2 h-2 rounded-full bg-red-500 pulse-glow"></span>
                     <span>ศูนย์เฝ้าระวังแผ่นดินไหวโลก (USGS Real-time)</span>
@@ -118,11 +130,11 @@ body{font-family:'Inter',sans-serif;background:#050509;color:#fff;min-height:100
         </div>
     </div>
 
-    <!-- ส่วนแสดงข้อมูลสภาพอากาศ -->
-    <div class="flex-1 px-5 sm:px-8 pb-10" id="content">
+    <!-- Weather Content -->
+    <div class="flex-1 px-5 sm:px-8 pb-12" id="content">
         <div class="flex flex-col items-center justify-center py-32 gap-3">
             <div class="spinner"></div>
-            <p class="text-xs text-zinc-500">กำลังดึงข้อมูลตำแหน่งของคุณ...</p>
+            <p class="text-xs text-zinc-500 font-medium">กำลังโหลดข้อมูลสภาพอากาศ...</p>
         </div>
     </div>
 
@@ -138,7 +150,7 @@ let lastCountryCode = 'TH';
 let latestWeatherData = null;
 let latestQuakeData = null;
 
-let nextUpdateSeconds = 3600; // 1 ชั่วโมง = 3600 วินาที
+let nextUpdateSeconds = 3600;
 
 function updateClock() {
     const now = new Date();
@@ -152,7 +164,6 @@ function updateClock() {
 setInterval(updateClock, 1000);
 updateClock();
 
-// นับถอยหลังส่ง Discord และอัปเดตข้อมูลทุก 1 ชั่วโมง
 setInterval(() => {
     nextUpdateSeconds--;
     if (nextUpdateSeconds <= 0) {
@@ -164,7 +175,6 @@ setInterval(() => {
     document.getElementById('webhookTimer').textContent = `รอบต่อไป: ${mins}:${secs}`;
 }, 1000);
 
-// ดึงข้อมูลแผ่นดินไหว
 async function loadQuakeAlert() {
     const quakeContent = document.getElementById('quakeContent');
     const quakeLastUpdate = document.getElementById('quakeLastUpdate');
@@ -215,31 +225,17 @@ async function loadQuakeAlert() {
 }
 
 function parseWMOCode(code, isDay = 1) {
-    if (code === 0) return { icon: isDay ? '☀️' : '🌙', text: isDay ? 'ท้องฟ้าแจ่มใส' : 'ท้องฟ้าโปร่ง', bg: 'clear' };
-    if (code >= 1 && code <= 3) return { icon: isDay ? '⛅' : '🌙', text: 'มีเมฆบางส่วน', bg: 'clouds' };
-    if (code === 45 || code === 48) return { icon: '🌫️', text: 'หมอกหนา', bg: 'mist' };
-    if (code >= 51 && code <= 55) return { icon: '🌦️', text: 'ฝนตกเล็กน้อย', bg: 'drizzle' };
-    if (code >= 61 && code <= 65) return { icon: '🌧️', text: 'ฝนตก', bg: 'rain' };
-    if (code >= 71 && code <= 77) return { icon: '🌨️', text: 'หิมะตก', bg: 'snow' };
-    if (code >= 80 && code <= 82) return { icon: '🌧️', text: 'ฝนตกหนัก', bg: 'rain' };
-    if (code >= 95) return { icon: '⛈️', text: 'พายุฝนฟ้าคะนอง', bg: 'thunderstorm' };
-    return { icon: '🌡️', text: 'สภาพอากาศทั่วไป', bg: 'clear' };
+    if (code === 0) return { icon: isDay ? '☀️' : '🌙', text: isDay ? 'ท้องฟ้าแจ่มใส' : 'ท้องฟ้าโปร่ง' };
+    if (code >= 1 && code <= 3) return { icon: isDay ? '⛅' : '🌙', text: 'มีเมฆบางส่วน' };
+    if (code === 45 || code === 48) return { icon: '🌫️', text: 'หมอกหนา' };
+    if (code >= 51 && code <= 55) return { icon: '🌦️', text: 'ฝนตกเล็กน้อย' };
+    if (code >= 61 && code <= 65) return { icon: '🌧️', text: 'ฝนตก' };
+    if (code >= 71 && code <= 77) return { icon: '🌨️', text: 'หิมะตก' };
+    if (code >= 80 && code <= 82) return { icon: '🌧️', text: 'ฝนตกหนัก' };
+    if (code >= 95) return { icon: '⛈️', text: 'พายุฝนฟ้าคะนอง' };
+    return { icon: '🌡️', text: 'สภาพอากาศทั่วไป' };
 }
 
-function bgImage(bg) {
-    const imgs = {
-        clear: 'https://images.unsplash.com/photo-1611974789855-9c2a0a7236a3?w=1920&q=80',
-        clouds: 'https://images.unsplash.com/photo-1534088568595-a066f410bcda?w=1920&q=80',
-        rain: 'https://images.unsplash.com/photo-1515694346937-94d85e41e6f0?w=1920&q=80',
-        drizzle: 'https://images.unsplash.com/photo-1527482797697-8795b05a13fe?w=1920&q=80',
-        thunderstorm: 'https://images.unsplash.com/photo-1605722616301-6417b5d4e3c2?w=1920&q=80',
-        snow: 'https://images.unsplash.com/photo-1491002052546-bf38f186af56?w=1920&q=80',
-        mist: 'https://images.unsplash.com/photo-1485236735568-9bf5507605a2?w=1920&q=80',
-    };
-    return imgs[bg] || imgs.clear;
-}
-
-// ฟังก์ชั่นส่ง Discord Embed Webhook (พร้อมแท็ก @everyone)
 async function sendDiscordNotification() {
     if (!latestWeatherData) return;
 
@@ -262,52 +258,18 @@ async function sendDiscordNotification() {
             {
                 title: `📈 รายงานอัปเดตข้อมูลสภาพแวดล้อม: ${lastCityName}`,
                 description: `ประจำวันที่ **${nowStr}**\nสภาวะปัจจุบัน: **${info.text} ${info.icon}**`,
-                color: 16753920, // สีส้มทอง (Golden Amber)
+                color: 16753920,
                 fields: [
-                    {
-                        name: "🌡️ อุณหภูมิปัจจุบัน",
-                        value: `**${Math.round(current.temperature_2m)}°C** (รู้สึกเหมือน ${Math.round(current.apparent_temperature)}°C)`,
-                        inline: true
-                    },
-                    {
-                        name: "💧 ความชื้น",
-                        value: `${current.relative_humidity_2m}%`,
-                        inline: true
-                    },
-                    {
-                        name: "💨 ความเร็วลม",
-                        value: `${current.wind_speed_10m} km/h`,
-                        inline: true
-                    },
-                    {
-                        name: "⏲️ ความกดอากาศ",
-                        value: `${Math.round(current.surface_pressure)} hPa`,
-                        inline: true
-                    },
-                    {
-                        name: "🌅 พระอาทิตย์ขึ้น",
-                        value: new Date(daily.sunrise[0]).toLocaleTimeString('th-TH', {hour:'2-digit', minute:'2-digit'}),
-                        inline: true
-                    },
-                    {
-                        name: "🌇 พระอาทิตย์ตก",
-                        value: new Date(daily.sunset[0]).toLocaleTimeString('th-TH', {hour:'2-digit', minute:'2-digit'}),
-                        inline: true
-                    },
-                    {
-                        name: "🌍 พิกัดพื้นที่",
-                        value: `${lastLat.toFixed(2)}, ${lastLon.toFixed(2)}`,
-                        inline: true
-                    },
-                    {
-                        name: "📌 รายงานแผ่นดินไหวล่าสุด (USGS)",
-                        value: quakeMsg,
-                        inline: false
-                    }
+                    { name: "🌡️ อุณหภูมิปัจจุบัน", value: `**${Math.round(current.temperature_2m)}°C** (รู้สึกเหมือน ${Math.round(current.apparent_temperature)}°C)`, inline: true },
+                    { name: "💧 ความชื้น", value: `${current.relative_humidity_2m}%`, inline: true },
+                    { name: "💨 ความเร็วลม", value: `${current.wind_speed_10m} km/h`, inline: true },
+                    { name: "⏲️ ความกดอากาศ", value: `${Math.round(current.surface_pressure)} hPa`, inline: true },
+                    { name: "🌅 พระอาทิตย์ขึ้น", value: new Date(daily.sunrise[0]).toLocaleTimeString('th-TH', {hour:'2-digit', minute:'2-digit'}), inline: true },
+                    { name: "🌇 พระอาทิตย์ตก", value: new Date(daily.sunset[0]).toLocaleTimeString('th-TH', {hour:'2-digit', minute:'2-digit'}), inline: true },
+                    { name: "🌍 พิกัดพื้นที่", value: `${lastLat.toFixed(2)}, ${lastLon.toFixed(2)}`, inline: true },
+                    { name: "📌 รายงานแผ่นดินไหวล่าสุด (USGS)", value: quakeMsg, inline: false }
                 ],
-                footer: {
-                    text: "Stock & Disaster Auto Notification • แท็กทุกคนอัตโนมัติ"
-                }
+                footer: { text: "Stock & Disaster Auto Notification • แท็กทุกคนอัตโนมัติ" }
             }
         ]
     };
@@ -334,7 +296,7 @@ async function manualRefresh() {
 
     await sendDiscordNotification();
     
-    nextUpdateSeconds = 3600; // Reset ตัวนับถอยหลัง
+    nextUpdateSeconds = 3600;
     setTimeout(() => icon.classList.remove('spin-active'), 600);
 }
 
@@ -397,10 +359,6 @@ function render(data, city, cc, lat, lon) {
     const sunrise = daily.sunrise[0] ? new Date(daily.sunrise[0]).toLocaleTimeString('th-TH',{hour:'2-digit',minute:'2-digit'}) : '--:--';
     const sunset = daily.sunset[0] ? new Date(daily.sunset[0]).toLocaleTimeString('th-TH',{hour:'2-digit',minute:'2-digit'}) : '--:--';
 
-    const bg = document.getElementById('bgImg');
-    bg.style.opacity = '0';
-    setTimeout(() => { bg.src = bgImage(info.bg); bg.style.opacity = '1'; }, 300);
-
     const nowIndex = new Date().getHours();
     const hourlySlice = hourly.time.slice(nowIndex, nowIndex + 24);
     const tempsSlice = hourly.temperature_2m.slice(nowIndex, nowIndex + 24);
@@ -417,11 +375,11 @@ function render(data, city, cc, lat, lon) {
         const pct = Math.max(0, Math.min(100, ((hTemp - minTemp) / tempRange) * 100));
         const hourLabel = new Date(t).getHours().toString().padStart(2, '0') + ':00';
 
-        return `<div class="flex flex-col items-center gap-2 min-w-[52px]">
-            <span class="text-[10px] text-zinc-500 font-medium">${hourLabel}</span>
-            <span class="text-xl">${hInfo.icon}</span>
+        return `<div class="flex flex-col items-center gap-2 min-w-[56px] glass-card p-3 rounded-2xl">
+            <span class="text-[10px] text-zinc-400 font-medium">${hourLabel}</span>
+            <span class="text-xl my-0.5">${hInfo.icon}</span>
             <span class="text-xs font-bold text-white">${hTemp}°</span>
-            <div class="hour-bar w-full"><div class="hour-fill" style="width:${pct}%"></div></div>
+            <div class="hour-bar w-full mt-1"><div class="hour-fill" style="width:${pct}%"></div></div>
         </div>`;
     }).join('');
 
@@ -433,44 +391,44 @@ function render(data, city, cc, lat, lon) {
         const ci = parseWMOCode(daily.weather_code[i], 1);
         const dayName = i === 0 ? 'วันนี้' : dayNames[dt.getDay()];
 
-        return `<div class="flex flex-col items-center gap-2 min-w-[56px]">
-            <span class="text-[10px] text-zinc-500 font-medium">${dayName}</span>
-            <span class="text-2xl">${ci.icon}</span>
-            <span class="text-xs font-bold">${hi}°</span>
-            <span class="text-[10px] text-zinc-600">${lo}°</span>
+        return `<div class="flex flex-col items-center gap-2 min-w-[60px] glass-card p-3 rounded-2xl">
+            <span class="text-[10px] text-zinc-400 font-medium">${dayName}</span>
+            <span class="text-2xl my-0.5">${ci.icon}</span>
+            <span class="text-xs font-bold text-white">${hi}°</span>
+            <span class="text-[10px] text-zinc-500">${lo}°</span>
         </div>`;
     }).join('');
 
     document.getElementById('content').innerHTML = `
     <div class="max-w-2xl mx-auto fade-up">
-        <div class="text-center mb-10">
-            <div class="flex items-center justify-center gap-3 mb-2">
-                <img src="https://flagcdn.com/w40/${cc.toLowerCase()}.png" alt="" class="flag" onerror="this.style.display='none'">
-                <h1 class="text-2xl sm:text-3xl font-extrabold text-white">${esc(city)}</h1>
+        <div class="text-center mb-8">
+            <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/5 border border-white/10 mb-3">
+                <img src="https://flagcdn.com/w40/${cc.toLowerCase()}.png" alt="" class="w-4 h-3 rounded-sm object-cover" onerror="this.style.display='none'">
+                <span class="text-xs font-semibold text-zinc-300">${esc(city)}</span>
             </div>
-            <p class="text-xs text-zinc-400 mb-6">${info.text}</p>
+            <p class="text-xs text-amber-400 font-medium mb-4 tracking-wide uppercase">${info.text}</p>
 
-            <div class="float inline-block mb-2">
-                <span class="temp-big text-white">${temp}°</span>
+            <div class="inline-block mb-1">
+                <span class="temp-big">${temp}°</span>
             </div>
-            <p class="text-sm text-zinc-400 font-medium -mt-2 mb-1">รู้สึกเหมือน ${feels}°C</p>
+            <p class="text-xs text-zinc-400 font-medium">รู้สึกเหมือน ${feels}°C</p>
         </div>
 
-        <div class="glass rounded-2xl p-5 sm:p-6 mb-6 fade-up" style="animation-delay:.15s">
+        <div class="glass-panel rounded-3xl p-6 mb-6 fade-up" style="animation-delay:.15s">
             <div class="detail-row"><span class="detail-label">ความชื้น</span><span class="detail-val">${hum}%</span></div>
             <div class="detail-row"><span class="detail-label">ความเร็วลม</span><span class="detail-val">${wind} km/h</span></div>
             <div class="detail-row"><span class="detail-label">ความกดอากาศ</span><span class="detail-val">${pressure} hPa</span></div>
             <div class="detail-row"><span class="detail-label">พระอาทิตย์ขึ้น</span><span class="detail-val">${sunrise}</span></div>
             <div class="detail-row"><span class="detail-label">พระอาทิตย์ตก</span><span class="detail-val">${sunset}</span></div>
-            <div class="detail-row"><span class="detail-label">พิกัด</span><span class="detail-val font-mono text-[11px]">${lat.toFixed(2)}, ${lon.toFixed(2)}</span></div>
+            <div class="detail-row"><span class="detail-label">พิกัด</span><span class="detail-val font-mono text-[11px] text-amber-400/80">${lat.toFixed(2)}, ${lon.toFixed(2)}</span></div>
         </div>
 
-        <div class="glass rounded-2xl p-5 sm:p-6 mb-6 fade-up" style="animation-delay:.25s">
+        <div class="glass-panel rounded-3xl p-6 mb-6 fade-up" style="animation-delay:.25s">
             <h3 class="text-xs font-bold text-zinc-400 uppercase tracking-wider mb-4">24 ชั่วโมงข้างหน้า</h3>
-            <div class="flex gap-1 overflow-x-auto pb-2" style="-webkit-overflow-scrolling:touch;scrollbar-width:none">${hourlyHTML}</div>
+            <div class="flex gap-2 overflow-x-auto pb-2" style="-webkit-overflow-scrolling:touch;scrollbar-width:none">${hourlyHTML}</div>
         </div>
 
-        <div class="glass rounded-2xl p-5 sm:p-6 fade-up" style="animation-delay:.35s">
+        <div class="glass-panel rounded-3xl p-6 fade-up" style="animation-delay:.35s">
             <h3 class="text-xs font-bold text-zinc-400 uppercase tracking-wider mb-4">5 วันข้างหน้า</h3>
             <div class="flex gap-2 overflow-x-auto pb-2" style="-webkit-overflow-scrolling:touch;scrollbar-width:none">${dailyHTML}</div>
         </div>
@@ -486,7 +444,6 @@ function errorHTML(msg) {
     </div>`;
 }
 
-// เริ่มต้นระบบ
 (async function init() {
     await loadQuakeAlert();
     
@@ -501,8 +458,6 @@ function errorHTML(msg) {
     } catch (e) {}
 
     await fetchWeatherByCoords(lastLat, lastLon, lastCityName, lastCountryCode);
-    
-    // ส่งข้อมูลครั้งแรกเข้า Discord ทันทีที่เปิดเว็บ
     sendDiscordNotification();
 })();
 </script>
