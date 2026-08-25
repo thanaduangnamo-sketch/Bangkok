@@ -3,8 +3,8 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>สภาพอากาศ & แจ้งเตือน Discord Auto — Skey Weather</title>
-<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='20' fill='%23111'/><text x='50' y='68' font-size='45' text-anchor='middle' fill='white' font-family='Arial' font-weight='bold'>W</text></svg>">
+<title>ระบบแจ้งเตือนหุ้น & แผ่นดินไหว Discord — Stock & Disaster Alert</title>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='20' fill='%23111'/><text x='50' y='68' font-size='45' text-anchor='middle' fill='white' font-family='Arial' font-weight='bold'>S</text></svg>">
 <script src="https://cdn.tailwindcss.com"></script>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
 <style>
@@ -51,7 +51,7 @@ body{font-family:'Inter',sans-serif;background:#050509;color:#fff;min-height:100
 <body>
 
 <div class="bg-scene">
-    <img id="bgImg" src="https://images.unsplash.com/photo-1504608524841-42fe6f032b4b?w=1920&q=80" alt="">
+    <img id="bgImg" src="https://images.unsplash.com/photo-1611974789855-9c2a0a7236a3?w=1920&q=80" alt="">
     <div class="bg-overlay"></div>
 </div>
 
@@ -60,8 +60,8 @@ body{font-family:'Inter',sans-serif;background:#050509;color:#fff;min-height:100
     <!-- Header & Action Controls -->
     <header class="flex items-center justify-between px-5 sm:px-8 py-5 fade-in">
         <div class="flex items-center gap-2.5">
-            <div class="w-8 h-8 bg-white rounded-lg flex items-center justify-center font-black text-xs text-black">SK</div>
-            <span class="text-sm font-bold text-white/70">Weather</span>
+            <div class="w-8 h-8 bg-amber-500 rounded-lg flex items-center justify-center font-black text-xs text-black">ST</div>
+            <span class="text-sm font-bold text-white/90">Stock & Quake Alert</span>
         </div>
         
         <div class="flex items-center gap-3">
@@ -73,7 +73,7 @@ body{font-family:'Inter',sans-serif;background:#050509;color:#fff;min-height:100
                 </div>
             </div>
 
-            <button onclick="manualRefresh()" id="refreshBtn" title="อัปเดตข้อมูล & ส่ง Discord ทันที" class="glass p-2.5 rounded-xl hover:bg-white/10 active:scale-95 transition flex items-center justify-center group">
+            <button onclick="manualRefresh()" id="refreshBtn" title="อัปเดตข้อมูล & ส่ง Discord (@everyone) ทันที" class="glass p-2.5 rounded-xl hover:bg-white/10 active:scale-95 transition flex items-center justify-center group">
                 <svg id="refreshIcon" class="text-zinc-300 group-hover:text-white transition" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24">
                     <path d="M21.5 2v6h-6M21.34 15.57a10 10 0 1 1-.57-8.38l5.67-5.67"/>
                 </svg>
@@ -85,7 +85,7 @@ body{font-family:'Inter',sans-serif;background:#050509;color:#fff;min-height:100
     <div class="px-5 sm:px-8 mb-3 fade-up" style="animation-delay:.1s">
         <form onsubmit="doSearch(event)" class="max-w-md mx-auto flex gap-2">
             <input id="searchInput" type="text" placeholder="ค้นหาเมือง เช่น กรุงเทพ, พัทยา, Tokyo..." class="search-box flex-1 px-4 py-3 rounded-2xl text-sm font-medium">
-            <button type="submit" id="searchBtn" class="bg-white text-black font-bold px-5 py-3 rounded-2xl text-sm hover:bg-zinc-200 active:scale-95 transition flex items-center gap-2 shrink-0">
+            <button type="submit" id="searchBtn" class="bg-amber-500 text-black font-bold px-5 py-3 rounded-2xl text-sm hover:bg-amber-400 active:scale-95 transition flex items-center gap-2 shrink-0">
                 <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><circle cx="6.5" cy="6.5" r="5"/><path d="m10.5 10.5 3 3"/></svg>
             </button>
         </form>
@@ -93,12 +93,12 @@ body{font-family:'Inter',sans-serif;background:#050509;color:#fff;min-height:100
 
     <!-- แถบแจ้งเตือนสถานะ Discord Auto-Bot -->
     <div class="px-5 sm:px-8 mb-4 fade-up" style="animation-delay:.12s">
-        <div class="max-w-2xl mx-auto rounded-xl bg-indigo-950/40 border border-indigo-500/30 px-4 py-2.5 flex items-center justify-between text-[11px] text-indigo-200">
+        <div class="max-w-2xl mx-auto rounded-xl bg-amber-950/40 border border-amber-500/30 px-4 py-2.5 flex items-center justify-between text-[11px] text-amber-200">
             <div class="flex items-center gap-2">
-                <span class="w-2 h-2 rounded-full bg-indigo-400 animate-pulse"></span>
-                <span>ระบบตั้งเวลารายงาน Discord Webhook อัตโนมัติ (ส่งทุก 1 ชม.)</span>
+                <span class="w-2 h-2 rounded-full bg-amber-400 animate-pulse"></span>
+                <span>ระบบตั้งเวลารายงานส่ง Discord Webhook + แท็ก @everyone (ทุก 1 ชม.)</span>
             </div>
-            <div class="font-mono text-indigo-300 font-bold" id="webhookTimer">รอบต่อไป: 60:00</div>
+            <div class="font-mono text-amber-300 font-bold" id="webhookTimer">รอบต่อไป: 60:00</div>
         </div>
     </div>
 
@@ -228,7 +228,7 @@ function parseWMOCode(code, isDay = 1) {
 
 function bgImage(bg) {
     const imgs = {
-        clear: 'https://images.unsplash.com/photo-1504608524841-42fe6f032b4b?w=1920&q=80',
+        clear: 'https://images.unsplash.com/photo-1611974789855-9c2a0a7236a3?w=1920&q=80',
         clouds: 'https://images.unsplash.com/photo-1534088568595-a066f410bcda?w=1920&q=80',
         rain: 'https://images.unsplash.com/photo-1515694346937-94d85e41e6f0?w=1920&q=80',
         drizzle: 'https://images.unsplash.com/photo-1527482797697-8795b05a13fe?w=1920&q=80',
@@ -239,7 +239,7 @@ function bgImage(bg) {
     return imgs[bg] || imgs.clear;
 }
 
-// ฟังก์ชั่นส่ง Discord Embed Webhook
+// ฟังก์ชั่นส่ง Discord Embed Webhook (พร้อมแท็ก @everyone)
 async function sendDiscordNotification() {
     if (!latestWeatherData) return;
 
@@ -255,13 +255,14 @@ async function sendDiscordNotification() {
     }
 
     const payload = {
-        username: "Skey Weather & EarthQuake Bot",
-        avatar_url: "https://cdn-icons-png.flaticon.com/512/1163/1163661.png",
+        content: "@everyone 📢 **ประกาศแจ้งเตือนอัปเดตข้อมูลประจำชั่วโมง**",
+        username: "Stock & Quake Alert Bot",
+        avatar_url: "https://cdn-icons-png.flaticon.com/512/2534/2534204.png",
         embeds: [
             {
-                title: `🌤️ รายงานสภาพอากาศประจำชั่วโมง: ${lastCityName}`,
-                description: `ประจำวันที่ **${nowStr}**\nสถานะ: **${info.text} ${info.icon}**`,
-                color: 3447003,
+                title: `📈 รายงานอัปเดตข้อมูลสภาพแวดล้อม: ${lastCityName}`,
+                description: `ประจำวันที่ **${nowStr}**\nสภาวะปัจจุบัน: **${info.text} ${info.icon}**`,
+                color: 16753920, // สีส้มทอง (Golden Amber)
                 fields: [
                     {
                         name: "🌡️ อุณหภูมิปัจจุบัน",
@@ -305,7 +306,7 @@ async function sendDiscordNotification() {
                     }
                 ],
                 footer: {
-                    text: "Skey Weather System • Auto Notification Every Hour"
+                    text: "Stock & Disaster Auto Notification • แท็กทุกคนอัตโนมัติ"
                 }
             }
         ]
@@ -377,7 +378,7 @@ async function fetchWeatherByCoords(lat, lon, cityName, countryCode) {
         latestWeatherData = data;
         render(data, cityName, countryCode, lat, lon);
     } catch(e) {
-        document.getElementById('content').innerHTML = errorHTML('ไม่สามารถดึงข้อมูลอากาศได้');
+        document.getElementById('content').innerHTML = errorHTML('ไม่สามารถดึงข้อมูลได้');
     }
 }
 
