@@ -3,123 +3,355 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Skey Shop</title>
-<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='20' fill='%23111'/><text x='50' y='68' font-size='50' text-anchor='middle' fill='white' font-family='Arial' font-weight='bold'>S</text></svg>">
+<title>เสดงสภาพอากาศ — Skey Weather</title>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='20' fill='%23111'/><text x='50' y='68' font-size='45' text-anchor='middle' fill='white' font-family='Arial' font-weight='bold'>W</text></svg>">
 <script src="https://cdn.tailwindcss.com"></script>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
 <style>
 *{box-sizing:border-box;margin:0}
-body{font-family:'Inter',sans-serif;background:#09090b;color:#fff;min-height:100vh;display:flex;flex-direction:column}
-.card{background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);border-radius:20px;padding:28px 32px;transition:.25s}
-@keyframes fadeUp{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
-.fade-up{animation:fadeUp .6s cubic-bezier(.16,1,.3,1) both}
+body{font-family:'Inter',sans-serif;background:#050509;color:#fff;min-height:100vh;overflow-x:hidden}
+::selection{background:#fff;color:#000}
+
+.bg-scene{position:fixed;inset:0;z-index:0;overflow:hidden;pointer-events:none}
+.bg-scene img{width:100%;height:100%;object-fit:cover;filter:brightness(.25) saturate(.6) blur(2px);transition:opacity 1.5s ease}
+.bg-overlay{position:absolute;inset:0;background:linear-gradient(180deg,rgba(5,5,9,.3) 0%,rgba(5,5,9,.6) 40%,rgba(5,5,9,.95) 100%)}
+
+.glass{background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.08);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px)}
+@keyframes fadeUp{from{opacity:0;transform:translateY(24px)}to{opacity:1;transform:translateY(0)}}
+.fade-up{animation:fadeUp .7s cubic-bezier(.16,1,.3,1) both}
+@keyframes fadeIn{from{opacity:0}to{opacity:1}}
+.fade-in{animation:fadeIn 1s ease both}
+
+.temp-big{font-size:clamp(72px,15vw,120px);font-weight:900;line-height:1;letter-spacing:-.04em}
+@keyframes float{0%,100%{transform:translateY(0)}50%{transform:translateY(-8px)}}
+.float{animation:float 4s ease-in-out infinite}
+
+.detail-row{display:flex;align-items:center;gap:10px;padding:10px 0;border-bottom:1px solid rgba(255,255,255,.05)}
+.detail-row:last-child{border-bottom:none}
+.detail-label{font-size:12px;color:rgba(255,255,255,.4);width:90px;flex-shrink:0}
+.detail-val{font-size:13px;font-weight:600;color:rgba(255,255,255,.85)}
+
+.hour-bar{width:100%;height:4px;border-radius:99px;background:rgba(255,255,255,.06);overflow:hidden;position:relative}
+.hour-fill{height:100%;border-radius:99px;background:linear-gradient(90deg,#3b82f6,#60a5fa);transition:width 1s ease}
+
 @keyframes spin{to{transform:rotate(360deg)}}
-.spinner{width:13px;height:13px;border:2px solid rgba(255,255,255,.15);border-top-color:#a1a1aa;border-radius:50%;animation:spin .6s linear infinite;display:inline-block;vertical-align:middle}
-.ver{font-size:10.5px;font-family:'SF Mono',Monaco,Consolas,monospace;color:#a1a1aa;padding:4px 10px;border-radius:8px;background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.06);letter-spacing:.01em;max-width:220px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-.prev-btn{font-size:11px;color:#71717a;background:none;border:1px solid rgba(255,255,255,.08);border-radius:10px;padding:6px 14px;cursor:pointer;transition:.2s;font-family:inherit;font-weight:600}
-.prev-btn:hover{color:#fff;border-color:rgba(255,255,255,.2);background:rgba(255,255,255,.05)}
+.spinner{width:32px;height:32px;border:3px solid rgba(255,255,255,.1);border-top-color:#fff;border-radius:50%;animation:spin .7s linear infinite}
+
+.flag{width:20px;height:14px;border-radius:2px;object-fit:cover;border:1px solid rgba(255,255,255,.1)}
+
+.search-box{background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);color:#fff;backdrop-filter:blur(12px);transition:.2s}
+.search-box:focus{outline:none;border-color:rgba(255,255,255,.3);box-shadow:0 0 0 3px rgba(255,255,255,.05)}
+.search-box::placeholder{color:#52525b}
 </style>
 </head>
 <body>
 
-<!-- มุมซ้ายบน -->
-<div class="fixed top-0 left-0 right-0 z-50 flex items-center justify-between px-6 py-4" style="background:linear-gradient(180deg,rgba(9,9,11,.9),transparent)">
-    <div class="flex items-center gap-2.5">
-        <div class="w-8 h-8 bg-white rounded-lg flex items-center justify-center font-black text-xs text-black">SK</div>
-        <span class="text-sm font-bold text-white/80">Skey Shop</span>
-    </div>
-    <div class="flex items-center gap-2">
-        <div class="w-2 h-2 rounded-full bg-green-500" style="box-shadow:0 0 8px #22c55e80"></div>
-        <span class="text-[11px] text-zinc-500 font-medium">Online</span>
-    </div>
+<!-- พื้นหลังภาพอากาศ -->
+<div class="bg-scene">
+    <img id="bgImg" src="https://images.unsplash.com/photo-1504608524841-42fe6f032b4b?w=1920&q=80" alt="">
+    <div class="bg-overlay"></div>
 </div>
 
-<!-- ตรงกลาง -->
-<main class="flex-1 flex items-center justify-center px-4">
-    <div class="card fade-up max-w-md w-full">
+<!-- เนื้อหา -->
+<div class="relative z-10 min-h-screen flex flex-col">
 
-        <!-- หัว Roblox -->
-        <div class="flex items-center gap-3 mb-6">
-            <div class="w-10 h-10 bg-white/[.07] border border-white/10 rounded-xl flex items-center justify-center">
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="none"><rect x="2" y="4" width="20" height="16" rx="3" stroke="currentColor" stroke-width="1.5"/><path d="M2 8h20M8 4v16" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
-            </div>
-            <h2 class="text-base font-extrabold text-white">Roblox</h2>
+    <!-- Header -->
+    <header class="flex items-center justify-between px-5 sm:px-8 py-5 fade-in">
+        <div class="flex items-center gap-2.5">
+            <div class="w-8 h-8 bg-white rounded-lg flex items-center justify-center font-black text-xs text-black">SK</div>
+            <span class="text-sm font-bold text-white/70">Weather</span>
         </div>
+        <div class="text-[11px] text-zinc-600 font-medium" id="clockDisplay">--:--</div>
+    </header>
 
-        <!-- Windows -->
-        <div class="p-4 rounded-2xl bg-white/[.03] border border-white/[.06] mb-3">
-            <div class="flex items-center justify-between gap-3">
-                <div class="flex items-center gap-3 min-w-0">
-                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M3 5.5L12 2l9 3.5v13L12 22l-9-3.5v-13z" stroke="#0078d4" stroke-width="1.5" stroke-linejoin="round"/><path d="M12 2v20M3 5.5l9 3.5 9-3.5" stroke="#0078d4" stroke-width="1.5" stroke-linejoin="round"/></svg>
-                    <div class="min-w-0">
-                        <p class="text-sm font-bold text-white">Windows</p>
-                        <p class="text-[10px] text-zinc-600" id="winTime"><span class="spinner"></span></p>
-                    </div>
-                </div>
-                <span class="ver shrink-0" id="winVer"><span class="spinner"></span></span>
-            </div>
-            <div class="mt-3 pt-3 border-t border-white/[.05] flex justify-end">
-                <button class="prev-btn">Download Previous Version</button>
-            </div>
-        </div>
-
-        <!-- Mac -->
-        <div class="p-4 rounded-2xl bg-white/[.03] border border-white/[.06]">
-            <div class="flex items-center justify-between gap-3">
-                <div class="flex items-center gap-3 min-w-0">
-                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none"><rect x="3" y="3" width="18" height="18" rx="4" stroke="#a1a1aa" stroke-width="1.5"/><path d="M9 3c0 2.5-2 4-6 4M15 3c0 2.5 2 4 6 4M9 21c0-2.5-2-4-6-4M15 21c0-2.5 2-4 6-4" stroke="#a1a1aa" stroke-width="1.5" stroke-linecap="round"/></svg>
-                    <div class="min-w-0">
-                        <p class="text-sm font-bold text-white">Mac</p>
-                        <p class="text-[10px] text-zinc-600" id="macTime"><span class="spinner"></span></p>
-                    </div>
-                </div>
-                <span class="ver shrink-0" id="macVer"><span class="spinner"></span></span>
-            </div>
-            <div class="mt-3 pt-3 border-t border-white/[.05] flex justify-end">
-                <button class="prev-btn">Download Previous Version</button>
-            </div>
-        </div>
-
+    <!-- ค้นหา -->
+    <div class="px-5 sm:px-8 mb-8 fade-up" style="animation-delay:.1s">
+        <form onsubmit="doSearch(event)" class="max-w-md mx-auto flex gap-2">
+            <input id="searchInput" type="text" placeholder="ค้นหาเมือง เช่น Bangkok, Tokyo, London..." class="search-box flex-1 px-4 py-3 rounded-2xl text-sm font-medium">
+            <button type="submit" id="searchBtn" class="bg-white text-black font-bold px-5 py-3 rounded-2xl text-sm hover:bg-zinc-200 active:scale-95 transition flex items-center gap-2 shrink-0">
+                <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><circle cx="6.5" cy="6.5" r="5"/><path d="m10.5 10.5 3 3"/></svg>
+            </button>
+        </form>
     </div>
-</main>
+
+    <!-- ผลลัพธ์ -->
+    <div class="flex-1 px-5 sm:px-8 pb-10" id="content">
+        <!-- Loading -->
+        <div class="flex items-center justify-center py-32">
+            <div class="spinner"></div>
+        </div>
+    </div>
+
+</div>
 
 <script>
-async function getVersion(platform) {
-    try {
-        const r = await fetch('https://clientsettings.roblox.com/v2/client-version/' + platform, { cache: 'no-store' });
-        if (!r.ok) throw 0;
-        const d = await r.json();
-        return { ver: d.versionNumber || d.version || null, time: d.clientVersionUploadTime || null };
-    } catch(e) { return null; }
+const API_KEY = 'd1f8c3e8b2a944a5a3c2b1d4e6f8a0b2';
+const GEO_API = 'https://api.openweathermap.org/geo/1.0/direct';
+const WEATHER_API = 'https://api.openweathermap.org/data/2.5/weather';
+const FORECAST_API = 'https://api.openweathermap.org/data/2.5/forecast';
+
+let currentData = null;
+
+// นาฬิกา
+function updateClock() {
+    const now = new Date();
+    document.getElementById('clockDisplay').textContent = now.toLocaleTimeString('th-TH', { hour:'2-digit', minute:'2-digit' });
+}
+setInterval(updateClock, 1000);
+updateClock();
+
+// ค้นหา
+async function doSearch(e) {
+    e.preventDefault();
+    const q = document.getElementById('searchInput').value.trim();
+    if (!q) return;
+    const btn = document.getElementById('searchBtn');
+    btn.innerHTML = '<div class="spinner" style="width:15px;height:15px;border-width:2px"></div>';
+    btn.disabled = true;
+    document.getElementById('content').innerHTML = '<div class="flex items-center justify-center py-32"><div class="spinner"></div></div>';
+    await loadWeather(q);
+    btn.innerHTML = '<svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><circle cx="6.5" cy="6.5" r="5"/><path d="m10.5 10.5 3 3"/></svg>';
+    btn.disabled = false;
 }
 
-function fmtTime(iso) {
-    if (!iso) return 'ไม่พบข้อมูลเวลา';
+// โหลดอากาศ
+async function loadWeather(query) {
+    const content = document.getElementById('content');
     try {
-        const d = new Date(iso);
-        return 'Last Updated: ' + d.toLocaleDateString('en-US', { month:'2-digit', day:'2-digit', year:'numeric' }) +
-               ', ' + d.toLocaleTimeString('en-US', { hour:'2-digit', minute:'2-digit', second:'2-digit', hour12:true }) + ' UTC';
-    } catch(e) { return iso; }
+        // ค้นหาเมือง
+        const geo = await fetch(`${GEO_API}?q=${encodeURIComponent(query)}&limit=1&appid=${API_KEY}`).then(r => r.json());
+        if (!geo || !geo.length) { content.innerHTML = errorHTML('ไม่พบเมืองที่ค้นหา ลองใช้ชื่อภาษาอังกฤษ'); return; }
+
+        const { lat, lon, name, country, state } = geo[0];
+        const cityName = state ? `${name}, ${state}` : name;
+        const countryCode = country.toLowerCase();
+
+        // ดึงข้อมูลพร้อมกัน
+        const [weather, forecast] = await Promise.all([
+            fetch(`${WEATHER_API}?lat=${lat}&lon=${lon}&units=metric&appid=${API_KEY}`).then(r => r.json()),
+            fetch(`${FORECAST_API}?lat=${lat}&lon=${lon}&units=metric&appid=${API_KEY}`).then(r => r.json())
+        ]);
+
+        currentData = { weather, forecast, cityName, countryCode };
+        render(weather, forecast, cityName, countryCode, lat, lon);
+
+    } catch(e) {
+        content.innerHTML = errorHTML('ไม่สามารถดึงข้อมูลอากาศได้ กรุณาลองอีกครั้ง');
+    }
 }
 
-(async function() {
-    const [w, m] = await Promise.all([getVersion('Windows'), getVersion('Mac')]);
+// เวลาของเมืองนั้น
+function localTime(offset) {
+    const now = new Date();
+    const utc = now.getTime() + now.getTimezoneOffset() * 60000;
+    return new Date(utc + offset * 1000).toLocaleTimeString('th-TH', { hour:'2-digit', minute:'2-digit' });
+}
 
-    if (w) {
-        document.getElementById('winVer').textContent = 'version - ' + (w.ver || '?');
-        document.getElementById('winTime').textContent = fmtTime(w.time);
-    } else {
-        document.getElementById('winVer').textContent = '—';
-        document.getElementById('winTime').textContent = 'ไม่สามารถดึงข้อมูล';
-    }
+// แปลง condition code เป็นข้อมูล
+function conditionInfo(code, isNight) {
+    const map = {
+        200: { icon: '⛈️', text: 'ฟ้าผ่า', bg: 'thunderstorm' },
+        201: { icon: '⛈️', text: 'ฟ้าผ่าฝนตก', bg: 'thunderstorm' },
+        202: { icon: '⛈️', text: 'ฟ้าผ่าฝนตกหนัก', bg: 'thunderstorm' },
+        210: { icon: '⛈️', text: 'ฟ้าผ่าเบาๆ', bg: 'thunderstorm' },
+        211: { icon: '⛈️', text: 'ฟ้าผ่ากระจาย', bg: 'thunderstorm' },
+        230: { icon: '⛈️', text: 'ฟ้าผ่ามีฝนปน', bg: 'thunderstorm' },
+        231: { icon: '⛈️', text: 'ฟ้าผ่ามีฝนปนหนัก', bg: 'thunderstorm' },
+        300: { icon: '🌦️', text: 'ฝนตกเบาๆ', bg: 'drizzle' },
+        301: { icon: '🌦️', text: 'ฝนตกประปราย', bg: 'drizzle' },
+        302: { icon: '🌧️', text: 'ฝนตกหนัก', bg: 'rain' },
+        310: { icon: '🌧️', text: 'ฝนตกหนักมาก', bg: 'rain' },
+        311: { icon: '🌧️', text: 'ฝนน้ำแข็ง', bg: 'rain' },
+        312: { icon: '🌧️', text: 'ฝนน้ำแข็งหนัก', bg: 'rain' },
+        313: { icon: '🌧️', text: 'ฝนผสมน้ำแข็ง', bg: 'rain' },
+        314: { icon: '🌧️', text: 'ฝนผสมน้ำแข็งหนัก', bg: 'rain' },
+        321: { icon: '🌦️', text: 'ฝนตกเล็กน้อย', bg: 'drizzle' },
+        500: { icon: '🌫️', text: 'หมอกบางๆ', bg: 'mist' },
+        501: { icon: '🌫️', text: 'หมอก', bg: 'mist' },
+        502: { icon: '🌫️', text: 'หมอกหนา', bg: 'mist' },
+        503: { icon: '🌫️', text: 'หมอกละเอียด', bg: 'mist' },
+        504: { icon: '🌫️', text: 'หมอกหนามาก', bg: 'mist' },
+        600: { icon: '🌨️', text: 'หิมะตก', bg: 'snow' },
+        601: { icon: '🌨️', text: 'หิมะตกเล็กน้อย', bg: 'snow' },
+        602: { icon: '🌨️', text: 'หิมะตกหนัก', bg: 'snow' },
+        611: { icon: '🌨️', text: 'หิมะผสมฝน', bg: 'snow' },
+        612: { icon: '🌨️', text: 'หิมะผสมฝนหนัก', bg: 'snow' },
+        615: { icon: '🌨️', text: 'หิมะผสมฝนปน', bg: 'snow' },
+        620: { icon: '🌫️', text: 'หมอกปนหิมะ', bg: 'mist' },
+        621: { icon: '🌫️', text: 'หิมะละเอียด', bg: 'snow' },
+        701: { icon: '🌫️', text: 'หมอกย้อย', bg: 'mist' },
+        711: { icon: '🌫️', text: 'หมอกย้อยเล็กน้อย', bg: 'mist' },
+        721: { icon: '🌫️', text: 'หมอกย้อยกระจาย', bg: 'mist' },
+        731: { icon: '🌫️', text: 'ทรายบิน', bg: 'mist' },
+        741: { icon: '🌫️', text: 'หมอกหมอก', bg: 'mist' },
+        751: { icon: '🌫️', text: 'หมอกธรรมชาติ', bg: 'mist' },
+        761: { icon: '🌫️', text: 'หมอกหนา', bg: 'mist' },
+        762: { icon: '🌫️', text: 'หมอกหนากระจาย', bg: 'mist' },
+        771: { icon: '🌪️', text: 'พายุทอร์นาโด', bg: 'mist' },
+        781: { icon: '🌪️', text: 'ทอร์นาโด', bg: 'mist' },
+        800: { icon: isNight ? '🌙' : '☀️', text: isNight ? 'ท้องฟ้าโปร่งใส' : 'ท้องฟ้าแจ่มใส', bg: 'clear' },
+        801: { icon: isNight ? '🌙' : '🌤️', text: isNight ? 'มีเมฆบางๆ' : 'มีเมฆเล็กน้อย', bg: 'clear' },
+        802: { icon: '⛅', text: 'เมฆกระจาย', bg: 'clouds' },
+        803: { icon: '☁️', text: 'เมฆเป็นส่วนมาก', bg: 'clouds' },
+        804: { icon: '☁️', text: 'เมึกครึ้ม', bg: 'overcast' },
+    };
+    return map[code] || { icon: '🌡️', text: 'ไม่ทราบ', bg: 'clear' };
+}
 
-    if (m) {
-        document.getElementById('macVer').textContent = 'version - ' + (m.ver || '?');
-        document.getElementById('macTime').textContent = fmtTime(m.time);
-    } else {
-        document.getElementById('macVer').textContent = '—';
-        document.getElementById('macTime').textContent = 'ไม่สามารถดึงข้อมูล';
-    }
+// ภาพพื้นหลังตามสภาพอากาศ
+function bgImage(bg) {
+    const imgs = {
+        clear: 'https://images.unsplash.com/photo-1504608524841-42fe6f032b4b?w=1920&q=80',
+        clouds: 'https://images.unsplash.com/photo-1534088568595-a066f410bcda?w=1920&q=80',
+        overcast: 'https://images.unsplash.com/photo-1532978379173-423e6e1f7cbb?w=1920&q=80',
+        rain: 'https://images.unsplash.com/photo-1515694346937-94d85e41e6f0?w=1920&q=80',
+        drizzle: 'https://images.unsplash.com/photo-1527482797697-8795b05a13fe?w=1920&q=80',
+        thunderstorm: 'https://images.unsplash.com/photo-1605722616301-6417b5d4e3c2?w=1920&q=80',
+        snow: 'https://images.unsplash.com/photo-1491002052546-bf38f186af56?w=1920&q=80',
+        mist: 'https://images.unsplash.com/photo-1485236735568-9bf5507605a2?w=1920&q=80',
+    };
+    return imgs[bg] || imgs.clear;
+}
+
+// ตรวจกลางคืน
+function isNightTime(timestamp, timezone) {
+    const d = new Date(timestamp * 1000);
+    const utc = d.getTime() + d.getTimezoneOffset() * 60000;
+    const local = new Date(utc + timezone * 1000);
+    const h = local.getHours();
+    return h < 6 || h >= 19;
+}
+
+// Render
+function render(w, fc, city, cc, lat, lon) {
+    const cond = w.weather[0];
+    const info = conditionInfo(cond.id, isNightTime(w.dt, w.timezone));
+    const temp = Math.round(w.main.temp);
+    const feels = Math.round(w.main.feels_like);
+    const hum = w.main.humidity;
+    const wind = w.wind.speed;
+    const pressure = w.main.pressure;
+    const vis = w.visibility;
+    const sunrise = new Date(w.sys.sunrise * 1000);
+    const sunset = new Date(w.sys.sunset * 1000);
+    const tz = w.timezone;
+
+    // เปลี่ยนพื้นหลัง
+    const bg = document.getElementById('bgImg');
+    bg.style.opacity = '0';
+    setTimeout(() => { bg.src = bgImage(info.bg); bg.style.opacity = '1'; }, 300);
+
+    // ชั่วโมง hourly (24 ชม.)
+    const now = Date.now() / 1000;
+    const hourly = (fc.list || []).filter(f => f.dt > now).slice(0, 24);
+    const maxTemp = Math.max(...hourly.map(h => h.main.temp), temp);
+    const minTemp = Math.min(...hourly.map(h => h.main.temp), temp);
+    const tempRange = maxTemp - minTemp || 1;
+
+    let hourlyHTML = hourly.map(h => {
+        const isN = isNightTime(h.dt, tz);
+        const hi = conditionInfo(h.weather[0].id, isN);
+        const pct = Math.max(0, Math.min(100, ((h.main.temp - minTemp) / tempRange) * 100));
+        const time = new Date(h.dt * 1000);
+        const hr = time.getHours().toString().padStart(2, '0');
+        return `<div class="flex flex-col items-center gap-2 min-w-[52px]">
+            <span class="text-[10px] text-zinc-500 font-medium">${hr}:00</span>
+            <span class="text-xl">${hi.icon}</span>
+            <span class="text-xs font-bold text-white">${Math.round(h.main.temp)}°</span>
+            <div class="hour-bar w-full"><div class="hour-fill" style="width:${pct}%"></div></div>
+        </div>`;
+    }).join('');
+
+    // 5 วัน
+    const dailyMap = {};
+    (fc.list || []).forEach(f => {
+        const day = f.dt_txt.split(' ')[0];
+        if (!dailyMap[day]) dailyMap[day] = { temps: [], icons: [], cond: f.weather[0] };
+        dailyMap[day].temps.push(f.main.temp);
+    });
+    const days = Object.entries(dailyMap).slice(0, 5);
+    const dayNames = ['อาทิตย์', 'จันทร์', 'อังคาร', 'พุธ', 'พฤหัสบดี', 'ศุกร์', 'เสาร์'];
+    let dailyHTML = days.map(([date, d], i) => {
+        const dt = new Date(date + 'T12:00:00');
+        const hi = Math.round(Math.max(...d.temps));
+        const lo = Math.round(Math.min(...d.temps));
+        const isN = isNightTime(dt.getTime() / 1000, tz);
+        const ci = conditionInfo(d.cond.id, isN);
+        const dayName = i === 0 ? 'วันนี้' : dayNames[dt.getDay()];
+        return `<div class="flex flex-col items-center gap-2 min-w-[56px]">
+            <span class="text-[10px] text-zinc-500 font-medium">${dayName}</span>
+            <span class="text-2xl">${ci.icon}</span>
+            <span class="text-xs font-bold">${hi}°</span>
+            <span class="text-[10px] text-zinc-600">${lo}°</span>
+        </div>`;
+    }).join('');
+
+    document.getElementById('content').innerHTML = `
+    <!-- อุณหภูมิหลัก -->
+    <div class="max-w-2xl mx-auto fade-up">
+        <div class="text-center mb-10">
+            <div class="flex items-center justify-center gap-3 mb-2">
+                <img src="https://flagcdn.com/w40/${cc}.png" alt="" class="flag" onerror="this.style.display='none'">
+                <h1 class="text-2xl sm:text-3xl font-extrabold text-white">${esc(city)}</h1>
+            </div>
+            <p class="text-xs text-zinc-600 mb-6">${info.text} · เวลาท้องถิ่น ${localTime(tz)}</p>
+
+            <div class="float inline-block mb-2">
+                <span class="temp-big text-white">${temp}°</span>
+            </div>
+            <p class="text-sm text-zinc-500 font-medium -mt-2 mb-1">รู้สึกเหมือน ${feels}°C</p>
+        </div>
+
+        <!-- รายละเอียด -->
+        <div class="glass rounded-2xl p-5 sm:p-6 mb-6 fade-up" style="animation-delay:.15s">
+            <div class="detail-row"><span class="detail-label">ความชื้น</span><span class="detail-val">${hum}%</span></div>
+            <div class="detail-row"><span class="detail-label">ลม</span><span class="detail-val">${wind} m/s</span></div>
+            <div class="detail-row"><span class="detail-label">ความกดอากาศ</span><span class="detail-val">${pressure} hPa</span></div>
+            <div class="detail-row"><span class="detail-label">ทัศนวิสัย</span><span class="detail-val">${(vis / 1000).toFixed(1)} km</span></div>
+            <div class="detail-row"><span class="detail-label">พระอาทิตย์ขึ้น</span><span class="detail-val">${sunrise.toLocaleTimeString('th-TH',{hour:'2-digit',minute:'2-digit'})}</span></div>
+            <div class="detail-row"><span class="detail-label">พระอาทิตย์ตก</span><span class="detail-val">${sunset.toLocaleTimeString('th-TH',{hour:'2-digit',minute:'2-digit'})}</span></div>
+            <div class="detail-row"><span class="detail-label">พิกัด</span><span class="detail-val font-mono text-[11px]">${lat.toFixed(2)}, ${lon.toFixed(2)}</span></div>
+        </div>
+
+        <!-- 24 ชม. -->
+        <div class="glass rounded-2xl p-5 sm:p-6 mb-6 fade-up" style="animation-delay:.25s">
+            <h3 class="text-xs font-bold text-zinc-400 uppercase tracking-wider mb-4">24 ชั่วโมง</h3>
+            <div class="flex gap-1 overflow-x-auto pb-2" style="-webkit-overflow-scrolling:touch;scrollbar-width:none">${hourlyHTML}</div>
+        </div>
+
+        <!-- 5 วัน -->
+        <div class="glass rounded-2xl p-5 sm:p-6 fade-up" style="animation-delay:.35s">
+            <h3 class="text-xs font-bold text-zinc-400 uppercase tracking-wider mb-4">5 วันข้างหน้า</h3>
+            <div class="flex gap-2 overflow-x-auto pb-2" style="-webkit-overflow-scrolling:touch;scrollbar-width:none">${dailyHTML}</div>
+        </div>
+    </div>`;
+}
+
+function esc(s) { const d = document.createElement('div'); d.textContent = s; return d.innerHTML; }
+
+function errorHTML(msg) {
+    return `<div class="flex flex-col items-center justify-center py-24 text-center fade-up">
+        <svg width="40" height="40" fill="none" stroke="currentColor" stroke-width="1.5" class="text-red-500/40 mb-4"><circle cx="20" cy="20" r="16"/><path d="M20 13v7M20 24v.01"/></svg>
+        <p class="text-sm font-semibold text-zinc-400">${esc(msg)}</p>
+    </div>`;
+}
+
+// โหลดตอนเข้า — ลอง Geolocation ก่อน
+(async function init() {
+    try {
+        const pos = await new Promise((res, rej) => navigator.geolocation.getCurrentPosition(res, rej, { timeout: 5000 }));
+        const { latitude, longitude } = pos.coords;
+        // ยิง reverse geocode ด้วย weather api แบบจุด
+        const r = await fetch(`${WEATHER_API}?lat=${latitude}&lon=${longitude}&units=metric&appid=${API_KEY}`).then(r => r.json());
+        if (r && r.name) {
+            document.getElementById('searchInput').value = r.name;
+            await loadWeather(r.name);
+            return;
+        }
+    } catch(e) {}
+    // ถ้าไม่ได้ location ให้ค้นหา Bangkok
+    document.getElementById('searchInput').value = 'Bangkok';
+    await loadWeather('Bangkok');
 })();
 </script>
 </body>
