@@ -85,7 +85,7 @@ body{font-family:'Plus Jakarta Sans','Noto Sans Thai',sans-serif;background:#030
                 </div>
             </div>
 
-            <button onclick="manualRefresh()" id="refreshBtn" title="อัปเดตข้อมูล & ส่ง Discord (@everyone) ทันที" class="glass-card p-2.5 rounded-xl hover:bg-white/10 active:scale-95 transition flex items-center justify-center group">
+            <button onclick="manualRefresh()" id="refreshBtn" title="อัปเดตข้อมูล & ส่ง Discord ทันที" class="glass-card p-2.5 rounded-xl hover:bg-white/10 active:scale-95 transition flex items-center justify-center group">
                 <svg id="refreshIcon" class="text-zinc-400 group-hover:text-amber-400 transition" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24">
                     <path d="M21.5 2v6h-6M21.34 15.57a10 10 0 1 1-.57-8.38l5.67-5.67"/>
                 </svg>
@@ -108,7 +108,7 @@ body{font-family:'Plus Jakarta Sans','Noto Sans Thai',sans-serif;background:#030
         <div class="max-w-2xl mx-auto rounded-2xl bg-amber-950/20 border border-amber-500/20 backdrop-blur-md px-4 py-3 flex items-center justify-between text-[11px] text-amber-200/90 shadow-lg">
             <div class="flex items-center gap-2.5">
                 <span class="w-2 h-2 rounded-full bg-amber-400 animate-pulse"></span>
-                <span>ระบบรายงาน Discord Webhook + แท็ก @everyone (ทำงานทุก 1 ชม.)</span>
+                <span>ระบบรายงาน Discord (แท็ก @everyone เฉพาะเหตุการณ์สำคัญ)</span>
             </div>
             <div class="font-mono text-amber-400 font-bold bg-amber-500/10 px-2.5 py-1 rounded-lg border border-amber-500/20" id="webhookTimer">รอบต่อไป: 60:00</div>
         </div>
@@ -185,7 +185,7 @@ async function loadQuakeAlert() {
         
         if (data.features && data.features.length > 0) {
             const latest = data.features[0];
-            const mag = latest.properties.mag.toFixed(1);
+            const mag = parseFloat(latest.properties.mag.toFixed(1));
             const place = latest.properties.place || 'ไม่ระบุพื้นที่';
             const time = new Date(latest.properties.time).toLocaleString('th-TH', {
                 dateStyle: 'short',
@@ -196,7 +196,7 @@ async function loadQuakeAlert() {
             latestQuakeData = { place, mag, depth, time };
 
             let alertLevel = 'text-amber-400';
-            if (mag >= 6.0) alertLevel = 'text-red-400 font-extrabold';
+            if (mag >= 5.0) alertLevel = 'text-red-400 font-extrabold';
 
             const now = new Date();
             quakeLastUpdate.textContent = `อัปเดต: ${now.toLocaleTimeString('th-TH', {hour:'2-digit', minute:'2-digit'})}`;
@@ -242,23 +242,37 @@ async function sendDiscordNotification() {
     const current = latestWeatherData.current;
     const daily = latestWeatherData.daily;
     const info = parseWMOCode(current.weather_code, current.is_day);
-    
     const nowStr = new Date().toLocaleString('th-TH', { dateStyle: 'long', timeStyle: 'medium' });
 
     let quakeMsg = "ไม่มีรายงานเหตุการณ์รุนแรง";
+    let isSevereQuake = false;
+
     if (latestQuakeData) {
         quakeMsg = `🚨 **${latestQuakeData.place}**\n• ขนาด: **${latestQuakeData.mag} M** | ลึก: ${latestQuakeData.depth} กม.\n• เวลา: ${latestQuakeData.time}`;
+        // กำหนดเงื่อนไข: หากแผ่นดินไหวขนาดใหญ่กว่าหรือเท่ากับ 5.0 M ให้ตั้งค่าแจ้งเตือนด่วน
+        if (latestQuakeData.mag >= 5.0) {
+            isSevereQuake = true;
+        }
+    }
+
+    // เงื่อนไขข้อความ: แท็ก @everyone เฉพาะกรณีแผ่นดินไหวใหญ่
+    let mentionText = "📢 **รายงานอัปเดตสถานการณ์ประจำชั่วโมง**";
+    let embedColor = 16753920; // สีส้มทองมาตรฐาน
+
+    if (isSevereQuake) {
+        mentionText = "@everyone 🚨 **[แจ้งเตือนฉุกเฉิน] ตรวจพบเหตุแผ่นดินไหวรุนแรง!**";
+        embedColor = 15548927; // เปลี่ยนเป็นสีแดงฉุกเฉิน
     }
 
     const payload = {
-        content: "@everyone 📢 **ประกาศแจ้งเตือนอัปเดตข้อมูลประจำชั่วโมง**",
+        content: mentionText,
         username: "Stock & Quake Alert Bot",
         avatar_url: "https://cdn-icons-png.flaticon.com/512/2534/2534204.png",
         embeds: [
             {
-                title: `📈 รายงานอัปเดตข้อมูลสภาพแวดล้อม: ${lastCityName}`,
+                title: isSevereQuake ? `⚠️ รายงานแผ่นดินไหวขนาดใหญ่ & สภาพอากาศ: ${lastCityName}` : `📈 รายงานอัปเดตข้อมูลสภาพแวดล้อม: ${lastCityName}`,
                 description: `ประจำวันที่ **${nowStr}**\nสภาวะปัจจุบัน: **${info.text} ${info.icon}**`,
-                color: 16753920,
+                color: embedColor,
                 fields: [
                     { name: "🌡️ อุณหภูมิปัจจุบัน", value: `**${Math.round(current.temperature_2m)}°C** (รู้สึกเหมือน ${Math.round(current.apparent_temperature)}°C)`, inline: true },
                     { name: "💧 ความชื้น", value: `${current.relative_humidity_2m}%`, inline: true },
@@ -269,7 +283,7 @@ async function sendDiscordNotification() {
                     { name: "🌍 พิกัดพื้นที่", value: `${lastLat.toFixed(2)}, ${lastLon.toFixed(2)}`, inline: true },
                     { name: "📌 รายงานแผ่นดินไหวล่าสุด (USGS)", value: quakeMsg, inline: false }
                 ],
-                footer: { text: "Stock & Disaster Auto Notification • แท็กทุกคนอัตโนมัติ" }
+                footer: { text: "Stock & Disaster Auto Notification System" }
             }
         ]
     };
