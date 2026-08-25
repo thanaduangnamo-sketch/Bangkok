@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>แสดงสภาพอากาศ & แจ้งเตือนแผ่นดินไหว — Skey Weather</title>
+<title>สภาพอากาศ & แจ้งเตือน Discord Auto — Skey Weather</title>
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='20' fill='%23111'/><text x='50' y='68' font-size='45' text-anchor='middle' fill='white' font-family='Arial' font-weight='bold'>W</text></svg>">
 <script src="https://cdn.tailwindcss.com"></script>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
@@ -36,6 +36,7 @@ body{font-family:'Inter',sans-serif;background:#050509;color:#fff;min-height:100
 
 @keyframes spin{to{transform:rotate(360deg)}}
 .spinner{width:32px;height:32px;border:3px solid rgba(255,255,255,.1);border-top-color:#fff;border-radius:50%;animation:spin .7s linear infinite}
+.spin-active{animation:spin .6s linear infinite}
 
 .flag{width:20px;height:14px;border-radius:2px;object-fit:cover;border:1px solid rgba(255,255,255,.1)}
 
@@ -43,7 +44,7 @@ body{font-family:'Inter',sans-serif;background:#050509;color:#fff;min-height:100
 .search-box:focus{outline:none;border-color:rgba(255,255,255,.3);box-shadow:0 0 0 3px rgba(255,255,255,.05)}
 .search-box::placeholder{color:#52525b}
 
-@keyframes pulseGlow{0%,100%{opacity:1}50%{opacity:.6}}
+@keyframes pulseGlow{0%,100%{opacity:1}50%{opacity:.4}}
 .pulse-glow{animation:pulseGlow 2s infinite ease-in-out}
 </style>
 </head>
@@ -56,19 +57,32 @@ body{font-family:'Inter',sans-serif;background:#050509;color:#fff;min-height:100
 
 <div class="relative z-10 min-h-screen flex flex-col">
 
+    <!-- Header & Action Controls -->
     <header class="flex items-center justify-between px-5 sm:px-8 py-5 fade-in">
         <div class="flex items-center gap-2.5">
             <div class="w-8 h-8 bg-white rounded-lg flex items-center justify-center font-black text-xs text-black">SK</div>
             <span class="text-sm font-bold text-white/70">Weather</span>
         </div>
-        <div class="text-[11px] text-zinc-400 font-medium flex items-center gap-2">
-            <span class="inline-block w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
-            <span id="clockDisplay">--:--</span>
+        
+        <div class="flex items-center gap-3">
+            <div class="text-right">
+                <div class="text-[11px] text-zinc-300 font-semibold" id="dateDisplay">--/--/----</div>
+                <div class="text-[10px] text-zinc-500 font-medium flex items-center justify-end gap-1">
+                    <span class="inline-block w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></span>
+                    <span id="clockDisplay">--:--:--</span>
+                </div>
+            </div>
+
+            <button onclick="manualRefresh()" id="refreshBtn" title="อัปเดตข้อมูล & ส่ง Discord ทันที" class="glass p-2.5 rounded-xl hover:bg-white/10 active:scale-95 transition flex items-center justify-center group">
+                <svg id="refreshIcon" class="text-zinc-300 group-hover:text-white transition" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24">
+                    <path d="M21.5 2v6h-6M21.34 15.57a10 10 0 1 1-.57-8.38l5.67-5.67"/>
+                </svg>
+            </button>
         </div>
     </header>
 
     <!-- ค้นหา -->
-    <div class="px-5 sm:px-8 mb-6 fade-up" style="animation-delay:.1s">
+    <div class="px-5 sm:px-8 mb-3 fade-up" style="animation-delay:.1s">
         <form onsubmit="doSearch(event)" class="max-w-md mx-auto flex gap-2">
             <input id="searchInput" type="text" placeholder="ค้นหาเมือง เช่น กรุงเทพ, พัทยา, Tokyo..." class="search-box flex-1 px-4 py-3 rounded-2xl text-sm font-medium">
             <button type="submit" id="searchBtn" class="bg-white text-black font-bold px-5 py-3 rounded-2xl text-sm hover:bg-zinc-200 active:scale-95 transition flex items-center gap-2 shrink-0">
@@ -77,46 +91,85 @@ body{font-family:'Inter',sans-serif;background:#050509;color:#fff;min-height:100
         </form>
     </div>
 
-    <!-- แถบแจ้งเตือนแผ่นดินไหวสด -->
+    <!-- แถบแจ้งเตือนสถานะ Discord Auto-Bot -->
+    <div class="px-5 sm:px-8 mb-4 fade-up" style="animation-delay:.12s">
+        <div class="max-w-2xl mx-auto rounded-xl bg-indigo-950/40 border border-indigo-500/30 px-4 py-2.5 flex items-center justify-between text-[11px] text-indigo-200">
+            <div class="flex items-center gap-2">
+                <span class="w-2 h-2 rounded-full bg-indigo-400 animate-pulse"></span>
+                <span>ระบบตั้งเวลารายงาน Discord Webhook อัตโนมัติ (ส่งทุก 1 ชม.)</span>
+            </div>
+            <div class="font-mono text-indigo-300 font-bold" id="webhookTimer">รอบต่อไป: 60:00</div>
+        </div>
+    </div>
+
+    <!-- แถบเช็คแผ่นดินไหว -->
     <div class="px-5 sm:px-8 mb-6 fade-up" style="animation-delay:.15s">
-        <div class="max-w-2xl mx-auto rounded-2xl border border-red-500/20 bg-red-950/30 backdrop-blur-md p-4 text-xs" id="quakeBox">
+        <div class="max-w-2xl mx-auto rounded-2xl border border-red-500/20 bg-red-950/25 backdrop-blur-md p-4 text-xs" id="quakeBox">
             <div class="flex items-center justify-between mb-2 pb-2 border-b border-red-500/10">
                 <div class="flex items-center gap-2 font-bold text-red-400">
                     <span class="w-2 h-2 rounded-full bg-red-500 pulse-glow"></span>
-                    <span>🚨 รายงานเฝ้าระวังแผ่นดินไหวล่าสุด (USGS Live)</span>
+                    <span>ศูนย์เฝ้าระวังแผ่นดินไหวโลก (USGS Real-time)</span>
                 </div>
-                <span class="text-[10px] text-zinc-500" id="quakeTime">กำลังอัปเดต...</span>
+                <span class="text-[10px] text-zinc-400 font-mono" id="quakeLastUpdate">อัปเดตล่าสุด: --:--</span>
             </div>
             <div id="quakeContent" class="text-zinc-300 leading-relaxed">
-                กำลังดึงข้อมูลเหตุการณ์แผ่นดินไหว...
+                กำลังดึงข้อมูลแผ่นดินไหวล่าสุด...
             </div>
         </div>
     </div>
 
+    <!-- ส่วนแสดงข้อมูลสภาพอากาศ -->
     <div class="flex-1 px-5 sm:px-8 pb-10" id="content">
         <div class="flex flex-col items-center justify-center py-32 gap-3">
             <div class="spinner"></div>
-            <p class="text-xs text-zinc-500">กำลังดึงตำแหน่งปัจจุบันของคุณ...</p>
+            <p class="text-xs text-zinc-500">กำลังดึงข้อมูลตำแหน่งของคุณ...</p>
         </div>
     </div>
 
 </div>
 
 <script>
+const DISCORD_WEBHOOK_URL = "https://discord.com/api/webhooks/1541796417025351743/WWiN2oYSEHZHAG81RvyynyxhNZHbXa7mHR2Oc-9_u651BGY4yXrP0KhxzTNdaSnPjfBo";
+
+let lastLat = 13.7563;
+let lastLon = 100.5018;
+let lastCityName = 'กรุงเทพมหานคร';
+let lastCountryCode = 'TH';
+let latestWeatherData = null;
+let latestQuakeData = null;
+
+let nextUpdateSeconds = 3600; // 1 ชั่วโมง = 3600 วินาที
+
 function updateClock() {
     const now = new Date();
-    document.getElementById('clockDisplay').textContent = now.toLocaleTimeString('th-TH', { hour:'2-digit', minute:'2-digit' });
+    document.getElementById('clockDisplay').textContent = now.toLocaleTimeString('th-TH');
+    document.getElementById('dateDisplay').textContent = now.toLocaleDateString('th-TH', {
+        year: 'numeric',
+        month: 'short',
+        day: 'numeric'
+    });
 }
 setInterval(updateClock, 1000);
 updateClock();
 
-// ดึงข้อมูลแผ่นดินไหวล่าสุดจาก USGS API
+// นับถอยหลังส่ง Discord และอัปเดตข้อมูลทุก 1 ชั่วโมง
+setInterval(() => {
+    nextUpdateSeconds--;
+    if (nextUpdateSeconds <= 0) {
+        nextUpdateSeconds = 3600;
+        manualRefresh();
+    }
+    const mins = Math.floor(nextUpdateSeconds / 60).toString().padStart(2, '0');
+    const secs = (nextUpdateSeconds % 60).toString().padStart(2, '0');
+    document.getElementById('webhookTimer').textContent = `รอบต่อไป: ${mins}:${secs}`;
+}, 1000);
+
+// ดึงข้อมูลแผ่นดินไหว
 async function loadQuakeAlert() {
     const quakeContent = document.getElementById('quakeContent');
-    const quakeTime = document.getElementById('quakeTime');
+    const quakeLastUpdate = document.getElementById('quakeLastUpdate');
     
     try {
-        // ดึงข้อมูลแผ่นดินไหวขนาด > 2.5 ริกเตอร์ที่เกิดขึ้นใน 24 ชั่วโมงที่ผ่านมา
         const res = await fetch('https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/2.5_day.geojson');
         const data = await res.json();
         
@@ -128,17 +181,20 @@ async function loadQuakeAlert() {
                 dateStyle: 'short',
                 timeStyle: 'medium'
             });
-            const depth = latest.geometry.coordinates[2]; // ความลึก (กิโลเมตร)
+            const depth = latest.geometry.coordinates[2];
 
-            // จัดระดับความรุนแรง
+            latestQuakeData = { place, mag, depth, time };
+
             let alertLevel = 'text-amber-400';
             if (mag >= 6.0) alertLevel = 'text-red-400 font-extrabold';
 
-            quakeTime.textContent = 'อัปเดตแล้ว';
+            const now = new Date();
+            quakeLastUpdate.textContent = `อัปเดต: ${now.toLocaleTimeString('th-TH', {hour:'2-digit', minute:'2-digit'})}`;
+            
             quakeContent.innerHTML = `
                 <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
                     <div>
-                        <span class="font-semibold text-white">สถานที่/ประเทศ:</span> <span class="text-zinc-200">${esc(place)}</span>
+                        <span class="font-semibold text-white">ตำแหน่งที่เกิด:</span> <span class="text-zinc-200">${esc(place)}</span>
                     </div>
                     <div class="flex items-center gap-3 shrink-0">
                         <span>ขนาด: <strong class="${alertLevel}">${mag} M</strong></span>
@@ -146,14 +202,15 @@ async function loadQuakeAlert() {
                     </div>
                 </div>
                 <div class="mt-1 text-[11px] text-zinc-400">
-                    ⏱️ เกิดขึ้นเมื่อ: <span class="text-zinc-300">${time}</span>
+                    ⏱️ วันเวลาที่เกิดเหตุ: <span class="text-zinc-300">${time}</span>
                 </div>
             `;
         } else {
-            quakeContent.innerHTML = 'ไม่มีรายงานแผ่นดินไหวรุนแรงใน 24 ชั่วโมงที่ผ่านมา';
+            latestQuakeData = null;
+            quakeContent.innerHTML = 'ไม่มีรายงานเหตุแผ่นดินไหวรุนแรงใน 24 ชั่วโมงที่ผ่านมา';
         }
     } catch (e) {
-        quakeContent.innerHTML = '<span class="text-zinc-500">ไม่สามารถเชื่อมต่อข้อมูลแผ่นดินไหวได้</span>';
+        quakeContent.innerHTML = '<span class="text-zinc-500">ไม่สามารถเชื่อมต่อเซิร์ฟเวอร์แผ่นดินไหวได้</span>';
     }
 }
 
@@ -182,6 +239,104 @@ function bgImage(bg) {
     return imgs[bg] || imgs.clear;
 }
 
+// ฟังก์ชั่นส่ง Discord Embed Webhook
+async function sendDiscordNotification() {
+    if (!latestWeatherData) return;
+
+    const current = latestWeatherData.current;
+    const daily = latestWeatherData.daily;
+    const info = parseWMOCode(current.weather_code, current.is_day);
+    
+    const nowStr = new Date().toLocaleString('th-TH', { dateStyle: 'long', timeStyle: 'medium' });
+
+    let quakeMsg = "ไม่มีรายงานเหตุการณ์รุนแรง";
+    if (latestQuakeData) {
+        quakeMsg = `🚨 **${latestQuakeData.place}**\n• ขนาด: **${latestQuakeData.mag} M** | ลึก: ${latestQuakeData.depth} กม.\n• เวลา: ${latestQuakeData.time}`;
+    }
+
+    const payload = {
+        username: "Skey Weather & EarthQuake Bot",
+        avatar_url: "https://cdn-icons-png.flaticon.com/512/1163/1163661.png",
+        embeds: [
+            {
+                title: `🌤️ รายงานสภาพอากาศประจำชั่วโมง: ${lastCityName}`,
+                description: `ประจำวันที่ **${nowStr}**\nสถานะ: **${info.text} ${info.icon}**`,
+                color: 3447003,
+                fields: [
+                    {
+                        name: "🌡️ อุณหภูมิปัจจุบัน",
+                        value: `**${Math.round(current.temperature_2m)}°C** (รู้สึกเหมือน ${Math.round(current.apparent_temperature)}°C)`,
+                        inline: true
+                    },
+                    {
+                        name: "💧 ความชื้น",
+                        value: `${current.relative_humidity_2m}%`,
+                        inline: true
+                    },
+                    {
+                        name: "💨 ความเร็วลม",
+                        value: `${current.wind_speed_10m} km/h`,
+                        inline: true
+                    },
+                    {
+                        name: "⏲️ ความกดอากาศ",
+                        value: `${Math.round(current.surface_pressure)} hPa`,
+                        inline: true
+                    },
+                    {
+                        name: "🌅 พระอาทิตย์ขึ้น",
+                        value: new Date(daily.sunrise[0]).toLocaleTimeString('th-TH', {hour:'2-digit', minute:'2-digit'}),
+                        inline: true
+                    },
+                    {
+                        name: "🌇 พระอาทิตย์ตก",
+                        value: new Date(daily.sunset[0]).toLocaleTimeString('th-TH', {hour:'2-digit', minute:'2-digit'}),
+                        inline: true
+                    },
+                    {
+                        name: "🌍 พิกัดพื้นที่",
+                        value: `${lastLat.toFixed(2)}, ${lastLon.toFixed(2)}`,
+                        inline: true
+                    },
+                    {
+                        name: "📌 รายงานแผ่นดินไหวล่าสุด (USGS)",
+                        value: quakeMsg,
+                        inline: false
+                    }
+                ],
+                footer: {
+                    text: "Skey Weather System • Auto Notification Every Hour"
+                }
+            }
+        ]
+    };
+
+    try {
+        await fetch(DISCORD_WEBHOOK_URL, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(payload)
+        });
+    } catch (e) {
+        console.error("ส่ง Discord ไม่สำเร็จ:", e);
+    }
+}
+
+async function manualRefresh() {
+    const icon = document.getElementById('refreshIcon');
+    icon.classList.add('spin-active');
+    
+    await Promise.all([
+        loadQuakeAlert(),
+        fetchWeatherByCoords(lastLat, lastLon, lastCityName, lastCountryCode)
+    ]);
+
+    await sendDiscordNotification();
+    
+    nextUpdateSeconds = 3600; // Reset ตัวนับถอยหลัง
+    setTimeout(() => icon.classList.remove('spin-active'), 600);
+}
+
 async function doSearch(e) {
     if (e) e.preventDefault();
     const q = document.getElementById('searchInput').value.trim();
@@ -195,14 +350,19 @@ async function doSearch(e) {
         const geoRes = await fetch(`https://geocoding-api.open-meteo.com/v1/search?name=${encodeURIComponent(q)}&count=1&language=th&format=json`).then(r => r.json());
         
         if (!geoRes.results || geoRes.results.length === 0) {
-            document.getElementById('content').innerHTML = errorHTML('ไม่พบข้อมูลเมืองที่คุณค้นหา โปรดตรวจสอบชื่อเมืองอีกครั้ง');
+            document.getElementById('content').innerHTML = errorHTML('ไม่พบข้อมูลเมืองที่คุณค้นหา');
         } else {
             const place = geoRes.results[0];
-            const name = place.name + (place.admin1 ? `, ${place.admin1}` : '');
-            await fetchWeatherByCoords(place.latitude, place.longitude, name, place.country_code || 'TH');
+            lastLat = place.latitude;
+            lastLon = place.longitude;
+            lastCityName = place.name + (place.admin1 ? `, ${place.admin1}` : '');
+            lastCountryCode = place.country_code || 'TH';
+            
+            await fetchWeatherByCoords(lastLat, lastLon, lastCityName, lastCountryCode);
+            await sendDiscordNotification();
         }
     } catch(err) {
-        document.getElementById('content').innerHTML = errorHTML('เกิดข้อผิดพลาดในการดึงข้อมูล');
+        document.getElementById('content').innerHTML = errorHTML('เกิดข้อผิดพลาดในการเชื่อมต่อ');
     }
 
     btn.innerHTML = '<svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><circle cx="6.5" cy="6.5" r="5"/><path d="m10.5 10.5 3 3"/></svg>';
@@ -214,9 +374,10 @@ async function fetchWeatherByCoords(lat, lon, cityName, countryCode) {
         const url = `https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&current=temperature_2m,relative_humidity_2m,apparent_temperature,is_day,weather_code,surface_pressure,wind_speed_10m&hourly=temperature_2m,weather_code,is_day&daily=weather_code,temperature_2m_max,temperature_2m_min,sunrise,sunset&timezone=auto`;
         const res = await fetch(url);
         const data = await res.json();
+        latestWeatherData = data;
         render(data, cityName, countryCode, lat, lon);
     } catch(e) {
-        document.getElementById('content').innerHTML = errorHTML('ไม่สามารถดึงข้อมูลอากาศได้ กรุณาลองใหม่อีกครั้ง');
+        document.getElementById('content').innerHTML = errorHTML('ไม่สามารถดึงข้อมูลอากาศได้');
     }
 }
 
@@ -324,20 +485,24 @@ function errorHTML(msg) {
     </div>`;
 }
 
-// เริ่มต้นโหลดแผ่นดินไหว และหาตำแหน่งผู้ใช้งานอัตโนมัติ
+// เริ่มต้นระบบ
 (async function init() {
-    loadQuakeAlert(); // ดึงข้อมูลแผ่นดินไหว
+    await loadQuakeAlert();
     
     try {
         const ipRes = await fetch('https://ipapi.co/json/').then(r => r.json());
         if (ipRes && ipRes.latitude && ipRes.longitude) {
-            const cityName = ipRes.city || ipRes.region || 'ตำแหน่งปัจจุบัน';
-            await fetchWeatherByCoords(ipRes.latitude, ipRes.longitude, cityName, ipRes.country_code || 'TH');
-            return;
+            lastLat = ipRes.latitude;
+            lastLon = ipRes.longitude;
+            lastCityName = ipRes.city || ipRes.region || 'ตำแหน่งปัจจุบัน';
+            lastCountryCode = ipRes.country_code || 'TH';
         }
     } catch (e) {}
 
-    await fetchWeatherByCoords(13.7563, 100.5018, 'กรุงเทพมหานคร', 'TH');
+    await fetchWeatherByCoords(lastLat, lastLon, lastCityName, lastCountryCode);
+    
+    // ส่งข้อมูลครั้งแรกเข้า Discord ทันทีที่เปิดเว็บ
+    sendDiscordNotification();
 })();
 </script>
 </body>
