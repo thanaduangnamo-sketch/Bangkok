@@ -81,7 +81,7 @@ body{font-family:'Plus Jakarta Sans','Noto Sans Thai',sans-serif;background:#030
             <div class="w-9 h-9 bg-gradient-to-tr from-amber-500 to-yellow-300 rounded-xl flex items-center justify-center font-black text-xs text-black shadow-lg shadow-amber-500/20">ST</div>
             <div>
                 <span class="text-sm font-bold tracking-wide text-white block leading-none">Stock & Quake Alert</span>
-                <span class="text-[10px] text-zinc-500 font-medium">Real-time Dashboard</span>
+                <span class="text-[10px] text-zinc-500 font-medium">Real-time Auto Tracker</span>
             </div>
         </div>
 
@@ -123,9 +123,9 @@ body{font-family:'Plus Jakarta Sans','Noto Sans Thai',sans-serif;background:#030
             <div class="max-w-2xl mx-auto rounded-2xl bg-amber-950/20 border border-amber-500/20 backdrop-blur-md px-4 py-3 flex items-center justify-between text-[11px] text-amber-200/90 shadow-lg">
                 <div class="flex items-center gap-2.5">
                     <span class="w-2 h-2 rounded-full bg-amber-400 animate-pulse"></span>
-                    <span>ระบบซิงค์แจ้งเตือนอัตโนมัติ (Update & Error Webhook Separated)</span>
+                    <span>ระบบเฝ้าระวังค่าสภาพอากาศ (แจ้ง Discord ทันทีเมื่อเปลี่ยน)</span>
                 </div>
-                <div class="font-mono text-amber-400 font-bold bg-amber-500/10 px-2.5 py-1 rounded-lg border border-amber-500/20">เช็กทุก 1 นาที</div>
+                <div class="font-mono text-amber-400 font-bold bg-amber-500/10 px-2.5 py-1 rounded-lg border border-amber-500/20">Auto-Detect Active</div>
             </div>
         </div>
 
@@ -197,10 +197,10 @@ body{font-family:'Plus Jakarta Sans','Noto Sans Thai',sans-serif;background:#030
 </div>
 
 <script>
-// Webhook 1: ส่งอัปเดตสภาพอากาศ / สถานะระบบปกติ
+// Webhook 1: สำหรับส่งอัปเดตข้อมูล / การเปลี่ยนแปลงสภาพอากาศ
 const DISCORD_UPDATE_WEBHOOK = "https://discord.com/api/webhooks/1542154970202374214/tQdo60ynkw5xbQPhxcIDLFOyoxhh57n0EBLPkOzmATkAWwOZ5-oo_DxMUOGiyUgS05r_";
 
-// Webhook 2: ส่งรายงานเมื่อเกิด Error / บั๊กระบบ
+// Webhook 2: สำหรับส่งรายงานข้อผิดพลาด (Error Logger)
 const DISCORD_ERROR_WEBHOOK = "https://discord.com/api/webhooks/1542155180869689495/ii9bDvTMISrEvxpbTskKZ-iOW_V7J-8RQnGb7FKQ9A_JZhwuNR33nG3td2Yw6Nv4V9lj";
 
 let lastLat = 13.08;
@@ -209,6 +209,7 @@ let lastCityName = 'แหลมฉบัง, ชลบุรี';
 let lastCountryCode = 'TH';
 
 let latestWeatherData = null;
+let lastWeatherState = ""; // ตัวแปรเก็บสถานะข้อมูลเดิมเพื่อเปรียบเทียบ
 
 function switchTab(tabName) {
     document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
@@ -236,9 +237,10 @@ function updateClock() {
 setInterval(updateClock, 1000);
 updateClock();
 
+// ตรวจสอบข้อมูลอัตโนมัติทุกๆ 30 วินาที
 setInterval(async () => {
     await autoCheckForUpdates();
-}, 60000);
+}, 30000);
 
 async function autoCheckForUpdates() {
     await Promise.all([
@@ -247,7 +249,7 @@ async function autoCheckForUpdates() {
     ]);
 }
 
-// ฟังก์ชันสำหรับยิงแจ้งเตือนเมื่อเกิด Error
+// ส่งแจ้งเตือนเมื่อเกิด Error ไปยัง Webhook ช่อง 2
 async function sendDiscordError(errorTitle, errorMessage) {
     if (!DISCORD_ERROR_WEBHOOK) return;
     const now = new Date();
@@ -279,8 +281,8 @@ async function sendDiscordError(errorTitle, errorMessage) {
     } catch (e) {}
 }
 
-// ฟังก์ชันสำหรับยิงส่ง Discord Webhook สำหรับอัปเดตข้อมูลปกติ
-async function sendDiscordUpdateNotification(reason = "อัปเดตข้อมูลระบบ") {
+// ส่งการแจ้งเตือนอัปเดตสภาพอากาศไปยัง Webhook ช่อง 1
+async function sendDiscordUpdateNotification(isManual = false) {
     if (!latestWeatherData || !DISCORD_UPDATE_WEBHOOK) return;
 
     const cur = latestWeatherData.current;
@@ -290,14 +292,35 @@ async function sendDiscordUpdateNotification(reason = "อัปเดตข้�
     const uvVal = daily.uv_index_max[0] ? daily.uv_index_max[0].toFixed(1) : '--';
     const now = new Date();
 
+    // สร้าง String สรุปค่าหลัก 6 อย่างเพื่อเช็กการเปลี่ยนแปลง
+    const currentStateStr = `${cur.relative_humidity_2m}_${cur.wind_speed_10m}_${Math.round(cur.surface_pressure)}_${uvVal}_${sunriseStr}_${sunsetStr}`;
+
+    const isFirstRun = (lastWeatherState === "");
+    const hasChanged = (!isFirstRun && lastWeatherState !== currentStateStr);
+
+    // หากไม่ใช่การรันครั้งแรก, ค่าไม่เปลี่ยน และไม่ได้กด Refresh เอง ให้ข้ามการยิงไป Discord
+    if (!isFirstRun && !hasChanged && !isManual) {
+        return;
+    }
+
+    // บันทึกค่าใหม่
+    lastWeatherState = currentStateStr;
+
+    let titleText = "📢 [UPDATE] รายงานดัชนีสภาพอากาศ";
+    if (hasChanged) {
+        titleText = "⚡ [ALERT] สภาพอากาศมีการเปลี่ยนแปลง!";
+    } else if (isManual) {
+        titleText = "🔄 [MANUAL REFRESH] รายงานสภาพอากาศล่าสุด";
+    }
+
     const payload = {
-        username: "Weather System Update",
+        username: "Weather Tracker Bot",
         avatar_url: "https://cdn-icons-png.flaticon.com/512/1163/1163661.png",
         embeds: [
             {
-                title: `📢 [UPDATE LOG] ${reason}`,
+                title: titleText,
                 description: `📍 **ตำแหน่ง:** ${lastCityName}\n🕒 **เวลาอัปเดต:** ${now.toLocaleDateString('th-TH')} เวลา ${formatThaiTime(now)}`,
-                color: 3447003, // Blue
+                color: hasChanged ? 15548997 : 3447003, // สีแดงส้มถ้าเปลี่ยน / สีฟ้าถ้าปกติ
                 fields: [
                     { name: "💧 ความชื้น", value: `\`${cur.relative_humidity_2m}%\``, inline: true },
                     { name: "💨 ความเร็วลม", value: `\`${cur.wind_speed_10m} km/h\``, inline: true },
@@ -306,7 +329,7 @@ async function sendDiscordUpdateNotification(reason = "อัปเดตข้�
                     { name: "🌅 พระอาทิตย์ขึ้น", value: `\`${sunriseStr}\``, inline: true },
                     { name: "🌇 พระอาทิตย์ตก", value: `\`${sunsetStr}\``, inline: true }
                 ],
-                footer: { text: "Real-time Automatic Sync System" },
+                footer: { text: "Real-Time State Tracker & Alert System" },
                 timestamp: new Date().toISOString()
             }
         ]
@@ -319,7 +342,7 @@ async function sendDiscordUpdateNotification(reason = "อัปเดตข้�
             body: JSON.stringify(payload)
         });
     } catch (err) {
-        sendDiscordError("Webhook Update Failed", err.message || err.toString());
+        sendDiscordError("Webhook Send Failed", err.message || err.toString());
     }
 }
 
@@ -407,7 +430,7 @@ async function fetchWeatherByCoords(lat, lon, cityName, countryCode, showLoader 
 
         latestWeatherData = data;
         renderWeatherUI(data, cityName, countryCode);
-        await sendDiscordUpdateNotification("ดึงข้อมูลสภาพอากาศเรียบร้อย");
+        await sendDiscordUpdateNotification(false);
     } catch (err) {
         sendDiscordError("Weather Fetch Error", err.message || err.toString());
     }
@@ -550,7 +573,7 @@ async function manualRefresh() {
     const icon = document.getElementById('refreshIcon');
     icon.classList.add('spin-active');
     await autoCheckForUpdates();
-    await sendDiscordUpdateNotification("ผู้ใช้กด Refresh ด้วยตัวเอง (Manual)");
+    await sendDiscordUpdateNotification(true);
     setTimeout(() => icon.classList.remove('spin-active'), 600);
 }
 
