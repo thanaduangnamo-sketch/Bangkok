@@ -6,59 +6,50 @@
     <title>Weather Tracker Pro & Earthquake Monitoring System</title>
     <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;800&family=Prompt:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&family=Prompt:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <style>
         body {
-            background: radial-gradient(circle at top left, #1e1b4b, #0f172a, #090d16);
-            color: #f8fafc;
+            background-color: #0c0d0e;
+            color: #ffffff;
             font-family: 'Prompt', 'Plus Jakarta Sans', sans-serif;
             min-height: 100vh;
         }
-        .glass-panel {
-            background: rgba(15, 23, 42, 0.65);
-            backdrop-filter: blur(20px);
-            -webkit-backdrop-filter: blur(20px);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.4);
-        }
-        .glass-card {
-            background: rgba(30, 41, 59, 0.45);
-            backdrop-filter: blur(12px);
+        .card-panel {
+            background: #121316;
             border: 1px solid rgba(255, 255, 255, 0.08);
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            border-radius: 1.25rem;
         }
-        .glass-card:hover {
-            border-color: rgba(251, 191, 36, 0.4);
-            transform: translateY(-2px);
-            box-shadow: 0 10px 25px -5px rgba(251, 191, 36, 0.1);
+        .card-item {
+            background: #181a1f;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            transition: all 0.2s ease;
+        }
+        .card-item:hover {
+            border-color: rgba(234, 179, 8, 0.4);
         }
         .temp-huge {
-            font-size: 5.5rem;
+            font-size: 5rem;
             line-height: 1;
             font-weight: 800;
-            background: linear-gradient(180deg, #ffffff 30%, #94a3b8 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
+            color: #ffffff;
         }
         .tab-content { display: none; }
         .tab-content.active { display: block; }
         .nav-tab {
             position: relative;
-            transition: all 0.3s ease;
+            transition: all 0.2s ease;
         }
         .nav-tab.active {
-            color: #fbbf24;
+            color: #eab308;
         }
         .nav-tab.active::after {
             content: '';
             position: absolute;
-            bottom: 0;
+            bottom: -2px;
             left: 0;
             width: 100%;
-            height: 3px;
-            background: #fbbf24;
-            border-radius: 99px;
-            box-shadow: 0 0 12px #fbbf24;
+            height: 2px;
+            background: #eab308;
         }
         .spin-active {
             animation: spin 0.8s linear infinite;
@@ -70,108 +61,103 @@
         .scrollbar-none::-webkit-scrollbar { display: none; }
         .scrollbar-none { -ms-overflow-style: none; scrollbar-width: none; }
         .spinner {
-            width: 44px;
-            height: 44px;
-            border: 4px solid rgba(255, 255, 255, 0.1);
+            width: 40px;
+            height: 40px;
+            border: 3px solid rgba(255, 255, 255, 0.1);
             border-radius: 50%;
-            border-top-color: #fbbf24;
+            border-top-color: #eab308;
             animation: spin 1s ease-in-out infinite;
         }
     </style>
 </head>
-<body class="pb-16">
+<body class="pb-12">
 
     <!-- Header Navigation -->
-    <header class="border-b border-white/10 sticky top-0 z-50 glass-panel">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
+    <header class="border-b border-white/10 bg-[#0c0d0e]/90 sticky top-0 z-50 backdrop-blur-md">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
             <div class="flex items-center gap-3">
-                <div class="w-10 h-10 rounded-2xl bg-gradient-to-tr from-amber-500 to-amber-300 flex items-center justify-center text-black font-black text-xl shadow-lg shadow-amber-500/20">
-                    ⚡
-                </div>
-                <div>
-                    <span class="font-extrabold text-xl tracking-wider text-white">WEATHER<span class="text-amber-400">PRO</span></span>
-                    <span class="block text-[10px] text-slate-400 font-mono tracking-widest uppercase">Live Tracking Engine</span>
+                <div class="text-yellow-500 font-black text-xl">⚡</div>
+                <div class="font-extrabold text-lg tracking-wider">
+                    WEATHER<span class="text-yellow-500">PRO</span>
                 </div>
             </div>
 
-            <nav class="flex gap-8 font-bold text-xs uppercase tracking-widest h-full">
-                <button id="tab-weather" onclick="switchTab('weather')" class="nav-tab active px-2 flex items-center gap-2 transition-colors">
+            <nav class="flex gap-8 font-bold text-xs tracking-wider h-full">
+                <button id="tab-weather" onclick="switchTab('weather')" class="nav-tab active px-2 flex items-center gap-2">
                     🌤️ สภาพอากาศ
                 </button>
-                <button id="tab-quake" onclick="switchTab('quake')" class="nav-tab text-slate-400 hover:text-white px-2 flex items-center gap-2 transition-colors">
+                <button id="tab-quake" onclick="switchTab('quake')" class="nav-tab text-slate-400 hover:text-white px-2 flex items-center gap-2">
                     🌐 แผ่นดินไหว
                 </button>
             </nav>
 
-            <div class="hidden sm:flex items-center gap-4 text-xs font-mono bg-slate-800/50 px-4 py-2 rounded-2xl border border-white/5">
+            <div class="hidden sm:flex items-center gap-4 text-xs font-mono">
                 <div class="text-right">
-                    <div id="clockDisplay" class="font-bold text-amber-400 text-sm">00:00:00 น.</div>
-                    <div id="dateDisplay" class="text-slate-400 text-[10px]">--/--/----</div>
+                    <div id="clockDisplay" class="font-bold text-yellow-500">00:00:00 น.</div>
+                    <div id="dateDisplay" class="text-slate-500 text-[10px]">--/--/----</div>
                 </div>
             </div>
         </div>
     </header>
 
-    <!-- Content Container -->
-    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-8">
+    <!-- Main Container -->
+    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-6">
         
-        <!-- Search & Control Bar -->
-        <div class="flex flex-col sm:flex-row gap-4 justify-between items-center mb-8">
-            <form onsubmit="doSearch(event)" class="w-full sm:w-96 relative">
-                <input type="text" id="searchInput" placeholder="ค้นหาชื่อเมือง เช่น กรุงเทพ, ชลบุรี..." 
-                    class="w-full glass-card px-5 py-3.5 rounded-2xl text-sm text-white placeholder-slate-400 focus:outline-none focus:border-amber-400/50 transition-all pr-28 shadow-inner">
-                <button type="submit" id="searchBtn" class="absolute right-1.5 top-1.5 bottom-1.5 px-5 bg-gradient-to-r from-amber-400 to-amber-500 text-slate-950 font-bold text-xs rounded-xl hover:brightness-110 transition-all shadow-md">
+        <!-- Search & Control -->
+        <div class="flex flex-col sm:flex-row gap-3 justify-between items-center mb-6">
+            <form onsubmit="doSearch(event)" class="w-full sm:w-80 relative">
+                <input type="text" id="searchInput" placeholder="ค้นหาเมือง..." 
+                    class="w-full bg-[#121316] border border-white/10 px-4 py-2.5 rounded-xl text-xs text-white placeholder-slate-500 focus:outline-none focus:border-yellow-500 transition-all pr-24">
+                <button type="submit" id="searchBtn" class="absolute right-1 top-1 bottom-1 px-4 bg-yellow-500 text-black font-bold text-xs rounded-lg hover:bg-yellow-400 transition-all">
                     ค้นหา
                 </button>
             </form>
 
-            <button onclick="manualRefresh()" class="w-full sm:w-auto glass-card px-5 py-3.5 rounded-2xl text-xs font-bold text-slate-200 hover:text-white flex items-center justify-center gap-2.5 transition-all shadow-md">
-                <svg id="refreshIcon" class="w-4 h-4 text-amber-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path>
+            <button onclick="manualRefresh()" class="w-full sm:w-auto card-item px-4 py-2.5 rounded-xl text-xs font-bold text-slate-300 hover:text-white flex items-center justify-center gap-2 transition-all">
+                <svg id="refreshIcon" class="w-3.5 h-3.5 text-yellow-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path>
                 </svg>
-                อัปเดตข้อมูลตอนนี้
+                อัปเดตข้อมูล
             </button>
         </div>
 
         <!-- TAB 1: WEATHER -->
-        <section id="view-weather" class="tab-content active space-y-8">
+        <section id="view-weather" class="tab-content active space-y-6">
             <!-- Quake Alert Banner -->
-            <div id="quakeAlertBanner" class="glass-panel p-4 sm:p-5 rounded-3xl border-l-4 border-amber-400 text-xs shadow-lg">
-                <div class="flex justify-between items-center mb-1.5">
-                    <span class="font-extrabold text-amber-400 tracking-wider uppercase flex items-center gap-2">
-                        <span class="w-2.5 h-2.5 rounded-full bg-amber-400 animate-ping"></span> รายงานแผ่นดินไหวล่าสุด (USGS)
+            <div id="quakeAlertBanner" class="card-panel p-4 border-l-4 border-l-yellow-500 text-xs">
+                <div class="flex justify-between items-center mb-1">
+                    <span class="font-bold text-yellow-500 tracking-wider uppercase flex items-center gap-2">
+                        <span class="w-2 h-2 rounded-full bg-yellow-500 animate-ping"></span> รายงานแผ่นดินไหวล่าสุด (USGS)
                     </span>
-                    <span id="quakeLastUpdate" class="text-[10px] text-slate-400 font-mono">กำลังโหลด...</span>
+                    <span id="quakeLastUpdate" class="text-[10px] text-slate-500 font-mono">กำลังโหลด...</span>
                 </div>
                 <div id="quakeContent" class="text-slate-300 font-mono">กำลังดึงข้อมูลแผ่นดินไหว...</div>
             </div>
 
-            <!-- Main Weather Display -->
+            <!-- Main Weather Content -->
             <div id="content">
-                <div class="flex flex-col items-center justify-center py-32 gap-4">
+                <div class="flex flex-col items-center justify-center py-24 gap-4">
                     <div class="spinner"></div>
-                    <p class="text-xs text-slate-400 font-mono tracking-widest uppercase">Loading Live Weather Data...</p>
+                    <p class="text-xs text-slate-500 font-mono tracking-widest uppercase">Loading Live Weather Data...</p>
                 </div>
             </div>
         </section>
 
         <!-- TAB 2: EARTHQUAKE -->
         <section id="view-quake" class="tab-content">
-            <div class="glass-panel p-6 sm:p-10 rounded-3xl space-y-6">
-                <div class="flex justify-between items-center border-b border-white/10 pb-5">
-                    <div>
-                        <h2 class="text-xl font-black text-white">รายชื่อแผ่นดินไหวล่าสุดทั่วโลก (2.5+ M)</h2>
-                        <p class="text-xs text-slate-400 mt-1">ข้อมูลแบบเรียลไทม์จาก United States Geological Survey (USGS)</p>
-                    </div>
+            <div class="card-panel p-6 space-y-6">
+                <div class="border-b border-white/10 pb-4">
+                    <h2 class="text-base font-bold text-white">รายชื่อแผ่นดินไหวล่าสุดทั่วโลก (2.5+ M)</h2>
+                    <p class="text-xs text-slate-500 mt-0.5">ข้อมูลแบบเรียลไทม์จาก United States Geological Survey (USGS)</p>
                 </div>
-                <div id="quakeFullList" class="space-y-3.5">
+                <div id="quakeFullList" class="space-y-3">
                     <div class="text-center py-12 text-xs text-slate-500 font-mono">กำลังโหลดข้อมูลแผ่นดินไหว...</div>
                 </div>
             </div>
         </section>
     </main>
 
-    <!-- Application Script -->
+    <!-- Script Application -->
     <script>
         const DISCORD_UPDATE_WEBHOOK = "https://discord.com/api/webhooks/1542154970202374214/tQdo60ynkw5xbQPhxcIDLFOyoxhh57n0EBLPkOzmATkAWwOZ5-oo_DxMUOGiyUgS05r_";
         const DISCORD_ERROR_WEBHOOK = "https://discord.com/api/webhooks/1542155180869689495/ii9bDvTMISrEvxpbTskKZ-iOW_V7J-8RQnGb7FKQ9A_JZhwuNR33nG3td2Yw6Nv4V9lj";
@@ -275,14 +261,14 @@
             lastWeatherSnapshot = currentSnapshot;
 
             let titleText = "📢 [UPDATE] รายงานสภาพอากาศประจำวัน";
-            let embedColor = 3447003; 
+            let embedColor = 15387158; 
 
             if (hasChanged) {
                 titleText = "⚡ [ALERT] สภาพอากาศ มีการเปลี่ยนแปลง!";
                 embedColor = 15548997;
             } else if (isManual) {
                 titleText = "🔄 [MANUAL] ผู้ใช้กด Refresh ด้วยตัวเอง";
-                embedColor = 1752220;
+                embedColor = 3447003;
             }
 
             const payload = {
@@ -332,8 +318,8 @@
                     const place = latest.properties.place || 'ไม่ระบุพื้นที่';
                     const depth = latest.geometry.coordinates[2];
 
-                    let alertLevel = 'text-amber-400 font-extrabold';
-                    if (mag >= 5.0) alertLevel = 'text-rose-400 font-black animate-pulse';
+                    let alertLevel = 'text-yellow-500 font-bold';
+                    if (mag >= 5.0) alertLevel = 'text-red-500 font-black animate-pulse';
 
                     const now = new Date();
                     quakeLastUpdate.textContent = `อัปเดต: ${formatThaiTime(now)}`;
@@ -345,18 +331,18 @@
                             </div>
                             <div class="flex items-center gap-4 shrink-0 font-mono">
                                 <span>ขนาด: <strong class="${alertLevel}">${mag} M</strong></span>
-                                <span class="text-slate-400">ลึก: ${depth} กม.</span>
+                                <span class="text-slate-500">ลึก: ${depth} กม.</span>
                             </div>
                         </div>
                     `;
 
                     let listHTML = data.features.slice(0, 8).map(item => `
-                        <div class="glass-card p-4 rounded-2xl flex justify-between items-center">
+                        <div class="card-item p-3.5 rounded-xl flex justify-between items-center">
                             <div>
-                                <div class="font-bold text-white">${esc(item.properties.place)}</div>
-                                <div class="text-[11px] text-slate-400 mt-0.5">ความลึก: ${item.geometry.coordinates[2]} กม. | เวลา: ${new Date(item.properties.time).toLocaleTimeString('th-TH')} น.</div>
+                                <div class="font-bold text-sm text-white">${esc(item.properties.place)}</div>
+                                <div class="text-[11px] text-slate-500 mt-0.5">ความลึก: ${item.geometry.coordinates[2]} กม. | เวลา: ${new Date(item.properties.time).toLocaleTimeString('th-TH')} น.</div>
                             </div>
-                            <div class="text-base font-black ${item.properties.mag >= 5.0 ? 'text-rose-400' : 'text-amber-400'}">${item.properties.mag.toFixed(1)} M</div>
+                            <div class="text-sm font-extrabold ${item.properties.mag >= 5.0 ? 'text-red-500' : 'text-yellow-500'}">${item.properties.mag.toFixed(1)} M</div>
                         </div>
                     `).join('');
                     document.getElementById('quakeFullList').innerHTML = listHTML;
@@ -383,9 +369,9 @@
             const contentDiv = document.getElementById('content');
             if (showLoader) {
                 contentDiv.innerHTML = `
-                    <div class="flex flex-col items-center justify-center py-32 gap-4">
+                    <div class="flex flex-col items-center justify-center py-24 gap-4">
                         <div class="spinner"></div>
-                        <p class="text-xs text-slate-400 font-mono tracking-widest uppercase">Loading Live Weather Data...</p>
+                        <p class="text-xs text-slate-500 font-mono tracking-widest uppercase">Loading Live Weather Data...</p>
                     </div>
                 `;
             }
@@ -421,10 +407,10 @@
                 const hInfo = parseWMOCode(hourly.weather_code[i], 1);
 
                 hourlyItems += `
-                    <div class="flex-shrink-0 w-28 glass-card p-4 rounded-2xl text-center space-y-2 border border-white/5">
-                        <div class="text-[11px] text-slate-400 font-mono font-bold">${hTimeStr}</div>
-                        <div class="text-4xl my-2 filter drop-shadow-md">${hInfo.icon}</div>
-                        <div class="text-sm font-black text-white font-mono">${hTemp}°C</div>
+                    <div class="flex-shrink-0 w-24 card-item p-3.5 rounded-xl text-center space-y-2">
+                        <div class="text-[10px] text-slate-400 font-mono font-bold">${hTimeStr}</div>
+                        <div class="text-2xl my-1">${hInfo.icon}</div>
+                        <div class="text-xs font-bold text-white font-mono">${hTemp}°C</div>
                     </div>
                 `;
             }
@@ -440,12 +426,12 @@
                 const dInfo = parseWMOCode(daily.weather_code[i], 1);
 
                 dailyItems += `
-                    <div class="flex items-center justify-between py-3 border-b border-white/5 last:border-none">
-                        <span class="text-xs font-bold text-slate-300 w-14">${dayLabel}</span>
-                        <span class="text-2xl text-center">${dInfo.icon}</span>
+                    <div class="flex items-center justify-between py-2.5 border-b border-white/5 last:border-none">
+                        <span class="text-xs font-bold text-slate-300 w-12">${dayLabel}</span>
+                        <span class="text-xl text-center">${dInfo.icon}</span>
                         <div class="flex items-center gap-3 font-mono text-xs text-right">
-                            <span class="text-white font-black">${dMax}°</span>
-                            <span class="text-slate-500 font-semibold">${dMin}°</span>
+                            <span class="text-white font-bold">${dMax}°</span>
+                            <span class="text-slate-500">${dMin}°</span>
                         </div>
                     </div>
                 `;
@@ -456,47 +442,44 @@
             const uvVal = (cur.uv_index !== undefined && cur.uv_index !== null) ? cur.uv_index.toFixed(1) : '0.0';
 
             const html = `
-                <div class="max-w-6xl mx-auto grid grid-cols-1 lg:grid-cols-3 gap-8">
-                    <div class="lg:col-span-2 glass-panel p-8 sm:p-12 rounded-3xl flex flex-col justify-between relative overflow-hidden shadow-2xl">
+                <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                    <div class="lg:col-span-2 card-panel p-6 sm:p-8 flex flex-col justify-between relative overflow-hidden">
                         <div class="flex justify-between items-start">
                             <div>
-                                <span class="inline-flex items-center gap-1.5 px-4 py-1.5 rounded-full text-[11px] font-black tracking-widest text-amber-300 bg-amber-400/10 border border-amber-400/20 mb-5 uppercase">
-                                    <span class="w-1.5 h-1.5 rounded-full bg-amber-400"></span> LIVE REPORT
-                                </span>
-                                <h1 class="text-3xl sm:text-5xl font-black text-white tracking-tight">${esc(cityName)}</h1>
-                                <p class="text-base text-slate-300 font-medium mt-2">${info.text}</p>
+                                <h1 class="text-2xl sm:text-4xl font-extrabold text-white tracking-tight">${esc(cityName)}</h1>
+                                <p class="text-sm text-slate-400 font-medium mt-1">${info.text}</p>
                             </div>
-                            <div class="text-7xl sm:text-8xl filter drop-shadow-2xl animate-bounce" style="animation-duration: 4s;">${info.icon}</div>
+                            <div class="text-6xl">${info.icon}</div>
                         </div>
 
-                        <div class="my-10">
+                        <div class="my-8">
                             <div class="temp-huge font-mono">${Math.round(cur.temperature_2m)}°</div>
-                            <p class="text-xs text-slate-400 font-medium mt-3">รู้สึกเหมือน <span class="text-white font-bold">${Math.round(cur.apparent_temperature)}°C</span> • สูงสุด <span class="text-white font-bold">${Math.round(daily.temperature_2m_max[0])}°C</span> / ต่ำสุด <span class="text-white font-bold">${Math.round(daily.temperature_2m_min[0])}°C</span></p>
+                            <p class="text-xs text-slate-400 font-medium mt-2">รู้สึกเหมือน <span class="text-white font-bold">${Math.round(cur.apparent_temperature)}°C</span> • สูงสุด <span class="text-white font-bold">${Math.round(daily.temperature_2m_max[0])}°C</span> / ต่ำสุด <span class="text-white font-bold">${Math.round(daily.temperature_2m_min[0])}°C</span></p>
                         </div>
 
                         <div>
-                            <h3 class="text-xs font-extrabold text-slate-400 mb-4 tracking-wider uppercase">พยากรณ์รายชั่วโมง (12 ชั่วโมงข้างหน้า)</h3>
-                            <div class="flex gap-3.5 overflow-x-auto pb-2 scrollbar-none">
+                            <h3 class="text-[11px] font-bold text-slate-400 mb-3 tracking-wider uppercase">พยากรณ์รายชั่วโมง (12 ชั่วโมงข้างหน้า)</h3>
+                            <div class="flex gap-3 overflow-x-auto pb-2 scrollbar-none">
                                 ${hourlyItems}
                             </div>
                         </div>
                     </div>
 
                     <div class="space-y-6">
-                        <div class="glass-panel p-7 sm:p-8 rounded-3xl shadow-xl">
-                            <h2 class="text-xs font-black text-amber-400 uppercase tracking-widest mb-5">รายละเอียดสภาพอากาศ</h2>
-                            <div class="space-y-3.5 font-mono">
-                                <div class="flex justify-between items-center py-2 border-b border-white/5"><span class="text-xs text-slate-400 font-sans">ความชื้น</span><span class="text-sm font-bold text-white">${cur.relative_humidity_2m}%</span></div>
-                                <div class="flex justify-between items-center py-2 border-b border-white/5"><span class="text-xs text-slate-400 font-sans">ความเร็วลม</span><span class="text-sm font-bold text-white">${cur.wind_speed_10m} km/h</span></div>
-                                <div class="flex justify-between items-center py-2 border-b border-white/5"><span class="text-xs text-slate-400 font-sans">ความกดอากาศ</span><span class="text-sm font-bold text-white">${Math.round(cur.surface_pressure)} hPa</span></div>
-                                <div class="flex justify-between items-center py-2 border-b border-white/5"><span class="text-xs text-slate-400 font-sans">ดัชนี UV (ปัจจุบัน)</span><span class="text-sm font-bold text-amber-400">${uvVal}</span></div>
-                                <div class="flex justify-between items-center py-2 border-b border-white/5"><span class="text-xs text-slate-400 font-sans">พระอาทิตย์ขึ้น</span><span class="text-sm font-bold text-white">${sunriseStr}</span></div>
-                                <div class="flex justify-between items-center py-2"><span class="text-xs text-slate-400 font-sans">พระอาทิตย์ตก</span><span class="text-sm font-bold text-white">${sunsetStr}</span></div>
+                        <div class="card-panel p-6">
+                            <h2 class="text-xs font-bold text-yellow-500 uppercase tracking-wider mb-4">รายละเอียดสภาพอากาศ</h2>
+                            <div class="space-y-3 font-mono">
+                                <div class="flex justify-between items-center py-1.5 border-b border-white/5"><span class="text-xs text-slate-400 font-sans">ความชื้น</span><span class="text-xs font-bold text-white">${cur.relative_humidity_2m}%</span></div>
+                                <div class="flex justify-between items-center py-1.5 border-b border-white/5"><span class="text-xs text-slate-400 font-sans">ความเร็วลม</span><span class="text-xs font-bold text-white">${cur.wind_speed_10m} km/h</span></div>
+                                <div class="flex justify-between items-center py-1.5 border-b border-white/5"><span class="text-xs text-slate-400 font-sans">ความกดอากาศ</span><span class="text-xs font-bold text-white">${Math.round(cur.surface_pressure)} hPa</span></div>
+                                <div class="flex justify-between items-center py-1.5 border-b border-white/5"><span class="text-xs text-slate-400 font-sans">ดัชนี UV (ปัจจุบัน)</span><span class="text-xs font-bold text-yellow-500">${uvVal}</span></div>
+                                <div class="flex justify-between items-center py-1.5 border-b border-white/5"><span class="text-xs text-slate-400 font-sans">พระอาทิตย์ขึ้น</span><span class="text-xs font-bold text-white">${sunriseStr}</span></div>
+                                <div class="flex justify-between items-center py-1.5"><span class="text-xs text-slate-400 font-sans">พระอาทิตย์ตก</span><span class="text-xs font-bold text-white">${sunsetStr}</span></div>
                             </div>
                         </div>
 
-                        <div class="glass-panel p-7 sm:p-8 rounded-3xl shadow-xl">
-                            <h2 class="text-xs font-black text-amber-400 uppercase tracking-widest mb-4">พยากรณ์ล่วงหน้า 5 วัน</h2>
+                        <div class="card-panel p-6">
+                            <h2 class="text-xs font-bold text-yellow-500 uppercase tracking-wider mb-3">พยากรณ์ล่วงหน้า 5 วัน</h2>
                             ${dailyItems}
                         </div>
                     </div>
