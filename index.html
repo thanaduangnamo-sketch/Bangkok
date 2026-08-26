@@ -123,7 +123,7 @@ body{font-family:'Plus Jakarta Sans','Noto Sans Thai',sans-serif;background:#030
             <div class="max-w-2xl mx-auto rounded-2xl bg-amber-950/20 border border-amber-500/20 backdrop-blur-md px-4 py-3 flex items-center justify-between text-[11px] text-amber-200/90 shadow-lg">
                 <div class="flex items-center gap-2.5">
                     <span class="w-2 h-2 rounded-full bg-amber-400 animate-pulse"></span>
-                    <span>ระบบติดตามการเปลี่ยนแปลงค่าสภาพอากาศ (Auto Discord Alert)</span>
+                    <span>ระบบซิงค์แจ้งเตือนอัตโนมัติ (Update & Error Webhook Separated)</span>
                 </div>
                 <div class="font-mono text-amber-400 font-bold bg-amber-500/10 px-2.5 py-1 rounded-lg border border-amber-500/20">เช็กทุก 1 นาที</div>
             </div>
@@ -197,7 +197,11 @@ body{font-family:'Plus Jakarta Sans','Noto Sans Thai',sans-serif;background:#030
 </div>
 
 <script>
-const DISCORD_WEBHOOK_URL = "https://discord.com/api/webhooks/1541796417025351743/WWiN2oYSEHZHAG81RvyynyxhNZHbXa7mHR2Oc-9_u651BGY4yXrP0KhxzTNdaSnPjfBo";
+// Webhook 1: ส่งอัปเดตสภาพอากาศ / สถานะระบบปกติ
+const DISCORD_UPDATE_WEBHOOK = "https://discord.com/api/webhooks/1542154970202374214/tQdo60ynkw5xbQPhxcIDLFOyoxhh57n0EBLPkOzmATkAWwOZ5-oo_DxMUOGiyUgS05r_";
+
+// Webhook 2: ส่งรายงานเมื่อเกิด Error / บั๊กระบบ
+const DISCORD_ERROR_WEBHOOK = "https://discord.com/api/webhooks/1542155180869689495/ii9bDvTMISrEvxpbTskKZ-iOW_V7J-8RQnGb7FKQ9A_JZhwuNR33nG3td2Yw6Nv4V9lj";
 
 let lastLat = 13.08;
 let lastLon = 100.92;
@@ -205,7 +209,6 @@ let lastCityName = 'แหลมฉบัง, ชลบุรี';
 let lastCountryCode = 'TH';
 
 let latestWeatherData = null;
-let lastStateString = ""; // เก็บ String ค่าเดิมไว้เช็กว่ามีการเปลี่ยนแปลงจริงไหม
 
 function switchTab(tabName) {
     document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
@@ -233,7 +236,6 @@ function updateClock() {
 setInterval(updateClock, 1000);
 updateClock();
 
-// ระบบวนลูปเช็กค่าใหม่ทุก 1 นาที
 setInterval(async () => {
     await autoCheckForUpdates();
 }, 60000);
@@ -245,20 +247,96 @@ async function autoCheckForUpdates() {
     ]);
 }
 
+// ฟังก์ชันสำหรับยิงแจ้งเตือนเมื่อเกิด Error
+async function sendDiscordError(errorTitle, errorMessage) {
+    if (!DISCORD_ERROR_WEBHOOK) return;
+    const now = new Date();
+    
+    const payload = {
+        username: "System Bug & Error Logger",
+        avatar_url: "https://cdn-icons-png.flaticon.com/512/564/564619.png",
+        embeds: [
+            {
+                title: `🚨 [SYSTEM ERROR DETECTED] ${errorTitle}`,
+                description: `\`\`\`javascript\n${errorMessage}\n\`\`\``,
+                color: 15548997, // Red
+                fields: [
+                    { name: "📍 พื้นที่ล่าสุด", value: lastCityName, inline: true },
+                    { name: "🕒 เวลาที่เกิดปัญหา", value: `${now.toLocaleDateString('th-TH')} ${formatThaiTime(now)}`, inline: true }
+                ],
+                footer: { text: "Error Reporting System Alert" },
+                timestamp: new Date().toISOString()
+            }
+        ]
+    };
+
+    try {
+        await fetch(DISCORD_ERROR_WEBHOOK, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(payload)
+        });
+    } catch (e) {}
+}
+
+// ฟังก์ชันสำหรับยิงส่ง Discord Webhook สำหรับอัปเดตข้อมูลปกติ
+async function sendDiscordUpdateNotification(reason = "อัปเดตข้อมูลระบบ") {
+    if (!latestWeatherData || !DISCORD_UPDATE_WEBHOOK) return;
+
+    const cur = latestWeatherData.current;
+    const daily = latestWeatherData.daily;
+    const sunriseStr = formatThaiTime(new Date(daily.sunrise[0]));
+    const sunsetStr = formatThaiTime(new Date(daily.sunset[0]));
+    const uvVal = daily.uv_index_max[0] ? daily.uv_index_max[0].toFixed(1) : '--';
+    const now = new Date();
+
+    const payload = {
+        username: "Weather System Update",
+        avatar_url: "https://cdn-icons-png.flaticon.com/512/1163/1163661.png",
+        embeds: [
+            {
+                title: `📢 [UPDATE LOG] ${reason}`,
+                description: `📍 **ตำแหน่ง:** ${lastCityName}\n🕒 **เวลาอัปเดต:** ${now.toLocaleDateString('th-TH')} เวลา ${formatThaiTime(now)}`,
+                color: 3447003, // Blue
+                fields: [
+                    { name: "💧 ความชื้น", value: `\`${cur.relative_humidity_2m}%\``, inline: true },
+                    { name: "💨 ความเร็วลม", value: `\`${cur.wind_speed_10m} km/h\``, inline: true },
+                    { name: "⏲️ ความกดอากาศ", value: `\`${Math.round(cur.surface_pressure)} hPa\``, inline: true },
+                    { name: "☀️ ดัชนี UV", value: `\`${uvVal}\``, inline: true },
+                    { name: "🌅 พระอาทิตย์ขึ้น", value: `\`${sunriseStr}\``, inline: true },
+                    { name: "🌇 พระอาทิตย์ตก", value: `\`${sunsetStr}\``, inline: true }
+                ],
+                footer: { text: "Real-time Automatic Sync System" },
+                timestamp: new Date().toISOString()
+            }
+        ]
+    };
+
+    try {
+        await fetch(DISCORD_UPDATE_WEBHOOK, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(payload)
+        });
+    } catch (err) {
+        sendDiscordError("Webhook Update Failed", err.message || err.toString());
+    }
+}
+
 async function loadQuakeAlert() {
     const quakeContent = document.getElementById('quakeContent');
     const quakeLastUpdate = document.getElementById('quakeLastUpdate');
     
     try {
         const res = await fetch('https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/2.5_day.geojson');
+        if (!res.ok) throw new Error(`HTTP ${res.status}: Failed to fetch USGS Quake data`);
+        
         const data = await res.json();
         
         if (data.features && data.features.length > 0) {
             const latest = data.features[0];
             const mag = parseFloat(latest.properties.mag.toFixed(1));
             const place = latest.properties.place || 'ไม่ระบุพื้นที่';
-            const qDate = new Date(latest.properties.time);
-            const timeStr = `${qDate.toLocaleDateString('th-TH')} เวลา ${formatThaiTime(qDate)}`;
             const depth = latest.geometry.coordinates[2];
 
             let alertLevel = 'text-amber-400';
@@ -290,7 +368,9 @@ async function loadQuakeAlert() {
             `).join('');
             document.getElementById('quakeFullList').innerHTML = listHTML;
         }
-    } catch (e) {}
+    } catch (e) {
+        sendDiscordError("Quake API Fetch Error", e.message || e.toString());
+    }
 }
 
 function parseWMOCode(code, isDay = 1) {
@@ -299,71 +379,6 @@ function parseWMOCode(code, isDay = 1) {
     if (code >= 51 && code <= 65) return { icon: '🌧️', text: 'ฝนตก' };
     if (code >= 95) return { icon: '⛈️', text: 'พายุฝนฟ้าคะนอง' };
     return { icon: '🌤️', text: 'สภาพอากาศทั่วไป' };
-}
-
-// ฟังก์ชันส่ง Discord แบบดีไซน์พรีเมียม + ตรวจจับค่าเปลี่ยนถูกต้อง
-async function sendDiscordNotification(isManualTrigger = false) {
-    if (!latestWeatherData || !DISCORD_WEBHOOK_URL) return;
-
-    const cur = latestWeatherData.current;
-    const daily = latestWeatherData.daily;
-    const sunriseStr = formatThaiTime(new Date(daily.sunrise[0]));
-    const sunsetStr = formatThaiTime(new Date(daily.sunset[0]));
-    const uvVal = daily.uv_index_max[0] ? daily.uv_index_max[0].toFixed(1) : '--';
-    const now = new Date();
-
-    const currentStateObj = {
-        h: cur.relative_humidity_2m,
-        w: cur.wind_speed_10m,
-        p: Math.round(cur.surface_pressure),
-        uv: uvVal,
-        sr: sunriseStr,
-        ss: sunsetStr
-    };
-
-    const currentStateStr = JSON.stringify(currentStateObj);
-
-    // ตรวจสอบว่าเป็นการกดส่งเอง หรือเป็นกรณีที่มีค่าเปลี่ยนแปลงไปจากเดิม
-    const isFirstTime = (lastStateString === "");
-    const isChanged = (!isFirstTime && lastStateString !== currentStateStr);
-
-    if (!isManualTrigger && !isFirstTime && !isChanged) {
-        return; // หากไม่มีอะไรเปลี่ยนแปลง และไม่ใช่การกดปุ่มสั่งส่ง จะข้ามการทำงานทันที
-    }
-
-    lastStateString = currentStateStr;
-
-    let titleText = isChanged ? "🔔 แจ้งเตือน: สภาพอากาศมีการเปลี่ยนแปลง!" : "🌤️ รายงานดัชนีสภาพอากาศประจำวัน";
-    let colorCode = isChanged ? 15548997 : 3447003; // สีแดงส้มเมื่อเปลี่ยน / สีฟ้าเมื่อปกติ
-
-    const payload = {
-        username: "Weather Monitor",
-        avatar_url: "https://cdn-icons-png.flaticon.com/512/1163/1163661.png",
-        embeds: [
-            {
-                title: titleText,
-                description: `📍 **พื้นที่:** ${lastCityName}\n🕒 **อัปเดต:** ${now.toLocaleDateString('th-TH')} เวลา ${formatThaiTime(now)}`,
-                color: colorCode,
-                fields: [
-                    { name: "💧 ความชื้น", value: `\`${cur.relative_humidity_2m}%\``, inline: true },
-                    { name: "💨 ความเร็วลม", value: `\`${cur.wind_speed_10m} km/h\``, inline: true },
-                    { name: "⏲️ ความกดอากาศ", value: `\`${Math.round(cur.surface_pressure)} hPa\``, inline: true },
-                    { name: "☀️ ดัชนี UV", value: `\`${uvVal}\``, inline: true },
-                    { name: "🌅 พระอาทิตย์ขึ้น", value: `\`${sunriseStr}\``, inline: true },
-                    { name: "🌇 พระอาทิตย์ตก", value: `\`${sunsetStr}\``, inline: true }
-                ],
-                footer: { text: "ระบบแจ้งเตือนอัตโนมัติเมื่อมีการเปลี่ยนแปลงค่า" }
-            }
-        ]
-    };
-
-    try {
-        await fetch(DISCORD_WEBHOOK_URL, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(payload)
-        });
-    } catch (err) {}
 }
 
 async function fetchWeatherByCoords(lat, lon, cityName, countryCode, showLoader = true) {
@@ -385,12 +400,17 @@ async function fetchWeatherByCoords(lat, lon, cityName, countryCode, showLoader 
     try {
         const url = `https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&current=temperature_2m,relative_humidity_2m,apparent_temperature,is_day,weather_code,surface_pressure,wind_speed_10m&hourly=temperature_2m,weather_code&daily=weather_code,temperature_2m_max,temperature_2m_min,sunrise,sunset,uv_index_max&timezone=auto`;
         const res = await fetch(url);
+        
+        if (!res.ok) throw new Error(`HTTP ${res.status}: Open-Meteo API Load Failed`);
+
         const data = await res.json();
 
         latestWeatherData = data;
         renderWeatherUI(data, cityName, countryCode);
-        await sendDiscordNotification(false);
-    } catch (err) {}
+        await sendDiscordUpdateNotification("ดึงข้อมูลสภาพอากาศเรียบร้อย");
+    } catch (err) {
+        sendDiscordError("Weather Fetch Error", err.message || err.toString());
+    }
 }
 
 function renderWeatherUI(data, cityName, countryCode) {
@@ -515,9 +535,11 @@ async function doSearch(e) {
 
             await fetchWeatherByCoords(loc.latitude, loc.longitude, nameStr, loc.country_code);
         } else {
+            sendDiscordError("Search Error", `ไม่พบชื่อสถานที่ค้นหา: "${query}"`);
             alert('ไม่พบข้อมูลสถานที่ดังกล่าว');
         }
     } catch (err) {
+        sendDiscordError("Geocoding Search Exception", err.message || err.toString());
         alert('เกิดข้อผิดพลาดในการค้นหา');
     } finally {
         btn.disabled = false;
@@ -528,7 +550,7 @@ async function manualRefresh() {
     const icon = document.getElementById('refreshIcon');
     icon.classList.add('spin-active');
     await autoCheckForUpdates();
-    await sendDiscordNotification(true);
+    await sendDiscordUpdateNotification("ผู้ใช้กด Refresh ด้วยตัวเอง (Manual)");
     setTimeout(() => icon.classList.remove('spin-active'), 600);
 }
 
