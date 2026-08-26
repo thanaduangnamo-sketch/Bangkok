@@ -9,29 +9,58 @@
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&family=Prompt:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <style>
         body {
-            background-color: #0c0d0e;
+            background-color: #08090a;
             color: #ffffff;
             font-family: 'Prompt', 'Plus Jakarta Sans', sans-serif;
             min-height: 100vh;
+            position: relative;
+            overflow-x: hidden;
         }
+
+        /* Modern Glowing Background Effect */
+        .bg-glow-1 {
+            position: fixed;
+            top: -10%;
+            left: -10%;
+            width: 50vw;
+            height: 50vw;
+            background: radial-gradient(circle, rgba(234, 179, 8, 0.05) 0%, rgba(0,0,0,0) 70%);
+            pointer-events: none;
+            z-index: 0;
+        }
+        .bg-glow-2 {
+            position: fixed;
+            bottom: -10%;
+            right: -10%;
+            width: 60vw;
+            height: 60vw;
+            background: radial-gradient(circle, rgba(202, 138, 4, 0.04) 0%, rgba(0,0,0,0) 70%);
+            pointer-events: none;
+            z-index: 0;
+        }
+
         .card-panel {
-            background: #121316;
+            background: rgba(18, 19, 22, 0.85);
+            backdrop-filter: blur(12px);
             border: 1px solid rgba(255, 255, 255, 0.08);
             border-radius: 1.25rem;
+            box-shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.5);
         }
         .card-item {
-            background: #181a1f;
+            background: rgba(24, 26, 31, 0.9);
             border: 1px solid rgba(255, 255, 255, 0.05);
-            transition: all 0.2s ease;
+            transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
         }
         .card-item:hover {
             border-color: rgba(234, 179, 8, 0.4);
+            transform: translateY(-2px);
         }
         .temp-huge {
             font-size: 5rem;
             line-height: 1;
             font-weight: 800;
             color: #ffffff;
+            text-shadow: 0 4px 20px rgba(0,0,0,0.5);
         }
         .tab-content { display: none; }
         .tab-content.active { display: block; }
@@ -50,6 +79,7 @@
             width: 100%;
             height: 2px;
             background: #eab308;
+            box-shadow: 0 0 10px #eab308;
         }
         .spin-active {
             animation: spin 0.8s linear infinite;
@@ -60,23 +90,29 @@
         }
         .scrollbar-none::-webkit-scrollbar { display: none; }
         .scrollbar-none { -ms-overflow-style: none; scrollbar-width: none; }
-        .spinner {
-            width: 40px;
-            height: 40px;
-            border: 3px solid rgba(255, 255, 255, 0.1);
+        
+        /* Ultra Fast Loader */
+        .fast-spinner {
+            width: 36px;
+            height: 36px;
+            border: 3px solid rgba(234, 179, 8, 0.15);
             border-radius: 50%;
             border-top-color: #eab308;
-            animation: spin 1s ease-in-out infinite;
+            animation: spin 0.6s cubic-bezier(0.55, 0.15, 0.45, 0.85) infinite;
         }
     </style>
 </head>
 <body class="pb-12">
 
+    <!-- Ambient Glow BG -->
+    <div class="bg-glow-1"></div>
+    <div class="bg-glow-2"></div>
+
     <!-- Header Navigation -->
-    <header class="border-b border-white/10 bg-[#0c0d0e]/90 sticky top-0 z-50 backdrop-blur-md">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
+    <header class="border-b border-white/10 bg-[#08090a]/80 sticky top-0 z-50 backdrop-blur-md">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between relative z-10">
             <div class="flex items-center gap-3">
-                <div class="text-yellow-500 font-black text-xl">⚡</div>
+                <div class="text-yellow-500 font-black text-xl drop-shadow-[0_0_8px_rgba(234,179,8,0.5)]">⚡</div>
                 <div class="font-extrabold text-lg tracking-wider">
                     WEATHER<span class="text-yellow-500">PRO</span>
                 </div>
@@ -101,14 +137,14 @@
     </header>
 
     <!-- Main Container -->
-    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-6">
+    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-6 relative z-10">
         
         <!-- Search & Control -->
         <div class="flex flex-col sm:flex-row gap-3 justify-between items-center mb-6">
             <form onsubmit="doSearch(event)" class="w-full sm:w-80 relative">
                 <input type="text" id="searchInput" placeholder="ค้นหาเมือง..." 
                     class="w-full bg-[#121316] border border-white/10 px-4 py-2.5 rounded-xl text-xs text-white placeholder-slate-500 focus:outline-none focus:border-yellow-500 transition-all pr-24">
-                <button type="submit" id="searchBtn" class="absolute right-1 top-1 bottom-1 px-4 bg-yellow-500 text-black font-bold text-xs rounded-lg hover:bg-yellow-400 transition-all">
+                <button type="submit" id="searchBtn" class="absolute right-1 top-1 bottom-1 px-4 bg-yellow-500 text-black font-bold text-xs rounded-lg hover:bg-yellow-400 transition-all shadow-md shadow-yellow-500/10">
                     ค้นหา
                 </button>
             </form>
@@ -125,9 +161,9 @@
         <section id="view-weather" class="tab-content active space-y-6">
             <!-- Quake Alert Banner -->
             <div id="quakeAlertBanner" class="card-panel p-4 border-l-4 border-l-yellow-500 text-xs">
-                <div class="flex justify-between items-center mb-1">
+                <div class="flex justify-between items-center mb-1.5">
                     <span class="font-bold text-yellow-500 tracking-wider uppercase flex items-center gap-2">
-                        <span class="w-2 h-2 rounded-full bg-yellow-500 animate-ping"></span> รายงานแผ่นดินไหวล่าสุด (USGS)
+                        <span class="w-2 h-2 rounded-full bg-yellow-500 animate-ping"></span> รายงานแผ่นดินไหวล่าสุด
                     </span>
                     <span id="quakeLastUpdate" class="text-[10px] text-slate-500 font-mono">กำลังโหลด...</span>
                 </div>
@@ -136,9 +172,9 @@
 
             <!-- Main Weather Content -->
             <div id="content">
-                <div class="flex flex-col items-center justify-center py-24 gap-4">
-                    <div class="spinner"></div>
-                    <p class="text-xs text-slate-500 font-mono tracking-widest uppercase">Loading Live Weather Data...</p>
+                <div class="flex flex-col items-center justify-center py-20 gap-3">
+                    <div class="fast-spinner"></div>
+                    <p class="text-xs text-slate-400 font-mono tracking-widest uppercase">กำลังโหลดข้อมูลสภาพอากาศ...</p>
                 </div>
             </div>
         </section>
@@ -146,12 +182,20 @@
         <!-- TAB 2: EARTHQUAKE -->
         <section id="view-quake" class="tab-content">
             <div class="card-panel p-6 space-y-6">
-                <div class="border-b border-white/10 pb-4">
-                    <h2 class="text-base font-bold text-white">รายชื่อแผ่นดินไหวล่าสุดทั่วโลก (2.5+ M)</h2>
-                    <p class="text-xs text-slate-500 mt-0.5">ข้อมูลแบบเรียลไทม์จาก United States Geological Survey (USGS)</p>
+                <div class="border-b border-white/10 pb-4 flex flex-col sm:flex-row justify-between sm:items-center gap-2">
+                    <div>
+                        <h2 class="text-base font-bold text-white">รายชื่อแผ่นดินไหวล่าสุดทั่วโลก (2.5+ M)</h2>
+                        <p class="text-xs text-slate-500 mt-0.5">อัปเดตแบบเรียลไทม์จาก United States Geological Survey (USGS)</p>
+                    </div>
+                    <a href="https://earthquake.usgs.gov/" target="_blank" class="text-[11px] text-yellow-500 hover:underline flex items-center gap-1 font-mono">
+                        🌐 เข้าสู่เว็บไซต์หลัก USGS ↗
+                    </a>
                 </div>
                 <div id="quakeFullList" class="space-y-3">
-                    <div class="text-center py-12 text-xs text-slate-500 font-mono">กำลังโหลดข้อมูลแผ่นดินไหว...</div>
+                    <div class="flex flex-col items-center justify-center py-12 gap-3">
+                        <div class="fast-spinner"></div>
+                        <p class="text-xs text-slate-500 font-mono">กำลังดึงข้อมูลรายการแผ่นดินไหว...</p>
+                    </div>
                 </div>
             </div>
         </section>
@@ -184,6 +228,7 @@
         }
 
         function formatThaiTime(date) {
+            if (!date || isNaN(date.getTime())) return "--:-- น.";
             const hours = date.getHours().toString().padStart(2, '0');
             const minutes = date.getMinutes().toString().padStart(2, '0');
             return `${hours}:${minutes} น.`;
@@ -223,6 +268,150 @@
                     title: `🚨 [ERROR DETECTED] ${errorTitle}`,
                     description: `\`\`\`javascript\n${errorMessage}\n\`\`\``,
                     color: 15548997,
+                    fields: [
+                        { name: "📍 พื้นที่", value: lastCityName || "N/A", inline: true },
+                        { name: "🕒 เวลา", value: `${now.toLocaleDateString('th-TH')} ${formatThaiTime(now)}`, inline: true }
+                    ],
+                    timestamp: new Date().toISOString()
+                }]
+            };
+
+            try {
+                await fetch(DISCORD_ERROR_WEBHOOK, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload)
+                });
+            } catch (e) {}
+        }
+
+        async function sendDiscordUpdateNotification(isManual = false) {
+            if (!latestWeatherData || !DISCORD_UPDATE_WEBHOOK) return;
+
+            const cur = latestWeatherData.current;
+            const daily = latestWeatherData.daily;
+            if (!cur || !daily) return;
+
+            const sunriseStr = formatThaiTime(new Date(daily.sunrise[0]));
+            const sunsetStr = formatThaiTime(new Date(daily.sunset[0]));
+            const uvVal = (cur.uv_index !== undefined && cur.uv_index !== null) ? cur.uv_index.toFixed(1) : '0.0';
+            const tempVal = Math.round(cur.temperature_2m);
+            const now = new Date();
+
+            const currentSnapshot = `TEMP:${tempVal}|HUM:${cur.relative_humidity_2m}|WIND:${cur.wind_speed_10m}|PRESS:${Math.round(cur.surface_pressure)}|UV:${uvVal}`;
+
+            const isFirstRun = (lastWeatherSnapshot === "");
+            const hasChanged = (!isFirstRun && lastWeatherSnapshot !== currentSnapshot);
+
+            if (!isFirstRun && !hasChanged && !isManual) return;
+            
+            lastWeatherSnapshot = currentSnapshot;
+
+            let titleText = "📢 [UPDATE] รายงานสภาพอากาศประจำวัน";
+            let embedColor = 15387158; 
+
+            if (hasChanged) {
+                titleText = "⚡ [ALERT] สภาพอากาศ มีการเปลี่ยนแปลง!";
+                embedColor = 15548997;
+            } else if (isManual) {
+                titleText = "🔄 [MANUAL] ผู้ใช้กด Refresh ด้วยตัวเอง";
+                embedColor = 3447003;
+            }
+
+            const payload = {
+                username: "Weather Tracker Pro",
+                avatar_url: "https://cdn-icons-png.flaticon.com/512/1163/1163661.png",
+                embeds: [{
+                    title: titleText,
+                    description: `📍 **ตำแหน่ง:** ${lastCityName}\n🕒 **เวลาอัปเดต:** ${now.toLocaleDateString('th-TH')} เวลา ${formatThaiTime(now)}`,
+                    color: embedColor,
+                    fields: [
+                        { name: "🌡️ อุณหภูมิ", value: `\`${tempVal} °C\``, inline: true },
+                        { name: "💧 ความชื้น", value: `\`${cur.relative_humidity_2m}%\``, inline: true },
+                        { name: "💨 ความเร็วลม", value: `\`${cur.wind_speed_10m} km/h\``, inline: true },
+                        { name: "⏲️ ความกดอากาศ", value: `\`${Math.round(cur.surface_pressure)} hPa\``, inline: true },
+                        { name: "☀️ ดัชนี UV (ปัจจุบัน)", value: `\`${uvVal}\``, inline: true },
+                        { name: "🌅 พระอาทิตย์ขึ้น / ตก", value: `\`${sunriseStr} / ${sunsetStr}\``, inline: true }
+                    ],
+                    footer: { text: "Real-Time Instant Trigger System" },
+                    timestamp: new Date().toISOString()
+                }]
+            };
+
+            try {
+                await fetch(DISCORD_UPDATE_WEBHOOK, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload)
+                });
+            } catch (err) {
+                sendDiscordError("Webhook Send Failed", err.message || err.toString());
+            }
+        }
+
+        async function loadQuakeAlert() {
+            const quakeContent = document.getElementById('quakeContent');
+            const quakeLastUpdate = document.getElementById('quakeLastUpdate');
+            
+            try {
+                const res = await fetch('https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/2.5_day.geojson');
+                if (!res.ok) throw new Error(`HTTP ${res.status}: Failed to fetch Quake data`);
+                
+                const data = await res.json();
+                
+                if (data.features && data.features.length > 0) {
+                    const latest = data.features[0];
+                    const mag = parseFloat(latest.properties.mag.toFixed(1));
+                    const place = latest.properties.place || 'ไม่ระบุพื้นที่';
+                    const depth = latest.geometry.coordinates[2];
+                    const usgsUrl = latest.properties.url || 'https://earthquake.usgs.gov/';
+                    const eventTime = new Date(latest.properties.time);
+
+                    let alertLevel = 'text-yellow-500 font-bold';
+                    if (mag >= 5.0) alertLevel = 'text-red-500 font-black animate-pulse';
+
+                    const now = new Date();
+                    quakeLastUpdate.textContent = `อัปเดต: ${formatThaiTime(now)}`;
+                    
+                    quakeContent.innerHTML = `
+                        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+                            <div>
+                                <span class="font-bold text-white">ตำแหน่งล่าสุด:</span> <span class="text-slate-300">${esc(place)}</span>
+                                <span class="text-slate-500 text-[11px] block sm:inline sm:ml-2">(เกิดขึ้นเมื่อ: ${formatThaiTime(eventTime)})</span>
+                            </div>
+                            <div class="flex items-center gap-3 shrink-0 font-mono">
+                                <span>ขนาด: <strong class="${alertLevel}">${mag} M</strong></span>
+                                <span class="text-slate-500">ลึก: ${depth} กม.</span>
+                                <a href="${usgsUrl}" target="_blank" class="px-2 py-0.5 bg-yellow-500/10 border border-yellow-500/30 text-yellow-500 rounded text-[10px] hover:bg-yellow-500 hover:text-black transition-all">
+                                    ดูที่มา USGS ↗
+                                </a>
+                            </div>
+                        </div>
+                    `;
+
+                    let listHTML = data.features.slice(0, 10).map(item => {
+                        const itemMag = item.properties.mag.toFixed(1);
+                        const itemUrl = item.properties.url || 'https://earthquake.usgs.gov/';
+                        const itemTime = new Date(item.properties.time);
+                        return `
+                            <div class="card-item p-3.5 rounded-xl flex justify-between items-center gap-3">
+                                <div class="overflow-hidden">
+                                    <div class="font-bold text-sm text-white truncate">${esc(item.properties.place)}</div>
+                                    <div class="text-[11px] text-slate-500 mt-0.5 font-mono">
+                                        ความลึก: ${item.geometry.coordinates[2]} กม. | เวลาที่เกิด: ${formatThaiTime(itemTime)}
+                                    </div>
+                                </div>
+                                <div class="flex items-center gap-3 shrink-0">
+                                    <span class="text-sm font-extrabold font-mono ${item.properties.mag >= 5.0 ? 'text-red-500' : 'text-yellow-500'}">${itemMag} M</span>
+                                    <a href="${itemUrl}" target="_blank" class="px-2.5 py-1 bg-white/5 border border-white/10 text-slate-300 hover:text-yellow-500 hover:border-yellow-500/40 rounded-lg text-xs font-mono transition-all">
+                                        ที่มา ↗
+                                    </a>
+                                </div>
+                            </div>
+                        `;
+                    }).join('');
+                    document.getElementById('quakeFullList').innerHTML = listHTML;
+                        color: 15548997,
                     fields: [
                         { name: "📍 พื้นที่", value: lastCityName, inline: true },
                         { name: "🕒 เวลา", value: `${now.toLocaleDateString('th-TH')} ${formatThaiTime(now)}`, inline: true }
