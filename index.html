@@ -123,9 +123,9 @@ body{font-family:'Plus Jakarta Sans','Noto Sans Thai',sans-serif;background:#030
             <div class="max-w-2xl mx-auto rounded-2xl bg-amber-950/20 border border-amber-500/20 backdrop-blur-md px-4 py-3 flex items-center justify-between text-[11px] text-amber-200/90 shadow-lg">
                 <div class="flex items-center gap-2.5">
                     <span class="w-2 h-2 rounded-full bg-amber-400 animate-pulse"></span>
-                    <span>ส่ง Discord อัตโนมัติเมื่อค่าความชื้น/ลม/UV/ความกดอากาศมีการเปลี่ยนแปลง</span>
+                    <span>ระบบติดตามการเปลี่ยนแปลงค่าสภาพอากาศ (Auto Discord Alert)</span>
                 </div>
-                <div class="font-mono text-amber-400 font-bold bg-amber-500/10 px-2.5 py-1 rounded-lg border border-amber-500/20" id="webhookTimer">เช็กอัตโนมัติทุก 1 นาที</div>
+                <div class="font-mono text-amber-400 font-bold bg-amber-500/10 px-2.5 py-1 rounded-lg border border-amber-500/20">เช็กทุก 1 นาที</div>
             </div>
         </div>
 
@@ -205,10 +205,7 @@ let lastCityName = 'แหลมฉบัง, ชลบุรี';
 let lastCountryCode = 'TH';
 
 let latestWeatherData = null;
-let latestQuakeData = null;
-
-// ระบบจดจำค่าเดิมเพื่อตรวจจับการเปลี่ยนแปลง (Auto-Alert on Value Change)
-let previousWeatherState = null;
+let lastStateString = ""; // เก็บ String ค่าเดิมไว้เช็กว่ามีการเปลี่ยนแปลงจริงไหม
 
 function switchTab(tabName) {
     document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
@@ -236,7 +233,7 @@ function updateClock() {
 setInterval(updateClock, 1000);
 updateClock();
 
-// เช็กข้อมูลอัปเดตอัตโนมัติทุกๆ 1 นาที (ถ้าค่าเปลี่ยนจะยิง Discord ทันที)
+// ระบบวนลูปเช็กค่าใหม่ทุก 1 นาที
 setInterval(async () => {
     await autoCheckForUpdates();
 }, 60000);
@@ -263,8 +260,6 @@ async function loadQuakeAlert() {
             const qDate = new Date(latest.properties.time);
             const timeStr = `${qDate.toLocaleDateString('th-TH')} เวลา ${formatThaiTime(qDate)}`;
             const depth = latest.geometry.coordinates[2];
-
-            latestQuakeData = { place, mag, depth, time: timeStr };
 
             let alertLevel = 'text-amber-400';
             if (mag >= 5.0) alertLevel = 'text-red-400 font-extrabold';
@@ -306,7 +301,7 @@ function parseWMOCode(code, isDay = 1) {
     return { icon: '🌤️', text: 'สภาพอากาศทั่วไป' };
 }
 
-// ฟังก์ชันส่ง Discord แบบดีไซน์ใหม่รองรับการแจ้งเตือนค่าที่เปลี่ยนแปลง
+// ฟังก์ชันส่ง Discord แบบดีไซน์พรีเมียม + ตรวจจับค่าเปลี่ยนถูกต้อง
 async function sendDiscordNotification(isManualTrigger = false) {
     if (!latestWeatherData || !DISCORD_WEBHOOK_URL) return;
 
@@ -317,58 +312,47 @@ async function sendDiscordNotification(isManualTrigger = false) {
     const uvVal = daily.uv_index_max[0] ? daily.uv_index_max[0].toFixed(1) : '--';
     const now = new Date();
 
-    const currentState = {
-        humidity: cur.relative_humidity_2m,
-        wind: cur.wind_speed_10m,
-        pressure: Math.round(cur.surface_pressure),
+    const currentStateObj = {
+        h: cur.relative_humidity_2m,
+        w: cur.wind_speed_10m,
+        p: Math.round(cur.surface_pressure),
         uv: uvVal,
-        sunrise: sunriseStr,
-        sunset: sunsetStr
+        sr: sunriseStr,
+        ss: sunsetStr
     };
 
-    // เช็กว่ามีการเปลี่ยนแปลงของข้อมูลหรือไม่
-    let isChanged = false;
-    if (previousWeatherState) {
-        if (
-            previousWeatherState.humidity !== currentState.humidity ||
-            previousWeatherState.wind !== currentState.wind ||
-            previousWeatherState.pressure !== currentState.pressure ||
-            previousWeatherState.uv !== currentState.uv ||
-            previousWeatherState.sunrise !== currentState.sunrise ||
-            previousWeatherState.sunset !== currentState.sunset
-        ) {
-            isChanged = true;
-        }
+    const currentStateStr = JSON.stringify(currentStateObj);
+
+    // ตรวจสอบว่าเป็นการกดส่งเอง หรือเป็นกรณีที่มีค่าเปลี่ยนแปลงไปจากเดิม
+    const isFirstTime = (lastStateString === "");
+    const isChanged = (!isFirstTime && lastStateString !== currentStateStr);
+
+    if (!isManualTrigger && !isFirstTime && !isChanged) {
+        return; // หากไม่มีอะไรเปลี่ยนแปลง และไม่ใช่การกดปุ่มสั่งส่ง จะข้ามการทำงานทันที
     }
 
-    // ถ้ากดปุ่มเอง หรือเป็นครั้งแรก หรือมีค่าเปลี่ยนไป ให้ส่ง Discord ทันที
-    if (!isManualTrigger && previousWeatherState && !isChanged) {
-        return; // ถ้าค่าเดิม ไม่เปลี่ยนอะไร ให้ข้ามการส่ง
-    }
+    lastStateString = currentStateStr;
 
-    previousWeatherState = currentState;
-
-    let titleHeader = isChanged ? "⚡ [แจ้งเตือน] สภาพอากาศมีการเปลี่ยนแปลง!" : "🌤️ รายงานอัปเดตสภาพอากาศล่าสุด";
-    let embedColor = isChanged ? 16753920 : 3447003; 
+    let titleText = isChanged ? "🔔 แจ้งเตือน: สภาพอากาศมีการเปลี่ยนแปลง!" : "🌤️ รายงานดัชนีสภาพอากาศประจำวัน";
+    let colorCode = isChanged ? 15548997 : 3447003; // สีแดงส้มเมื่อเปลี่ยน / สีฟ้าเมื่อปกติ
 
     const payload = {
-        username: "Weather & Environment Alert Bot",
+        username: "Weather Monitor",
         avatar_url: "https://cdn-icons-png.flaticon.com/512/1163/1163661.png",
         embeds: [
             {
-                title: `${titleHeader} (${lastCityName})`,
-                description: `ประจำวันที่ **${now.toLocaleDateString('th-TH')} เวลา ${formatThaiTime(now)}**`,
-                color: embedColor,
+                title: titleText,
+                description: `📍 **พื้นที่:** ${lastCityName}\n🕒 **อัปเดต:** ${now.toLocaleDateString('th-TH')} เวลา ${formatThaiTime(now)}`,
+                color: colorCode,
                 fields: [
-                    { name: "💧 ความชื้น", value: `**${currentState.humidity}%**`, inline: true },
-                    { name: "💨 ความเร็วลม", value: `**${currentState.wind} km/h**`, inline: true },
-                    { name: "⏲️ ความกดอากาศ", value: `**${currentState.pressure} hPa**`, inline: true },
-                    { name: "☀️ ดัชนี UV", value: `**${currentState.uv}**`, inline: true },
-                    { name: "🌅 พระอาทิตย์ขึ้น", value: `**${currentState.sunrise}**`, inline: true },
-                    { name: "🌇 พระอาทิตย์ตก", value: `**${currentState.sunset}**`, inline: true }
+                    { name: "💧 ความชื้น", value: `\`${cur.relative_humidity_2m}%\``, inline: true },
+                    { name: "💨 ความเร็วลม", value: `\`${cur.wind_speed_10m} km/h\``, inline: true },
+                    { name: "⏲️ ความกดอากาศ", value: `\`${Math.round(cur.surface_pressure)} hPa\``, inline: true },
+                    { name: "☀️ ดัชนี UV", value: `\`${uvVal}\``, inline: true },
+                    { name: "🌅 พระอาทิตย์ขึ้น", value: `\`${sunriseStr}\``, inline: true },
+                    { name: "🌇 พระอาทิตย์ตก", value: `\`${sunsetStr}\``, inline: true }
                 ],
-                footer: { text: "ระบบตรวจจับการเปลี่ยนแปลงสภาพอากาศแบบ Real-time" },
-                timestamp: new Date().toISOString()
+                footer: { text: "ระบบแจ้งเตือนอัตโนมัติเมื่อมีการเปลี่ยนแปลงค่า" }
             }
         ]
     };
@@ -544,7 +528,7 @@ async function manualRefresh() {
     const icon = document.getElementById('refreshIcon');
     icon.classList.add('spin-active');
     await autoCheckForUpdates();
-    await sendDiscordNotification(true); // บังคับยิงเข้า Discord เมื่อกดปุ่ม
+    await sendDiscordNotification(true);
     setTimeout(() => icon.classList.remove('spin-active'), 600);
 }
 
