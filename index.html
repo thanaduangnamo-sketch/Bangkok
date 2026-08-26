@@ -395,6 +395,554 @@
                     document.getElementById('quakeFullList').innerHTML = listHTML;
                 }
             } catch (e) {
+                // ป้องกันไม่ให้พังลามไปส่วนอื่น
+                quakeContent.innerHTML = `<span class="text-slate-400">ไม่สามารถโหลดข้อมูลแผ่นดินไหวได้ในขณะนี้</span>`;
+                document.getElementById('quakeFullList').innerHTML = `<div class="text-xs text-slate-500 font-mono text-center py-6">ไม่มีข้อมูลแผ่นดินไหว</div>`;
+            }
+        }
+
+        function parseWMOCode(code, isDay = 1) {
+            if (code === 0) return { icon: isDay ? '☀️' : '🌙', text: isDay ? 'ท้องฟ้าแจ่มใส' : 'ท้องฟ้าโปร่ง' };
+            if (code >= 1 && code <= 3) return { icon: isDay ? '⛅' : '🌙', text: 'มีเมฆบางส่วน' };
+            if (code >= 51 && code <= 65) return { icon: '🌧️', text: 'ฝนตก' };
+            if (code >= 95) return { icon: '⛈️', text: 'พายุฝนฟ้าคะนอง' };
+            return { icon: '🌤️', text: 'สภาพอากาศทั่วไป' };
+        }
+
+        async function fetchWeatherByCoords(lat, lon, cityName, countryCode) {
+            lastLat = lat; 
+            lastLon = lon; 
+            lastCityName = cityName; 
+            lastCountryCode = countryCode;
+
+            try {
+                const url = `https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&current=temperature_2m,relative_humidity_2m,apparent_temperature,is_day,weather_code,surface_pressure,wind_speed_10m,uv_index&hourly=temperature_2m,weather_code&daily=weather_code,temperature_2m_max,temperature_2m_min,sunrise,sunset&timezone=auto`;
+                const res = await fetch(url);
+                
+                if (!res.ok) throw new Error(`HTTP ${res.status}: Open-Meteo Load Failed`);
+
+                const data = await res.json();
+                latestWeatherData = data;
+                renderWeatherUI(data, cityName, countryCode);
+                await sendDiscordUpdateNotification(false);
+            } catch (err) {
+                sendDiscordError("Weather Fetch Error", err.message || err.toString());
+                document.getElementById('content').innerHTML = `<div class="card-panel p-6 text-center text-red-400 text-xs">เกิดข้อผิดพลาดในการโหลดข้อมูลสภาพอากาศ</div>`;
+            }
+        }
+
+        function renderWeatherUI(data, cityName, countryCode) {
+            const cur = data.current;
+            const daily = data.daily;
+            const hourly = data.hourly;
+            if (!cur || !daily || !hourly) return;
+
+            const info = parseWMOCode(cur.weather_code, cur.is_day);
+
+            let hourlyItems = '';
+            const nowHourIndex = new Date().getHours();
+            for (let i = nowHourIndex; i < nowHourIndex + 12; i++) {
+                if (!hourly.time[i]) break;
+                const timeObj = new Date(hourly.time[i]);
+                const hTimeStr = `${timeObj.getHours().toString().padStart(2, '0')}:00`;
+                const hTemp = Math.round(hourly.temperature_2m[i]);
+                const hInfo = parseWMOCode(hourly.weather_code[i], 1);
+
+                hourlyItems += `
+                    <div class="flex-shrink-0 w-24 card-item p-3.5 rounded-xl text-center space-y-2">
+                        <div class="text-[10px] text-slate-400 font-mono font-bold">${hTimeStr}</div>
+                        <div class="text-2xl my-1">${hInfo.icon}</div>
+                        <div class="text-xs font-bold text-white font-mono">${hTemp}°C</div>
+                    </div>
+                `;
+            }
+
+            let dailyItems = '';
+            const daysArr = ['อา.', 'จ.', 'อ.', 'พ.', 'พฤ.', 'ศ.', 'ส.'];
+            for (let i = 0; i < 5; i++) {
+                if (!daily.time[i]) break;
+                const dObj = new Date(daily.time[i]);
+                const dayLabel = i === 0 ? 'วันนี้' : daysArr[dObj.getDay()];
+                const dMax = Math.round(daily.temperature_2m_max[i]);
+                const dMin = Math.round(daily.temperature_2m_min[i]);
+                const dInfo = parseWMOCode(daily.weather_code[i], 1);
+
+                dailyItems += `
+                    <div class="flex items-center justify-between py-2.5 border-b border-white/5 last:border-none">
+                        <span class="text-xs font-bold text-slate-300 w-12">${dayLabel}</span>
+                        <span class="text-xl text-center">${dInfo.icon}</span>
+                        <div class="flex items-center gap-3 font-mono text-xs text-right">
+                            <span class="text-white font-bold">${dMax}°</span>
+                            <span class="text-slate-500">${dMin}°</span>
+                        </div>
+                    </div>
+                `;
+            }
+
+            const sunriseStr = formatThaiTime(new Date(daily.sunrise[0]));
+            const sunsetStr = formatThaiTime(new Date(daily.sunset[0]));
+            const uvVal = (cur.uv_index !== undefined && cur.uv_index !== null) ? cur.uv_index.toFixed(1) : '0.0';
+
+            const html = `
+                <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                    <div class="lg:col-span-2 card-panel p-6 sm:p-8 flex flex-col justify-between relative overflow-hidden">
+                        <div class="flex justify-between items-start">
+                            <div>
+                                <h1 class="text-2xl sm:text-4xl font-extrabold text-white tracking-tight">${esc(cityName)}</h1>
+                                <p class="text-sm text-slate-400 font-medium mt-1">${info.text}</p>
+                            </div>
+                            <div class="text-6xl drop-shadow-lg">${info.icon}</div>
+                        </div>
+
+                        <div class="my-8">
+                            <div class="temp-huge font-mono">${Math.round(cur.temperature_2m)}°</div>
+                            <p class="text-xs text-slate-400 font-medium mt-2">รู้สึกเหมือน <span class="text-white font-bold">${Math.round(cur.apparent_temperature)}°C</span> • สูงสุด <span class="text-white font-bold">${Math.round(daily.temperature_2m_max[0])}°C</span> / ต่ำสุด <span class="text-white font-bold">${Math.round(daily.temperature_2m_min[0])}°C</span></p>
+                        </div>
+
+                        <div>
+                            <h3 class="text-[11px] font-bold text-slate-400 mb-3 tracking-wider uppercase">พยากรณ์รายชั่วโมง (12 ชั่วโมงข้างหน้า)</h3>
+                            <div class="flex gap-3 overflow-x-auto pb-2 scrollbar-none">
+                                ${hourlyItems}
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="space-y-6">
+                        <div class="card-panel p-6">
+                            <h2 class="text-xs font-bold text-yellow-500 uppercase tracking-wider mb-4">รายละเอียดสภาพอากาศ</h2>
+                            <div class="space-y-3 font-mono">
+                                <div class="flex justify-between items-center py-1.5 border-b border-white/5"><span class="text-xs text-slate-400 font-sans">ความชื้น</span><span class="text-xs font-bold text-white">${cur.relative_humidity_2m}%</span></div>
+                                <div class="flex justify-between items-center py-1.5 border-b border-white/5"><span class="text-xs text-slate-400 font-sans">ความเร็วลม</span><span class="text-xs font-bold text-white">${cur.wind_speed_10m} km/h</span></div>
+                                <div class="flex justify-between items-center py-1.5 border-b border-white/5"><span class="text-xs text-slate-400 font-sans">ความกดอากาศ</span><span class="text-xs font-bold text-white">${Math.round(cur.surface_pressure)} hPa</span></div>
+                                <div class="flex justify-between items-center py-1.5 border-b border-white/5"><span class="text-xs text-slate-400 font-sans">ดัชนี UV (ปัจจุบัน)</span><span class="text-xs font-bold text-yellow-500">${uvVal}</span></div>
+                                <div class="flex justify-between items-center py-1.5 border-b border-white/5"><span class="text-xs text-slate-400 font-sans">พระอาทิตย์ขึ้น</span><span class="text-xs font-bold text-white">${sunriseStr}</span></div>
+                                <div class="flex justify-between items-center py-1.5"><span class="text-xs text-slate-400 font-sans">พระอาทิตย์ตก</span><span class="text-xs font-bold text-white">${sunsetStr}</span></div>
+                            </div>
+                        </div>
+
+                        <div class="card-panel p-6">
+                            <h2 class="text-xs font-bold text-yellow-500 uppercase tracking-wider mb-3">พยากรณ์ล่วงหน้า 5 วัน</h2>
+                            ${dailyItems}
+                        </div>
+                    </div>
+                </div>
+            `;
+
+            document.getElementById('content').innerHTML = html;
+        }
+
+        async function doSearch(e) {
+            if (e) e.preventDefault();
+            const input = document.getElementById('searchInput');
+            const query = input.value.trim();
+            if (!query) return;
+
+            const btn = document.getElementById('searchBtn');
+            btn.disabled = true;
+
+            try {
+                const url = `https://geocoding-api.open-meteo.com/v1/search?name=${encodeURIComponent(query)}&count=1&language=th&format=json`;
+                const res = await fetch(url);
+                const data = await res.json();
+
+                if (data.results && data.results.length > 0) {
+                    const loc = data.results[0];
+                    let nameStr = loc.name;
+                    if (loc.admin1 && loc.admin1 !== loc.name) nameStr += `, ${loc.admin1}`;
+
+                    lastWeatherSnapshot = "";
+                    await fetchWeatherByCoords(loc.latitude, loc.longitude, nameStr, loc.country_code);
+                } else {
+                    sendDiscordError("Search Failed", `ไม่พบสถานที่: "${query}"`);
+                    alert('ไม่พบข้อมูลสถานที่ดังกล่าว');
+                }
+            } catch (err) {
+                sendDiscordError("Search Error", err.message || err.toString());
+                alert('เกิดข้อผิดพลาดในการค้นหา');
+            } finally {
+                btn.disabled = false;
+            }
+        }
+
+        async function manualRefresh() {
+            const icon = document.getElementById('refreshIcon');
+            icon.classList.add('spin-active');
+            await autoCheckForUpdates();
+            await sendDiscordUpdateNotification(true);
+            setTimeout(() => icon.classList.remove('spin-active'), 500);
+        }
+
+        function esc(str) {
+            if (!str) return '';
+            return str.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+        }
+
+        // Initialize App (แยกการทำงาน ป้องกันชนกัน)
+        fetchWeatherByCoords(lastLat, lastLon, lastCityName, lastCountryCode);
+        loadQuakeAlert();
+    </script>
+</body>
+</sendDiscordError          background: radial-gradient(circle, rgba(202, 138, 4, 0.04) 0%, rgba(0,0,0,0) 70%);
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        .card-panel {
+            background: rgba(18, 19, 22, 0.85);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 1.25rem;
+            box-shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.5);
+        }
+        .card-item {
+            background: rgba(24, 26, 31, 0.9);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .card-item:hover {
+            border-color: rgba(234, 179, 8, 0.4);
+            transform: translateY(-2px);
+        }
+        .temp-huge {
+            font-size: 5rem;
+            line-height: 1;
+            font-weight: 800;
+            color: #ffffff;
+            text-shadow: 0 4px 20px rgba(0,0,0,0.5);
+        }
+        .tab-content { display: none; }
+        .tab-content.active { display: block; }
+        .nav-tab {
+            position: relative;
+            transition: all 0.2s ease;
+        }
+        .nav-tab.active {
+            color: #eab308;
+        }
+        .nav-tab.active::after {
+            content: '';
+            position: absolute;
+            bottom: -2px;
+            left: 0;
+            width: 100%;
+            height: 2px;
+            background: #eab308;
+            box-shadow: 0 0 10px #eab308;
+        }
+        .spin-active {
+            animation: spin 0.8s linear infinite;
+        }
+        @keyframes spin {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+        .scrollbar-none::-webkit-scrollbar { display: none; }
+        .scrollbar-none { -ms-overflow-style: none; scrollbar-width: none; }
+    </style>
+</head>
+<body class="pb-12">
+
+    <!-- Ambient Glow BG -->
+    <div class="bg-glow-1"></div>
+    <div class="bg-glow-2"></div>
+
+    <!-- Header Navigation -->
+    <header class="border-b border-white/10 bg-[#08090a]/80 sticky top-0 z-50 backdrop-blur-md">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between relative z-10">
+            <div class="flex items-center gap-3">
+                <div class="text-yellow-500 font-black text-xl drop-shadow-[0_0_8px_rgba(234,179,8,0.5)]">⚡</div>
+                <div class="font-extrabold text-lg tracking-wider">
+                    WEATHER<span class="text-yellow-500">PRO</span>
+                </div>
+            </div>
+
+            <nav class="flex gap-8 font-bold text-xs tracking-wider h-full">
+                <button id="tab-weather" onclick="switchTab('weather')" class="nav-tab active px-2 flex items-center gap-2">
+                    🌤️ สภาพอากาศ
+                </button>
+                <button id="tab-quake" onclick="switchTab('quake')" class="nav-tab text-slate-400 hover:text-white px-2 flex items-center gap-2">
+                    🌐 แผ่นดินไหว
+                </button>
+            </nav>
+
+            <div class="hidden sm:flex items-center gap-4 text-xs font-mono">
+                <div class="text-right">
+                    <div id="clockDisplay" class="font-bold text-yellow-500">00:00:00 น.</div>
+                    <div id="dateDisplay" class="text-slate-500 text-[10px]">--/--/----</div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Container -->
+    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-6 relative z-10">
+        
+        <!-- Search & Control -->
+        <div class="flex flex-col sm:flex-row gap-3 justify-between items-center mb-6">
+            <form onsubmit="doSearch(event)" class="w-full sm:w-80 relative">
+                <input type="text" id="searchInput" placeholder="ค้นหาเมือง..." 
+                    class="w-full bg-[#121316] border border-white/10 px-4 py-2.5 rounded-xl text-xs text-white placeholder-slate-500 focus:outline-none focus:border-yellow-500 transition-all pr-24">
+                <button type="submit" id="searchBtn" class="absolute right-1 top-1 bottom-1 px-4 bg-yellow-500 text-black font-bold text-xs rounded-lg hover:bg-yellow-400 transition-all shadow-md shadow-yellow-500/10">
+                    ค้นหา
+                </button>
+            </form>
+
+            <button onclick="manualRefresh()" class="w-full sm:w-auto card-item px-4 py-2.5 rounded-xl text-xs font-bold text-slate-300 hover:text-white flex items-center justify-center gap-2 transition-all">
+                <svg id="refreshIcon" class="w-3.5 h-3.5 text-yellow-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path>
+                </svg>
+                อัปเดตข้อมูล
+            </button>
+        </div>
+
+        <!-- TAB 1: WEATHER -->
+        <section id="view-weather" class="tab-content active space-y-6">
+            <!-- Quake Alert Banner -->
+            <div id="quakeAlertBanner" class="card-panel p-4 border-l-4 border-l-yellow-500 text-xs">
+                <div class="flex justify-between items-center mb-1.5">
+                    <span class="font-bold text-yellow-500 tracking-wider uppercase flex items-center gap-2">
+                        <span class="w-2 h-2 rounded-full bg-yellow-500 animate-ping"></span> รายงานแผ่นดินไหวล่าสุด
+                    </span>
+                    <span id="quakeLastUpdate" class="text-[10px] text-slate-500 font-mono">-</span>
+                </div>
+                <div id="quakeContent" class="text-slate-300 font-mono">กำลังซิงค์ข้อมูลแผ่นดินไหว...</div>
+            </div>
+
+            <!-- Main Weather Content -->
+            <div id="content"></div>
+        </section>
+
+        <!-- TAB 2: EARTHQUAKE -->
+        <section id="view-quake" class="tab-content">
+            <div class="card-panel p-6 space-y-6">
+                <div class="border-b border-white/10 pb-4 flex flex-col sm:flex-row justify-between sm:items-center gap-2">
+                    <div>
+                        <h2 class="text-base font-bold text-white">รายชื่อแผ่นดินไหวล่าสุดทั่วโลก (2.5+ M)</h2>
+                        <p class="text-xs text-slate-500 mt-0.5">อัปเดตแบบเรียลไทม์จาก United States Geological Survey (USGS)</p>
+                    </div>
+                    <a href="https://earthquake.usgs.gov/" target="_blank" class="text-[11px] text-yellow-500 hover:underline flex items-center gap-1 font-mono">
+                        🌐 เข้าสู่เว็บไซต์หลัก USGS ↗
+                    </a>
+                </div>
+                <div id="quakeFullList" class="space-y-3">
+                    <div class="text-xs text-slate-500 font-mono text-center py-6">กำลังโหลดข้อมูลรายการแผ่นดินไหว...</div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Script Application -->
+    <script>
+        const DISCORD_UPDATE_WEBHOOK = "https://discord.com/api/webhooks/1542154970202374214/tQdo60ynkw5xbQPhxcIDLFOyoxhh57n0EBLPkOzmATkAWwOZ5-oo_DxMUOGiyUgS05r_";
+        const DISCORD_ERROR_WEBHOOK = "https://discord.com/api/webhooks/1542155180869689495/ii9bDvTMISrEvxpbTskKZ-iOW_V7J-8RQnGb7FKQ9A_JZhwuNR33nG3td2Yw6Nv4V9lj";
+
+        let lastLat = 13.08;
+        let lastLon = 100.92;
+        let lastCityName = 'แหลมฉบัง, ชลบุรี';
+        let lastCountryCode = 'TH';
+
+        let latestWeatherData = null;
+        let lastWeatherSnapshot = ""; 
+
+        function switchTab(tabName) {
+            document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
+            document.querySelectorAll('.nav-tab').forEach(el => {
+                el.classList.remove('active');
+                el.classList.add('text-slate-400');
+            });
+
+            document.getElementById(`view-${tabName}`).classList.add('active');
+            const targetTab = document.getElementById(`tab-${tabName}`);
+            targetTab.classList.add('active');
+            targetTab.classList.remove('text-slate-400');
+        }
+
+        function formatThaiTime(date) {
+            if (!date || isNaN(date.getTime())) return "--:-- น.";
+            const hours = date.getHours().toString().padStart(2, '0');
+            const minutes = date.getMinutes().toString().padStart(2, '0');
+            return `${hours}:${minutes} น.`;
+        }
+
+        function updateClock() {
+            const now = new Date();
+            document.getElementById('clockDisplay').textContent = `${now.getHours().toString().padStart(2, '0')}:${now.getMinutes().toString().padStart(2, '0')}:${now.getSeconds().toString().padStart(2, '0')} น.`;
+            document.getElementById('dateDisplay').textContent = now.toLocaleDateString('th-TH', {
+                year: 'numeric',
+                month: 'short',
+                day: 'numeric'
+            });
+        }
+        setInterval(updateClock, 1000);
+        updateClock();
+
+        setInterval(async () => {
+            await autoCheckForUpdates();
+        }, 30000);
+
+        async function autoCheckForUpdates() {
+            await Promise.all([
+                loadQuakeAlert(),
+                fetchWeatherByCoords(lastLat, lastLon, lastCityName, lastCountryCode, false)
+            ]);
+        }
+
+        async function sendDiscordError(errorTitle, errorMessage) {
+            if (!DISCORD_ERROR_WEBHOOK) return;
+            const now = new Date();
+            
+            const payload = {
+                username: "System Error Logger",
+                avatar_url: "https://cdn-icons-png.flaticon.com/512/564/564619.png",
+                embeds: [{
+                    title: `🚨 [ERROR DETECTED] ${errorTitle}`,
+                    description: `\`\`\`javascript\n${errorMessage}\n\`\`\``,
+                    color: 15548997,
+                    fields: [
+                        { name: "📍 พื้นที่", value: lastCityName || "N/A", inline: true },
+                        { name: "🕒 เวลา", value: `${now.toLocaleDateString('th-TH')} ${formatThaiTime(now)}`, inline: true }
+                    ],
+                    timestamp: new Date().toISOString()
+                }]
+            };
+
+            try {
+                await fetch(DISCORD_ERROR_WEBHOOK, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload)
+                });
+            } catch (e) {}
+        }
+
+        async function sendDiscordUpdateNotification(isManual = false) {
+            if (!latestWeatherData || !DISCORD_UPDATE_WEBHOOK) return;
+
+            const cur = latestWeatherData.current;
+            const daily = latestWeatherData.daily;
+            if (!cur || !daily) return;
+
+            const sunriseStr = formatThaiTime(new Date(daily.sunrise[0]));
+            const sunsetStr = formatThaiTime(new Date(daily.sunset[0]));
+            const uvVal = (cur.uv_index !== undefined && cur.uv_index !== null) ? cur.uv_index.toFixed(1) : '0.0';
+            const tempVal = Math.round(cur.temperature_2m);
+            const now = new Date();
+
+            const currentSnapshot = `TEMP:${tempVal}|HUM:${cur.relative_humidity_2m}|WIND:${cur.wind_speed_10m}|PRESS:${Math.round(cur.surface_pressure)}|UV:${uvVal}`;
+
+            const isFirstRun = (lastWeatherSnapshot === "");
+            const hasChanged = (!isFirstRun && lastWeatherSnapshot !== currentSnapshot);
+
+            if (!isFirstRun && !hasChanged && !isManual) return;
+            
+            lastWeatherSnapshot = currentSnapshot;
+
+            let titleText = "📢 [UPDATE] รายงานสภาพอากาศประจำวัน";
+            let embedColor = 15387158; 
+
+            if (hasChanged) {
+                titleText = "⚡ [ALERT] สภาพอากาศ มีการเปลี่ยนแปลง!";
+                embedColor = 15548997;
+            } else if (isManual) {
+                titleText = "🔄 [MANUAL] ผู้ใช้กด Refresh ด้วยตัวเอง";
+                embedColor = 3447003;
+            }
+
+            const payload = {
+                username: "Weather Tracker Pro",
+                avatar_url: "https://cdn-icons-png.flaticon.com/512/1163/1163661.png",
+                embeds: [{
+                    title: titleText,
+                    description: `📍 **ตำแหน่ง:** ${lastCityName}\n🕒 **เวลาอัปเดต:** ${now.toLocaleDateString('th-TH')} เวลา ${formatThaiTime(now)}`,
+                    color: embedColor,
+                    fields: [
+                        { name: "🌡️ อุณหภูมิ", value: `\`${tempVal} °C\``, inline: true },
+                        { name: "💧 ความชื้น", value: `\`${cur.relative_humidity_2m}%\``, inline: true },
+                        { name: "💨 ความเร็วลม", value: `\`${cur.wind_speed_10m} km/h\``, inline: true },
+                        { name: "⏲️ ความกดอากาศ", value: `\`${Math.round(cur.surface_pressure)} hPa\``, inline: true },
+                        { name: "☀️ ดัชนี UV (ปัจจุบัน)", value: `\`${uvVal}\``, inline: true },
+                        { name: "🌅 พระอาทิตย์ขึ้น / ตก", value: `\`${sunriseStr} / ${sunsetStr}\``, inline: true }
+                    ],
+                    footer: { text: "Real-Time Instant Trigger System" },
+                    timestamp: new Date().toISOString()
+                }]
+            };
+
+            try {
+                await fetch(DISCORD_UPDATE_WEBHOOK, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload)
+                });
+            } catch (err) {
+                sendDiscordError("Webhook Send Failed", err.message || err.toString());
+            }
+        }
+
+        async function loadQuakeAlert() {
+            const quakeContent = document.getElementById('quakeContent');
+            const quakeLastUpdate = document.getElementById('quakeLastUpdate');
+            
+            try {
+                const res = await fetch('https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/2.5_day.geojson');
+                if (!res.ok) throw new Error(`HTTP ${res.status}: Failed to fetch Quake data`);
+                
+                const data = await res.json();
+                
+                if (data.features && data.features.length > 0) {
+                    const latest = data.features[0];
+                    const mag = parseFloat(latest.properties.mag.toFixed(1));
+                    const place = latest.properties.place || 'ไม่ระบุพื้นที่';
+                    const depth = latest.geometry.coordinates[2];
+                    const usgsUrl = latest.properties.url || 'https://earthquake.usgs.gov/';
+                    const eventTime = new Date(latest.properties.time);
+
+                    let alertLevel = 'text-yellow-500 font-bold';
+                    if (mag >= 5.0) alertLevel = 'text-red-500 font-black animate-pulse';
+
+                    const now = new Date();
+                    quakeLastUpdate.textContent = `อัปเดต: ${formatThaiTime(now)}`;
+                    
+                    quakeContent.innerHTML = `
+                        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+                            <div>
+                                <span class="font-bold text-white">ตำแหน่งล่าสุด:</span> <span class="text-slate-300">${esc(place)}</span>
+                                <span class="text-slate-500 text-[11px] block sm:inline sm:ml-2">(เกิดขึ้นเมื่อ: ${formatThaiTime(eventTime)})</span>
+                            </div>
+                            <div class="flex items-center gap-3 shrink-0 font-mono">
+                                <span>ขนาด: <strong class="${alertLevel}">${mag} M</strong></span>
+                                <span class="text-slate-500">ลึก: ${depth} กม.</span>
+                                <a href="${usgsUrl}" target="_blank" class="px-2 py-0.5 bg-yellow-500/10 border border-yellow-500/30 text-yellow-500 rounded text-[10px] hover:bg-yellow-500 hover:text-black transition-all">
+                                    ดูที่มา USGS ↗
+                                </a>
+                            </div>
+                        </div>
+                    `;
+
+                    let listHTML = data.features.slice(0, 10).map(item => {
+                        const itemMag = item.properties.mag.toFixed(1);
+                        const itemUrl = item.properties.url || 'https://earthquake.usgs.gov/';
+                        const itemTime = new Date(item.properties.time);
+                        return `
+                            <div class="card-item p-3.5 rounded-xl flex justify-between items-center gap-3">
+                                <div class="overflow-hidden">
+                                    <div class="font-bold text-sm text-white truncate">${esc(item.properties.place)}</div>
+                                    <div class="text-[11px] text-slate-500 mt-0.5 font-mono">
+                                        ความลึก: ${item.geometry.coordinates[2]} กม. | เวลาที่เกิด: ${formatThaiTime(itemTime)}
+                                    </div>
+                                </div>
+                                <div class="flex items-center gap-3 shrink-0">
+                                    <span class="text-sm font-extrabold font-mono ${item.properties.mag >= 5.0 ? 'text-red-500' : 'text-yellow-500'}">${itemMag} M</span>
+                                    <a href="${itemUrl}" target="_blank" class="px-2.5 py-1 bg-white/5 border border-white/10 text-slate-300 hover:text-yellow-500 hover:border-yellow-500/40 rounded-lg text-xs font-mono transition-all">
+                                        ที่มา ↗
+                                    </a>
+                                </div>
+                            </div>
+                        `;
+                    }).join('');
+                    document.getElementById('quakeFullList').innerHTML = listHTML;
+                }
+            } catch (e) {
                 sendDiscordError("Quake API Error", e.message || e.toString());
                 quakeContent.innerHTML = `<span class="text-red-400">เกิดข้อผิดพลาดในการโหลดข้อมูลแผ่นดินไหว</span>`;
             }
