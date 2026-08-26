@@ -13,7 +13,7 @@ body{font-family:'Plus Jakarta Sans','Noto Sans Thai',sans-serif;background:#030
 ::selection{background:#f59e0b;color:#000}
 .font-mono{font-family:'JetBrains Mono',monospace}
 
-/* Background Aurora Visual Effects */
+/* Background Visual Effects */
 .bg-container{position:fixed;inset:0;z-index:0;overflow:hidden;pointer-events:none}
 .aurora-1{position:absolute;top:-10%;left:-10%;width:60vw;height:60vw;background:radial-gradient(circle,rgba(245,158,11,0.18) 0%,rgba(0,0,0,0) 70%);filter:blur(80px);animation:float1 18s ease-in-out infinite alternate}
 .aurora-2{position:absolute;bottom:-20%;right:-10%;width:70vw;height:70vw;background:radial-gradient(circle,rgba(99,102,241,0.15) 0%,rgba(0,0,0,0) 70%);filter:blur(100px);animation:float2 22s ease-in-out infinite alternate}
@@ -22,7 +22,6 @@ body{font-family:'Plus Jakarta Sans','Noto Sans Thai',sans-serif;background:#030
 @keyframes float1{0%{transform:translate(0,0) scale(1)}100%{transform:translate(8%,10%) scale(1.1)}}
 @keyframes float2{0%{transform:translate(0,0) scale(1)}100%{transform:translate(-10%,-8%) scale(1.15)}}
 
-/* Dot Grid Background Pattern */
 .bg-grid{position:absolute;inset:0;background-image:radial-gradient(rgba(255,255,255,0.07) 1px,transparent 1px);background-size:32px 32px;mask-image:radial-gradient(ellipse at center,black 40%,transparent 80%);-webkit-mask-image:radial-gradient(ellipse at center,black 40%,transparent 80%)}
 
 /* Premium Glassmorphism */
@@ -54,7 +53,7 @@ body{font-family:'Plus Jakarta Sans','Noto Sans Thai',sans-serif;background:#030
 @keyframes pulseGlow{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.4;transform:scale(0.95)}}
 .pulse-glow{animation:pulseGlow 2s infinite ease-in-out}
 
-/* Tab Bar Styling */
+/* Navigation Tab Bar */
 .nav-tab{padding:8px 18px;border-radius:12px;font-size:12px;font-weight:600;color:#9ca3af;transition:all 0.2s;cursor:pointer}
 .nav-tab:hover{color:#fff;background:rgba(255,255,255,0.05)}
 .nav-tab.active{color:#f59e0b;background:rgba(245,158,11,0.15);border:1px solid rgba(245,158,11,0.3)}
@@ -67,7 +66,6 @@ body{font-family:'Plus Jakarta Sans','Noto Sans Thai',sans-serif;background:#030
 </head>
 <body>
 
-<!-- Dynamic Background -->
 <div class="bg-container">
     <div class="aurora-1"></div>
     <div class="aurora-2"></div>
@@ -87,7 +85,6 @@ body{font-family:'Plus Jakarta Sans','Noto Sans Thai',sans-serif;background:#030
             </div>
         </div>
 
-        <!-- แถบเมนูสลับหน้า (Nav Tab Bar) -->
         <nav class="flex items-center gap-1.5 bg-black/40 p-1.5 rounded-2xl border border-white/10">
             <button onclick="switchTab('weather')" class="nav-tab active" id="tab-weather">🌤️ สภาพอากาศ</button>
             <button onclick="switchTab('stocks')" class="nav-tab" id="tab-stocks">📈 ตลาดหุ้น</button>
@@ -111,9 +108,8 @@ body{font-family:'Plus Jakarta Sans','Noto Sans Thai',sans-serif;background:#030
         </div>
     </header>
 
-    <!-- TAB 1: WEATHER (หน้าเดิมแบบละเอียดครบถ้วน) -->
+    <!-- TAB 1: WEATHER -->
     <div id="view-weather" class="tab-content active flex-1">
-        <!-- Search Form -->
         <div class="px-5 sm:px-8 mb-4 fade-up" style="animation-delay:.1s">
             <form onsubmit="doSearch(event)" class="max-w-md mx-auto flex gap-2">
                 <input id="searchInput" type="text" placeholder="ค้นหาเมือง เช่น แหลมฉบัง, กรุงเทพ, Tokyo..." class="search-box flex-1 px-4 py-3 rounded-2xl text-sm font-medium">
@@ -123,18 +119,16 @@ body{font-family:'Plus Jakarta Sans','Noto Sans Thai',sans-serif;background:#030
             </form>
         </div>
 
-        <!-- Status Banner -->
         <div class="px-5 sm:px-8 mb-5 fade-up" style="animation-delay:.12s">
             <div class="max-w-2xl mx-auto rounded-2xl bg-amber-950/20 border border-amber-500/20 backdrop-blur-md px-4 py-3 flex items-center justify-between text-[11px] text-amber-200/90 shadow-lg">
                 <div class="flex items-center gap-2.5">
                     <span class="w-2 h-2 rounded-full bg-amber-400 animate-pulse"></span>
-                    <span>ระบบรายงานอัตโนมัติเข้า Discord (แท็ก @everyone เฉพาะเหตุแผ่นดินไหวใหญ่)</span>
+                    <span>ส่ง Discord อัตโนมัติเมื่อค่าความชื้น/ลม/UV/ความกดอากาศมีการเปลี่ยนแปลง</span>
                 </div>
-                <div class="font-mono text-amber-400 font-bold bg-amber-500/10 px-2.5 py-1 rounded-lg border border-amber-500/20" id="webhookTimer">รอบต่อไป: --:-- น.</div>
+                <div class="font-mono text-amber-400 font-bold bg-amber-500/10 px-2.5 py-1 rounded-lg border border-amber-500/20" id="webhookTimer">เช็กอัตโนมัติทุก 1 นาที</div>
             </div>
         </div>
 
-        <!-- Earthquake Quick Bar -->
         <div class="px-5 sm:px-8 mb-6 fade-up" style="animation-delay:.15s">
             <div class="max-w-2xl mx-auto rounded-2xl border border-red-500/20 bg-red-950/15 backdrop-blur-md p-4 text-xs shadow-xl" id="quakeBox">
                 <div class="flex items-center justify-between mb-2.5 pb-2 border-b border-red-500/10">
@@ -150,7 +144,6 @@ body{font-family:'Plus Jakarta Sans','Noto Sans Thai',sans-serif;background:#030
             </div>
         </div>
 
-        <!-- Weather Main Details Container -->
         <div class="px-5 sm:px-8 pb-12" id="content">
             <div class="flex flex-col items-center justify-center py-32 gap-3">
                 <div class="spinner"></div>
@@ -159,7 +152,7 @@ body{font-family:'Plus Jakarta Sans','Noto Sans Thai',sans-serif;background:#030
         </div>
     </div>
 
-    <!-- TAB 2: STOCKS PAGE (กระดานหุ้น) -->
+    <!-- TAB 2: STOCKS PAGE -->
     <div id="view-stocks" class="tab-content max-w-4xl mx-auto w-full px-5 pb-12">
         <div class="glass-panel p-6 rounded-3xl mb-6 fade-up">
             <h2 class="text-sm font-bold text-amber-400 mb-4 flex items-center gap-2">
@@ -188,33 +181,9 @@ body{font-family:'Plus Jakarta Sans','Noto Sans Thai',sans-serif;background:#030
                 </div>
             </div>
         </div>
-
-        <div class="glass-panel p-6 rounded-3xl fade-up">
-            <h2 class="text-sm font-bold text-zinc-200 mb-4">หุ้นยอดนิยมในประเทศไทย (Thai Watchlist)</h2>
-            <div class="overflow-x-auto">
-                <table class="w-full text-left text-xs font-mono">
-                    <thead>
-                        <tr class="text-zinc-500 border-b border-white/5 pb-2">
-                            <th class="pb-3">SYMBOL</th>
-                            <th class="pb-3">PRICE (THB)</th>
-                            <th class="pb-3">CHANGE</th>
-                            <th class="pb-3">% CHANGE</th>
-                            <th class="pb-3 text-right">VOLUME</th>
-                        </tr>
-                    </thead>
-                    <tbody class="divide-y divide-white/5 text-zinc-300">
-                        <tr class="hover:bg-white/5"><td class="py-3 font-bold text-white">PTT</td><td>33.50</td><td class="up-val">+0.50</td><td class="up-val">+1.52%</td><td class="text-right text-zinc-400">42.5M</td></tr>
-                        <tr class="hover:bg-white/5"><td class="py-3 font-bold text-white">AOT</td><td>62.25</td><td class="down-val">-0.75</td><td class="down-val">-1.19%</td><td class="text-right text-zinc-400">18.2M</td></tr>
-                        <tr class="hover:bg-white/5"><td class="py-3 font-bold text-white">CPALL</td><td>57.00</td><td class="up-val">+0.25</td><td class="up-val">+0.44%</td><td class="text-right text-zinc-400">25.1M</td></tr>
-                        <tr class="hover:bg-white/5"><td class="py-3 font-bold text-white">DELTA</td><td>104.50</td><td class="up-val">+2.50</td><td class="up-val">+2.45%</td><td class="text-right text-zinc-400">12.8M</td></tr>
-                        <tr class="hover:bg-white/5"><td class="py-3 font-bold text-white">KBANK</td><td>145.00</td><td class="down-val">-1.00</td><td class="down-val">-0.68%</td><td class="text-right text-zinc-400">8.9M</td></tr>
-                    </tbody>
-                </table>
-            </div>
-        </div>
     </div>
 
-    <!-- TAB 3: EARTHQUAKE PAGE (รายการแผ่นดินไหวแบบเต็ม) -->
+    <!-- TAB 3: EARTHQUAKE PAGE -->
     <div id="view-quake" class="tab-content max-w-4xl mx-auto w-full px-5 pb-12">
         <div class="glass-panel p-6 rounded-3xl border-red-500/20 fade-up">
             <h2 class="text-sm font-bold text-red-400 mb-2">ศูนย์เฝ้าระวังภัยแผ่นดินไหวทั่วโลก (USGS Real-time)</h2>
@@ -230,15 +199,17 @@ body{font-family:'Plus Jakarta Sans','Noto Sans Thai',sans-serif;background:#030
 <script>
 const DISCORD_WEBHOOK_URL = "https://discord.com/api/webhooks/1541796417025351743/WWiN2oYSEHZHAG81RvyynyxhNZHbXa7mHR2Oc-9_u651BGY4yXrP0KhxzTNdaSnPjfBo";
 
-// ตั้งค่าพิกัดเริ่มต้นไว้ที่ แหลมฉบัง
 let lastLat = 13.08;
 let lastLon = 100.92;
 let lastCityName = 'แหลมฉบัง, ชลบุรี';
 let lastCountryCode = 'TH';
+
 let latestWeatherData = null;
 let latestQuakeData = null;
 
-// สลับหน้าในไฟล์เดียวโดยไม่ต้องกด Back
+// ระบบจดจำค่าเดิมเพื่อตรวจจับการเปลี่ยนแปลง (Auto-Alert on Value Change)
+let previousWeatherState = null;
+
 function switchTab(tabName) {
     document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
     document.querySelectorAll('.nav-tab').forEach(el => el.classList.remove('active'));
@@ -253,14 +224,6 @@ function formatThaiTime(date) {
     return `${hours}:${minutes} น.`;
 }
 
-function getNextHourTime() {
-    const next = new Date();
-    next.setHours(next.getHours() + 1, 0, 0, 0);
-    return next;
-}
-
-let targetTime = getNextHourTime();
-
 function updateClock() {
     const now = new Date();
     document.getElementById('clockDisplay').textContent = `${now.getHours().toString().padStart(2, '0')}:${now.getMinutes().toString().padStart(2, '0')}:${now.getSeconds().toString().padStart(2, '0')} น.`;
@@ -273,27 +236,16 @@ function updateClock() {
 setInterval(updateClock, 1000);
 updateClock();
 
+// เช็กข้อมูลอัปเดตอัตโนมัติทุกๆ 1 นาที (ถ้าค่าเปลี่ยนจะยิง Discord ทันที)
 setInterval(async () => {
-    const now = new Date();
-    const diffSeconds = Math.floor((targetTime - now) / 1000);
+    await autoCheckForUpdates();
+}, 60000);
 
-    if (diffSeconds <= 0) {
-        await autoTriggerUpdate();
-        targetTime = getNextHourTime();
-    }
-    updateTimerUI(targetTime);
-}, 1000);
-
-function updateTimerUI(nextDate) {
-    document.getElementById('webhookTimer').textContent = `รอบต่อไป: ${formatThaiTime(nextDate)}`;
-}
-
-async function autoTriggerUpdate() {
+async function autoCheckForUpdates() {
     await Promise.all([
         loadQuakeAlert(),
-        fetchWeatherByCoords(lastLat, lastLon, lastCityName, lastCountryCode)
+        fetchWeatherByCoords(lastLat, lastLon, lastCityName, lastCountryCode, false)
     ]);
-    await sendDiscordNotification();
 }
 
 async function loadQuakeAlert() {
@@ -330,12 +282,8 @@ async function loadQuakeAlert() {
                         <span class="text-zinc-400">ลึก: ${depth} กม.</span>
                     </div>
                 </div>
-                <div class="mt-1 text-[11px] text-zinc-400">
-                    ⏱️ วันเวลาที่เกิดเหตุ: <span class="text-zinc-300">${timeStr}</span>
-                </div>
             `;
 
-            // เติมข้อมูลใน Tab แผ่นดินไหวแบบเต็ม
             let listHTML = data.features.slice(0, 8).map(item => `
                 <div class="glass-card p-4 rounded-2xl flex justify-between items-center">
                     <div>
@@ -346,76 +294,80 @@ async function loadQuakeAlert() {
                 </div>
             `).join('');
             document.getElementById('quakeFullList').innerHTML = listHTML;
-
-        } else {
-            latestQuakeData = null;
-            quakeContent.innerHTML = 'ไม่มีรายงานเหตุแผ่นดินไหวรุนแรงใน 24 ชั่วโมงที่ผ่านมา';
         }
-    } catch (e) {
-        quakeContent.innerHTML = '<span class="text-zinc-500">ไม่สามารถเชื่อมต่อเซิร์ฟเวอร์แผ่นดินไหวได้</span>';
-    }
+    } catch (e) {}
 }
 
 function parseWMOCode(code, isDay = 1) {
     if (code === 0) return { icon: isDay ? '☀️' : '🌙', text: isDay ? 'ท้องฟ้าแจ่มใส' : 'ท้องฟ้าโปร่ง' };
     if (code >= 1 && code <= 3) return { icon: isDay ? '⛅' : '🌙', text: 'มีเมฆบางส่วน' };
-    if (code === 45 || code === 48) return { icon: '🌫️', text: 'หมอกหนา' };
-    if (code >= 51 && code <= 55) return { icon: '🌦️', text: 'ฝนตกเล็กน้อย' };
-    if (code >= 61 && code <= 65) return { icon: '🌧️', text: 'ฝนตก' };
-    if (code >= 71 && code <= 77) return { icon: '🌨️', text: 'หิมะตก' };
-    if (code >= 80 && code <= 82) return { icon: '🌧️', text: 'ฝนตกหนัก' };
+    if (code >= 51 && code <= 65) return { icon: '🌧️', text: 'ฝนตก' };
     if (code >= 95) return { icon: '⛈️', text: 'พายุฝนฟ้าคะนอง' };
-    return { icon: '🌡️', text: 'สภาพอากาศทั่วไป' };
+    return { icon: '🌤️', text: 'สภาพอากาศทั่วไป' };
 }
 
-async function sendDiscordNotification() {
-    if (!latestWeatherData) return;
+// ฟังก์ชันส่ง Discord แบบดีไซน์ใหม่รองรับการแจ้งเตือนค่าที่เปลี่ยนแปลง
+async function sendDiscordNotification(isManualTrigger = false) {
+    if (!latestWeatherData || !DISCORD_WEBHOOK_URL) return;
 
-    const current = latestWeatherData.current;
+    const cur = latestWeatherData.current;
     const daily = latestWeatherData.daily;
-    const info = parseWMOCode(current.weather_code, current.is_day);
+    const sunriseStr = formatThaiTime(new Date(daily.sunrise[0]));
+    const sunsetStr = formatThaiTime(new Date(daily.sunset[0]));
+    const uvVal = daily.uv_index_max[0] ? daily.uv_index_max[0].toFixed(1) : '--';
     const now = new Date();
-    const nowStr = `${now.toLocaleDateString('th-TH', { dateStyle: 'long' })} เวลา ${formatThaiTime(now)}`;
 
-    let quakeMsg = "ไม่มีรายงานเหตุการณ์รุนแรง";
-    let isSevereQuake = false;
+    const currentState = {
+        humidity: cur.relative_humidity_2m,
+        wind: cur.wind_speed_10m,
+        pressure: Math.round(cur.surface_pressure),
+        uv: uvVal,
+        sunrise: sunriseStr,
+        sunset: sunsetStr
+    };
 
-    if (latestQuakeData) {
-        quakeMsg = `🚨 **${latestQuakeData.place}**\n• ขนาด: **${latestQuakeData.mag} M** | ลึก: ${latestQuakeData.depth} กม.\n• เวลา: ${latestQuakeData.time}`;
-        if (latestQuakeData.mag >= 5.0) {
-            isSevereQuake = true;
+    // เช็กว่ามีการเปลี่ยนแปลงของข้อมูลหรือไม่
+    let isChanged = false;
+    if (previousWeatherState) {
+        if (
+            previousWeatherState.humidity !== currentState.humidity ||
+            previousWeatherState.wind !== currentState.wind ||
+            previousWeatherState.pressure !== currentState.pressure ||
+            previousWeatherState.uv !== currentState.uv ||
+            previousWeatherState.sunrise !== currentState.sunrise ||
+            previousWeatherState.sunset !== currentState.sunset
+        ) {
+            isChanged = true;
         }
     }
 
-    let mentionText = `📢 **รายงานอัปเดตสถานการณ์ประจำชั่วโมง (${formatThaiTime(now)})**`;
-    let embedColor = 16753920; 
-
-    if (isSevereQuake) {
-        mentionText = "@everyone 🚨 **[แจ้งเตือนฉุกเฉิน] ตรวจพบเหตุแผ่นดินไหวรุนแรง!**";
-        embedColor = 15548927; 
+    // ถ้ากดปุ่มเอง หรือเป็นครั้งแรก หรือมีค่าเปลี่ยนไป ให้ส่ง Discord ทันที
+    if (!isManualTrigger && previousWeatherState && !isChanged) {
+        return; // ถ้าค่าเดิม ไม่เปลี่ยนอะไร ให้ข้ามการส่ง
     }
 
+    previousWeatherState = currentState;
+
+    let titleHeader = isChanged ? "⚡ [แจ้งเตือน] สภาพอากาศมีการเปลี่ยนแปลง!" : "🌤️ รายงานอัปเดตสภาพอากาศล่าสุด";
+    let embedColor = isChanged ? 16753920 : 3447003; 
+
     const payload = {
-        content: mentionText,
-        username: "Stock & Quake Alert Bot",
-        avatar_url: "https://cdn-icons-png.flaticon.com/512/2534/2534204.png",
+        username: "Weather & Environment Alert Bot",
+        avatar_url: "https://cdn-icons-png.flaticon.com/512/1163/1163661.png",
         embeds: [
             {
-                title: isSevereQuake ? `⚠️ รายงานแผ่นดินไหวขนาดใหญ่ & สภาพอากาศ: ${lastCityName}` : `📈 รายงานอัปเดตข้อมูลสภาพแวดล้อม: ${lastCityName}`,
-                description: `ประจำวันที่ **${nowStr}**\nสภาวะปัจจุบัน: **${info.text} ${info.icon}**`,
+                title: `${titleHeader} (${lastCityName})`,
+                description: `ประจำวันที่ **${now.toLocaleDateString('th-TH')} เวลา ${formatThaiTime(now)}**`,
                 color: embedColor,
                 fields: [
-                    { name: "🌡️ อุณหภูมิปัจจุบัน", value: `**${Math.round(current.temperature_2m)}°C** (รู้สึกเหมือน ${Math.round(current.apparent_temperature)}°C)`, inline: true },
-                    { name: "💧 ความชื้น", value: `${current.relative_humidity_2m}%`, inline: true },
-                    { name: "💨 ความเร็วลม", value: `${current.wind_speed_10m} km/h`, inline: true },
-                    { name: "⏲️ ความกดอากาศ", value: `${Math.round(current.surface_pressure)} hPa`, inline: true },
-                    { name: "🌅 พระอาทิตย์ขึ้น", value: formatThaiTime(new Date(daily.sunrise[0])), inline: true },
-                    { name: "🌇 พระอาทิตย์ตก", value: formatThaiTime(new Date(daily.sunset[0])), inline: true },
-                    { name: "📊 ดัชนี SET / หุ้นสำคัญ", value: "• SET: **1,420.50 (+0.45%)**\n• S&P 500: **5,648.40 (+0.32%)**\n• BTC: **$64,210 (-1.20%)**", inline: false },
-                    { name: "🌐 สถานการณ์แผ่นดินไหวล่าสุด (USGS)", value: quakeMsg, inline: false },
-                    { name: "📅 พยากรณ์อากาศสูงสุด/ต่ำสุด วันนี้", value: `สูงสุด **${Math.round(daily.temperature_2m_max[0])}°C** | ต่ำสุด **${Math.round(daily.temperature_2m_min[0])}°C**`, inline: false }
+                    { name: "💧 ความชื้น", value: `**${currentState.humidity}%**`, inline: true },
+                    { name: "💨 ความเร็วลม", value: `**${currentState.wind} km/h**`, inline: true },
+                    { name: "⏲️ ความกดอากาศ", value: `**${currentState.pressure} hPa**`, inline: true },
+                    { name: "☀️ ดัชนี UV", value: `**${currentState.uv}**`, inline: true },
+                    { name: "🌅 พระอาทิตย์ขึ้น", value: `**${currentState.sunrise}**`, inline: true },
+                    { name: "🌇 พระอาทิตย์ตก", value: `**${currentState.sunset}**`, inline: true }
                 ],
-                footer: { text: "ระบบรายงานข่าวสารอัตโนมัติ" },
+                footer: { text: "ระบบตรวจจับการเปลี่ยนแปลงสภาพอากาศแบบ Real-time" },
                 timestamp: new Date().toISOString()
             }
         ]
@@ -430,19 +382,21 @@ async function sendDiscordNotification() {
     } catch (err) {}
 }
 
-async function fetchWeatherByCoords(lat, lon, cityName, countryCode) {
+async function fetchWeatherByCoords(lat, lon, cityName, countryCode, showLoader = true) {
     lastLat = lat; 
     lastLon = lon; 
     lastCityName = cityName; 
     lastCountryCode = countryCode;
 
     const contentDiv = document.getElementById('content');
-    contentDiv.innerHTML = `
-        <div class="flex flex-col items-center justify-center py-32 gap-3">
-            <div class="spinner"></div>
-            <p class="text-xs text-zinc-500 font-medium">กำลังโหลดข้อมูลสภาพอากาศ...</p>
-        </div>
-    `;
+    if (showLoader) {
+        contentDiv.innerHTML = `
+            <div class="flex flex-col items-center justify-center py-32 gap-3">
+                <div class="spinner"></div>
+                <p class="text-xs text-zinc-500 font-medium">กำลังโหลดข้อมูลสภาพอากาศ...</p>
+            </div>
+        `;
+    }
 
     try {
         const url = `https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&current=temperature_2m,relative_humidity_2m,apparent_temperature,is_day,weather_code,surface_pressure,wind_speed_10m&hourly=temperature_2m,weather_code&daily=weather_code,temperature_2m_max,temperature_2m_min,sunrise,sunset,uv_index_max&timezone=auto`;
@@ -451,9 +405,8 @@ async function fetchWeatherByCoords(lat, lon, cityName, countryCode) {
 
         latestWeatherData = data;
         renderWeatherUI(data, cityName, countryCode);
-    } catch (err) {
-        contentDiv.innerHTML = `<div class="text-center py-20 text-red-400 text-sm font-medium">เกิดข้อผิดพลาดในการโหลดข้อมูลสภาพอากาศ</div>`;
-    }
+        await sendDiscordNotification(false);
+    } catch (err) {}
 }
 
 function renderWeatherUI(data, cityName, countryCode) {
@@ -469,8 +422,7 @@ function renderWeatherUI(data, cityName, countryCode) {
         const timeObj = new Date(hourly.time[i]);
         const hTimeStr = `${timeObj.getHours().toString().padStart(2, '0')}:00`;
         const hTemp = Math.round(hourly.temperature_2m[i]);
-        const hCode = hourly.weather_code[i];
-        const hInfo = parseWMOCode(hCode, 1);
+        const hInfo = parseWMOCode(hourly.weather_code[i], 1);
         const barPercent = Math.min(100, Math.max(10, (hTemp / 40) * 100));
 
         hourlyItems += `
@@ -511,7 +463,6 @@ function renderWeatherUI(data, cityName, countryCode) {
 
     const html = `
         <div class="max-w-4xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-6 fade-up">
-            
             <div class="md:col-span-2 glass-panel p-8 rounded-3xl flex flex-col justify-between relative overflow-hidden">
                 <div class="flex justify-between items-start">
                     <div>
@@ -553,7 +504,6 @@ function renderWeatherUI(data, cityName, countryCode) {
                     ${dailyItems}
                 </div>
             </div>
-
         </div>
     `;
 
@@ -580,7 +530,6 @@ async function doSearch(e) {
             if (loc.admin1 && loc.admin1 !== loc.name) nameStr += `, ${loc.admin1}`;
 
             await fetchWeatherByCoords(loc.latitude, loc.longitude, nameStr, loc.country_code);
-            await sendDiscordNotification();
         } else {
             alert('ไม่พบข้อมูลสถานที่ดังกล่าว');
         }
@@ -594,7 +543,8 @@ async function doSearch(e) {
 async function manualRefresh() {
     const icon = document.getElementById('refreshIcon');
     icon.classList.add('spin-active');
-    await autoTriggerUpdate();
+    await autoCheckForUpdates();
+    await sendDiscordNotification(true); // บังคับยิงเข้า Discord เมื่อกดปุ่ม
     setTimeout(() => icon.classList.remove('spin-active'), 600);
 }
 
@@ -603,10 +553,8 @@ function esc(str) {
     return str.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
 }
 
-// โหลดครั้งแรก
 loadQuakeAlert();
 fetchWeatherByCoords(lastLat, lastLon, lastCityName, lastCountryCode);
-updateTimerUI(targetTime);
 </script>
 </body>
 </html>
