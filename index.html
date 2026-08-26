@@ -3,89 +3,71 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>ระบบแจ้งเตือนหุ้น & แผ่นดินไหว Discord — Stock & Disaster Alert</title>
-<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='20' fill='%23111'/><text x='50' y='68' font-size='45' text-anchor='middle' fill='white' font-family='Arial' font-weight='bold'>S</text></svg>">
+<title>Ultimate Weather & Disaster Tracker Pro</title>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='25' fill='%23f59e0b'/><text x='50' y='68' font-size='50' text-anchor='middle' fill='black' font-weight='900'>W</text></svg>">
 <script src="https://cdn.tailwindcss.com"></script>
-<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Noto+Sans+Thai:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800;900&family=Noto+Sans+Thai:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;600;700;800&display=swap" rel="stylesheet">
 <style>
-*{box-sizing:border-box;margin:0}
-body{font-family:'Plus Jakarta Sans','Noto Sans Thai',sans-serif;background:#030712;color:#fff;min-height:100vh;overflow-x:hidden}
-::selection{background:#f59e0b;color:#000}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Plus Jakarta Sans','Noto Sans Thai',sans-serif;background:#02040a;color:#fff;min-height:100vh;overflow-x:hidden}
 .font-mono{font-family:'JetBrains Mono',monospace}
 
-/* Background Visual Effects */
+/* Ultra Background Lights */
 .bg-container{position:fixed;inset:0;z-index:0;overflow:hidden;pointer-events:none}
-.aurora-1{position:absolute;top:-10%;left:-10%;width:60vw;height:60vw;background:radial-gradient(circle,rgba(245,158,11,0.18) 0%,rgba(0,0,0,0) 70%);filter:blur(80px);animation:float1 18s ease-in-out infinite alternate}
-.aurora-2{position:absolute;bottom:-20%;right:-10%;width:70vw;height:70vw;background:radial-gradient(circle,rgba(99,102,241,0.15) 0%,rgba(0,0,0,0) 70%);filter:blur(100px);animation:float2 22s ease-in-out infinite alternate}
-.aurora-3{position:absolute;top:30%;right:20%;width:40vw;height:40vw;background:radial-gradient(circle,rgba(239,68,68,0.12) 0%,rgba(0,0,0,0) 70%);filter:blur(90px);animation:float1 14s ease-in-out infinite alternate-reverse}
+.glow-1{position:absolute;top:-15%;left:-10%;width:55vw;height:55vw;background:radial-gradient(circle,rgba(245,158,11,0.2) 0%,rgba(0,0,0,0) 70%);filter:blur(90px);animation:float1 16s ease-in-out infinite alternate}
+.glow-2{position:absolute;bottom:-20%;right:-10%;width:65vw;height:65vw;background:radial-gradient(circle,rgba(14,165,233,0.18) 0%,rgba(0,0,0,0) 70%);filter:blur(110px);animation:float2 20s ease-in-out infinite alternate}
+.glow-3{position:absolute;top:40%;right:15%;width:35vw;height:35vw;background:radial-gradient(circle,rgba(236,72,153,0.12) 0%,rgba(0,0,0,0) 70%);filter:blur(80px);animation:float1 12s ease-in-out infinite alternate-reverse}
 
-@keyframes float1{0%{transform:translate(0,0) scale(1)}100%{transform:translate(8%,10%) scale(1.1)}}
-@keyframes float2{0%{transform:translate(0,0) scale(1)}100%{transform:translate(-10%,-8%) scale(1.15)}}
+@keyframes float1{0%{transform:translate(0,0)}100%{transform:translate(6%,8%) scale(1.08)}}
+@keyframes float2{0%{transform:translate(0,0)}100%{transform:translate(-8%,-6%) scale(1.12)}}
 
-.bg-grid{position:absolute;inset:0;background-image:radial-gradient(rgba(255,255,255,0.07) 1px,transparent 1px);background-size:32px 32px;mask-image:radial-gradient(ellipse at center,black 40%,transparent 80%);-webkit-mask-image:radial-gradient(ellipse at center,black 40%,transparent 80%)}
+.bg-grid{position:absolute;inset:0;background-image:radial-gradient(rgba(255,255,255,0.08) 1px,transparent 1px);background-size:28px 28px;mask-image:radial-gradient(ellipse at center,black 40%,transparent 85%)}
 
-/* Premium Glassmorphism */
-.glass-panel{background:rgba(17,24,39,0.55);border:1px solid rgba(255,255,255,0.08);backdrop-filter:blur(24px);-webkit-backdrop-filter:blur(24px);box-shadow:0 20px 50px rgba(0,0,0,0.4),inset 0 1px 0 rgba(255,255,255,0.1)}
-.glass-card{background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.06);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);transition:all 0.3s cubic-bezier(0.16,1,0.3,1)}
-.glass-card:hover{border-color:rgba(245,158,11,0.3);transform:translateY(-2px)}
+/* Extreme 3D Glassmorphism */
+.glass-panel{background:linear-gradient(135deg,rgba(255,255,255,0.07) 0%,rgba(255,255,255,0.02) 100%);border:1px solid rgba(255,255,255,0.12);backdrop-filter:blur(30px);-webkit-backdrop-filter:blur(30px);box-shadow:0 30px 60px rgba(0,0,0,0.6),inset 0 1px 1px rgba(255,255,255,0.25)}
+.glass-card{background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.07);backdrop-filter:blur(20px);transition:all 0.3s cubic-bezier(0.16,1,0.3,1)}
+.glass-card:hover{border-color:rgba(245,158,11,0.4);transform:translateY(-3px);box-shadow:0 10px 30px rgba(245,158,11,0.15)}
 
-@keyframes fadeUp{from{opacity:0;transform:translateY(24px)}to{opacity:1;transform:translateY(0)}}
-.fade-up{animation:fadeUp .7s cubic-bezier(.16,1,.3,1) both}
+.temp-huge{font-size:clamp(80px,14vw,120px);font-weight:900;line-height:0.9;letter-spacing:-0.05em;background:linear-gradient(180deg,#ffffff 40%,rgba(255,255,255,0.4) 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
 
-.temp-big{font-size:clamp(72px,15vw,110px);font-weight:800;line-height:1;letter-spacing:-.04em;background:linear-gradient(180deg,#ffffff 30%,rgba(255,255,255,0.6) 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+/* Nav Tabs */
+.nav-tab{padding:10px 22px;border-radius:14px;font-size:12px;font-weight:700;color:#9ca3af;transition:all 0.3s;cursor:pointer}
+.nav-tab:hover{color:#fff;background:rgba(255,255,255,0.06)}
+.nav-tab.active{color:#000;background:linear-gradient(135deg,#f59e0b,#fbbf24);box-shadow:0 0 20px rgba(245,158,11,0.4)}
 
-.detail-row{display:flex;align-items:center;justify-content:space-between;padding:12px 0;border-bottom:1px solid rgba(255,255,255,.04)}
-.detail-row:last-child{border-bottom:none}
-.detail-label{font-size:12px;color:rgba(255,255,255,.45);font-weight:500}
-.detail-val{font-size:13px;font-weight:600;color:rgba(255,255,255,.9)}
-
-.hour-bar{width:100%;height:4px;border-radius:99px;background:rgba(255,255,255,.06);overflow:hidden;position:relative}
-.hour-fill{height:100%;border-radius:99px;background:linear-gradient(90deg,#f59e0b,#fbbf24);transition:width 1s ease}
+.search-box{background:rgba(0,0,0,0.4);border:1px solid rgba(255,255,255,0.12);color:#fff;backdrop-filter:blur(16px);transition:all 0.3s}
+.search-box:focus{outline:none;border-color:#f59e0b;box-shadow:0 0 25px rgba(245,158,11,0.25)}
 
 @keyframes spin{to{transform:rotate(360deg)}}
-.spinner{width:32px;height:32px;border:3px solid rgba(255,255,255,.1);border-top-color:#f59e0b;border-radius:50%;animation:spin .7s linear infinite}
-.spin-active{animation:spin .6s linear infinite}
-
-.search-box{background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);color:#fff;backdrop-filter:blur(12px);transition:.2s}
-.search-box:focus{outline:none;border-color:rgba(245,158,11,0.5);box-shadow:0 0 20px rgba(245,158,11,0.15)}
-.search-box::placeholder{color:#6b7280}
-
-@keyframes pulseGlow{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.4;transform:scale(0.95)}}
-.pulse-glow{animation:pulseGlow 2s infinite ease-in-out}
-
-/* Navigation Tab Bar */
-.nav-tab{padding:8px 18px;border-radius:12px;font-size:12px;font-weight:600;color:#9ca3af;transition:all 0.2s;cursor:pointer}
-.nav-tab:hover{color:#fff;background:rgba(255,255,255,0.05)}
-.nav-tab.active{color:#f59e0b;background:rgba(245,158,11,0.15);border:1px solid rgba(245,158,11,0.3)}
-
-.tab-content{display:none}
-.tab-content.active{display:block}
+.spinner{width:36px;height:36px;border:3px solid rgba(255,255,255,0.1);border-top-color:#f59e0b;border-radius:50%;animation:spin 0.7s linear infinite}
+.spin-active{animation:spin 0.5s linear infinite}
 
 .up-val{color:#10b981}.down-val{color:#ef4444}
+.tab-content{display:none}.tab-content.active{display:block}
 </style>
 </head>
-<body>
+<body class="relative min-h-screen">
 
 <div class="bg-container">
-    <div class="aurora-1"></div>
-    <div class="aurora-2"></div>
-    <div class="aurora-3"></div>
+    <div class="glow-1"></div>
+    <div class="glow-2"></div>
+    <div class="glow-3"></div>
     <div class="bg-grid"></div>
 </div>
 
-<div class="relative z-10 min-h-screen flex flex-col">
+<div class="relative z-10 min-h-screen flex flex-col justify-between">
 
-    <!-- Header Controls -->
-    <header class="flex flex-wrap items-center justify-between px-5 sm:px-10 py-6 fade-up gap-4">
-        <div class="flex items-center gap-3">
-            <div class="w-9 h-9 bg-gradient-to-tr from-amber-500 to-yellow-300 rounded-xl flex items-center justify-center font-black text-xs text-black shadow-lg shadow-amber-500/20">ST</div>
+    <!-- Header -->
+    <header class="flex flex-wrap items-center justify-between px-6 sm:px-12 py-6 gap-4 border-b border-white/5 bg-black/20 backdrop-blur-md">
+        <div class="flex items-center gap-3.5">
+            <div class="w-10 h-10 bg-gradient-to-tr from-amber-500 via-amber-400 to-yellow-200 rounded-2xl flex items-center justify-center font-black text-black text-sm shadow-lg shadow-amber-500/30">WX</div>
             <div>
-                <span class="text-sm font-bold tracking-wide text-white block leading-none">Stock & Quake Alert</span>
-                <span class="text-[10px] text-zinc-500 font-medium">Real-time Auto Tracker</span>
+                <span class="text-base font-extrabold tracking-wide text-white block leading-tight">WEATHER PRO</span>
+                <span class="text-[10px] text-amber-400/90 font-mono font-bold tracking-widest uppercase">Real-Time Sync Engine</span>
             </div>
         </div>
 
-        <nav class="flex items-center gap-1.5 bg-black/40 p-1.5 rounded-2xl border border-white/10">
+        <nav class="flex items-center gap-1.5 bg-black/60 p-1.5 rounded-2xl border border-white/10 shadow-2xl">
             <button onclick="switchTab('weather')" class="nav-tab active" id="tab-weather">🌤️ สภาพอากาศ</button>
             <button onclick="switchTab('stocks')" class="nav-tab" id="tab-stocks">📈 ตลาดหุ้น</button>
             <button onclick="switchTab('quake')" class="nav-tab" id="tab-quake">🚨 แผ่นดินไหว</button>
@@ -93,15 +75,15 @@ body{font-family:'Plus Jakarta Sans','Noto Sans Thai',sans-serif;background:#030
         
         <div class="flex items-center gap-4">
             <div class="text-right hidden sm:block">
-                <div class="text-[11px] text-zinc-300 font-semibold" id="dateDisplay">--/--/----</div>
-                <div class="text-[10px] text-zinc-500 font-medium flex items-center justify-end gap-1.5">
-                    <span class="inline-block w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span>
-                    <span id="clockDisplay">--:--:-- น.</span>
+                <div class="text-xs text-white font-bold font-mono" id="dateDisplay">--/--/----</div>
+                <div class="text-[10px] text-zinc-400 font-medium flex items-center justify-end gap-1.5">
+                    <span class="inline-block w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+                    <span id="clockDisplay" class="font-mono">--:--:-- น.</span>
                 </div>
             </div>
 
-            <button onclick="manualRefresh()" id="refreshBtn" title="อัปเดตข้อมูล & ส่ง Discord ทันที" class="glass-card p-2.5 rounded-xl hover:bg-white/10 active:scale-95 transition flex items-center justify-center group">
-                <svg id="refreshIcon" class="text-zinc-400 group-hover:text-amber-400 transition" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24">
+            <button onclick="manualRefresh()" id="refreshBtn" title="อัปเดตข้อมูล & ยิง Discord" class="glass-card p-3 rounded-2xl hover:bg-white/10 active:scale-95 transition flex items-center justify-center">
+                <svg id="refreshIcon" class="text-zinc-300 hover:text-amber-400 transition" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24">
                     <path d="M21.5 2v6h-6M21.34 15.57a10 10 0 1 1-.57-8.38l5.67-5.67"/>
                 </svg>
             </button>
@@ -110,84 +92,89 @@ body{font-family:'Plus Jakarta Sans','Noto Sans Thai',sans-serif;background:#030
 
     <!-- TAB 1: WEATHER -->
     <div id="view-weather" class="tab-content active flex-1">
-        <div class="px-5 sm:px-8 mb-4 fade-up" style="animation-delay:.1s">
-            <form onsubmit="doSearch(event)" class="max-w-md mx-auto flex gap-2">
-                <input id="searchInput" type="text" placeholder="ค้นหาเมือง เช่น แหลมฉบัง, กรุงเทพ, Tokyo..." class="search-box flex-1 px-4 py-3 rounded-2xl text-sm font-medium">
-                <button type="submit" id="searchBtn" class="bg-amber-500 text-black font-bold px-5 py-3 rounded-2xl text-sm hover:bg-amber-400 active:scale-95 transition shadow-lg shadow-amber-500/20 flex items-center gap-2 shrink-0">
-                    <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><circle cx="6.5" cy="6.5" r="5"/><path d="m10.5 10.5 3 3"/></svg>
+        <!-- Search Bar -->
+        <div class="px-6 sm:px-12 my-6">
+            <form onsubmit="doSearch(event)" class="max-w-xl mx-auto flex gap-2.5">
+                <input id="searchInput" type="text" placeholder="ค้นหาเมือง เช่น แหลมฉบัง, กรุงเทพ, Tokyo, London..." class="search-box flex-1 px-5 py-3.5 rounded-2xl text-sm font-medium">
+                <button type="submit" id="searchBtn" class="bg-gradient-to-r from-amber-500 to-amber-400 text-black font-extrabold px-6 py-3.5 rounded-2xl text-sm hover:brightness-110 active:scale-95 transition shadow-lg shadow-amber-500/25 flex items-center gap-2 shrink-0">
+                    <span>ค้นหา</span>
+                    <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"><circle cx="6.5" cy="6.5" r="5"/><path d="m10.5 10.5 3 3"/></svg>
                 </button>
             </form>
         </div>
 
-        <div class="px-5 sm:px-8 mb-5 fade-up" style="animation-delay:.12s">
-            <div class="max-w-2xl mx-auto rounded-2xl bg-amber-950/20 border border-amber-500/20 backdrop-blur-md px-4 py-3 flex items-center justify-between text-[11px] text-amber-200/90 shadow-lg">
-                <div class="flex items-center gap-2.5">
-                    <span class="w-2 h-2 rounded-full bg-amber-400 animate-pulse"></span>
-                    <span>ระบบเฝ้าระวังค่าสภาพอากาศ (แจ้ง Discord ทันทีเมื่อเปลี่ยน)</span>
+        <!-- System Status Bar -->
+        <div class="px-6 sm:px-12 mb-6">
+            <div class="max-w-4xl mx-auto rounded-2xl bg-gradient-to-r from-amber-950/40 via-amber-900/20 to-transparent border border-amber-500/30 backdrop-blur-md px-5 py-3 flex items-center justify-between text-xs text-amber-200 shadow-xl">
+                <div class="flex items-center gap-3">
+                    <span class="w-2.5 h-2.5 rounded-full bg-amber-400 animate-ping"></span>
+                    <span class="font-medium">ระบบเฝ้าระวังอัตโนมัติ: แจ้ง Discord ทันทีเมื่อค่าสภาพอากาศมีการเปลี่ยนแปลง</span>
                 </div>
-                <div class="font-mono text-amber-400 font-bold bg-amber-500/10 px-2.5 py-1 rounded-lg border border-amber-500/20">Auto-Detect Active</div>
+                <div class="font-mono text-amber-400 font-extrabold bg-amber-500/15 px-3 py-1 rounded-xl border border-amber-500/30">Auto-Check Active</div>
             </div>
         </div>
 
-        <div class="px-5 sm:px-8 mb-6 fade-up" style="animation-delay:.15s">
-            <div class="max-w-2xl mx-auto rounded-2xl border border-red-500/20 bg-red-950/15 backdrop-blur-md p-4 text-xs shadow-xl" id="quakeBox">
-                <div class="flex items-center justify-between mb-2.5 pb-2 border-b border-red-500/10">
-                    <div class="flex items-center gap-2 font-bold text-red-400">
-                        <span class="w-2 h-2 rounded-full bg-red-500 pulse-glow"></span>
-                        <span>ศูนย์เฝ้าระวังแผ่นดินไหวโลก (USGS Real-time)</span>
+        <!-- Earthquake Alert Mini Banner -->
+        <div class="px-6 sm:px-12 mb-8">
+            <div class="max-w-4xl mx-auto rounded-3xl border border-rose-500/30 bg-rose-950/20 backdrop-blur-xl p-5 text-xs shadow-2xl" id="quakeBox">
+                <div class="flex items-center justify-between mb-3 pb-2.5 border-b border-rose-500/20">
+                    <div class="flex items-center gap-2.5 font-extrabold text-rose-400">
+                        <span class="w-2.5 h-2.5 rounded-full bg-rose-500 animate-pulse"></span>
+                        <span class="tracking-wide">ศูนย์เฝ้าระวังภัยแผ่นดินไหว (USGS Real-time)</span>
                     </div>
-                    <span class="text-[10px] text-zinc-400 font-mono" id="quakeLastUpdate">อัปเดตล่าสุด: --:-- น.</span>
+                    <span class="text-[11px] text-zinc-400 font-mono" id="quakeLastUpdate">อัปเดต: --:-- น.</span>
                 </div>
-                <div id="quakeContent" class="text-zinc-300 leading-relaxed">
+                <div id="quakeContent" class="text-zinc-200 leading-relaxed font-medium">
                     กำลังดึงข้อมูลแผ่นดินไหวล่าสุด...
                 </div>
             </div>
         </div>
 
-        <div class="px-5 sm:px-8 pb-12" id="content">
-            <div class="flex flex-col items-center justify-center py-32 gap-3">
+        <!-- Main Weather Content -->
+        <div class="px-6 sm:px-12 pb-16" id="content">
+            <div class="flex flex-col items-center justify-center py-28 gap-4">
                 <div class="spinner"></div>
-                <p class="text-xs text-zinc-500 font-medium">กำลังโหลดข้อมูลสภาพอากาศ...</p>
+                <p class="text-xs text-zinc-400 font-mono tracking-widest uppercase">Loading Live Weather Data...</p>
             </div>
         </div>
     </div>
 
-    <!-- TAB 2: STOCKS PAGE -->
-    <div id="view-stocks" class="tab-content max-w-4xl mx-auto w-full px-5 pb-12">
-        <div class="glass-panel p-6 rounded-3xl mb-6 fade-up">
-            <h2 class="text-sm font-bold text-amber-400 mb-4 flex items-center gap-2">
-                <span>📈</span> ดัชนีตลาดหลักทรัพย์สำคัญ
+    <!-- TAB 2: STOCKS -->
+    <div id="view-stocks" class="tab-content max-w-5xl mx-auto w-full px-6 pb-16">
+        <div class="glass-panel p-8 rounded-3xl mb-6">
+            <h2 class="text-base font-extrabold text-amber-400 mb-6 flex items-center gap-2.5">
+                <span>📈</span> ดัชนีตลาดหลักทรัพย์ & สินทรัพย์ดิจิทัล
             </h2>
-            <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 font-mono">
-                <div class="glass-card p-4 rounded-2xl">
-                    <div class="text-[11px] text-zinc-400 mb-1">SET Index</div>
-                    <div class="text-lg font-bold">1,420.50</div>
-                    <div class="text-xs up-val mt-1">+6.35 (+0.45%)</div>
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 font-mono">
+                <div class="glass-card p-5 rounded-2xl">
+                    <div class="text-xs text-zinc-400 mb-1 font-semibold">SET Index</div>
+                    <div class="text-2xl font-black">1,420.50</div>
+                    <div class="text-xs up-val font-bold mt-1.5">+6.35 (+0.45%)</div>
                 </div>
-                <div class="glass-card p-4 rounded-2xl">
-                    <div class="text-[11px] text-zinc-400 mb-1">S&P 500</div>
-                    <div class="text-lg font-bold">5,648.40</div>
-                    <div class="text-xs up-val mt-1">+18.00 (+0.32%)</div>
+                <div class="glass-card p-5 rounded-2xl">
+                    <div class="text-xs text-zinc-400 mb-1 font-semibold">S&P 500</div>
+                    <div class="text-2xl font-black">5,648.40</div>
+                    <div class="text-xs up-val font-bold mt-1.5">+18.00 (+0.32%)</div>
                 </div>
-                <div class="glass-card p-4 rounded-2xl">
-                    <div class="text-[11px] text-zinc-400 mb-1">NASDAQ</div>
-                    <div class="text-lg font-bold">17,713.00</div>
-                    <div class="text-xs up-val mt-1">+105.40 (+0.60%)</div>
+                <div class="glass-card p-5 rounded-2xl">
+                    <div class="text-xs text-zinc-400 mb-1 font-semibold">NASDAQ</div>
+                    <div class="text-2xl font-black">17,713.00</div>
+                    <div class="text-xs up-val font-bold mt-1.5">+105.40 (+0.60%)</div>
                 </div>
-                <div class="glass-card p-4 rounded-2xl">
-                    <div class="text-[11px] text-zinc-400 mb-1">Bitcoin</div>
-                    <div class="text-lg font-bold">$64,210</div>
-                    <div class="text-xs down-val mt-1">-780.00 (-1.20%)</div>
+                <div class="glass-card p-5 rounded-2xl">
+                    <div class="text-xs text-zinc-400 mb-1 font-semibold">Bitcoin (BTC)</div>
+                    <div class="text-2xl font-black">$64,210</div>
+                    <div class="text-xs down-val font-bold mt-1.5">-780.00 (-1.20%)</div>
                 </div>
             </div>
         </div>
     </div>
 
-    <!-- TAB 3: EARTHQUAKE PAGE -->
-    <div id="view-quake" class="tab-content max-w-4xl mx-auto w-full px-5 pb-12">
-        <div class="glass-panel p-6 rounded-3xl border-red-500/20 fade-up">
-            <h2 class="text-sm font-bold text-red-400 mb-2">ศูนย์เฝ้าระวังภัยแผ่นดินไหวทั่วโลก (USGS Real-time)</h2>
-            <p class="text-xs text-zinc-400 mb-6">รายงานเหตุการณ์แผ่นดินไหวขนาด 2.5 ขึ้นไปในรอบ 24 ชั่วโมงล่าสุด</p>
+    <!-- TAB 3: EARTHQUAKE LIST -->
+    <div id="view-quake" class="tab-content max-w-5xl mx-auto w-full px-6 pb-16">
+        <div class="glass-panel p-8 rounded-3xl border-rose-500/30">
+            <h2 class="text-base font-extrabold text-rose-400 mb-2">ศูนย์รายงานเหตุการณ์แผ่นดินไหวทั่วโลก</h2>
+            <p class="text-xs text-zinc-400 mb-6">ความรุนแรงขนาด 2.5 M ขึ้นไป ในรอบ 24 ชั่วโมงล่าสุดจาก USGS</p>
             <div id="quakeFullList" class="space-y-3 font-mono text-xs">
                 กำลังดึงข้อมูล...
             </div>
@@ -197,10 +184,10 @@ body{font-family:'Plus Jakarta Sans','Noto Sans Thai',sans-serif;background:#030
 </div>
 
 <script>
-// Webhook 1: สำหรับส่งอัปเดตข้อมูล / การเปลี่ยนแปลงสภาพอากาศ
+// Webhook 1: อัปเดตข้อมูล / แจ้งเตือนเปลี่ยนสภาพอากาศ
 const DISCORD_UPDATE_WEBHOOK = "https://discord.com/api/webhooks/1542154970202374214/tQdo60ynkw5xbQPhxcIDLFOyoxhh57n0EBLPkOzmATkAWwOZ5-oo_DxMUOGiyUgS05r_";
 
-// Webhook 2: สำหรับส่งรายงานข้อผิดพลาด (Error Logger)
+// Webhook 2: รายงาน Bug & Error
 const DISCORD_ERROR_WEBHOOK = "https://discord.com/api/webhooks/1542155180869689495/ii9bDvTMISrEvxpbTskKZ-iOW_V7J-8RQnGb7FKQ9A_JZhwuNR33nG3td2Yw6Nv4V9lj";
 
 let lastLat = 13.08;
@@ -209,7 +196,7 @@ let lastCityName = 'แหลมฉบัง, ชลบุรี';
 let lastCountryCode = 'TH';
 
 let latestWeatherData = null;
-let lastWeatherState = ""; // ตัวแปรเก็บสถานะข้อมูลเดิมเพื่อเปรียบเทียบ
+let lastWeatherState = ""; 
 
 function switchTab(tabName) {
     document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
@@ -237,10 +224,10 @@ function updateClock() {
 setInterval(updateClock, 1000);
 updateClock();
 
-// ตรวจสอบข้อมูลอัตโนมัติทุกๆ 30 วินาที
+// ตรวจเช็กอัตโนมัติทุกๆ 3 นาที (180,000 ms) ป้องกันข้อมูลแกว่งรบกวน
 setInterval(async () => {
     await autoCheckForUpdates();
-}, 30000);
+}, 180000);
 
 async function autoCheckForUpdates() {
     await Promise.all([
@@ -249,27 +236,23 @@ async function autoCheckForUpdates() {
     ]);
 }
 
-// ส่งแจ้งเตือนเมื่อเกิด Error ไปยัง Webhook ช่อง 2
 async function sendDiscordError(errorTitle, errorMessage) {
     if (!DISCORD_ERROR_WEBHOOK) return;
     const now = new Date();
     
     const payload = {
-        username: "System Bug & Error Logger",
+        username: "System Error Logger",
         avatar_url: "https://cdn-icons-png.flaticon.com/512/564/564619.png",
-        embeds: [
-            {
-                title: `🚨 [SYSTEM ERROR DETECTED] ${errorTitle}`,
-                description: `\`\`\`javascript\n${errorMessage}\n\`\`\``,
-                color: 15548997, // Red
-                fields: [
-                    { name: "📍 พื้นที่ล่าสุด", value: lastCityName, inline: true },
-                    { name: "🕒 เวลาที่เกิดปัญหา", value: `${now.toLocaleDateString('th-TH')} ${formatThaiTime(now)}`, inline: true }
-                ],
-                footer: { text: "Error Reporting System Alert" },
-                timestamp: new Date().toISOString()
-            }
-        ]
+        embeds: [{
+            title: `🚨 [ERROR DETECTED] ${errorTitle}`,
+            description: `\`\`\`javascript\n${errorMessage}\n\`\`\``,
+            color: 15548997,
+            fields: [
+                { name: "📍 พื้นที่", value: lastCityName, inline: true },
+                { name: "🕒 เวลา", value: `${now.toLocaleDateString('th-TH')} ${formatThaiTime(now)}`, inline: true }
+            ],
+            timestamp: new Date().toISOString()
+        }]
     };
 
     try {
@@ -281,7 +264,6 @@ async function sendDiscordError(errorTitle, errorMessage) {
     } catch (e) {}
 }
 
-// ส่งการแจ้งเตือนอัปเดตสภาพอากาศไปยัง Webhook ช่อง 1
 async function sendDiscordUpdateNotification(isManual = false) {
     if (!latestWeatherData || !DISCORD_UPDATE_WEBHOOK) return;
 
@@ -289,24 +271,20 @@ async function sendDiscordUpdateNotification(isManual = false) {
     const daily = latestWeatherData.daily;
     const sunriseStr = formatThaiTime(new Date(daily.sunrise[0]));
     const sunsetStr = formatThaiTime(new Date(daily.sunset[0]));
-    const uvVal = daily.uv_index_max[0] ? daily.uv_index_max[0].toFixed(1) : '--';
+    
+    // Fix: ดึง UV Real-time ตามช่วงเวลาจริง ไม่ดึง uv_index_max
+    const uvVal = (cur.uv_index !== undefined && cur.uv_index !== null) ? cur.uv_index.toFixed(1) : '0.0';
     const now = new Date();
 
-    // สร้าง String สรุปค่าหลัก 6 อย่างเพื่อเช็กการเปลี่ยนแปลง
     const currentStateStr = `${cur.relative_humidity_2m}_${cur.wind_speed_10m}_${Math.round(cur.surface_pressure)}_${uvVal}_${sunriseStr}_${sunsetStr}`;
 
     const isFirstRun = (lastWeatherState === "");
     const hasChanged = (!isFirstRun && lastWeatherState !== currentStateStr);
 
-    // หากไม่ใช่การรันครั้งแรก, ค่าไม่เปลี่ยน และไม่ได้กด Refresh เอง ให้ข้ามการยิงไป Discord
-    if (!isFirstRun && !hasChanged && !isManual) {
-        return;
-    }
-
-    // บันทึกค่าใหม่
+    if (!isFirstRun && !hasChanged && !isManual) return;
     lastWeatherState = currentStateStr;
 
-    let titleText = "📢 [UPDATE] รายงานดัชนีสภาพอากาศ";
+    let titleText = "📢 [UPDATE] รายงานสภาพอากาศประจำวัน";
     if (hasChanged) {
         titleText = "⚡ [ALERT] สภาพอากาศมีการเปลี่ยนแปลง!";
     } else if (isManual) {
@@ -314,25 +292,23 @@ async function sendDiscordUpdateNotification(isManual = false) {
     }
 
     const payload = {
-        username: "Weather Tracker Bot",
+        username: "Weather Tracker Pro",
         avatar_url: "https://cdn-icons-png.flaticon.com/512/1163/1163661.png",
-        embeds: [
-            {
-                title: titleText,
-                description: `📍 **ตำแหน่ง:** ${lastCityName}\n🕒 **เวลาอัปเดต:** ${now.toLocaleDateString('th-TH')} เวลา ${formatThaiTime(now)}`,
-                color: hasChanged ? 15548997 : 3447003, // สีแดงส้มถ้าเปลี่ยน / สีฟ้าถ้าปกติ
-                fields: [
-                    { name: "💧 ความชื้น", value: `\`${cur.relative_humidity_2m}%\``, inline: true },
-                    { name: "💨 ความเร็วลม", value: `\`${cur.wind_speed_10m} km/h\``, inline: true },
-                    { name: "⏲️ ความกดอากาศ", value: `\`${Math.round(cur.surface_pressure)} hPa\``, inline: true },
-                    { name: "☀️ ดัชนี UV", value: `\`${uvVal}\``, inline: true },
-                    { name: "🌅 พระอาทิตย์ขึ้น", value: `\`${sunriseStr}\``, inline: true },
-                    { name: "🌇 พระอาทิตย์ตก", value: `\`${sunsetStr}\``, inline: true }
-                ],
-                footer: { text: "Real-Time State Tracker & Alert System" },
-                timestamp: new Date().toISOString()
-            }
-        ]
+        embeds: [{
+            title: titleText,
+            description: `📍 **ตำแหน่ง:** ${lastCityName}\n🕒 **เวลาอัปเดต:** ${now.toLocaleDateString('th-TH')} เวลา ${formatThaiTime(now)}`,
+            color: hasChanged ? 15548997 : 3447003,
+            fields: [
+                { name: "💧 ความชื้น", value: `\`${cur.relative_humidity_2m}%\``, inline: true },
+                { name: "💨 ความเร็วลม", value: `\`${cur.wind_speed_10m} km/h\``, inline: true },
+                { name: "⏲️ ความกดอากาศ", value: `\`${Math.round(cur.surface_pressure)} hPa\``, inline: true },
+                { name: "☀️ ดัชนี UV (ปัจจุบัน)", value: `\`${uvVal}\``, inline: true },
+                { name: "🌅 พระอาทิตย์ขึ้น", value: `\`${sunriseStr}\``, inline: true },
+                { name: "🌇 พระอาทิตย์ตก", value: `\`${sunsetStr}\``, inline: true }
+            ],
+            footer: { text: "Real-Time Automatic Weather Engine" },
+            timestamp: new Date().toISOString()
+        }]
     };
 
     try {
@@ -352,7 +328,7 @@ async function loadQuakeAlert() {
     
     try {
         const res = await fetch('https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/2.5_day.geojson');
-        if (!res.ok) throw new Error(`HTTP ${res.status}: Failed to fetch USGS Quake data`);
+        if (!res.ok) throw new Error(`HTTP ${res.status}: Failed to fetch Quake data`);
         
         const data = await res.json();
         
@@ -362,8 +338,8 @@ async function loadQuakeAlert() {
             const place = latest.properties.place || 'ไม่ระบุพื้นที่';
             const depth = latest.geometry.coordinates[2];
 
-            let alertLevel = 'text-amber-400';
-            if (mag >= 5.0) alertLevel = 'text-red-400 font-extrabold';
+            let alertLevel = 'text-amber-400 font-extrabold';
+            if (mag >= 5.0) alertLevel = 'text-rose-400 font-black animate-pulse';
 
             const now = new Date();
             quakeLastUpdate.textContent = `อัปเดต: ${formatThaiTime(now)}`;
@@ -371,9 +347,9 @@ async function loadQuakeAlert() {
             quakeContent.innerHTML = `
                 <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
                     <div>
-                        <span class="font-semibold text-white">ตำแหน่งที่เกิด:</span> <span class="text-zinc-200">${esc(place)}</span>
+                        <span class="font-bold text-white">ตำแหน่งล่าสุด:</span> <span class="text-zinc-300">${esc(place)}</span>
                     </div>
-                    <div class="flex items-center gap-3 shrink-0">
+                    <div class="flex items-center gap-4 shrink-0 font-mono">
                         <span>ขนาด: <strong class="${alertLevel}">${mag} M</strong></span>
                         <span class="text-zinc-400">ลึก: ${depth} กม.</span>
                     </div>
@@ -384,15 +360,15 @@ async function loadQuakeAlert() {
                 <div class="glass-card p-4 rounded-2xl flex justify-between items-center">
                     <div>
                         <div class="font-bold text-white">${esc(item.properties.place)}</div>
-                        <div class="text-[11px] text-zinc-400">ความลึก: ${item.geometry.coordinates[2]} กม. | เวลา: ${new Date(item.properties.time).toLocaleTimeString('th-TH')} น.</div>
+                        <div class="text-[11px] text-zinc-400 mt-0.5">ความลึก: ${item.geometry.coordinates[2]} กม. | เวลา: ${new Date(item.properties.time).toLocaleTimeString('th-TH')} น.</div>
                     </div>
-                    <div class="text-base font-bold ${item.properties.mag >= 5.0 ? 'text-red-400' : 'text-amber-400'}">${item.properties.mag.toFixed(1)} M</div>
+                    <div class="text-base font-black ${item.properties.mag >= 5.0 ? 'text-rose-400' : 'text-amber-400'}">${item.properties.mag.toFixed(1)} M</div>
                 </div>
             `).join('');
             document.getElementById('quakeFullList').innerHTML = listHTML;
         }
     } catch (e) {
-        sendDiscordError("Quake API Fetch Error", e.message || e.toString());
+        sendDiscordError("Quake API Error", e.message || e.toString());
     }
 }
 
@@ -413,21 +389,21 @@ async function fetchWeatherByCoords(lat, lon, cityName, countryCode, showLoader 
     const contentDiv = document.getElementById('content');
     if (showLoader) {
         contentDiv.innerHTML = `
-            <div class="flex flex-col items-center justify-center py-32 gap-3">
+            <div class="flex flex-col items-center justify-center py-28 gap-4">
                 <div class="spinner"></div>
-                <p class="text-xs text-zinc-500 font-medium">กำลังโหลดข้อมูลสภาพอากาศ...</p>
+                <p class="text-xs text-zinc-400 font-mono tracking-widest uppercase">Loading Live Weather Data...</p>
             </div>
         `;
     }
 
     try {
-        const url = `https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&current=temperature_2m,relative_humidity_2m,apparent_temperature,is_day,weather_code,surface_pressure,wind_speed_10m&hourly=temperature_2m,weather_code&daily=weather_code,temperature_2m_max,temperature_2m_min,sunrise,sunset,uv_index_max&timezone=auto`;
+        // Fix: เพิ่ม uv_index ลงใน current params
+        const url = `https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&current=temperature_2m,relative_humidity_2m,apparent_temperature,is_day,weather_code,surface_pressure,wind_speed_10m,uv_index&hourly=temperature_2m,weather_code&daily=weather_code,temperature_2m_max,temperature_2m_min,sunrise,sunset&timezone=auto`;
         const res = await fetch(url);
         
-        if (!res.ok) throw new Error(`HTTP ${res.status}: Open-Meteo API Load Failed`);
+        if (!res.ok) throw new Error(`HTTP ${res.status}: Open-Meteo Load Failed`);
 
         const data = await res.json();
-
         latestWeatherData = data;
         renderWeatherUI(data, cityName, countryCode);
         await sendDiscordUpdateNotification(false);
@@ -450,14 +426,12 @@ function renderWeatherUI(data, cityName, countryCode) {
         const hTimeStr = `${timeObj.getHours().toString().padStart(2, '0')}:00`;
         const hTemp = Math.round(hourly.temperature_2m[i]);
         const hInfo = parseWMOCode(hourly.weather_code[i], 1);
-        const barPercent = Math.min(100, Math.max(10, (hTemp / 40) * 100));
 
         hourlyItems += `
-            <div class="flex-shrink-0 w-20 glass-card p-3 rounded-2xl text-center space-y-2">
-                <div class="text-[11px] text-zinc-400 font-mono">${hTimeStr}</div>
-                <div class="text-2xl my-1">${hInfo.icon}</div>
-                <div class="text-xs font-bold text-white">${hTemp}°</div>
-                <div class="hour-bar"><div class="hour-fill" style="width:${barPercent}%"></div></div>
+            <div class="flex-shrink-0 w-24 glass-card p-4 rounded-2xl text-center space-y-2 border border-white/5">
+                <div class="text-[11px] text-zinc-400 font-mono font-bold">${hTimeStr}</div>
+                <div class="text-3xl my-1">${hInfo.icon}</div>
+                <div class="text-sm font-black text-white font-mono">${hTemp}°C</div>
             </div>
         `;
     }
@@ -473,12 +447,12 @@ function renderWeatherUI(data, cityName, countryCode) {
         const dInfo = parseWMOCode(daily.weather_code[i], 1);
 
         dailyItems += `
-            <div class="flex items-center justify-between py-2.5 border-b border-white/5 last:border-none">
-                <span class="text-xs font-medium text-zinc-300 w-12">${dayLabel}</span>
-                <span class="text-lg w-8 text-center">${dInfo.icon}</span>
-                <div class="flex items-center gap-2 font-mono text-xs text-right">
-                    <span class="text-white font-bold">${dMax}°</span>
-                    <span class="text-zinc-500">${dMin}°</span>
+            <div class="flex items-center justify-between py-3 border-b border-white/5 last:border-none">
+                <span class="text-xs font-bold text-zinc-300 w-14">${dayLabel}</span>
+                <span class="text-2xl text-center">${dInfo.icon}</span>
+                <div class="flex items-center gap-2.5 font-mono text-xs text-right">
+                    <span class="text-white font-black">${dMax}°</span>
+                    <span class="text-zinc-500 font-semibold">${dMin}°</span>
                 </div>
             </div>
         `;
@@ -486,48 +460,54 @@ function renderWeatherUI(data, cityName, countryCode) {
 
     const sunriseStr = formatThaiTime(new Date(daily.sunrise[0]));
     const sunsetStr = formatThaiTime(new Date(daily.sunset[0]));
-    const uvVal = daily.uv_index_max[0] ? daily.uv_index_max[0].toFixed(1) : '--';
+    
+    // Fix: ดึงค่า UV Real-time ของเวลาปัจจุบัน
+    const uvVal = (cur.uv_index !== undefined && cur.uv_index !== null) ? cur.uv_index.toFixed(1) : '0.0';
 
     const html = `
-        <div class="max-w-4xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-6 fade-up">
-            <div class="md:col-span-2 glass-panel p-8 rounded-3xl flex flex-col justify-between relative overflow-hidden">
+        <div class="max-w-5xl mx-auto grid grid-cols-1 lg:grid-cols-3 gap-6">
+            <!-- Left Large Main Panel -->
+            <div class="lg:col-span-2 glass-panel p-8 sm:p-10 rounded-3xl flex flex-col justify-between relative overflow-hidden">
                 <div class="flex justify-between items-start">
                     <div>
-                        <span class="inline-block px-3 py-1 rounded-full text-[10px] font-bold tracking-wider text-amber-400 bg-amber-500/10 border border-amber-500/20 mb-3">CURRENT WEATHER</span>
-                        <h1 class="text-2xl sm:text-3xl font-extrabold text-white tracking-tight">${esc(cityName)}</h1>
-                        <p class="text-xs text-zinc-400 font-medium mt-1">${info.text}</p>
+                        <span class="inline-block px-3.5 py-1.5 rounded-full text-[10px] font-black tracking-widest text-amber-400 bg-amber-500/10 border border-amber-500/30 mb-4 uppercase">LIVE WEATHER REPORT</span>
+                        <h1 class="text-3xl sm:text-4xl font-black text-white tracking-tight">${esc(cityName)}</h1>
+                        <p class="text-sm text-zinc-300 font-medium mt-1.5">${info.text}</p>
                     </div>
-                    <div class="text-5xl sm:text-6xl">${info.icon}</div>
+                    <div class="text-6xl sm:text-7xl filter drop-shadow-lg">${info.icon}</div>
                 </div>
 
-                <div class="my-6">
-                    <div class="temp-big font-mono">${Math.round(cur.temperature_2m)}°</div>
-                    <p class="text-xs text-zinc-400 font-medium">รู้สึกเหมือน ${Math.round(cur.apparent_temperature)}°C • สูงสุด ${Math.round(daily.temperature_2m_max[0])}° ต่ำสุด ${Math.round(daily.temperature_2m_min[0])}°</p>
+                <div class="my-8">
+                    <div class="temp-huge font-mono">${Math.round(cur.temperature_2m)}°</div>
+                    <p class="text-xs text-zinc-400 font-medium mt-2">รู้สึกเหมือน ${Math.round(cur.apparent_temperature)}°C • สูงสุด ${Math.round(daily.temperature_2m_max[0])}°C / ต่ำสุด ${Math.round(daily.temperature_2m_min[0])}°C</p>
                 </div>
 
                 <div>
-                    <h3 class="text-xs font-semibold text-zinc-400 mb-3">พยากรณ์ล่วงหน้า 12 ชั่วโมง</h3>
+                    <h3 class="text-xs font-extrabold text-zinc-400 mb-4 tracking-wider uppercase">พยากรณ์รายชั่วโมง (12 ชั่วโมงข้างหน้า)</h3>
                     <div class="flex gap-3 overflow-x-auto pb-2 scrollbar-none">
                         ${hourlyItems}
                     </div>
                 </div>
             </div>
 
+            <!-- Right Details & Forecast -->
             <div class="space-y-6">
-                <div class="glass-panel p-6 rounded-3xl">
-                    <h2 class="text-xs font-bold text-zinc-400 uppercase tracking-wider mb-4">รายละเอียดสภาพอากาศ</h2>
-                    <div class="divide-y divide-white/5">
-                        <div class="detail-row"><span class="detail-label">ความชื้น</span><span class="detail-val font-mono">${cur.relative_humidity_2m}%</span></div>
-                        <div class="detail-row"><span class="detail-label">ความเร็วลม</span><span class="detail-val font-mono">${cur.wind_speed_10m} km/h</span></div>
-                        <div class="detail-row"><span class="detail-label">ความกดอากาศ</span><span class="detail-val font-mono">${Math.round(cur.surface_pressure)} hPa</span></div>
-                        <div class="detail-row"><span class="detail-label">ดัชนี UV</span><span class="detail-val font-mono">${uvVal}</span></div>
-                        <div class="detail-row"><span class="detail-label">พระอาทิตย์ขึ้น</span><span class="detail-val font-mono">${sunriseStr}</span></div>
-                        <div class="detail-row"><span class="detail-label">พระอาทิตย์ตก</span><span class="detail-val font-mono">${sunsetStr}</span></div>
+                <!-- Data Grid Details -->
+                <div class="glass-panel p-6 sm:p-7 rounded-3xl">
+                    <h2 class="text-xs font-black text-amber-400 uppercase tracking-widest mb-4">รายละเอียดสภาพอากาศ</h2>
+                    <div class="space-y-3 font-mono">
+                        <div class="flex justify-between items-center py-2 border-b border-white/5"><span class="text-xs text-zinc-400 font-sans">ความชื้น</span><span class="text-sm font-bold text-white">${cur.relative_humidity_2m}%</span></div>
+                        <div class="flex justify-between items-center py-2 border-b border-white/5"><span class="text-xs text-zinc-400 font-sans">ความเร็วลม</span><span class="text-sm font-bold text-white">${cur.wind_speed_10m} km/h</span></div>
+                        <div class="flex justify-between items-center py-2 border-b border-white/5"><span class="text-xs text-zinc-400 font-sans">ความกดอากาศ</span><span class="text-sm font-bold text-white">${Math.round(cur.surface_pressure)} hPa</span></div>
+                        <div class="flex justify-between items-center py-2 border-b border-white/5"><span class="text-xs text-zinc-400 font-sans">ดัชนี UV (ปัจจุบัน)</span><span class="text-sm font-bold text-amber-400">${uvVal}</span></div>
+                        <div class="flex justify-between items-center py-2 border-b border-white/5"><span class="text-xs text-zinc-400 font-sans">พระอาทิตย์ขึ้น</span><span class="text-sm font-bold text-white">${sunriseStr}</span></div>
+                        <div class="flex justify-between items-center py-2"><span class="text-xs text-zinc-400 font-sans">พระอาทิตย์ตก</span><span class="text-sm font-bold text-white">${sunsetStr}</span></div>
                     </div>
                 </div>
 
-                <div class="glass-panel p-6 rounded-3xl">
-                    <h2 class="text-xs font-bold text-zinc-400 uppercase tracking-wider mb-3">พยากรณ์ 5 วัน</h2>
+                <!-- 5-Day Forecast -->
+                <div class="glass-panel p-6 sm:p-7 rounded-3xl">
+                    <h2 class="text-xs font-black text-amber-400 uppercase tracking-widest mb-3">พยากรณ์ล่วงหน้า 5 วัน</h2>
                     ${dailyItems}
                 </div>
             </div>
@@ -558,11 +538,11 @@ async function doSearch(e) {
 
             await fetchWeatherByCoords(loc.latitude, loc.longitude, nameStr, loc.country_code);
         } else {
-            sendDiscordError("Search Error", `ไม่พบชื่อสถานที่ค้นหา: "${query}"`);
+            sendDiscordError("Search Failed", `ไม่พบสถานที่: "${query}"`);
             alert('ไม่พบข้อมูลสถานที่ดังกล่าว');
         }
     } catch (err) {
-        sendDiscordError("Geocoding Search Exception", err.message || err.toString());
+        sendDiscordError("Search Error", err.message || err.toString());
         alert('เกิดข้อผิดพลาดในการค้นหา');
     } finally {
         btn.disabled = false;
@@ -574,7 +554,7 @@ async function manualRefresh() {
     icon.classList.add('spin-active');
     await autoCheckForUpdates();
     await sendDiscordUpdateNotification(true);
-    setTimeout(() => icon.classList.remove('spin-active'), 600);
+    setTimeout(() => icon.classList.remove('spin-active'), 500);
 }
 
 function esc(str) {
