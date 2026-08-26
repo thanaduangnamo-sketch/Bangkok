@@ -3,8 +3,8 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Pro Stock & Quake Terminal</title>
-<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='20' fill='%230f172a'/><path d='M20 70 L40 40 L60 55 L80 25' stroke='%2310b981' stroke-width='8' fill='none'/></svg>">
+<title>Pro Stock & Terminal Dashboard</title>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='20' fill='%230b0f19'/><path d='M20 70 L40 40 L60 55 L80 25' stroke='%2310b981' stroke-width='8' fill='none'/></svg>">
 <script src="https://cdn.tailwindcss.com"></script>
 <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Noto+Sans+Thai:wght@400;500;600;700&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
 <style>
@@ -12,24 +12,30 @@
 body{font-family:'Plus Jakarta Sans','Noto Sans Thai',sans-serif;background:#060811;color:#f3f4f6;min-height:100vh;overflow-x:hidden}
 .font-mono{font-family:'JetBrains Mono',monospace}
 
-/* Grid Pattern Background */
+/* Grid & Glow Effects */
 .bg-grid{position:fixed;inset:0;background-image:linear-gradient(to right, rgba(255,255,255,0.03) 1px, transparent 1px),linear-gradient(to bottom, rgba(255,255,255,0.03) 1px, transparent 1px);background-size:40px 40px;z-index:0;pointer-events:none}
 .bg-glow{position:fixed;top:0;left:50%;transform:translateX(-50%);width:1000px;height:400px;background:radial-gradient(ellipse at top, rgba(16,185,129,0.12), transparent 70%);z-index:0;pointer-events:none}
 
-/* Terminal Cards */
+/* Glassmorphism Cards */
 .card-glass{background:rgba(15, 23, 42, 0.65);border:1px solid rgba(255,255,255,0.08);backdrop-filter:blur(16px);border-radius:16px;transition:all 0.2s ease}
-.card-glass:hover{border-color:rgba(16,185,129,0.3);box-shadow:0 10px 30px -10px rgba(16,185,129,0.15)}
+.card-glass:hover{border-color:rgba(16,185,129,0.3)}
 
-/* Ticker Animation */
+/* Navigation Tab Active Styling */
+.nav-tab{padding:8px 16px;border-radius:12px;font-size:12px;font-weight:600;color:#9ca3af;transition:all 0.2s;cursor:pointer}
+.nav-tab:hover{color:#fff;background:rgba(255,255,255,0.05)}
+.nav-tab.active{color:#10b981;background:rgba(16,185,129,0.15);border:1px solid rgba(16,185,129,0.3)}
+
+/* Section Visibility Switcher */
+.tab-content{display:none}
+.tab-content.active{display:block}
+
+/* Live Ticker Bar */
 @keyframes ticker{0%{transform:translateX(0)}100%{transform:translateX(-50%)}}
-.ticker-wrap{overflow:hidden;white-space:nowrap;background:rgba(3, 7, 18, 0.8);border-bottom:1px solid rgba(255,255,255,0.08)}
+.ticker-wrap{overflow:hidden;white-space:nowrap;background:rgba(3, 7, 18, 0.9);border-bottom:1px solid rgba(255,255,255,0.08)}
 .ticker-move{display:inline-block;animation:ticker 30s linear infinite}
 .ticker-move:hover{animation-play-state:paused}
 
 .up-val{color:#10b981}.down-val{color:#ef4444}
-.up-bg{background:rgba(16,185,129,0.1);border:1px solid rgba(16,185,129,0.2)}
-.down-bg{background:rgba(239,68,68,0.1);border:1px solid rgba(239,68,68,0.2)}
-
 @keyframes spin{to{transform:rotate(360deg)}}
 .spin{animation:spin 1s linear infinite}
 </style>
@@ -49,7 +55,6 @@ body{font-family:'Plus Jakarta Sans','Noto Sans Thai',sans-serif;background:#060
             <span>NASDAQ <b class="up-val">17,713.00 (+0.60%)</b></span>
             <span>BTC/USD <b class="down-val">64,210.00 (-1.20%)</b></span>
             <span>GOLD <b class="up-val">2,512.30 (+0.15%)</b></span>
-            <!-- Repeat for seamless scroll -->
             <span>SET <b class="up-val">1,420.50 (+0.45%)</b></span>
             <span>S&P 500 <b class="up-val">5,648.40 (+0.32%)</b></span>
             <span>NASDAQ <b class="up-val">17,713.00 (+0.60%)</b></span>
@@ -59,181 +64,162 @@ body{font-family:'Plus Jakarta Sans','Noto Sans Thai',sans-serif;background:#060
     </div>
 
     <!-- Main Navigation Header -->
-    <header class="px-6 py-5 flex items-center justify-between border-b border-white/5">
+    <header class="px-6 py-4 flex flex-wrap items-center justify-between border-b border-white/5 gap-4">
         <div class="flex items-center gap-3">
             <div class="w-10 h-10 rounded-xl bg-emerald-500/10 border border-emerald-500/30 flex items-center justify-center text-emerald-400 font-bold font-mono">
-                📈
+                ⚡
             </div>
             <div>
                 <h1 class="font-bold text-base tracking-wide flex items-center gap-2">
-                    FINANCIAL & DISASTER TERMINAL
-                    <span class="text-[10px] bg-emerald-500/20 text-emerald-400 px-2 py-0.5 rounded-full border border-emerald-500/30 font-mono">PRO V2</span>
+                    PRO TERMINAL
+                    <span class="text-[10px] bg-emerald-500/20 text-emerald-400 px-2 py-0.5 rounded-full border border-emerald-500/30 font-mono">SINGLE PAGE</span>
                 </h1>
-                <p class="text-xs text-gray-400">ระบบเฝ้าระวังตลาดหุ้น & พิบัติภัย real-time</p>
+                <p class="text-[11px] text-gray-400">ระบบติดตามตลาดหุ้น สภาพอากาศ และภัยพิบัติ</p>
             </div>
         </div>
+
+        <!-- Tab Switching Buttons (ไม่ต้องกดย้อนกลับ) -->
+        <nav class="flex items-center gap-2 bg-black/40 p-1.5 rounded-2xl border border-white/10">
+            <button onclick="switchTab('dashboard')" class="nav-tab active" id="tab-dashboard">📊 รวมข้อมูลทั้งหมด</button>
+            <button onclick="switchTab('stocks')" class="nav-tab" id="tab-stocks">📈 ตลาดหุ้น</button>
+            <button onclick="switchTab('weather')" class="nav-tab" id="tab-weather">🌤️ สภาพอากาศ (แหลมฉบัง)</button>
+            <button onclick="switchTab('quake')" class="nav-tab" id="tab-quake">🚨 แผ่นดินไหว</button>
+        </nav>
 
         <div class="flex items-center gap-4">
             <div class="text-right hidden sm:block font-mono">
                 <div class="text-xs text-gray-300" id="clock">00:00:00</div>
                 <div class="text-[10px] text-gray-500" id="timerInfo">Auto Sync: --:--</div>
             </div>
-            <button onclick="triggerManualSync()" id="syncBtn" class="card-glass p-2.5 hover:bg-white/10 text-emerald-400 active:scale-95">
+            <button onclick="triggerManualSync()" id="syncBtn" class="card-glass p-2.5 hover:bg-white/10 text-emerald-400 active:scale-95" title="ส่ง Discord & อัปเดตทันที">
                 <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M21.5 2v6h-6M21.34 15.57a10 10 0 1 1-.57-8.38l5.67-5.67"/></svg>
             </button>
         </div>
     </header>
 
-    <main class="flex-1 max-w-7xl w-full mx-auto p-4 sm:p-6 grid grid-cols-1 lg:grid-cols-3 gap-6">
+    <!-- Content Area -->
+    <main class="flex-1 max-w-7xl w-full mx-auto p-4 sm:p-6">
 
-        <!-- Left Column: Global Market Indices -->
-        <div class="lg:col-span-2 space-y-6">
-            
-            <!-- Market Overview Grid -->
-            <div>
-                <h2 class="text-xs font-bold text-gray-400 uppercase tracking-wider mb-3 flex items-center justify-between">
-                    <span>ดัชนีตลาดหลักทรัพย์สำคัญ (Market Overview)</span>
-                    <span class="text-[10px] text-emerald-400 font-normal">● Market Open</span>
-                </h2>
-                <div class="grid grid-cols-2 sm:grid-cols-4 gap-3">
-                    <div class="card-glass p-4">
-                        <div class="text-xs text-gray-400 mb-1">SET Index</div>
-                        <div class="text-lg font-bold font-mono">1,420.50</div>
-                        <div class="text-xs up-val font-mono mt-1">+6.35 (+0.45%)</div>
+        <!-- TAB 1: DASHBOARD (ภาพรวมทั้งหมด) -->
+        <div id="view-dashboard" class="tab-content active space-y-6">
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                <!-- Market Left Summary -->
+                <div class="lg:col-span-2 space-y-6">
+                    <div>
+                        <h2 class="text-xs font-bold text-gray-400 uppercase tracking-wider mb-3 flex items-center justify-between">
+                            <span>ดัชนีหุ้นสำคัญประจำวัน</span>
+                            <span class="text-[10px] text-emerald-400 font-normal">● Live Feed</span>
+                        </h2>
+                        <div class="grid grid-cols-2 sm:grid-cols-4 gap-3">
+                            <div class="card-glass p-4">
+                                <div class="text-xs text-gray-400 mb-1">SET Index</div>
+                                <div class="text-lg font-bold font-mono">1,420.50</div>
+                                <div class="text-xs up-val font-mono mt-1">+6.35 (+0.45%)</div>
+                            </div>
+                            <div class="card-glass p-4">
+                                <div class="text-xs text-gray-400 mb-1">S&P 500</div>
+                                <div class="text-lg font-bold font-mono">5,648.40</div>
+                                <div class="text-xs up-val font-mono mt-1">+18.00 (+0.32%)</div>
+                            </div>
+                            <div class="card-glass p-4">
+                                <div class="text-xs text-gray-400 mb-1">NASDAQ</div>
+                                <div class="text-lg font-bold font-mono">17,713.00</div>
+                                <div class="text-xs up-val font-mono mt-1">+105.40 (+0.60%)</div>
+                            </div>
+                            <div class="card-glass p-4">
+                                <div class="text-xs text-gray-400 mb-1">Bitcoin</div>
+                                <div class="text-lg font-bold font-mono">$64,210</div>
+                                <div class="text-xs down-val font-mono mt-1">-780.00 (-1.20%)</div>
+                            </div>
+                        </div>
                     </div>
-                    <div class="card-glass p-4">
-                        <div class="text-xs text-gray-400 mb-1">S&P 500</div>
-                        <div class="text-lg font-bold font-mono">5,648.40</div>
-                        <div class="text-xs up-val font-mono mt-1">+18.00 (+0.32%)</div>
+
+                    <!-- Location Weather Box -->
+                    <div class="card-glass p-5">
+                        <div class="flex justify-between items-center mb-3">
+                            <h3 class="text-sm font-bold text-gray-200">🌤️ สภาพอากาศพื้นที่ปัจจุบัน</h3>
+                            <span class="text-xs text-emerald-400 font-mono" id="locationTitle">แหลมฉบัง, ชลบุรี</span>
+                        </div>
+                        <div id="weatherSummary" class="text-xs text-gray-400">กำลังโหลดข้อมูล...</div>
                     </div>
-                    <div class="card-glass p-4">
-                        <div class="text-xs text-gray-400 mb-1">NASDAQ</div>
-                        <div class="text-lg font-bold font-mono">17,713.00</div>
-                        <div class="text-xs up-val font-mono mt-1">+105.40 (+0.60%)</div>
+                </div>
+
+                <!-- Right Sidebar Quake & Discord -->
+                <div class="space-y-6">
+                    <div class="card-glass p-5 border-red-500/20 bg-red-950/10">
+                        <div class="flex items-center justify-between mb-3 border-b border-red-500/20 pb-2">
+                            <h3 class="text-sm font-bold text-red-400 flex items-center gap-2">
+                                <span class="w-2 h-2 rounded-full bg-red-500 animate-pulse"></span>
+                                เหตุแผ่นดินไหวล่าสุด (USGS)
+                            </h3>
+                        </div>
+                        <div id="quakeSummary" class="text-xs text-gray-300">กำลังดึงข้อมูล...</div>
                     </div>
-                    <div class="card-glass p-4">
-                        <div class="text-xs text-gray-400 mb-1">Cryptocurrency</div>
-                        <div class="text-lg font-bold font-mono">$64,210</div>
-                        <div class="text-xs down-val font-mono mt-1">-780.00 (-1.20%)</div>
+
+                    <div class="card-glass p-5">
+                        <h3 class="text-sm font-bold text-gray-200 mb-2">🤖 Discord Auto Alert Status</h3>
+                        <p class="text-xs text-gray-400 mb-4">ส่งรายงานอัตโนมัติเข้า Discord ทุกๆ 1 ชั่วโมง</p>
+                        <div class="p-3 bg-black/40 rounded-xl border border-white/5 space-y-1.5 text-xs font-mono">
+                            <div class="flex justify-between"><span class="text-gray-500">สถานะ:</span><span class="text-emerald-400">● พร้อมใช้งาน</span></div>
+                            <div class="flex justify-between"><span class="text-gray-500">รอบถัดไป:</span><span class="text-amber-400" id="discordNextSync">--:-- น.</span></div>
+                        </div>
                     </div>
                 </div>
             </div>
+        </div>
 
-            <!-- Watchlist Section -->
-            <div class="card-glass p-5">
-                <div class="flex items-center justify-between mb-4">
-                    <h3 class="text-sm font-bold text-gray-200">หุ้นยอดนิยมในประเทศไทย (Thai Watchlist)</h3>
-                    <span class="text-xs text-gray-500 font-mono">Real-time Feed</span>
-                </div>
+        <!-- TAB 2: STOCKS PAGE -->
+        <div id="view-stocks" class="tab-content space-y-6">
+            <div class="card-glass p-6">
+                <h2 class="text-base font-bold text-white mb-4">รายการหุ้นไทยยอดนิยม (Thai Watchlist)</h2>
                 <div class="overflow-x-auto">
                     <table class="w-full text-left text-xs font-mono">
                         <thead>
                             <tr class="text-gray-500 border-b border-white/5 pb-2">
                                 <th class="pb-3">SYMBOL</th>
-                                <th class="pb-3">LAST PRICE</th>
+                                <th class="pb-3">PRICE (THB)</th>
                                 <th class="pb-3">CHANGE</th>
                                 <th class="pb-3">% CHANGE</th>
                                 <th class="pb-3 text-right">VOLUME</th>
                             </tr>
                         </thead>
                         <tbody class="divide-y divide-white/5 text-gray-300">
-                            <tr class="hover:bg-white/5">
-                                <td class="py-3 font-bold text-white">PTT</td>
-                                <td>33.50</td>
-                                <td class="up-val">+0.50</td>
-                                <td class="up-val">+1.52%</td>
-                                <td class="text-right text-gray-400">42.5M</td>
-                            </tr>
-                            <tr class="hover:bg-white/5">
-                                <td class="py-3 font-bold text-white">AOT</td>
-                                <td>62.25</td>
-                                <td class="down-val">-0.75</td>
-                                <td class="down-val">-1.19%</td>
-                                <td class="text-right text-gray-400">18.2M</td>
-                            </tr>
-                            <tr class="hover:bg-white/5">
-                                <td class="py-3 font-bold text-white">CPALL</td>
-                                <td>57.00</td>
-                                <td class="up-val">+0.25</td>
-                                <td class="up-val">+0.44%</td>
-                                <td class="text-right text-gray-400">25.1M</td>
-                            </tr>
-                            <tr class="hover:bg-white/5">
-                                <td class="py-3 font-bold text-white">DELTA</td>
-                                <td>104.50</td>
-                                <td class="up-val">+2.50</td>
-                                <td class="up-val">+2.45%</td>
-                                <td class="text-right text-gray-400">12.8M</td>
-                            </tr>
-                            <tr class="hover:bg-white/5">
-                                <td class="py-3 font-bold text-white">KBANK</td>
-                                <td>145.00</td>
-                                <td class="down-val">-1.00</td>
-                                <td class="down-val">-0.68%</td>
-                                <td class="text-right text-gray-400">8.9M</td>
-                            </tr>
+                            <tr class="hover:bg-white/5"><td class="py-3 font-bold text-white">PTT</td><td>33.50</td><td class="up-val">+0.50</td><td class="up-val">+1.52%</td><td class="text-right text-gray-400">42.5M</td></tr>
+                            <tr class="hover:bg-white/5"><td class="py-3 font-bold text-white">AOT</td><td>62.25</td><td class="down-val">-0.75</td><td class="down-val">-1.19%</td><td class="text-right text-gray-400">18.2M</td></tr>
+                            <tr class="hover:bg-white/5"><td class="py-3 font-bold text-white">CPALL</td><td>57.00</td><td class="up-val">+0.25</td><td class="up-val">+0.44%</td><td class="text-right text-gray-400">25.1M</td></tr>
+                            <tr class="hover:bg-white/5"><td class="py-3 font-bold text-white">DELTA</td><td>104.50</td><td class="up-val">+2.50</td><td class="up-val">+2.45%</td><td class="text-right text-gray-400">12.8M</td></tr>
+                            <tr class="hover:bg-white/5"><td class="py-3 font-bold text-white">KBANK</td><td>145.00</td><td class="down-val">-1.00</td><td class="down-val">-0.68%</td><td class="text-right text-gray-400">8.9M</td></tr>
+                            <tr class="hover:bg-white/5"><td class="py-3 font-bold text-white">BDMS</td><td>28.25</td><td class="up-val">+0.25</td><td class="up-val">+0.89%</td><td class="text-right text-gray-400">15.4M</td></tr>
                         </tbody>
                     </table>
                 </div>
             </div>
-
-            <!-- Weather Card Integration -->
-            <div class="card-glass p-5">
-                <div class="flex items-center justify-between mb-3">
-                    <h3 class="text-sm font-bold text-gray-200">สภาพอากาศพื้นที่ประกอบการ (Location Weather)</h3>
-                    <form onsubmit="searchCity(event)" class="flex gap-2">
-                        <input id="citySearch" type="text" placeholder="ค้นหาเมือง..." class="bg-black/40 border border-white/10 px-3 py-1 rounded-lg text-xs focus:outline-none focus:border-emerald-500">
-                        <button type="submit" class="bg-emerald-500/20 text-emerald-400 px-3 py-1 rounded-lg text-xs font-bold border border-emerald-500/30 hover:bg-emerald-500/30">ค้นหา</button>
-                    </form>
-                </div>
-                <div id="weatherDisplay" class="text-xs text-gray-400">
-                    กำลังโหลดข้อมูลสภาพอากาศ...
-                </div>
-            </div>
-
         </div>
 
-        <!-- Right Column: Disaster Warning & Discord Status -->
-        <div class="space-y-6">
-
-            <!-- Earthquake Real-time Alert -->
-            <div class="card-glass p-5 border-red-500/20 bg-red-950/10">
-                <div class="flex items-center justify-between mb-4 border-b border-red-500/20 pb-3">
-                    <div class="flex items-center gap-2">
-                        <span class="w-2.5 h-2.5 rounded-full bg-red-500 animate-pulse"></span>
-                        <h3 class="text-sm font-bold text-red-400">USGS Earthquake Monitor</h3>
+        <!-- TAB 3: WEATHER PAGE -->
+        <div id="view-weather" class="tab-content space-y-6">
+            <div class="card-glass p-6">
+                <div class="flex flex-wrap items-center justify-between gap-4 mb-6">
+                    <div>
+                        <h2 class="text-base font-bold text-white">รายละเอียดสภาพอากาศ</h2>
+                        <p class="text-xs text-gray-400">ข้อมูลอุณหภูมิและความชื้น real-time</p>
                     </div>
-                    <span class="text-[10px] text-gray-500 font-mono" id="quakeUpdate">--:--</span>
+                    <form onsubmit="searchLocation(event)" class="flex gap-2">
+                        <input id="searchInput" type="text" placeholder="พิมพ์ชื่อเมือง/พื้นที่..." class="bg-black/50 border border-white/10 px-4 py-2 rounded-xl text-xs text-white focus:outline-none focus:border-emerald-500">
+                        <button type="submit" class="bg-emerald-500 text-black px-4 py-2 rounded-xl text-xs font-bold hover:bg-emerald-400">ค้นหา</button>
+                    </form>
                 </div>
-                <div id="quakeDisplay" class="space-y-3 text-xs">
-                    <p class="text-gray-400">กำลังดึงข้อมูลแผ่นดินไหวล่าสุด...</p>
-                </div>
+                <div id="weatherFullDetails">กำลังโหลดข้อมูล...</div>
             </div>
+        </div>
 
-            <!-- Discord Auto Alert System Status -->
-            <div class="card-glass p-5">
-                <h3 class="text-sm font-bold text-gray-200 mb-3 flex items-center gap-2">
-                    <span class="text-indigo-400">🤖</span> Discord Webhook Bot
-                </h3>
-                <p class="text-xs text-gray-400 leading-relaxed mb-4">
-                    ระบบจะส่งรายงานสรุปภาวะตลาดหุ้น สภาพอากาศ และการแจ้งเตือนภัยแผ่นดินไหวเข้า Discord Channel ของคุณโดยอัตโนมัติทุกๆ 1 ชั่วโมง
-                </p>
-                <div class="p-3 bg-black/40 rounded-xl border border-white/5 space-y-2 text-xs font-mono">
-                    <div class="flex justify-between">
-                        <span class="text-gray-500">Status:</span>
-                        <span class="text-emerald-400">● Active</span>
-                    </div>
-                    <div class="flex justify-between">
-                        <span class="text-gray-500">Channel Tag:</span>
-                        <span class="text-gray-300">@everyone (ถ้าวิกฤต)</span>
-                    </div>
-                    <div class="flex justify-between">
-                        <span class="text-gray-500">Next Auto Sync:</span>
-                        <span class="text-amber-400" id="nextSyncTime">--:-- น.</span>
-                    </div>
-                </div>
+        <!-- TAB 4: EARTHQUAKE PAGE -->
+        <div id="view-quake" class="tab-content space-y-6">
+            <div class="card-glass p-6 border-red-500/20">
+                <h2 class="text-base font-bold text-red-400 mb-2">ศูนย์เฝ้าระวังภัยแผ่นดินไหวทั่วโลก (USGS Real-time)</h2>
+                <p class="text-xs text-gray-400 mb-6">รายงานเหตุการณ์แผ่นดินไหวขนาด 2.5 ขึ้นไปในรอบ 24 ชั่วโมง</p>
+                <div id="quakeFullDetails" class="space-y-4">กำลังโหลดข้อมูล...</div>
             </div>
-
         </div>
 
     </main>
@@ -242,11 +228,21 @@ body{font-family:'Plus Jakarta Sans','Noto Sans Thai',sans-serif;background:#060
 <script>
 const DISCORD_WEBHOOK_URL = "https://discord.com/api/webhooks/1541796417025351743/WWiN2oYSEHZHAG81RvyynyxhNZHbXa7mHR2Oc-9_u651BGY4yXrP0KhxzTNdaSnPjfBo";
 
-let currentLat = 13.7563;
-let currentLon = 100.5018;
-let currentCity = "กรุงเทพมหานคร";
+// พิกัดเริ่มต้น: แหลมฉบัง ชลบุรี
+let currentLat = 13.08; 
+let currentLon = 100.92;
+let currentCity = "แหลมฉบัง, ชลบุรี";
 let latestWeather = null;
 let latestQuake = null;
+
+// ระบบสลับหน้าแบบ Tab (ไม่ต้องกดย้อนกลับ)
+function switchTab(tabName) {
+    document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
+    document.querySelectorAll('.nav-tab').forEach(el => el.classList.remove('active'));
+
+    document.getElementById(`view-${tabName}`).classList.add('active');
+    document.getElementById(`tab-${tabName}`).classList.add('active');
+}
 
 function updateClock() {
     const now = new Date();
@@ -268,9 +264,42 @@ setInterval(() => {
         triggerManualSync();
         targetSync = getNextHour();
     }
-    document.getElementById('nextSyncTime').textContent = targetSync.toLocaleTimeString('th-TH', {hour:'2-digit', minute:'2-digit'}) + " น.";
-    document.getElementById('timerInfo').textContent = "Next Sync: " + targetSync.toLocaleTimeString('th-TH', {hour:'2-digit', minute:'2-digit'});
+    const timeStr = targetSync.toLocaleTimeString('th-TH', {hour:'2-digit', minute:'2-digit'}) + " น.";
+    document.getElementById('timerInfo').textContent = "Next Sync: " + timeStr;
+    document.getElementById('discordNextSync').textContent = timeStr;
 }, 1000);
+
+async function fetchWeather(lat, lon, city) {
+    try {
+        const res = await fetch(`https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&current=temperature_2m,relative_humidity_2m,wind_speed_10m,surface_pressure,apparent_temperature&timezone=auto`);
+        const data = await res.json();
+        latestWeather = data.current;
+
+        const htmlShort = `
+            <div class="grid grid-cols-2 sm:grid-cols-4 gap-4 font-mono">
+                <div><span class="text-gray-500 block text-[10px]">อุณหภูมิ</span><span class="text-emerald-400 font-bold text-base">${Math.round(latestWeather.temperature_2m)}°C</span></div>
+                <div><span class="text-gray-500 block text-[10px]">ความชื้น</span><span class="text-white font-bold text-base">${latestWeather.relative_humidity_2m}%</span></div>
+                <div><span class="text-gray-500 block text-[10px]">ความเร็วลม</span><span class="text-white font-bold text-base">${latestWeather.wind_speed_10m} km/h</span></div>
+                <div><span class="text-gray-500 block text-[10px]">ความกดอากาศ</span><span class="text-white font-bold text-base">${Math.round(latestWeather.surface_pressure)} hPa</span></div>
+            </div>
+        `;
+        document.getElementById('weatherSummary').innerHTML = htmlShort;
+        document.getElementById('locationTitle').textContent = city;
+
+        document.getElementById('weatherFullDetails').innerHTML = `
+            <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 font-mono">
+                <div class="p-4 bg-black/40 rounded-xl border border-white/5"><span class="text-gray-400 block text-xs">พื้นที่</span><span class="text-white font-bold text-lg">${city}</span></div>
+                <div class="p-4 bg-black/40 rounded-xl border border-white/5"><span class="text-gray-400 block text-xs">อุณหภูมิปัจจุบัน</span><span class="text-emerald-400 font-bold text-lg">${Math.round(latestWeather.temperature_2m)}°C</span></div>
+                <div class="p-4 bg-black/40 rounded-xl border border-white/5"><span class="text-gray-400 block text-xs">รู้สึกเหมือน</span><span class="text-white font-bold text-lg">${Math.round(latestWeather.apparent_temperature)}°C</span></div>
+                <div class="p-4 bg-black/40 rounded-xl border border-white/5"><span class="text-gray-400 block text-xs">ความชื้นสัมพัทธ์</span><span class="text-white font-bold text-lg">${latestWeather.relative_humidity_2m}%</span></div>
+                <div class="p-4 bg-black/40 rounded-xl border border-white/5"><span class="text-gray-400 block text-xs">ความเร็วลม</span><span class="text-white font-bold text-lg">${latestWeather.wind_speed_10m} km/h</span></div>
+                <div class="p-4 bg-black/40 rounded-xl border border-white/5"><span class="text-gray-400 block text-xs">ความกดอากาศ</span><span class="text-white font-bold text-lg">${Math.round(latestWeather.surface_pressure)} hPa</span></div>
+            </div>
+        `;
+    } catch(e) {
+        document.getElementById('weatherSummary').textContent = "ไม่สามารถดึงข้อมูลได้";
+    }
+}
 
 async function fetchEarthquake() {
     try {
@@ -285,52 +314,30 @@ async function fetchEarthquake() {
 
             latestQuake = { mag, place, depth, time };
 
-            document.getElementById('quakeDisplay').innerHTML = `
-                <div class="flex justify-between items-start">
+            const summaryHTML = `
+                <div class="flex justify-between items-center font-mono">
                     <div>
-                        <div class="font-bold text-white text-sm">${place}</div>
-                        <div class="text-[11px] text-gray-400 mt-0.5">ความลึก: ${depth} กม. | เวลา: ${time} น.</div>
+                        <div class="font-bold text-white text-xs">${place}</div>
+                        <div class="text-[10px] text-gray-400">ลึก: ${depth} กม. | เวลา: ${time} น.</div>
                     </div>
-                    <div class="text-right font-mono font-bold text-lg ${mag >= 5.0 ? 'text-red-500' : 'text-amber-400'}">
-                        ${mag} <span class="text-xs font-normal text-gray-400">M</span>
-                    </div>
+                    <div class="font-bold text-base ${mag >= 5.0 ? 'text-red-500' : 'text-amber-400'}">${mag} M</div>
                 </div>
             `;
-            document.getElementById('quakeUpdate').textContent = "Updated " + new Date().toLocaleTimeString('th-TH', {hour:'2-digit', minute:'2-digit'});
+            document.getElementById('quakeSummary').innerHTML = summaryHTML;
+
+            let fullHTML = data.features.slice(0, 5).map(item => `
+                <div class="p-4 bg-black/40 rounded-xl border border-white/5 flex justify-between items-center font-mono">
+                    <div>
+                        <div class="font-bold text-white text-sm">${item.properties.place}</div>
+                        <div class="text-xs text-gray-400">ความลึก: ${item.geometry.coordinates[2]} กม. | เวลา: ${new Date(item.properties.time).toLocaleTimeString('th-TH')} น.</div>
+                    </div>
+                    <div class="text-lg font-bold ${item.properties.mag >= 5.0 ? 'text-red-500' : 'text-amber-400'}">${item.properties.mag.toFixed(1)} M</div>
+                </div>
+            `).join('');
+            document.getElementById('quakeFullDetails').innerHTML = fullHTML;
         }
     } catch(e) {
-        document.getElementById('quakeDisplay').textContent = "ไม่สามารถโหลดข้อมูลแผ่นดินไหวได้";
-    }
-}
-
-async function fetchWeather(lat, lon, city) {
-    try {
-        const res = await fetch(`https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&current=temperature_2m,relative_humidity_2m,wind_speed_10m,surface_pressure&timezone=auto`);
-        const data = await res.json();
-        latestWeather = data.current;
-
-        document.getElementById('weatherDisplay').innerHTML = `
-            <div class="grid grid-cols-2 sm:grid-cols-4 gap-4 mt-2 font-mono">
-                <div>
-                    <span class="text-gray-500 block text-[10px]">LOCATION</span>
-                    <span class="text-white font-bold">${city}</span>
-                </div>
-                <div>
-                    <span class="text-gray-500 block text-[10px]">TEMPERATURE</span>
-                    <span class="text-emerald-400 font-bold">${Math.round(latestWeather.temperature_2m)}°C</span>
-                </div>
-                <div>
-                    <span class="text-gray-500 block text-[10px]">HUMIDITY</span>
-                    <span class="text-white font-bold">${latestWeather.relative_humidity_2m}%</span>
-                </div>
-                <div>
-                    <span class="text-gray-500 block text-[10px]">WIND SPEED</span>
-                    <span class="text-white font-bold">${latestWeather.wind_speed_10m} km/h</span>
-                </div>
-            </div>
-        `;
-    } catch(e) {
-        document.getElementById('weatherDisplay').textContent = "ไม่สามารถดึงข้อมูลอากาศได้";
+        document.getElementById('quakeSummary').textContent = "ไม่พบรายงาน";
     }
 }
 
@@ -346,9 +353,9 @@ async function sendDiscordAlert() {
             title: "📈 Trading Terminal & Disaster Daily Report",
             color: isUrgent ? 15548927 : 1049388,
             fields: [
-                { name: "🇹🇭 สรุปตลาดหุ้นไทย (SET)", value: "1,420.50 (+0.45%)", inline: true },
+                { name: "🇹🇭 SET Index", value: "1,420.50 (+0.45%)", inline: true },
                 { name: "🇺🇸 S&P 500", value: "5,648.40 (+0.32%)", inline: true },
-                { name: "🪙 Bitcoin (BTC)", value: "$64,210 (-1.20%)", inline: true },
+                { name: "🪙 Bitcoin", value: "$64,210 (-1.20%)", inline: true },
                 { name: "📍 สภาพอากาศ (" + currentCity + ")", value: `อุณหภูมิ ${latestWeather ? Math.round(latestWeather.temperature_2m) : '--'}°C | ความชื้น ${latestWeather ? latestWeather.relative_humidity_2m : '--'}%`, inline: false },
                 { name: "🚨 แผ่นดินไหวล่าสุด", value: latestQuake ? `${latestQuake.place} (ขนาด **${latestQuake.mag} M**)` : "ไม่มีเหตุรุนแรง", inline: false }
             ],
@@ -373,9 +380,9 @@ async function triggerManualSync() {
     setTimeout(() => btn.classList.remove('spin'), 500);
 }
 
-async function searchCity(e) {
+async function searchLocation(e) {
     e.preventDefault();
-    const query = document.getElementById('citySearch').value.trim();
+    const query = document.getElementById('searchInput').value.trim();
     if (!query) return;
 
     try {
@@ -390,7 +397,7 @@ async function searchCity(e) {
     } catch(e) {}
 }
 
-// Initial Load
+// โหลดข้อมูลเริ่มต้น
 fetchEarthquake();
 fetchWeather(currentLat, currentLon, currentCity);
 </script>
