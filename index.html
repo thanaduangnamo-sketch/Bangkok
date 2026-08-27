@@ -1,40 +1,80 @@
-<!DOCTYPE html>
-<html lang="th">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Weather Tracker Pro & Earthquake Monitoring System</title>
-    <!-- Tailwind CSS CDN -->
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&family=Prompt:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    <style>
-        body {
-            background-color: #08090a;
-            color: #ffffff;
-            font-family: 'Prompt', 'Plus Jakarta Sans', sans-serif;
-            min-height: 100vh;
-            position: relative;
-            overflow-x: hidden;
-        }
+import time
+import requests
+from datetime import datetime
 
-        /* Modern Glowing Background Effect */
-        .bg-glow-1 {
-            position: fixed;
-            top: -10%;
-            left: -10%;
-            width: 50vw;
-            height: 50vw;
-            background: radial-gradient(circle, rgba(234, 179, 8, 0.05) 0%, rgba(0,0,0,0) 70%);
-            pointer-events: none;
-            z-index: 0;
-        }
-        .bg-glow-2 {
-            position: fixed;
-            bottom: -10%;
-            right: -10%;
-            width: 60vw;
-            height: 60vw;
-            background: radial-gradient(circle, rgba(202, 138, 4, 0.04) 0%, rgba(0,0,0,0) 70%);
+# ใส่ Webhook Discord ของคุณตรงนี้
+DISCORD_UPDATE_WEBHOOK = "https://discord.com/api/webhooks/1542154970202374214/tQdo60ynkw5xbQPhxcIDLFOyoxhh57n0EBLPkOzmATkAWwOZ5-oo_DxMUOGiyUgS05r_"
+DISCORD_ERROR_WEBHOOK = "https://discord.com/api/webhooks/1542155180869689495/ii9bDvTMISrEvxpbTskKZ-iOW_V7J-8RQnGb7FKQ9A_JZhwuNR33nG3td2Yw6Nv4V9lj"
+
+# พิกัดที่ต้องการติดตาม (ค่าเริ่มต้น: แหลมฉบัง, ชลบุรี)
+LAT = 13.08
+LON = 100.92
+CITY_NAME = "แหลมฉบัง, ชลบุรี"
+
+def send_discord(webhook_url, title, desc, color=3447003):
+    if not webhook_url:
+        return
+    payload = {
+        "username": "Weather & Quake Bot",
+        "avatar_url": "https://cdn-icons-png.flaticon.com/512/1163/1163661.png",
+        "embeds": [{
+            "title": title,
+            "description": desc,
+            "color": color,
+            "timestamp": datetime.utcnow().isoformat()
+        }]
+    }
+    try:
+        requests.post(webhook_url, json=payload, timeout=10)
+    except Exception as e:
+        print("Webhook Error:", e)
+
+def check_weather():
+    try:
+        url = f"https://api.open-meteo.com/v1/forecast?latitude={LAT}&longitude={LON}&current=temperature_2m,relative_humidity_2m,weather_code,wind_speed_10m&timezone=auto"
+        res = requests.get(url, timeout=10)
+        res.raise_for_status()
+        data = res.json()
+        cur = data["current"]
+        
+        desc = (
+            f"📍 **ตำแหน่ง:** {CITY_NAME}\n"
+            f"🌡️ **อุณหภูมิ:** {round(cur['temperature_2m'])} °C\n"
+            f"💧 **ความชื้น:** {cur['relative_humidity_2m']}%\n"
+            f"💨 **ความเร็วลม:** {cur['wind_speed_10m']} km/h"
+        )
+        send_discord(DISCORD_UPDATE_WEBHOOK, "🌤️ รายงานสภาพอากาศอัตโนมัติ", desc, 15387158)
+    except Exception as e:
+        send_discord(DISCORD_ERROR_WEBHOOK, "🚨 Weather Bot Error", str(e), 15548997)
+
+def check_earthquake():
+    try:
+        url = "https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/2.5_day.geojson"
+        res = requests.get(url, timeout=10)
+        res.raise_for_status()
+        data = res.json()
+        
+        if data.get("features"):
+            latest = data["features"][0]
+            mag = latest["properties"]["mag"]
+            place = latest["properties"]["place"]
+            
+            # แจ้งเตือนเฉพาะแผ่นดินไหวขนาด 4.0 ขึ้นไป เพื่อป้องกันข้อความสแปมรัวเกินไป
+            if mag >= 4.0:
+                desc = f"⚠️ **ขนาด:** {mag} M\n📍 **พื้นที่:** {place}"
+                send_discord(DISCORD_UPDATE_WEBHOOK, "🌐 แจ้งเตือนแผ่นดินไหวสำคัญ", desc, 15548997)
+    except Exception as e:
+        pass
+
+if __name__ == "__main__":
+    print("🤖 Weather & Quake Bot started running in background...")
+    while True:
+        print(f"[{datetime.now().strftime('%Y-%m-%d %H:%M:%S')}] Checking updates...")
+        check_weather()
+        check_earthquake()
+        
+        # หน่วงเวลา 30 นาที (1800 วินาที) ค่อยเช็คใหม่อีกครั้ง
+        time.sleep(1800)            background: radial-gradient(circle, rgba(202, 138, 4, 0.04) 0%, rgba(0,0,0,0) 70%);
             pointer-events: none;
             z-index: 0;
         }
