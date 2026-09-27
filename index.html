@@ -486,139 +486,21 @@
         </div>
     </div>
 
-    <!-- FIREBASE MODULE & CLIENT LOGIC -->
-    <script type="module">
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
-        import { getAuth, signInAnonymously, signInWithCustomToken, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
-        import { getFirestore, doc, setDoc, getDoc, onSnapshot } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+    <!-- LOGIC & ANIMATION SCRIPT -->
+    <script>
+        // Progress Configuration
+        let progress = 0;
+        let speedMultiplier = 1;
+        let isAudioMuted = false;
+        let progressInterval = null;
+        let isTransitioning = false;
 
-        const appId = typeof __app_id !== 'undefined' ? __app_id : 'aesthetic-loading-app';
-        const firebaseConfig = typeof __firebase_config !== 'undefined' ? JSON.parse(__firebase_config) : {
-            apiKey: "demo-api-key",
-            authDomain: "demo-app.firebaseapp.com",
-            projectId: "demo-app",
-            storageBucket: "demo-app.appspot.com",
-            messagingSenderId: "123456789",
-            appId: "1:123456789:web:abcdef"
-        };
-
-        const app = initializeApp(firebaseConfig);
-        const auth = getAuth(app);
-        const db = getFirestore(app);
-
-        // State variables
+        // LocalStorage Profile State
         let currentUserProfile = {
             displayName: "ผู้ใช้งานทั่วไป",
             avatarUrl: "https://i.pinimg.com/736x/d1/50/12/d15012026d745a4302fd5bccffc437a2.jpg",
             isLoggedIn: false
         };
-
-        async function initAuthAndData() {
-            try {
-                if (typeof __initial_auth_token !== 'undefined' && __initial_auth_token) {
-                    await signInWithCustomToken(auth, __initial_auth_token);
-                } else {
-                    await signInAnonymously(auth);
-                }
-            } catch (err) {
-                console.warn("Auth note:", err.message);
-            }
-
-            onAuthStateChanged(auth, async (user) => {
-                if (user) {
-                    // Listen to current user profile document in Firestore
-                    const userDocRef = doc(db, 'artifacts', appId, 'users', user.uid, 'profile', 'info');
-                    
-                    onSnapshot(userDocRef, (snapshot) => {
-                        if (snapshot.exists()) {
-                            const data = snapshot.data();
-                            currentUserProfile.displayName = data.displayName || "ผู้ใช้งานทั่วไป";
-                            currentUserProfile.avatarUrl = data.avatarUrl || "https://i.pinimg.com/736x/d1/50/12/d15012026d745a4302fd5bccffc437a2.jpg";
-                            currentUserProfile.isLoggedIn = true;
-                            updateUIWithProfile();
-                        } else {
-                            // First time load - set default profile in Firestore
-                            saveUserProfileToFirestore(currentUserProfile.displayName, currentUserProfile.avatarUrl);
-                        }
-                    }, (error) => {
-                        console.error("Firestore snapshot error:", error);
-                    });
-                }
-            });
-        }
-
-        async function saveUserProfileToFirestore(name, avatar) {
-            if (!auth.currentUser) return;
-            const userDocRef = doc(db, 'artifacts', appId, 'users', auth.currentUser.uid, 'profile', 'info');
-            try {
-                await setDoc(userDocRef, {
-                    displayName: name,
-                    avatarUrl: avatar,
-                    updatedAt: new Date().toISOString()
-                }, { merge: true });
-            } catch (err) {
-                console.error("Error saving profile to Firestore:", err);
-            }
-        }
-
-        function updateUIWithProfile() {
-            const nameDisplays = [
-                document.getElementById('nav-username-display'),
-                document.getElementById('hero-username-display')
-            ];
-            const avatarImgs = [
-                document.getElementById('loading-avatar-img'),
-                document.getElementById('nav-avatar-img'),
-                document.getElementById('edit-avatar-preview')
-            ];
-
-            nameDisplays.forEach(el => {
-                if (el) el.textContent = currentUserProfile.displayName;
-            });
-
-            avatarImgs.forEach(img => {
-                if (img) img.src = currentUserProfile.avatarUrl;
-            });
-
-            const loadingUserTxt = document.getElementById('loading-username-display');
-            if (loadingUserTxt) {
-                loadingUserTxt.innerHTML = `<i class="fa-solid fa-user-astronaut text-xs"></i><span>เข้าใช้ในชื่อ: ${currentUserProfile.displayName}</span>`;
-            }
-
-            const authBtnLabel = document.getElementById('auth-btn-label');
-            if (authBtnLabel) {
-                authBtnLabel.textContent = currentUserProfile.isLoggedIn ? "สลับบัญชี / โปรไฟล์" : "เข้าสู่ระบบ / สมัครบัญชี";
-            }
-        }
-
-        // Global register and save functions exposed for UI forms
-        window.handleRegisterSubmit = async function(displayName, username, password, avatarUrl) {
-            currentUserProfile.displayName = displayName;
-            currentUserProfile.avatarUrl = avatarUrl || "https://i.pinimg.com/736x/d1/50/12/d15012026d745a4302fd5bccffc437a2.jpg";
-            currentUserProfile.isLoggedIn = true;
-
-            await saveUserProfileToFirestore(displayName, currentUserProfile.avatarUrl);
-            updateUIWithProfile();
-        };
-
-        window.handleProfileEdit = async function(displayName, avatarUrl) {
-            currentUserProfile.displayName = displayName;
-            currentUserProfile.avatarUrl = avatarUrl;
-            await saveUserProfileToFirestore(displayName, avatarUrl);
-            updateUIWithProfile();
-        };
-
-        initAuthAndData();
-    </script>
-
-    <!-- LOGIC & ANIMATION SCRIPT -->
-    <script>
-        // Progress Configuration
-        let progress = 0;
-        let speedMultiplier = 1; // 1 = Normal, 2.5 = Fast, 0.5 = Slow
-        let isAudioMuted = false;
-        let progressInterval = null;
-        let isTransitioning = false;
 
         // Dynamic Loading Messages
         const loadingStatusMessages = [
@@ -696,7 +578,7 @@
 
         function playCompletionSound() {
             if (isAudioMuted) return;
-            const notes = [523.25, 659.25, 783.99, 1046.50]; // C5, E5, G5, C6 arpeggio
+            const notes = [523.25, 659.25, 783.99, 1046.50];
             notes.forEach((freq, idx) => {
                 setTimeout(() => playChime(freq), idx * 90);
             });
@@ -734,6 +616,8 @@
         function onLoadingComplete() {
             playCompletionSound();
 
+            localStorage.setItem('hasLoadedMainPage', 'true');
+
             setTimeout(() => {
                 loadingScreen.classList.add('opacity-0', 'scale-105', 'pointer-events-none');
                 bgLoading.classList.add('opacity-0');
@@ -770,6 +654,18 @@
                 if (progressInterval) clearInterval(progressInterval);
                 progressInterval = setInterval(updateProgress, 40);
             }, 300);
+        }
+
+        function showMainPageImmediately() {
+            loadingScreen.classList.add('hidden', 'opacity-0', 'pointer-events-none');
+            bgLoading.classList.add('opacity-0');
+            bgMain.classList.remove('opacity-0');
+            mainPage.classList.remove('hidden', 'opacity-0', 'translate-y-4');
+        }
+
+        function resetLoadingPage() {
+            localStorage.removeItem('hasLoadedMainPage');
+            location.reload();
         }
 
         function openModal(modal) {
@@ -815,6 +711,79 @@
             formLogin.classList.add('hidden');
         });
 
+        // LocalStorage Profile Functions
+        function saveLocalProfile(displayName, avatarUrl) {
+            const profile = {
+                displayName: displayName || 'ผู้ใช้งานทั่วไป',
+                avatarUrl: avatarUrl || 'https://i.pinimg.com/736x/d1/50/12/d15012026d745a4302fd5bccffc437a2.jpg',
+                updatedAt: Date.now()
+            };
+            localStorage.setItem('userProfile', JSON.stringify(profile));
+        }
+
+        function loadLocalProfile() {
+            const savedProfile = localStorage.getItem('userProfile');
+            if (!savedProfile) return;
+
+            try {
+                const profile = JSON.parse(savedProfile);
+                currentUserProfile.displayName = profile.displayName || 'ผู้ใช้งานทั่วไป';
+                currentUserProfile.avatarUrl = profile.avatarUrl || 'https://i.pinimg.com/736x/d1/50/12/d15012026d745a4302fd5bccffc437a2.jpg';
+                currentUserProfile.isLoggedIn = true;
+                updateUIWithProfile();
+            } catch (error) {
+                console.error('ไม่สามารถโหลดโปรไฟล์ได้', error);
+            }
+        }
+
+        function updateUIWithProfile() {
+            const nameDisplays = [
+                document.getElementById('nav-username-display'),
+                document.getElementById('hero-username-display')
+            ];
+            const avatarImgs = [
+                document.getElementById('loading-avatar-img'),
+                document.getElementById('nav-avatar-img'),
+                document.getElementById('edit-avatar-preview')
+            ];
+
+            nameDisplays.forEach(el => {
+                if (el) el.textContent = currentUserProfile.displayName;
+            });
+
+            avatarImgs.forEach(img => {
+                if (img) img.src = currentUserProfile.avatarUrl;
+            });
+
+            const loadingUserTxt = document.getElementById('loading-username-display');
+            if (loadingUserTxt) {
+                const safeName = currentUserProfile.displayName.replace(/[<>]/g, '');
+                loadingUserTxt.innerHTML = `<i class="fa-solid fa-user-astronaut text-xs"></i><span>เข้าใช้ในชื่อ: ${safeName}</span>`;
+            }
+
+            const authBtnLabel = document.getElementById('auth-btn-label');
+            if (authBtnLabel) {
+                authBtnLabel.textContent = currentUserProfile.isLoggedIn ? "สลับบัญชี / โปรไฟล์" : "เข้าสู่ระบบ / สมัครบัญชี";
+            }
+        }
+
+        // Global register and save functions exposed for UI forms
+        window.handleRegisterSubmit = async function(displayName, username, password, avatarUrl) {
+            currentUserProfile.displayName = displayName;
+            currentUserProfile.avatarUrl = avatarUrl || "https://i.pinimg.com/736x/d1/50/12/d15012026d745a4302fd5bccffc437a2.jpg";
+            currentUserProfile.isLoggedIn = true;
+
+            saveLocalProfile(displayName, currentUserProfile.avatarUrl);
+            updateUIWithProfile();
+        };
+
+        window.handleProfileEdit = async function(displayName, avatarUrl) {
+            currentUserProfile.displayName = displayName;
+            currentUserProfile.avatarUrl = avatarUrl;
+            await saveLocalProfile(displayName, avatarUrl);
+            updateUIWithProfile();
+        };
+
         // Form Submit Handlers
         formLogin.addEventListener('submit', (e) => {
             e.preventDefault();
@@ -858,8 +827,8 @@
 
         // Button Controls
         btnRestart.addEventListener('click', startLoading);
-        btnReloadMain.addEventListener('click', startLoading);
-        btnTestWarp.addEventListener('click', startLoading);
+        btnReloadMain.addEventListener('click', resetLoadingPage);
+        btnTestWarp.addEventListener('click', resetLoadingPage);
 
         // Speed Toggle
         btnSpeed.addEventListener('click', () => {
@@ -950,7 +919,15 @@
         window.onload = function() {
             initParticles();
             animateParticles();
-            startLoading();
+            loadLocalProfile();
+
+            const hasLoadedMainPage = localStorage.getItem('hasLoadedMainPage');
+
+            if (hasLoadedMainPage === 'true') {
+                showMainPageImmediately();
+            } else {
+                startLoading();
+            }
         };
     </script>
 </body>
