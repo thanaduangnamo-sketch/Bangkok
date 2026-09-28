@@ -1,934 +1,1482 @@
 <!DOCTYPE html>
-<html lang="th">
+<html lang="th" class="h-full bg-slate-950 text-slate-100 font-sans">
+
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Aesthetic Animated Loading Screen & Main Page</title>
-    <!-- Tailwind CSS CDN -->
-    <script src="https://cdn.tailwindcss.com"></script>
-    <!-- FontAwesome Icons -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <!-- Google Fonts -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;500;600;700&family=Outfit:wght@400;600;800&display=swap" rel="stylesheet">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <style>
-        * {
-            font-family: 'Kanit', 'Outfit', sans-serif;
-        }
+  <title>Cyberpunk Bot Studio & Auth</title>
 
-        /* Glassmorphism effects */
-        .glass-card {
-            background: rgba(18, 18, 28, 0.70);
-            backdrop-filter: blur(20px);
-            -webkit-backdrop-filter: blur(20px);
-            border: 1px solid rgba(255, 255, 255, 0.12);
-            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5), 0 0 30px rgba(147, 51, 234, 0.15);
-        }
+  <script src="https://cdn.tailwindcss.com"></script>
 
-        .glass-nav {
-            background: rgba(15, 23, 42, 0.80);
-            backdrop-filter: blur(16px);
-            -webkit-backdrop-filter: blur(16px);
-            border-bottom: 1px solid rgba(255, 255, 255, 0.12);
-        }
+  <link
+    rel="stylesheet"
+    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+  >
 
-        .glass-modal {
-            background: rgba(15, 23, 42, 0.92);
-            backdrop-filter: blur(24px);
-            -webkit-backdrop-filter: blur(24px);
-            border: 1px solid rgba(168, 85, 247, 0.3);
-        }
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 
-        /* Custom glow animations */
-        @keyframes floatSlow {
-            0%, 100% { transform: translateY(0px) rotate(0deg); }
-            50% { transform: translateY(-8px) rotate(1deg); }
-        }
+  <link
+    href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500;600&family=Kanit:wght@300;400;500;600;700&display=swap"
+    rel="stylesheet"
+  >
 
-        @keyframes pulseGlow {
-            0%, 100% { opacity: 0.4; transform: scale(1); }
-            50% { opacity: 0.8; transform: scale(1.08); }
-        }
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['Kanit', 'sans-serif'],
+            mono: ['Fira Code', 'monospace'],
+          },
 
-        @keyframes rotateBorder {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-        }
+          colors: {
+            neon: {
+              cyan: '#00f3ff',
+              pink: '#ff007f',
+              purple: '#b026ff',
+              green: '#00ff66',
+            }
+          },
 
-        @keyframes shimmerBar {
-            0% { background-position: -200% 0; }
-            100% { background-position: 200% 0; }
-        }
+          boxShadow: {
+            'neon-cyan':
+              '0 0 15px rgba(0, 243, 255, 0.5), 0 0 30px rgba(0, 243, 255, 0.2)',
 
-        .animate-float {
-            animation: floatSlow 5s ease-in-out infinite;
-        }
+            'neon-pink':
+              '0 0 15px rgba(255, 0, 127, 0.5), 0 0 30px rgba(255, 0, 127, 0.2)',
 
-        .animate-pulse-glow {
-            animation: pulseGlow 3s ease-in-out infinite;
+            glass:
+              '0 8px 32px 0 rgba(0, 0, 0, 0.37)',
+          }
         }
+      }
+    };
+  </script>
 
-        .rotate-ring {
-            animation: rotateBorder 12s linear infinite;
-        }
+  <style>
+    ::-webkit-scrollbar {
+      width: 6px;
+      height: 6px;
+    }
 
-        .shimmer-effect {
-            background: linear-gradient(90deg, 
-                rgba(255, 255, 255, 0) 0%, 
-                rgba(255, 255, 255, 0.4) 50%, 
-                rgba(255, 255, 255, 0) 100%);
-            background-size: 200% 100%;
-            animation: shimmerBar 2s infinite;
-        }
+    ::-webkit-scrollbar-track {
+      background: rgba(15, 23, 42, 0.6);
+    }
 
-        #particles-canvas {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            z-index: 1;
-            pointer-events: none;
-        }
-    </style>
+    ::-webkit-scrollbar-thumb {
+      background: rgba(0, 243, 255, 0.3);
+      border-radius: 3px;
+    }
+
+    ::-webkit-scrollbar-thumb:hover {
+      background: rgba(0, 243, 255, 0.6);
+    }
+
+    .bg-loader {
+      background-image:
+        linear-gradient(
+          to bottom,
+          rgba(10, 10, 26, 0.82),
+          rgba(5, 5, 15, 0.92)
+        ),
+        url('https://i.pinimg.com/736x/d1/50/12/d15012026d745a4302fd5bccffc437a2.jpg');
+
+      background-size: cover;
+      background-position: center;
+    }
+
+    .bg-main {
+      background-image:
+        linear-gradient(
+          to bottom,
+          rgba(15, 23, 42, 0.88),
+          rgba(3, 7, 18, 0.95)
+        ),
+        url('https://i.pinimg.com/736x/67/93/f5/6793f5e51071422ae664139f6cf47baa.jpg');
+
+      background-size: cover;
+      background-position: center;
+      background-attachment: fixed;
+    }
+
+    .glass-card {
+      background: rgba(15, 23, 42, 0.65);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    .glass-nav {
+      background: rgba(10, 15, 30, 0.75);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border-bottom: 1px solid rgba(0, 243, 255, 0.2);
+    }
+
+    .circle-bg {
+      fill: none;
+      stroke: rgba(255, 255, 255, 0.1);
+      stroke-width: 8;
+    }
+
+    .circle-progress {
+      fill: none;
+      stroke: #00f3ff;
+      stroke-width: 8;
+      stroke-linecap: round;
+      transition: stroke-dashoffset 0.1s linear;
+      filter: drop-shadow(0 0 8px #00f3ff);
+    }
+
+    @keyframes status-pulse {
+      0% {
+        transform: scale(0.95);
+        box-shadow: 0 0 0 0 rgba(0, 255, 102, 0.7);
+      }
+
+      70% {
+        transform: scale(1);
+        box-shadow: 0 0 0 8px rgba(0, 255, 102, 0);
+      }
+
+      100% {
+        transform: scale(0.95);
+        box-shadow: 0 0 0 0 rgba(0, 255, 102, 0);
+      }
+    }
+
+    .status-pulse {
+      animation: status-pulse 2s infinite;
+    }
+
+    /* Cyberpunk Signup Button */
+    .signup-btn {
+      background:
+        linear-gradient(
+          135deg,
+          rgba(0, 243, 255, 0.2),
+          rgba(176, 38, 255, 0.28)
+        ),
+        rgba(15, 23, 42, 0.9);
+
+      border: 1px solid rgba(0, 243, 255, 0.65);
+
+      box-shadow:
+        0 0 12px rgba(0, 243, 255, 0.25),
+        inset 0 0 14px rgba(0, 243, 255, 0.08);
+    }
+
+    .signup-btn::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      border-radius: inherit;
+      padding: 1px;
+
+      background: linear-gradient(
+        120deg,
+        #00f3ff,
+        #b026ff,
+        #ff007f,
+        #00f3ff
+      );
+
+      background-size: 300% 300%;
+      animation: signup-border-flow 4s linear infinite;
+
+      -webkit-mask:
+        linear-gradient(#fff 0 0) content-box,
+        linear-gradient(#fff 0 0);
+
+      -webkit-mask-composite: xor;
+      mask-composite: exclude;
+
+      pointer-events: none;
+    }
+
+    .signup-btn:hover {
+      transform: translateY(-2px) scale(1.02);
+
+      border-color: #00f3ff;
+
+      box-shadow:
+        0 0 18px rgba(0, 243, 255, 0.65),
+        0 0 35px rgba(176, 38, 255, 0.3),
+        inset 0 0 18px rgba(0, 243, 255, 0.15);
+    }
+
+    .signup-btn:active {
+      transform: translateY(0) scale(0.98);
+    }
+
+    .signup-icon {
+      width: 30px;
+      height: 30px;
+
+      display: flex;
+      align-items: center;
+      justify-content: center;
+
+      color: #00f3ff;
+      border-radius: 9px;
+
+      background: rgba(0, 243, 255, 0.12);
+      border: 1px solid rgba(0, 243, 255, 0.4);
+
+      box-shadow: 0 0 12px rgba(0, 243, 255, 0.25);
+
+      transition: all 0.3s ease;
+    }
+
+    .signup-btn:hover .signup-icon {
+      color: #fff;
+      background: #00f3ff;
+      box-shadow: 0 0 18px rgba(0, 243, 255, 0.8);
+      transform: rotate(-8deg) scale(1.08);
+    }
+
+    .signup-shine {
+      position: absolute;
+      top: 0;
+      left: -80%;
+
+      width: 45%;
+      height: 100%;
+
+      transform: skewX(-20deg);
+
+      background: linear-gradient(
+        90deg,
+        transparent,
+        rgba(255, 255, 255, 0.25),
+        transparent
+      );
+
+      transition: left 0.6s ease;
+    }
+
+    .signup-btn:hover .signup-shine {
+      left: 140%;
+    }
+
+    @keyframes signup-border-flow {
+      0% {
+        background-position: 0% 50%;
+      }
+
+      50% {
+        background-position: 100% 50%;
+      }
+
+      100% {
+        background-position: 0% 50%;
+      }
+    }
+
+    /* Auth Tabs */
+    .auth-tab {
+      position: relative;
+      transition: all 0.3s ease;
+    }
+
+    .auth-tab:hover {
+      color: #67e8f9;
+      background: rgba(0, 243, 255, 0.05);
+    }
+
+    .auth-tab.active {
+      color: #22d3ee;
+      border-color: #22d3ee;
+      background: rgba(0, 243, 255, 0.06);
+      text-shadow: 0 0 8px rgba(0, 243, 255, 0.7);
+    }
+  </style>
 </head>
-<body class="bg-slate-950 text-slate-100 min-h-screen overflow-x-hidden relative selection:bg-purple-500 selection:text-white">
 
-    <!-- Background Image 1: Loading Screen BG -->
-    <div id="bg-loading" class="fixed inset-0 z-0 transition-opacity duration-1000 ease-in-out pointer-events-none">
-        <img 
-            src="https://i.pinimg.com/736x/d1/50/12/d15012026d745a4302fd5bccffc437a2.jpg" 
-            alt="Loading Background Image" 
-            class="w-full h-full object-cover object-center scale-105 filter blur-md brightness-40 contrast-105"
-            onerror="this.style.display='none';"
-        />
-        <div class="absolute inset-0 bg-gradient-to-b from-slate-950/80 via-slate-950/50 to-slate-950/90"></div>
-        <div class="absolute inset-0 bg-purple-950/20 mix-blend-color-dodge"></div>
+<body class="h-full overflow-x-hidden selection:bg-cyan-500 selection:text-black">
+
+  <!-- Loading Screen -->
+  <div
+    id="loading-screen"
+    class="fixed inset-0 z-50 flex flex-col items-center justify-center bg-loader transition-opacity duration-1000"
+  >
+    <div class="relative flex flex-col items-center">
+
+      <div class="relative w-48 h-48 sm:w-56 sm:h-56 flex items-center justify-center">
+        <svg class="w-full h-full -rotate-90" viewBox="0 0 100 100">
+          <circle
+            class="circle-bg"
+            cx="50"
+            cy="50"
+            r="42"
+          ></circle>
+
+          <circle
+            id="progress-circle"
+            class="circle-progress"
+            cx="50"
+            cy="50"
+            r="42"
+            stroke-dasharray="263.89"
+            stroke-dashoffset="263.89"
+          ></circle>
+        </svg>
+
+        <div class="absolute inset-0 flex flex-col items-center justify-center text-center">
+          <span
+            id="load-percent"
+            class="text-4xl sm:text-5xl font-bold font-mono text-cyan-400 drop-shadow-[0_0_10px_rgba(0,243,255,0.8)]"
+          >
+            0%
+          </span>
+
+          <span class="text-xs tracking-widest text-slate-400 uppercase mt-1">
+            System Booting
+          </span>
+        </div>
+      </div>
+
+      <div class="mt-6 flex flex-col items-center gap-2">
+        <p
+          id="loader-status"
+          class="text-sm font-mono text-slate-300 animate-pulse"
+        >
+          กำลังโหลดทรัพยากรระบบ...
+        </p>
+
+        <div class="flex gap-1.5 mt-1">
+          <div class="w-2 h-2 rounded-full bg-cyan-400 animate-ping"></div>
+          <div class="w-2 h-2 rounded-full bg-cyan-400 animate-ping delay-100"></div>
+          <div class="w-2 h-2 rounded-full bg-cyan-400 animate-ping delay-200"></div>
+        </div>
+      </div>
     </div>
+  </div>
 
-    <!-- Background Image 2: Main Page BG -->
-    <div id="bg-main" class="fixed inset-0 z-0 transition-opacity duration-1000 ease-in-out opacity-0 pointer-events-none">
-        <img 
-            src="https://i.pinimg.com/736x/67/93/f5/6793f5e51071422ae664139f6cf47baa.jpg" 
-            alt="Main Page Background Image" 
-            class="w-full h-full object-cover object-center filter blur-sm brightness-50 contrast-105 scale-105"
-            onerror="this.style.display='none';"
-        />
-        <div class="absolute inset-0 bg-gradient-to-b from-slate-950/70 via-slate-950/40 to-slate-950/85"></div>
-        <div class="absolute inset-0 bg-indigo-950/20 mix-blend-overlay"></div>
-    </div>
+  <!-- Main Application -->
+  <div
+    id="main-app"
+    class="hidden min-h-screen bg-main flex flex-col text-slate-200 opacity-0 transition-opacity duration-700"
+  >
 
-    <canvas id="particles-canvas"></canvas>
+    <!-- Header -->
+    <header
+      class="glass-nav sticky top-0 z-30 px-4 py-3 sm:px-6 flex items-center justify-between shadow-lg"
+    >
+      <div class="flex items-center gap-3">
+        <div
+          class="p-2 rounded-lg bg-cyan-500/10 border border-cyan-500/30 text-cyan-400 shadow-neon-cyan"
+        >
+          <i class="fa-solid fa-code-merge text-xl"></i>
+        </div>
 
-    <!-- Background Ambient Light Orbs -->
-    <div class="fixed top-1/4 left-1/4 w-96 h-96 bg-purple-600/20 rounded-full blur-3xl pointer-events-none animate-pulse-glow z-0"></div>
-    <div class="fixed bottom-1/4 right-1/4 w-96 h-96 bg-pink-600/20 rounded-full blur-3xl pointer-events-none animate-pulse-glow z-0" style="animation-delay: 1.5s;"></div>
+        <div>
+          <h1
+            class="text-lg sm:text-xl font-bold tracking-wide text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 via-purple-400 to-pink-500"
+          >
+            หน้าหลัก :: Cyber Studio
+          </h1>
 
-    <!-- SECTION 1: LOADING OVERLAY CONTAINER -->
-    <main id="loading-screen" class="relative z-10 min-h-screen flex flex-col items-center justify-center p-4 transition-all duration-1000 ease-in-out">
-        
-        <!-- Center Aesthetic Glass Card -->
-        <div class="glass-card w-full max-w-md rounded-3xl p-8 flex flex-col items-center text-center relative overflow-hidden transition-all duration-500 hover:border-purple-500/40">
-            
-            <!-- Top Subtle Badge -->
-            <div class="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-purple-500/10 border border-purple-500/30 text-purple-300 text-xs font-medium mb-5">
-                <span class="w-2 h-2 rounded-full bg-purple-400 animate-ping"></span>
-                <span>SYSTEM LOADING</span>
+          <p class="text-xs text-slate-400 hidden sm:block">
+            ระบบจัดการโค้ดบอทอัตโนมัติ Cloud Workspace
+          </p>
+        </div>
+      </div>
+
+      <!-- User Controls -->
+      <div class="flex items-center gap-3">
+
+        <!-- Logged In -->
+        <div
+          id="user-profile-badge"
+          class="hidden items-center gap-3 bg-slate-900/80 p-1.5 pr-3 pl-2 rounded-full border border-cyan-500/30 shadow-md"
+        >
+          <div class="relative">
+            <img
+              id="user-avatar"
+              src=""
+              alt="Avatar"
+              class="w-8 h-8 rounded-full object-cover border border-cyan-400"
+            >
+
+            <span
+              class="absolute bottom-0 right-0 w-2.5 h-2.5 bg-emerald-400 rounded-full status-pulse border border-slate-900"
+              title="Online"
+            ></span>
+          </div>
+
+          <div class="text-left hidden xs:block">
+            <p
+              id="user-display-name"
+              class="text-xs font-semibold text-slate-100 leading-tight"
+            >
+              User
+            </p>
+
+            <p
+              id="user-role"
+              class="text-[10px] text-cyan-400 font-mono"
+            >
+              Developer
+            </p>
+          </div>
+
+          <button
+            id="logout-btn"
+            title="ออกจากระบบ"
+            class="ml-1 text-slate-400 hover:text-red-400 transition-colors p-1"
+          >
+            <i class="fa-solid fa-right-from-bracket text-sm"></i>
+          </button>
+        </div>
+
+        <!-- Signup Button -->
+        <button
+          id="open-auth-btn"
+          class="signup-btn group relative overflow-hidden flex items-center gap-2 px-5 py-2.5 rounded-xl text-sm font-semibold text-white transition-all duration-300"
+        >
+          <span class="signup-shine"></span>
+
+          <span class="relative z-10 flex items-center gap-2">
+            <span class="signup-icon">
+              <i class="fa-solid fa-user-plus"></i>
+            </span>
+
+            <span class="flex flex-col items-start leading-tight">
+              <span class="text-[10px] uppercase tracking-[0.2em] text-cyan-200/80">
+                New Access
+              </span>
+
+              <span class="text-sm font-bold">
+                สร้างบัญชี
+              </span>
+            </span>
+
+            <i
+              class="fa-solid fa-arrow-right text-xs text-cyan-200 transition-transform duration-300 group-hover:translate-x-1"
+            ></i>
+          </span>
+        </button>
+      </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="flex-1 p-3 sm:p-6 max-w-7xl w-full mx-auto flex flex-col gap-6">
+
+      <!-- Welcome Banner -->
+      <section
+        class="glass-card rounded-2xl p-4 sm:p-6 relative overflow-hidden border border-cyan-500/20"
+      >
+        <div
+          class="absolute -right-10 -bottom-10 w-48 h-48 bg-cyan-500/10 rounded-full blur-3xl pointer-events-none"
+        ></div>
+
+        <div
+          class="relative z-10 flex flex-col md:flex-row md:items-center justify-between gap-4"
+        >
+          <div>
+            <div
+              class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-cyan-500/10 border border-cyan-500/30 text-cyan-300 text-xs font-mono mb-2"
+            >
+              <i class="fa-solid fa-bolt text-yellow-400"></i>
+              Modern Cloud Runtime v2.4
             </div>
 
-            <!-- Avatar Frame with Rotating Neon Ring -->
-            <div class="relative mb-4 group cursor-pointer" id="avatar-container">
-                <div class="absolute -inset-2 rounded-full bg-gradient-to-r from-pink-500 via-purple-500 to-indigo-500 opacity-75 blur-md group-hover:opacity-100 transition duration-500 animate-pulse-glow"></div>
-                
-                <div class="relative w-32 h-32 md:w-36 md:h-36 rounded-full p-1 bg-slate-900 overflow-hidden shadow-2xl flex items-center justify-center">
-                    <div class="absolute inset-0 bg-gradient-to-tr from-pink-500 via-purple-500 to-cyan-400 rotate-ring opacity-80"></div>
-                    
-                    <div class="relative w-full h-full rounded-full overflow-hidden border-2 border-slate-900 bg-slate-800">
-                        <img 
-                            id="loading-avatar-img"
-                            src="https://i.pinimg.com/736x/d1/50/12/d15012026d745a4302fd5bccffc437a2.jpg" 
-                            alt="Loading Avatar" 
-                            class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
-                            onerror="this.src='https://placehold.co/300x300/2e1065/ffffff?text=Avatar+Image';"
-                        />
-                    </div>
-                </div>
+            <h2 class="text-xl sm:text-2xl font-bold text-white">
+              ยินดีต้อนรับสู่ระบบควบคุมบอทอัจฉริยะ
+            </h2>
 
-                <!-- Active Online Indicator (Blinking Green Dot) -->
-                <div class="absolute bottom-1 right-1 bg-slate-950/90 p-1 rounded-full border border-emerald-500/50 shadow-lg">
-                    <span class="relative flex h-4 w-4">
-                        <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
-                        <span class="relative inline-flex rounded-full h-4 w-4 bg-emerald-500"></span>
-                    </span>
-                </div>
+            <p class="text-sm text-slate-300 mt-1">
+              แก้ไขโค้ด บันทึกไฟล์ และสั่งรันบอทของคุณได้ทันทีแบบ Real-time
+            </p>
+          </div>
+
+          <div class="flex items-center gap-3">
+            <div
+              class="px-4 py-2 rounded-xl bg-slate-900/80 border border-slate-700/60 text-center"
+            >
+              <span class="text-xs text-slate-400 block">
+                สถานะเซิร์ฟเวอร์
+              </span>
+
+              <span
+                class="text-sm font-semibold text-emerald-400 flex items-center justify-center gap-1.5"
+              >
+                <span class="w-2 h-2 rounded-full bg-emerald-400 animate-ping"></span>
+                ปกติ
+              </span>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Editor -->
+      <section
+        class="glass-card rounded-2xl overflow-hidden border border-slate-700/60 shadow-2xl flex flex-col lg:flex-row h-[650px]"
+      >
+
+        <!-- File Explorer -->
+        <div
+          class="w-full lg:w-60 bg-slate-900/90 border-b lg:border-b-0 lg:border-r border-slate-800 flex flex-col"
+        >
+          <div
+            class="p-3 border-b border-slate-800/80 flex items-center justify-between"
+          >
+            <span
+              class="text-xs font-semibold uppercase tracking-wider text-slate-400 font-mono"
+            >
+              <i class="fa-regular fa-folder-open text-cyan-400 mr-1.5"></i>
+              Explorer
+            </span>
+
+            <span class="text-[10px] text-slate-500 bg-slate-800 px-2 py-0.5 rounded">
+              3 Files
+            </span>
+          </div>
+
+          <div
+            class="flex-1 overflow-y-auto p-2 space-y-1"
+            id="file-list"
+          ></div>
+
+          <div
+            class="p-3 border-t border-slate-800 bg-slate-950/40 text-xs text-slate-500 flex justify-between items-center"
+          >
+            <span>
+              Auto-Save:
+              <strong class="text-emerald-400">ON</strong>
+            </span>
+
+            <i class="fa-solid fa-gear text-slate-400 hover:text-white cursor-pointer"></i>
+          </div>
+        </div>
+
+        <!-- Editor Area -->
+        <div class="flex-1 flex flex-col bg-slate-950/80 min-w-0">
+
+          <div
+            class="bg-slate-900/80 px-4 py-2.5 border-b border-slate-800 flex flex-wrap items-center justify-between gap-3"
+          >
+            <div class="flex items-center gap-2">
+              <span id="active-file-icon" class="text-cyan-400">
+                <i class="fa-brands fa-js"></i>
+              </span>
+
+              <span
+                id="active-file-name"
+                class="font-mono text-sm text-cyan-300 font-medium"
+              >
+                bot.js
+              </span>
+
+              <span
+                id="file-lang"
+                class="text-[10px] px-2 py-0.5 bg-slate-800 rounded text-slate-400 font-mono"
+              >
+                JavaScript
+              </span>
             </div>
 
-            <!-- User Welcome Display Name -->
-            <div class="mb-3">
-                <p id="loading-username-display" class="text-sm font-semibold text-purple-300 flex items-center justify-center gap-1.5">
-                    <i class="fa-solid fa-user-astronaut text-xs"></i>
-                    <span>กำลังเข้าใช้ในชื่อ: ผู้ใช้งานทั่วไป</span>
-                </p>
+            <div class="flex items-center gap-2">
+              <button
+                id="save-code-btn"
+                class="px-3 py-1.5 text-xs font-semibold rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 transition flex items-center gap-1.5"
+              >
+                <i class="fa-regular fa-floppy-disk text-cyan-400"></i>
+                บันทึกโค้ด
+              </button>
+
+              <button
+                id="run-bot-btn"
+                class="px-3.5 py-1.5 text-xs font-semibold rounded-lg bg-emerald-600 hover:bg-emerald-500 text-white shadow-md hover:shadow-emerald-500/30 transition flex items-center gap-1.5"
+              >
+                <i class="fa-solid fa-play"></i>
+                Run Bot
+              </button>
+
+              <button
+                id="stop-bot-btn"
+                class="px-3.5 py-1.5 text-xs font-semibold rounded-lg bg-rose-600/80 hover:bg-rose-600 text-white shadow-md transition hidden items-center gap-1.5"
+              >
+                <i class="fa-solid fa-square"></i>
+                Stop Bot
+              </button>
+            </div>
+          </div>
+
+          <div
+            class="flex-1 relative overflow-hidden flex font-mono text-xs sm:text-sm bg-slate-950/90"
+          >
+            <div
+              id="line-numbers"
+              class="w-10 py-3 text-right pr-3 bg-slate-900/40 text-slate-600 select-none border-r border-slate-800/60 leading-6 font-mono"
+            >
+              1
             </div>
 
-            <!-- Percentage Counter Display -->
-            <div class="mb-4">
-                <div class="flex items-baseline justify-center gap-1">
-                    <span id="percent-number" class="text-6xl md:text-7xl font-extrabold tracking-tight bg-clip-text text-transparent bg-gradient-to-r from-white via-slate-100 to-purple-200">
-                        0
-                    </span>
-                    <span class="text-2xl font-bold text-purple-400">%</span>
-                </div>
-                <p id="status-text" class="text-slate-400 text-sm font-light mt-1 h-6 transition-all duration-300">
-                    กำลังเริ่มต้นระบบ...
-                </p>
-            </div>
+            <textarea
+              id="code-editor"
+              class="flex-1 p-3 bg-transparent text-slate-200 focus:outline-none resize-none font-mono leading-6 whitespace-pre overflow-auto tracking-wide"
+              spellcheck="false"
+            ></textarea>
+          </div>
 
-            <!-- Progress Bar Container -->
-            <div class="w-full bg-slate-900/80 rounded-full h-3.5 p-0.5 border border-slate-800 relative overflow-hidden mb-6 shadow-inner">
-                <div 
-                    id="progress-fill" 
-                    class="h-full rounded-full bg-gradient-to-r from-pink-500 via-purple-500 to-cyan-400 transition-all duration-150 ease-out relative overflow-hidden" 
-                    style="width: 0%;"
+          <!-- Terminal -->
+          <div class="h-48 border-t border-slate-800 bg-slate-950 flex flex-col">
+            <div
+              class="px-3 py-1.5 bg-slate-900/90 border-b border-slate-800/80 flex items-center justify-between"
+            >
+              <div class="flex items-center gap-2 text-xs font-mono text-slate-400">
+                <i class="fa-solid fa-terminal text-pink-500"></i>
+                <span>Terminal Log</span>
+
+                <span
+                  id="bot-status-indicator"
+                  class="text-[10px] px-2 py-0.5 rounded-full bg-slate-800 text-slate-400"
                 >
-                    <div class="absolute inset-0 shimmer-effect opacity-60"></div>
-                </div>
+                  Stopped
+                </span>
+              </div>
+
+              <button
+                id="clear-term-btn"
+                class="text-[11px] text-slate-500 hover:text-slate-300 font-mono"
+              >
+                <i class="fa-solid fa-trash-can mr-1"></i>
+                Clear
+              </button>
             </div>
 
-            <!-- Interactive Controls -->
-            <div class="flex items-center justify-between w-full pt-4 border-t border-slate-800/80 text-xs text-slate-400">
-                <button id="btn-restart" class="flex items-center gap-1.5 hover:text-white transition-colors px-2.5 py-1.5 rounded-lg hover:bg-slate-800/60" title="โหลดใหม่อีกครั้ง">
-                    <i class="fa-solid fa-rotate-right"></i>
-                    <span>รีโหลด</span>
-                </button>
-
-                <div class="flex items-center gap-2">
-                    <button id="btn-speed" class="hover:text-purple-300 transition-colors px-2.5 py-1.5 rounded-lg hover:bg-slate-800/60" title="ปรับความเร็ว">
-                        <i class="fa-solid fa-gauge-high mr-1"></i><span id="speed-label">ปกติ</span>
-                    </button>
-                    
-                    <button id="btn-sound" class="hover:text-purple-300 transition-colors p-2 rounded-lg hover:bg-slate-800/60" title="เปิด/ปิด เสียง">
-                        <i id="sound-icon" class="fa-solid fa-volume-high"></i>
-                    </button>
-                </div>
+            <div
+              id="terminal-output"
+              class="flex-1 p-3 font-mono text-xs overflow-y-auto space-y-1 text-slate-300"
+            >
+              <div class="text-slate-500">
+                [System] ยินดีต้อนรับสู่ Cyber Console.
+                พิมพ์ 'help' เพื่อดูคำสั่งที่ใช้ได้
+              </div>
             </div>
+
+            <div
+              class="px-3 py-1.5 bg-slate-900/50 border-t border-slate-800/60 flex items-center gap-2"
+            >
+              <span class="text-cyan-400 font-mono text-xs">&gt;</span>
+
+              <input
+                type="text"
+                id="terminal-input"
+                placeholder="พิมพ์คำสั่ง เช่น help, ping, status, clear..."
+                class="flex-1 bg-transparent border-none text-xs font-mono text-slate-200 focus:outline-none"
+              >
+            </div>
+          </div>
         </div>
+      </section>
     </main>
+  </div>
 
-    <!-- SECTION 2: MAIN PAGE CONTENT (Appears after Warp) -->
-    <div id="main-page" class="relative z-10 min-h-screen flex flex-col transition-all duration-1000 ease-in-out opacity-0 translate-y-4 hidden">
-        
-        <!-- Top Navigation Header with Login & Active Profile Badge -->
-        <header class="glass-nav sticky top-0 z-30 px-4 md:px-8 py-3.5 flex items-center justify-between shadow-xl">
-            <!-- Left Header Title & Logo -->
-            <div class="flex items-center gap-3">
-                <div class="w-10 h-10 rounded-2xl bg-gradient-to-tr from-purple-600 via-pink-500 to-indigo-500 flex items-center justify-center text-white font-bold shadow-md shadow-purple-900/30">
-                    <i class="fa-solid fa-house-chimney text-lg"></i>
-                </div>
-                <div>
-                    <h1 class="text-lg md:text-xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-white via-slate-100 to-purple-200 leading-tight">
-                        หน้าหลัก
-                    </h1>
-                    <p class="text-[11px] text-purple-300/80 font-light hidden sm:block">Main Dashboard & User Center</p>
-                </div>
-            </div>
+  <!-- Auth Modal -->
+  <div
+    id="auth-modal"
+    class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/80 backdrop-blur-md opacity-0 pointer-events-none transition-all duration-300"
+  >
+    <div
+      id="auth-modal-card"
+      class="glass-card w-full max-w-md rounded-2xl p-6 sm:p-8 border border-cyan-500/30 shadow-2xl relative transform scale-95 transition-all duration-300"
+    >
+      <button
+        id="close-auth-btn"
+        class="absolute top-4 right-4 text-slate-400 hover:text-white transition"
+      >
+        <i class="fa-solid fa-xmark text-lg"></i>
+      </button>
 
-            <!-- Right Header Action & Profile Area -->
-            <div class="flex items-center gap-2.5 md:gap-4">
-                
-                <!-- Test Reload Button -->
-                <button id="btn-reload-main" class="px-3 py-1.5 rounded-xl bg-purple-600/20 hover:bg-purple-600/40 border border-purple-500/30 text-purple-200 text-xs font-medium transition flex items-center gap-1.5 shadow-sm">
-                    <i class="fa-solid fa-rotate"></i>
-                    <span class="hidden md:inline">ทดสอบการโหลด</span>
-                </button>
+      <!-- Auth Tabs -->
+      <div class="flex border-b border-slate-700/60 mb-6">
+        <button
+          id="tab-login"
+          class="auth-tab active flex-1 py-2.5 text-center font-semibold text-sm border-b-2 border-cyan-400 rounded-t-lg"
+        >
+          <i class="fa-solid fa-right-to-bracket mr-1"></i>
+          เข้าสู่ระบบ
+        </button>
 
-                <!-- Profile Badge with Glowing Pulsing Green Dot (When Logged In) -->
-                <div id="profile-container" class="flex items-center gap-3 bg-slate-900/80 border border-purple-500/30 rounded-full p-1 pr-3.5 shadow-lg">
-                    <div class="relative w-9 h-9 rounded-full overflow-hidden border border-purple-400/50 bg-slate-800 flex-shrink-0">
-                        <img id="nav-avatar-img" src="https://i.pinimg.com/736x/d1/50/12/d15012026d745a4302fd5bccffc437a2.jpg" alt="Profile" class="w-full h-full object-cover">
-                    </div>
+        <button
+          id="tab-register"
+          class="auth-tab flex-1 py-2.5 text-center font-semibold text-sm border-b-2 border-transparent text-slate-400 rounded-t-lg"
+        >
+          <i class="fa-solid fa-user-plus mr-1"></i>
+          สร้างบัญชีใหม่
+        </button>
+      </div>
 
-                    <!-- User Name & Blinking Green Status Indicator -->
-                    <div class="flex flex-col">
-                        <div class="flex items-center gap-1.5">
-                            <!-- Blinking Green Dot -->
-                            <span class="relative flex h-2.5 w-2.5">
-                                <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
-                                <span class="relative inline-flex rounded-full h-2.5 w-2.5 bg-emerald-500"></span>
-                            </span>
-                            
-                            <span id="nav-username-display" class="text-xs font-semibold text-slate-100 max-w-[100px] sm:max-w-[140px] truncate">
-                                ผู้ใช้งานทั่วไป
-                            </span>
-                        </div>
-                        <span id="nav-status-badge" class="text-[10px] text-emerald-400 font-medium leading-none mt-0.5">ออนไลน์</span>
-                    </div>
+      <!-- Auth Form -->
+      <form id="auth-form" class="space-y-4">
 
-                    <!-- User Settings Button -->
-                    <button id="btn-open-profile-edit" class="ml-1 text-slate-400 hover:text-purple-300 text-xs transition" title="แก้ไขชื่อ/โปรไฟล์">
-                        <i class="fa-solid fa-gear"></i>
-                    </button>
-                </div>
+        <div id="field-name" class="hidden">
+          <label class="block text-xs font-medium text-slate-300 mb-1">
+            ชื่อผู้ใช้งาน
+          </label>
 
-                <!-- Auth Buttons (Shown when not logged in or to switch account) -->
-                <button id="btn-open-auth-modal" class="px-4 py-2 rounded-xl bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-500 hover:to-pink-500 text-white font-medium text-xs shadow-lg shadow-purple-900/40 transition transform active:scale-95 flex items-center gap-2">
-                    <i class="fa-solid fa-right-to-bracket"></i>
-                    <span id="auth-btn-label">เข้าสู่ระบบ / สมัครบัญชี</span>
-                </button>
+          <div class="relative">
+            <i class="fa-regular fa-user absolute left-3 top-3 text-slate-500 text-sm"></i>
 
-            </div>
-        </header>
-
-        <!-- Main Content Dashboard Area -->
-        <main class="flex-1 max-w-5xl w-full mx-auto p-6 md:p-10 flex flex-col gap-6">
-            
-            <!-- Hero Card -->
-            <div class="glass-card rounded-3xl p-8 md:p-10 relative overflow-hidden border border-purple-500/20 shadow-2xl">
-                <div class="relative z-10 max-w-xl">
-                    <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-emerald-500/20 text-emerald-300 text-xs font-medium border border-emerald-500/30 mb-4">
-                        <span class="relative flex h-2 w-2">
-                            <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
-                            <span class="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
-                        </span>
-                        <span>เชื่อมต่อระบบสมาชิกและฐานข้อมูลเรียบร้อยแล้ว</span>
-                    </div>
-
-                    <h2 class="text-3xl md:text-4xl font-extrabold text-white mb-3 leading-tight">
-                        ยินดีต้อนรับคุณ <span id="hero-username-display" class="bg-clip-text text-transparent bg-gradient-to-r from-purple-400 via-pink-400 to-cyan-300">ผู้ใช้งานทั่วไป</span>
-                    </h2>
-                    <p class="text-slate-300 text-sm md:text-base leading-relaxed mb-6">
-                        ระบบวาร์ปย้ายหน้ามาที่นี่เรียบร้อยแล้ว พร้อมระบบล็อกอิน สมัครสมาชิก และบันทึกชื่อโปรไฟล์ของคุณลงในฐานข้อมูลระบบอย่างปลอดภัย
-                    </p>
-
-                    <div class="flex flex-wrap gap-3">
-                        <button id="btn-edit-profile-hero" class="px-5 py-2.5 rounded-xl bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-500 hover:to-pink-500 text-white font-medium text-sm shadow-lg shadow-purple-900/40 transition transform active:scale-95 flex items-center gap-2">
-                            <i class="fa-solid fa-pen-to-square"></i>
-                            ตั้งค่าชื่อโปรไฟล์ของคุณ
-                        </button>
-
-                        <button id="btn-test-warp" class="px-5 py-2.5 rounded-xl bg-slate-900/80 hover:bg-slate-800 border border-slate-700 text-slate-200 font-medium text-sm transition transform active:scale-95 flex items-center gap-2">
-                            <i class="fa-solid fa-rotate-left"></i>
-                            ย้อนกลับไปหน้าโหลด
-                        </button>
-                    </div>
-                </div>
-
-                <!-- Decorative Background Graphic inside Hero -->
-                <div class="absolute -right-10 -bottom-10 w-80 h-80 bg-purple-500/10 rounded-full blur-2xl pointer-events-none"></div>
-            </div>
-
-            <!-- Features / Info Grid Cards -->
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-                
-                <div class="glass-card rounded-2xl p-6 flex flex-col gap-3 hover:border-purple-500/40 transition">
-                    <div class="w-12 h-12 rounded-xl bg-purple-500/20 text-purple-300 flex items-center justify-center text-xl border border-purple-500/30">
-                        <i class="fa-solid fa-user-shield"></i>
-                    </div>
-                    <h3 class="text-lg font-semibold text-white">ระบบบันทึกโปรไฟล์</h3>
-                    <p class="text-xs text-slate-400 leading-relaxed">
-                        ชื่อที่คุณตั้งไว้และรูปโปรไฟล์จะถูกบันทึกไว้ในฐานข้อมูลคลาวด์ ไม่สูญหายเมื่อรีโหลด
-                    </p>
-                </div>
-
-                <div class="glass-card rounded-2xl p-6 flex flex-col gap-3 hover:border-emerald-500/40 transition">
-                    <div class="w-12 h-12 rounded-xl bg-emerald-500/20 text-emerald-300 flex items-center justify-center text-xl border border-emerald-500/30">
-                        <i class="fa-solid fa-circle-dot"></i>
-                    </div>
-                    <h3 class="text-lg font-semibold text-white">สถานะออนไลน์เขียว</h3>
-                    <p class="text-xs text-slate-400 leading-relaxed">
-                        แสดงจุดไฟสีเขียวกระพริบ (Pulsing Online Badge) แสดงสถานะบัญชีอย่างสวยงาม
-                    </p>
-                </div>
-
-                <div class="glass-card rounded-2xl p-6 flex flex-col gap-3 hover:border-pink-500/40 transition">
-                    <div class="w-12 h-12 rounded-xl bg-pink-500/20 text-pink-300 flex items-center justify-center text-xl border border-pink-500/30">
-                        <i class="fa-solid fa-wand-magic-sparkles"></i>
-                    </div>
-                    <h3 class="text-lg font-semibold text-white">ภาพพื้นหลังแบบสองหน้า</h3>
-                    <p class="text-xs text-slate-400 leading-relaxed">
-                        สลับเปลี่ยนภาพพื้นหลังระหว่างหน้าโหลดและหน้าหลักโดยอัตโนมัติพร้อมมิลลิวินาทีเอฟเฟกต์
-                    </p>
-                </div>
-
-            </div>
-
-        </main>
-
-        <footer class="py-6 text-center text-xs text-slate-500 border-t border-slate-900/50 mt-auto">
-            Interactive User Management & Aesthetic Loading Screen
-        </footer>
-    </div>
-
-    <!-- SECTION 3: AUTH & REGISTER MODAL -->
-    <div id="auth-modal" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/80 backdrop-blur-md hidden opacity-0 transition-opacity duration-300">
-        <div class="glass-modal w-full max-w-md rounded-3xl p-6 md:p-8 relative overflow-hidden shadow-2xl">
-            
-            <!-- Close Modal Button -->
-            <button id="btn-close-auth-modal" class="absolute top-4 right-4 text-slate-400 hover:text-white w-8 h-8 rounded-full bg-slate-800/50 flex items-center justify-center transition">
-                <i class="fa-solid fa-xmark"></i>
-            </button>
-
-            <!-- Modal Header Tabs -->
-            <div class="flex items-center border-b border-slate-800 mb-6">
-                <button id="tab-login" class="flex-1 py-3 text-center font-bold text-sm text-purple-400 border-b-2 border-purple-500 transition">
-                    <i class="fa-solid fa-right-to-bracket mr-2"></i>เข้าสู่ระบบ
-                </button>
-                <button id="tab-register" class="flex-1 py-3 text-center font-bold text-sm text-slate-400 border-b-2 border-transparent transition hover:text-purple-300">
-                    <i class="fa-solid fa-user-plus mr-2"></i>สมัครบัญชีใหม่
-                </button>
-            </div>
-
-            <!-- LOGIN FORM -->
-            <form id="form-login" class="space-y-4">
-                <div>
-                    <label class="block text-xs font-medium text-slate-300 mb-1.5">ชื่อผู้ใช้ / ไอดี</label>
-                    <div class="relative">
-                        <i class="fa-solid fa-user absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-500 text-xs"></i>
-                        <input type="text" id="login-username" required placeholder="ป้อนชื่อผู้ใช้" class="w-full pl-9 pr-4 py-2.5 bg-slate-900/90 border border-slate-700 rounded-xl text-sm text-slate-100 placeholder-slate-500 focus:outline-none focus:border-purple-500 transition">
-                    </div>
-                </div>
-
-                <div>
-                    <label class="block text-xs font-medium text-slate-300 mb-1.5">รหัสผ่าน</label>
-                    <div class="relative">
-                        <i class="fa-solid fa-lock absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-500 text-xs"></i>
-                        <input type="password" id="login-password" required placeholder="ป้อนรหัสผ่าน" class="w-full pl-9 pr-4 py-2.5 bg-slate-900/90 border border-slate-700 rounded-xl text-sm text-slate-100 placeholder-slate-500 focus:outline-none focus:border-purple-500 transition">
-                    </div>
-                </div>
-
-                <div id="login-error-msg" class="text-xs text-rose-400 hidden bg-rose-950/30 p-2.5 rounded-lg border border-rose-500/20"></div>
-
-                <button type="submit" class="w-full py-3 rounded-xl bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-500 hover:to-pink-500 text-white font-semibold text-sm shadow-lg shadow-purple-900/40 transition transform active:scale-95 flex items-center justify-center gap-2">
-                    <i class="fa-solid fa-right-to-bracket"></i>
-                    เข้าสู่ระบบ
-                </button>
-            </form>
-
-            <!-- REGISTER FORM (Hidden by default) -->
-            <form id="form-register" class="space-y-4 hidden">
-                <div>
-                    <label class="block text-xs font-medium text-slate-300 mb-1.5">ชื่อที่ต้องการแสดง (Display Name)</label>
-                    <div class="relative">
-                        <i class="fa-solid fa-id-card absolute left-3.5 top-1/2 -translate-y-1/2 text-purple-400 text-xs"></i>
-                        <input type="text" id="reg-displayname" required placeholder="เช่น Alex Frost หรือ น้องมีอา" class="w-full pl-9 pr-4 py-2.5 bg-slate-900/90 border border-purple-500/40 rounded-xl text-sm text-slate-100 placeholder-slate-500 focus:outline-none focus:border-purple-400 transition">
-                    </div>
-                    <p class="text-[11px] text-purple-300/70 mt-1">ชื่อนี้จะถูกบันทึกและแสดงที่โปรไฟล์พร้อมไฟเขียวกระพริบ</p>
-                </div>
-
-                <div>
-                    <label class="block text-xs font-medium text-slate-300 mb-1.5">ชื่อผู้ใช้ (Username สำหรับใช้เข้าสู่ระบบ)</label>
-                    <div class="relative">
-                        <i class="fa-solid fa-user absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-500 text-xs"></i>
-                        <input type="text" id="reg-username" required placeholder="ตั้งชื่อผู้ใช้ภาษาอังกฤษ" class="w-full pl-9 pr-4 py-2.5 bg-slate-900/90 border border-slate-700 rounded-xl text-sm text-slate-100 placeholder-slate-500 focus:outline-none focus:border-purple-500 transition">
-                    </div>
-                </div>
-
-                <div>
-                    <label class="block text-xs font-medium text-slate-300 mb-1.5">รหัสผ่าน</label>
-                    <div class="relative">
-                        <i class="fa-solid fa-lock absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-500 text-xs"></i>
-                        <input type="password" id="reg-password" required placeholder="ตั้งรหัสผ่านอย่างน้อย 4 ตัวอักษร" class="w-full pl-9 pr-4 py-2.5 bg-slate-900/90 border border-slate-700 rounded-xl text-sm text-slate-100 placeholder-slate-500 focus:outline-none focus:border-purple-500 transition">
-                    </div>
-                </div>
-
-                <div>
-                    <label class="block text-xs font-medium text-slate-300 mb-1.5">เลือกลิงก์รูปภาพโปรไฟล์ (Avatar URL)</label>
-                    <input type="url" id="reg-avatarurl" value="https://i.pinimg.com/736x/d1/50/12/d15012026d745a4302fd5bccffc437a2.jpg" class="w-full px-3.5 py-2 bg-slate-900/90 border border-slate-700 rounded-xl text-xs text-slate-200 focus:outline-none focus:border-purple-500 transition">
-                </div>
-
-                <div id="reg-error-msg" class="text-xs text-rose-400 hidden bg-rose-950/30 p-2.5 rounded-lg border border-rose-500/20"></div>
-
-                <button type="submit" class="w-full py-3 rounded-xl bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 text-white font-semibold text-sm shadow-lg shadow-emerald-900/40 transition transform active:scale-95 flex items-center justify-center gap-2">
-                    <i class="fa-solid fa-user-check"></i>
-                    สร้างบัญชีผู้ใช้และบันทึกข้อมูล
-                </button>
-            </form>
+            <input
+              type="text"
+              id="input-name"
+              placeholder="CyberDev99"
+              class="w-full bg-slate-900/90 border border-slate-700 rounded-lg py-2 pl-9 pr-3 text-sm text-slate-200 focus:outline-none focus:border-cyan-400 transition"
+            >
+          </div>
         </div>
-    </div>
 
-    <!-- EDIT PROFILE QUICK MODAL -->
-    <div id="profile-modal" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/80 backdrop-blur-md hidden opacity-0 transition-opacity duration-300">
-        <div class="glass-modal w-full max-w-sm rounded-3xl p-6 relative overflow-hidden shadow-2xl">
-            <button id="btn-close-profile-modal" class="absolute top-4 right-4 text-slate-400 hover:text-white w-8 h-8 rounded-full bg-slate-800/50 flex items-center justify-center transition">
-                <i class="fa-solid fa-xmark"></i>
-            </button>
+        <div>
+          <label class="block text-xs font-medium text-slate-300 mb-1">
+            อีเมล
+          </label>
 
-            <div class="text-center mb-5">
-                <div class="relative w-20 h-20 mx-auto mb-3 rounded-full overflow-hidden border-2 border-purple-500 shadow-xl">
-                    <img id="edit-avatar-preview" src="https://i.pinimg.com/736x/d1/50/12/d15012026d745a4302fd5bccffc437a2.jpg" class="w-full h-full object-cover">
-                </div>
-                <h3 class="text-lg font-bold text-white">แก้ไขโปรไฟล์ผู้ใช้</h3>
-                <p class="text-xs text-purple-300/80">ระบบจะบันทึกชื่อลงในฐานข้อมูลให้โดยอัตโนมัติ</p>
-            </div>
+          <div class="relative">
+            <i class="fa-regular fa-envelope absolute left-3 top-3 text-slate-500 text-sm"></i>
 
-            <form id="form-edit-profile" class="space-y-4">
-                <div>
-                    <label class="block text-xs font-medium text-slate-300 mb-1">ชื่อที่ต้องการแสดง</label>
-                    <input type="text" id="edit-displayname" required class="w-full px-3.5 py-2.5 bg-slate-900/90 border border-purple-500/50 rounded-xl text-sm text-slate-100 focus:outline-none focus:border-purple-400">
-                </div>
-
-                <div>
-                    <label class="block text-xs font-medium text-slate-300 mb-1">ลิงก์รูปอวตาร (URL)</label>
-                    <input type="url" id="edit-avatarurl" required class="w-full px-3.5 py-2 bg-slate-900/90 border border-slate-700 rounded-xl text-xs text-slate-200 focus:outline-none focus:border-purple-400">
-                </div>
-
-                <div class="pt-2 flex gap-2">
-                    <button type="submit" class="flex-1 py-2.5 rounded-xl bg-purple-600 hover:bg-purple-500 text-white font-semibold text-xs transition">
-                        <i class="fa-solid fa-floppy-disk mr-1"></i> บันทึกข้อมูล
-                    </button>
-                    <button type="button" id="btn-logout" class="px-3.5 py-2.5 rounded-xl bg-rose-950/60 hover:bg-rose-900 border border-rose-500/30 text-rose-300 font-semibold text-xs transition">
-                        <i class="fa-solid fa-right-from-bracket"></i>
-                    </button>
-                </div>
-            </form>
+            <input
+              type="email"
+              id="input-email"
+              required
+              placeholder="user@cyber.io"
+              class="w-full bg-slate-900/90 border border-slate-700 rounded-lg py-2 pl-9 pr-3 text-sm text-slate-200 focus:outline-none focus:border-cyan-400 transition"
+            >
+          </div>
         </div>
+
+        <div>
+          <label class="block text-xs font-medium text-slate-300 mb-1">
+            รหัสผ่าน
+          </label>
+
+          <div class="relative">
+            <i class="fa-solid fa-lock absolute left-3 top-3 text-slate-500 text-sm"></i>
+
+            <input
+              type="password"
+              id="input-password"
+              required
+              placeholder="••••••••"
+              class="w-full bg-slate-900/90 border border-slate-700 rounded-lg py-2 pl-9 pr-3 text-sm text-slate-200 focus:outline-none focus:border-cyan-400 transition"
+            >
+          </div>
+        </div>
+
+        <div
+          class="p-3 bg-slate-900/90 border border-slate-700 rounded-lg flex items-center justify-between"
+        >
+          <label class="flex items-center gap-3 cursor-pointer">
+            <input
+              type="checkbox"
+              id="recaptcha-check"
+              class="w-5 h-5 rounded border-slate-600 text-cyan-500 focus:ring-cyan-400 bg-slate-800"
+            >
+
+            <span class="text-xs text-slate-300 font-medium select-none">
+              ฉันไม่ใช่โปรแกรมอัตโนมัติ
+            </span>
+          </label>
+
+          <div class="flex flex-col items-center">
+            <i class="fa-solid fa-arrows-spin text-cyan-400 text-lg"></i>
+            <span class="text-[8px] text-slate-500 font-mono">
+              reCAPTCHA
+            </span>
+          </div>
+        </div>
+
+        <button
+          type="submit"
+          id="submit-auth-btn"
+          class="w-full py-3 rounded-xl bg-gradient-to-r from-cyan-500 via-blue-600 to-purple-600 text-slate-950 font-bold text-sm shadow-neon-cyan hover:brightness-110 transition transform active:scale-95"
+        >
+          <span class="flex items-center justify-center gap-2">
+            <i class="fa-solid fa-right-to-bracket"></i>
+            เข้าสู่ระบบ
+          </span>
+        </button>
+      </form>
+
+      <div class="my-5 flex items-center gap-3">
+        <div class="flex-1 h-px bg-slate-700/60"></div>
+        <span class="text-xs text-slate-500">หรือ</span>
+        <div class="flex-1 h-px bg-slate-700/60"></div>
+      </div>
+
+      <!-- Google Button -->
+      <button
+        id="google-auth-btn"
+        class="w-full py-3 px-4 bg-slate-900/80 hover:bg-slate-800 border border-slate-700 hover:border-cyan-400/50 rounded-xl flex items-center justify-center gap-3 text-sm font-medium text-slate-200 transition-all shadow-sm hover:shadow-neon-cyan"
+      >
+        <svg class="w-4 h-4" viewBox="0 0 24 24">
+          <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
+          <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
+          <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.06H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.94l2.85-2.22.81-.63z"/>
+          <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.06l3.66 2.84c.87-2.6 3.3-4.52 6.16-4.52z"/>
+        </svg>
+
+        <span>เข้าสู่ระบบด้วย Google</span>
+      </button>
     </div>
+  </div>
 
-    <!-- LOGIC & ANIMATION SCRIPT -->
-    <script>
-        // Progress Configuration
-        let progress = 0;
-        let speedMultiplier = 1;
-        let isAudioMuted = false;
-        let progressInterval = null;
-        let isTransitioning = false;
+  <!-- Google Mock Popup -->
+  <div
+    id="google-popup"
+    class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/70 backdrop-blur-sm hidden"
+  >
+    <div class="bg-white text-slate-800 w-full max-w-sm rounded-2xl p-6 shadow-2xl font-sans text-center">
 
-        // LocalStorage Profile State
-        let currentUserProfile = {
-            displayName: "ผู้ใช้งานทั่วไป",
-            avatarUrl: "https://i.pinimg.com/736x/d1/50/12/d15012026d745a4302fd5bccffc437a2.jpg",
-            isLoggedIn: false
-        };
+      <div class="flex justify-center mb-3">
+        <svg class="w-8 h-8" viewBox="0 0 24 24">
+          <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
+          <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
+          <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.06H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.94l2.85-2.22.81-.63z"/>
+          <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.06l3.66 2.84c.87-2.6 3.3-4.52 6.16-4.52z"/>
+        </svg>
+      </div>
 
-        // Dynamic Loading Messages
-        const loadingStatusMessages = [
-            { threshold: 0, text: "กำลังเริ่มต้นระบบ..." },
-            { threshold: 20, text: "กำลังดาวน์โหลดข้อมูลโปรไฟล์..." },
-            { threshold: 45, text: "กำลังเชื่อมต่อเซิร์ฟเวอร์..." },
-            { threshold: 75, text: "ตรวจสอบสถานะออนไลน์..." },
-            { threshold: 95, text: "กำลังวาร์ปเข้าสู่หน้าหลัก..." },
-            { threshold: 100, text: "เสร็จสิ้น! กำลังเปิดหน้าหลัก..." }
+      <h3 class="text-lg font-bold text-slate-900">
+        Sign in with Google
+      </h3>
+
+      <p class="text-xs text-slate-500 mt-1">
+        เลือกบัญชีจำลองเพื่อเข้าสู่ระบบ
+      </p>
+
+      <div class="mt-4 space-y-2 text-left">
+        <button
+          onclick="confirmGoogleLogin(
+            'Cyber Google User',
+            'user.google@gmail.com',
+            'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150'
+          )"
+          class="w-full p-2.5 border rounded-xl flex items-center gap-3 hover:bg-slate-50 transition"
+        >
+          <img
+            src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150"
+            class="w-9 h-9 rounded-full object-cover"
+            alt="Google User"
+          >
+
+          <div>
+            <p class="text-sm font-semibold text-slate-800">
+              Cyber Google User
+            </p>
+
+            <p class="text-xs text-slate-500">
+              user.google@gmail.com
+            </p>
+          </div>
+        </button>
+      </div>
+
+      <button
+        onclick="closeGooglePopup()"
+        class="mt-4 text-xs text-slate-500 hover:text-slate-700"
+      >
+        ยกเลิก
+      </button>
+    </div>
+  </div>
+
+  <!-- Toast -->
+  <div
+    id="toast"
+    class="fixed bottom-5 right-5 z-50 transform translate-y-20 opacity-0 transition-all duration-300 glass-card px-4 py-3 rounded-xl border border-cyan-400/40 text-sm flex items-center gap-3 shadow-xl pointer-events-none"
+  >
+    <i
+      id="toast-icon"
+      class="fa-solid fa-circle-check text-cyan-400 text-lg"
+    ></i>
+
+    <span id="toast-msg">
+      ข้อความแจ้งเตือน
+    </span>
+  </div>
+
+  <script>
+    // -----------------------------
+    // File System
+    // -----------------------------
+
+    const defaultFiles = {
+      'bot.js': {
+        name: 'bot.js',
+        lang: 'JavaScript',
+        icon: 'fa-brands fa-js text-yellow-400',
+        content: `// Cyberpunk Discord Bot
+const { Client, GatewayIntentBits } = require('discord.js');
+
+const client = new Client({
+  intents: [GatewayIntentBits.Guilds]
+});
+
+client.on('ready', () => {
+  console.log(\`[SUCCESS] Bot logged in as \${client.user.tag}!\`);
+});
+
+client.on('messageCreate', (msg) => {
+  if (msg.content === 'ping') {
+    msg.reply('Pong! 🏓 Neon Cyber Status: OK');
+  }
+});
+
+console.log("Starting Bot Worker Thread...");
+client.login(process.env.BOT_TOKEN);`
+      },
+
+      'main.py': {
+        name: 'main.py',
+        lang: 'Python',
+        icon: 'fa-brands fa-python text-cyan-400',
+        content: `# AI Assistant Runner
+import time
+
+def start_bot():
+    print("[INIT] Loading Python Core Engines...")
+    time.sleep(1)
+    print("[READY] Bot Worker Active! Waiting for commands.")
+
+if __name__ == "__main__":
+    start_bot()`
+      },
+
+      'config.json': {
+        name: 'config.json',
+        lang: 'JSON',
+        icon: 'fa-solid fa-gear text-pink-400',
+        content: `{
+  "bot_name": "CyberBot-X",
+  "version": "2.4.0",
+  "auto_restart": true,
+  "max_memory": "512MB",
+  "prefix": "!"
+}`
+      }
+    };
+
+    // -----------------------------
+    // State
+    // -----------------------------
+
+    let files = JSON.parse(localStorage.getItem('cyber_files')) || defaultFiles;
+    let currentFileKey = 'bot.js';
+    let isBotRunning = false;
+    let botInterval = null;
+    let authMode = 'login';
+
+    // -----------------------------
+    // DOM Elements
+    // -----------------------------
+
+    const loadingScreen = document.getElementById('loading-screen');
+    const mainApp = document.getElementById('main-app');
+    const progressCircle = document.getElementById('progress-circle');
+    const loadPercent = document.getElementById('load-percent');
+    const loaderStatus = document.getElementById('loader-status');
+
+    const codeEditor = document.getElementById('code-editor');
+    const lineNumbers = document.getElementById('line-numbers');
+    const fileListContainer = document.getElementById('file-list');
+    const activeFileName = document.getElementById('active-file-name');
+    const activeFileIcon = document.getElementById('active-file-icon');
+    const fileLangBadge = document.getElementById('file-lang');
+
+    const runBotBtn = document.getElementById('run-bot-btn');
+    const stopBotBtn = document.getElementById('stop-bot-btn');
+    const saveCodeBtn = document.getElementById('save-code-btn');
+    const terminalOutput = document.getElementById('terminal-output');
+    const terminalInput = document.getElementById('terminal-input');
+    const clearTermBtn = document.getElementById('clear-term-btn');
+    const botStatusIndicator = document.getElementById('bot-status-indicator');
+
+    const authModal = document.getElementById('auth-modal');
+    const authModalCard = document.getElementById('auth-modal-card');
+    const openAuthBtn = document.getElementById('open-auth-btn');
+    const closeAuthBtn = document.getElementById('close-auth-btn');
+
+    const userProfileBadge = document.getElementById('user-profile-badge');
+    const userAvatar = document.getElementById('user-avatar');
+    const userDisplayName = document.getElementById('user-display-name');
+    const logoutBtn = document.getElementById('logout-btn');
+
+    const tabLogin = document.getElementById('tab-login');
+    const tabRegister = document.getElementById('tab-register');
+    const fieldName = document.getElementById('field-name');
+    const submitAuthBtn = document.getElementById('submit-auth-btn');
+    const googleAuthBtn = document.getElementById('google-auth-btn');
+    const googlePopup = document.getElementById('google-popup');
+
+    // -----------------------------
+    // Loading Screen
+    // -----------------------------
+
+    function initLoadingScreen() {
+      let progress = 0;
+      const circumference = 263.89;
+
+      const statuses = [
+        'กำลังดาวน์โหลดส่วนประกอบ...',
+        'กำลังตรวจสอบสิทธิ์การเข้าถึง...',
+        'กำลังเชื่อมต่อ Cyber Cloud Workspace...',
+        'พร้อมเข้าสู่ระบบ!'
+      ];
+
+      const interval = setInterval(() => {
+        progress += Math.floor(Math.random() * 8) + 2;
+
+        if (progress > 100) {
+          progress = 100;
+        }
+
+        const offset = circumference - (progress / 100) * circumference;
+
+        progressCircle.style.strokeDashoffset = offset;
+        loadPercent.innerText = `${progress}%`;
+
+        if (progress < 30) {
+          loaderStatus.innerText = statuses[0];
+        } else if (progress < 70) {
+          loaderStatus.innerText = statuses[1];
+        } else if (progress < 95) {
+          loaderStatus.innerText = statuses[2];
+        } else {
+          loaderStatus.innerText = statuses[3];
+        }
+
+        if (progress === 100) {
+          clearInterval(interval);
+
+          setTimeout(() => {
+            loadingScreen.classList.add('opacity-0');
+
+            setTimeout(() => {
+              loadingScreen.classList.add('hidden');
+              mainApp.classList.remove('hidden');
+
+              setTimeout(() => {
+                mainApp.classList.remove('opacity-0');
+              }, 50);
+            }, 800);
+          }, 400);
+        }
+      }, 120);
+    }
+
+    // -----------------------------
+    // File Editor
+    // -----------------------------
+
+    function renderFileList() {
+      fileListContainer.innerHTML = '';
+
+      Object.keys(files).forEach((key) => {
+        const file = files[key];
+        const isActive = key === currentFileKey;
+
+        const item = document.createElement('button');
+
+        item.className = `
+          w-full px-3 py-2 rounded-lg text-left text-xs font-mono
+          flex items-center justify-between transition
+          ${
+            isActive
+              ? 'bg-cyan-500/15 text-cyan-300 border border-cyan-500/30 font-semibold'
+              : 'text-slate-400 hover:bg-slate-800/60 hover:text-slate-200'
+          }
+        `;
+
+        item.innerHTML = `
+          <div class="flex items-center gap-2">
+            <i class="${file.icon}"></i>
+            <span>${file.name}</span>
+          </div>
+
+          ${
+            isActive
+              ? '<span class="w-1.5 h-1.5 rounded-full bg-cyan-400"></span>'
+              : ''
+          }
+        `;
+
+        item.onclick = () => switchFile(key);
+        fileListContainer.appendChild(item);
+      });
+    }
+
+    function switchFile(key) {
+      files[currentFileKey].content = codeEditor.value;
+      currentFileKey = key;
+
+      const file = files[currentFileKey];
+
+      codeEditor.value = file.content;
+      activeFileName.innerText = file.name;
+      fileLangBadge.innerText = file.lang;
+      activeFileIcon.innerHTML = `<i class="${file.icon}"></i>`;
+
+      renderFileList();
+      updateLineNumbers();
+    }
+
+    function updateLineNumbers() {
+      const lines = codeEditor.value.split('\n').length;
+      let numbersHtml = '';
+
+      for (let i = 1; i <= lines; i++) {
+        numbersHtml += `${i}<br>`;
+      }
+
+      lineNumbers.innerHTML = numbersHtml;
+    }
+
+    codeEditor.addEventListener('input', updateLineNumbers);
+
+    codeEditor.addEventListener('scroll', () => {
+      lineNumbers.scrollTop = codeEditor.scrollTop;
+    });
+
+    saveCodeBtn.addEventListener('click', () => {
+      files[currentFileKey].content = codeEditor.value;
+
+      localStorage.setItem('cyber_files', JSON.stringify(files));
+
+      showToast('บันทึกโค้ดสำเร็จแล้ว!', 'success');
+      appendTerminal(`[SAVE] บันทึกการเปลี่ยนแปลงในไฟล์ ${currentFileKey} แล้ว`);
+    });
+
+    // -----------------------------
+    // Terminal
+    // -----------------------------
+
+    function appendTerminal(text, type = 'info') {
+      const line = document.createElement('div');
+      const time = new Date().toLocaleTimeString();
+
+      let colorClass = 'text-slate-300';
+
+      if (type === 'success') {
+        colorClass = 'text-emerald-400';
+      }
+
+      if (type === 'error') {
+        colorClass = 'text-rose-400';
+      }
+
+      if (type === 'cmd') {
+        colorClass = 'text-cyan-400 font-semibold';
+      }
+
+      line.className = `${colorClass} leading-relaxed`;
+
+      line.innerHTML = `
+        <span class="text-slate-600 mr-2">[${time}]</span>
+        ${escapeHtml(text)}
+      `;
+
+      terminalOutput.appendChild(line);
+      terminalOutput.scrollTop = terminalOutput.scrollHeight;
+    }
+
+    function escapeHtml(str) {
+      return str
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;');
+    }
+
+    terminalInput.addEventListener('keydown', (event) => {
+      if (event.key !== 'Enter') {
+        return;
+      }
+
+      const command = terminalInput.value.trim();
+
+      if (!command) {
+        return;
+      }
+
+      appendTerminal(`> ${command}`, 'cmd');
+      terminalInput.value = '';
+
+      switch (command.toLowerCase()) {
+        case 'help':
+          appendTerminal('คำสั่งที่ใช้ได้: ping, status, clear, run, stop, help');
+          break;
+
+        case 'ping':
+          appendTerminal(
+            'Pong! 🏓 Latency: ' +
+            Math.floor(Math.random() * 20 + 10) +
+            'ms',
+            'success'
+          );
+          break;
+
+        case 'status':
+          appendTerminal(
+            `สถานะบอท: ${
+              isBotRunning
+                ? 'กำลังทำงาน (Online)'
+                : 'ปิดอยู่ (Offline)'
+            }`
+          );
+          break;
+
+        case 'clear':
+          terminalOutput.innerHTML = '';
+          break;
+
+        case 'run':
+          startBot();
+          break;
+
+        case 'stop':
+          stopBot();
+          break;
+
+        default:
+          appendTerminal(
+            `ไม่รู้จักคำสั่ง '${command}' (พิมพ์ 'help' เพื่อดูคำสั่งทั้งหมด)`,
+            'error'
+          );
+      }
+    });
+
+    clearTermBtn.addEventListener('click', () => {
+      terminalOutput.innerHTML = '';
+    });
+
+    // -----------------------------
+    // Bot Runner
+    // -----------------------------
+
+    function startBot() {
+      if (isBotRunning) {
+        return;
+      }
+
+      isBotRunning = true;
+
+      runBotBtn.classList.add('hidden');
+      stopBotBtn.classList.remove('hidden');
+      stopBotBtn.classList.add('flex');
+
+      botStatusIndicator.innerText = 'Running';
+
+      botStatusIndicator.className =
+        'text-[10px] px-2 py-0.5 rounded-full bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 font-semibold';
+
+      appendTerminal(
+        `[START] กำลังเริ่มต้นรันบอท (${currentFileKey})...`,
+        'success'
+      );
+
+      let tick = 0;
+
+      botInterval = setInterval(() => {
+        tick++;
+
+        const messages = [
+          `[INFO] Heartbeat acknowledged (Tick #${tick})`,
+          `[PROCESS] Memory usage: ${(Math.random() * 20 + 40).toFixed(1)} MB`,
+          `[EVENT] WebSocket connection active`
         ];
 
-        // DOM Elements
-        const percentNumber = document.getElementById('percent-number');
-        const progressFill = document.getElementById('progress-fill');
-        const statusText = document.getElementById('status-text');
-        
-        const loadingScreen = document.getElementById('loading-screen');
-        const mainPage = document.getElementById('main-page');
-        const bgLoading = document.getElementById('bg-loading');
-        const bgMain = document.getElementById('bg-main');
+        const randomMessage =
+          messages[Math.floor(Math.random() * messages.length)];
 
-        const btnRestart = document.getElementById('btn-restart');
-        const btnSpeed = document.getElementById('btn-speed');
-        const speedLabel = document.getElementById('speed-label');
-        const btnSound = document.getElementById('btn-sound');
-        const soundIcon = document.getElementById('sound-icon');
-        const btnReloadMain = document.getElementById('btn-reload-main');
-        const btnTestWarp = document.getElementById('btn-test-warp');
+        appendTerminal(randomMessage);
+      }, 3500);
+    }
 
-        // Modal Elements
-        const authModal = document.getElementById('auth-modal');
-        const profileModal = document.getElementById('profile-modal');
-        const btnOpenAuthModal = document.getElementById('btn-open-auth-modal');
-        const btnCloseAuthModal = document.getElementById('btn-close-auth-modal');
-        const btnOpenProfileEdit = document.getElementById('btn-open-profile-edit');
-        const btnCloseProfileModal = document.getElementById('btn-close-profile-modal');
-        const btnEditProfileHero = document.getElementById('btn-edit-profile-hero');
+    function stopBot() {
+      if (!isBotRunning) {
+        return;
+      }
 
-        const tabLogin = document.getElementById('tab-login');
-        const tabRegister = document.getElementById('tab-register');
-        const formLogin = document.getElementById('form-login');
-        const formRegister = document.getElementById('form-register');
-        const formEditProfile = document.getElementById('form-edit-profile');
+      isBotRunning = false;
+      clearInterval(botInterval);
 
-        // Web Audio API Synthesizer
-        let audioCtx = null;
+      runBotBtn.classList.remove('hidden');
+      stopBotBtn.classList.add('hidden');
+      stopBotBtn.classList.remove('flex');
 
-        function playChime(freq = 440) {
-            if (isAudioMuted) return;
-            try {
-                if (!audioCtx) {
-                    audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-                }
-                if (audioCtx.state === 'suspended') {
-                    audioCtx.resume();
-                }
-                const osc = audioCtx.createOscillator();
-                const gain = audioCtx.createGain();
-                
-                osc.type = 'sine';
-                osc.frequency.setValueAtTime(freq, audioCtx.currentTime);
-                
-                gain.gain.setValueAtTime(0.02, audioCtx.currentTime);
-                gain.gain.exponentialRampToValueAtTime(0.0001, audioCtx.currentTime + 0.15);
-                
-                osc.connect(gain);
-                gain.connect(audioCtx.destination);
-                
-                osc.start();
-                osc.stop(audioCtx.currentTime + 0.15);
-            } catch (e) {
-                // Audio context suppressed
-            }
-        }
+      botStatusIndicator.innerText = 'Stopped';
 
-        function playCompletionSound() {
-            if (isAudioMuted) return;
-            const notes = [523.25, 659.25, 783.99, 1046.50];
-            notes.forEach((freq, idx) => {
-                setTimeout(() => playChime(freq), idx * 90);
-            });
-        }
+      botStatusIndicator.className =
+        'text-[10px] px-2 py-0.5 rounded-full bg-slate-800 text-slate-400';
 
-        function updateProgress() {
-            if (progress < 100) {
-                const step = (Math.random() * 2.2 + 0.8) * speedMultiplier;
-                progress = Math.min(100, progress + step);
-                
-                const roundedProgress = Math.floor(progress);
-                percentNumber.textContent = roundedProgress;
-                progressFill.style.width = `${progress}%`;
+      appendTerminal('[STOP] สั่งหยุดการทำงานของบอทแล้ว', 'error');
+    }
 
-                if (roundedProgress % 10 === 0 && roundedProgress > 0) {
-                    playChime(320 + (roundedProgress * 5));
-                }
+    runBotBtn.addEventListener('click', startBot);
+    stopBotBtn.addEventListener('click', stopBot);
 
-                for (let i = loadingStatusMessages.length - 1; i >= 0; i--) {
-                    if (progress >= loadingStatusMessages[i].threshold) {
-                        statusText.textContent = loadingStatusMessages[i].text;
-                        break;
-                    }
-                }
+    // -----------------------------
+    // Authentication
+    // -----------------------------
 
-                if (progress >= 100 && !isTransitioning) {
-                    isTransitioning = true;
-                    clearInterval(progressInterval);
-                    onLoadingComplete();
-                }
-            }
-        }
+    function checkSession() {
+      const savedUser = localStorage.getItem('cyber_user_session');
 
-        // Automatic Warp/Redirect Function to Main Page
-        function onLoadingComplete() {
-            playCompletionSound();
+      if (savedUser) {
+        const user = JSON.parse(savedUser);
+        setLoggedInUserUI(user);
+      } else {
+        setLoggedOutUI();
+      }
+    }
 
-            localStorage.setItem('hasLoadedMainPage', 'true');
+    function setLoggedInUserUI(user) {
+      openAuthBtn.classList.add('hidden');
 
-            setTimeout(() => {
-                loadingScreen.classList.add('opacity-0', 'scale-105', 'pointer-events-none');
-                bgLoading.classList.add('opacity-0');
-                bgMain.classList.remove('opacity-0');
+      userProfileBadge.classList.remove('hidden');
+      userProfileBadge.classList.add('flex');
 
-                setTimeout(() => {
-                    loadingScreen.classList.add('hidden');
-                    mainPage.classList.remove('hidden');
-                    void mainPage.offsetWidth;
-                    mainPage.classList.remove('opacity-0', 'translate-y-4');
-                }, 600);
+      userAvatar.src =
+        user.avatar ||
+        'https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=150';
 
-            }, 400);
-        }
+      userDisplayName.innerText =
+        user.name || user.email.split('@')[0];
+    }
 
-        function startLoading() {
-            isTransitioning = false;
-            progress = 0;
-            percentNumber.textContent = '0';
-            progressFill.style.width = '0%';
-            statusText.textContent = loadingStatusMessages[0].text;
+    function setLoggedOutUI() {
+      openAuthBtn.classList.remove('hidden');
 
-            mainPage.classList.add('opacity-0', 'translate-y-4');
-            bgMain.classList.add('opacity-0');
+      userProfileBadge.classList.add('hidden');
+      userProfileBadge.classList.remove('flex');
+    }
 
-            setTimeout(() => {
-                mainPage.classList.add('hidden');
-                loadingScreen.classList.remove('hidden', 'pointer-events-none');
-                bgLoading.classList.remove('opacity-0');
-                
-                void loadingScreen.offsetWidth;
-                loadingScreen.classList.remove('opacity-0', 'scale-105');
+    function openModal() {
+      authModal.classList.remove(
+        'pointer-events-none',
+        'opacity-0'
+      );
 
-                if (progressInterval) clearInterval(progressInterval);
-                progressInterval = setInterval(updateProgress, 40);
-            }, 300);
-        }
+      authModalCard.classList.remove('scale-95');
+      authModalCard.classList.add('scale-100');
+    }
 
-        function showMainPageImmediately() {
-            loadingScreen.classList.add('hidden', 'opacity-0', 'pointer-events-none');
-            bgLoading.classList.add('opacity-0');
-            bgMain.classList.remove('opacity-0');
-            mainPage.classList.remove('hidden', 'opacity-0', 'translate-y-4');
-        }
+    function closeModal() {
+      authModal.classList.add(
+        'opacity-0',
+        'pointer-events-none'
+      );
 
-        function resetLoadingPage() {
-            localStorage.removeItem('hasLoadedMainPage');
-            location.reload();
-        }
+      authModalCard.classList.remove('scale-100');
+      authModalCard.classList.add('scale-95');
+    }
 
-        function openModal(modal) {
-            modal.classList.remove('hidden');
-            setTimeout(() => modal.classList.remove('opacity-0'), 10);
-        }
+    openAuthBtn.addEventListener('click', openModal);
+    closeAuthBtn.addEventListener('click', closeModal);
 
-        function closeModal(modal) {
-            modal.classList.add('opacity-0');
-            setTimeout(() => modal.classList.add('hidden'), 300);
-        }
+    // -----------------------------
+    // Auth Tabs
+    // -----------------------------
 
-        // Modal triggers
-        btnOpenAuthModal.addEventListener('click', () => openModal(authModal));
-        btnCloseAuthModal.addEventListener('click', () => closeModal(authModal));
-        
-        btnOpenProfileEdit.addEventListener('click', () => {
-            const currentName = document.getElementById('nav-username-display').textContent.trim();
-            const currentImg = document.getElementById('nav-avatar-img').src;
-            document.getElementById('edit-displayname').value = currentName;
-            document.getElementById('edit-avatarurl').value = currentImg;
-            openModal(profileModal);
-        });
+    tabLogin.addEventListener('click', () => {
+      authMode = 'login';
 
-        btnEditProfileHero.addEventListener('click', () => {
-            btnOpenProfileEdit.click();
-        });
+      tabLogin.classList.add('active');
+      tabRegister.classList.remove('active');
 
-        btnCloseProfileModal.addEventListener('click', () => closeModal(profileModal));
+      fieldName.classList.add('hidden');
 
-        // Switch Tabs in Auth Modal
-        tabLogin.addEventListener('click', () => {
-            tabLogin.className = "flex-1 py-3 text-center font-bold text-sm text-purple-400 border-b-2 border-purple-500 transition";
-            tabRegister.className = "flex-1 py-3 text-center font-bold text-sm text-slate-400 border-b-2 border-transparent transition hover:text-purple-300";
-            formLogin.classList.remove('hidden');
-            formRegister.classList.add('hidden');
-        });
+      submitAuthBtn.innerHTML = `
+        <span class="flex items-center justify-center gap-2">
+          <i class="fa-solid fa-right-to-bracket"></i>
+          เข้าสู่ระบบ
+        </span>
+      `;
+    });
 
-        tabRegister.addEventListener('click', () => {
-            tabRegister.className = "flex-1 py-3 text-center font-bold text-sm text-emerald-400 border-b-2 border-emerald-500 transition";
-            tabLogin.className = "flex-1 py-3 text-center font-bold text-sm text-slate-400 border-b-2 border-transparent transition hover:text-purple-300";
-            formRegister.classList.remove('hidden');
-            formLogin.classList.add('hidden');
-        });
+    tabRegister.addEventListener('click', () => {
+      authMode = 'register';
 
-        // LocalStorage Profile Functions
-        function saveLocalProfile(displayName, avatarUrl) {
-            const profile = {
-                displayName: displayName || 'ผู้ใช้งานทั่วไป',
-                avatarUrl: avatarUrl || 'https://i.pinimg.com/736x/d1/50/12/d15012026d745a4302fd5bccffc437a2.jpg',
-                updatedAt: Date.now()
-            };
-            localStorage.setItem('userProfile', JSON.stringify(profile));
-        }
+      tabRegister.classList.add('active');
+      tabLogin.classList.remove('active');
 
-        function loadLocalProfile() {
-            const savedProfile = localStorage.getItem('userProfile');
-            if (!savedProfile) return;
+      fieldName.classList.remove('hidden');
 
-            try {
-                const profile = JSON.parse(savedProfile);
-                currentUserProfile.displayName = profile.displayName || 'ผู้ใช้งานทั่วไป';
-                currentUserProfile.avatarUrl = profile.avatarUrl || 'https://i.pinimg.com/736x/d1/50/12/d15012026d745a4302fd5bccffc437a2.jpg';
-                currentUserProfile.isLoggedIn = true;
-                updateUIWithProfile();
-            } catch (error) {
-                console.error('ไม่สามารถโหลดโปรไฟล์ได้', error);
-            }
-        }
+      submitAuthBtn.innerHTML = `
+        <span class="flex items-center justify-center gap-2">
+          <i class="fa-solid fa-rocket"></i>
+          สร้างบัญชีและเริ่มใช้งาน
+        </span>
+      `;
+    });
 
-        function updateUIWithProfile() {
-            const nameDisplays = [
-                document.getElementById('nav-username-display'),
-                document.getElementById('hero-username-display')
-            ];
-            const avatarImgs = [
-                document.getElementById('loading-avatar-img'),
-                document.getElementById('nav-avatar-img'),
-                document.getElementById('edit-avatar-preview')
-            ];
+    // -----------------------------
+    // Auth Submit
+    // -----------------------------
 
-            nameDisplays.forEach(el => {
-                if (el) el.textContent = currentUserProfile.displayName;
-            });
+    document.getElementById('auth-form').addEventListener('submit', (event) => {
+      event.preventDefault();
 
-            avatarImgs.forEach(img => {
-                if (img) img.src = currentUserProfile.avatarUrl;
-            });
+      const email = document.getElementById('input-email').value;
+      const password = document.getElementById('input-password').value;
+      const isCaptchaChecked =
+        document.getElementById('recaptcha-check').checked;
 
-            const loadingUserTxt = document.getElementById('loading-username-display');
-            if (loadingUserTxt) {
-                const safeName = currentUserProfile.displayName.replace(/[<>]/g, '');
-                loadingUserTxt.innerHTML = `<i class="fa-solid fa-user-astronaut text-xs"></i><span>เข้าใช้ในชื่อ: ${safeName}</span>`;
-            }
+      const name =
+        document.getElementById('input-name').value ||
+        email.split('@')[0];
 
-            const authBtnLabel = document.getElementById('auth-btn-label');
-            if (authBtnLabel) {
-                authBtnLabel.textContent = currentUserProfile.isLoggedIn ? "สลับบัญชี / โปรไฟล์" : "เข้าสู่ระบบ / สมัครบัญชี";
-            }
-        }
+      if (!isCaptchaChecked) {
+        showToast(
+          'กรุณายืนยันตัวตน reCAPTCHA ก่อนดำเนินการ!',
+          'error'
+        );
 
-        // Global register and save functions exposed for UI forms
-        window.handleRegisterSubmit = async function(displayName, username, password, avatarUrl) {
-            currentUserProfile.displayName = displayName;
-            currentUserProfile.avatarUrl = avatarUrl || "https://i.pinimg.com/736x/d1/50/12/d15012026d745a4302fd5bccffc437a2.jpg";
-            currentUserProfile.isLoggedIn = true;
+        return;
+      }
 
-            saveLocalProfile(displayName, currentUserProfile.avatarUrl);
-            updateUIWithProfile();
-        };
+      if (!password) {
+        showToast('กรุณากรอกรหัสผ่าน', 'error');
+        return;
+      }
 
-        window.handleProfileEdit = async function(displayName, avatarUrl) {
-            currentUserProfile.displayName = displayName;
-            currentUserProfile.avatarUrl = avatarUrl;
-            await saveLocalProfile(displayName, avatarUrl);
-            updateUIWithProfile();
-        };
+      const userData = {
+        name,
+        email,
+        avatar: `https://api.dicebear.com/7.x/bottts/svg?seed=${encodeURIComponent(name)}`
+      };
 
-        // Form Submit Handlers
-        formLogin.addEventListener('submit', (e) => {
-            e.preventDefault();
-            const username = document.getElementById('login-username').value;
-            if (window.handleRegisterSubmit) {
-                window.handleRegisterSubmit(username, username, '', 'https://i.pinimg.com/736x/d1/50/12/d15012026d745a4302fd5bccffc437a2.jpg');
-            }
-            closeModal(authModal);
-        });
+      localStorage.setItem(
+        'cyber_user_session',
+        JSON.stringify(userData)
+      );
 
-        formRegister.addEventListener('submit', (e) => {
-            e.preventDefault();
-            const dispName = document.getElementById('reg-displayname').value;
-            const uname = document.getElementById('reg-username').value;
-            const pass = document.getElementById('reg-password').value;
-            const avatar = document.getElementById('reg-avatarurl').value;
+      setLoggedInUserUI(userData);
+      closeModal();
 
-            if (window.handleRegisterSubmit) {
-                window.handleRegisterSubmit(dispName, uname, pass, avatar);
-            }
-            closeModal(authModal);
-        });
+      showToast(
+        authMode === 'login'
+          ? 'เข้าสู่ระบบสำเร็จ!'
+          : 'สร้างบัญชีและเข้าสู่ระบบสำเร็จ!',
+        'success'
+      );
+    });
 
-        formEditProfile.addEventListener('submit', (e) => {
-            e.preventDefault();
-            const newName = document.getElementById('edit-displayname').value;
-            const newAvatar = document.getElementById('edit-avatarurl').value;
+    // -----------------------------
+    // Logout
+    // -----------------------------
 
-            if (window.handleProfileEdit) {
-                window.handleProfileEdit(newName, newAvatar);
-            }
-            closeModal(profileModal);
-        });
+    logoutBtn.addEventListener('click', () => {
+      localStorage.removeItem('cyber_user_session');
+      setLoggedOutUI();
 
-        document.getElementById('btn-logout')?.addEventListener('click', () => {
-            if (window.handleProfileEdit) {
-                window.handleProfileEdit("ผู้ใช้งานทั่วไป", "https://i.pinimg.com/736x/d1/50/12/d15012026d745a4302fd5bccffc437a2.jpg");
-            }
-            closeModal(profileModal);
-        });
+      showToast('ออกจากระบบเรียบร้อยแล้ว', 'success');
+    });
 
-        // Button Controls
-        btnRestart.addEventListener('click', startLoading);
-        btnReloadMain.addEventListener('click', resetLoadingPage);
-        btnTestWarp.addEventListener('click', resetLoadingPage);
-
-        // Speed Toggle
-        btnSpeed.addEventListener('click', () => {
-            if (speedMultiplier === 1) {
-                speedMultiplier = 2.5;
-                speedLabel.textContent = 'เร็ว';
-            } else if (speedMultiplier === 2.5) {
-                speedMultiplier = 0.5;
-                speedLabel.textContent = 'ช้า';
-            } else {
-                speedMultiplier = 1;
-                speedLabel.textContent = 'ปกติ';
-            }
-        });
-
-        // Sound Toggle
-        btnSound.addEventListener('click', () => {
-            isAudioMuted = !isAudioMuted;
-            if (isAudioMuted) {
-                soundIcon.className = "fa-solid fa-volume-xmark text-slate-500";
-            } else {
-                soundIcon.className = "fa-solid fa-volume-high text-purple-400";
-                playChime(600);
-            }
-        });
-
-        const canvas = document.getElementById('particles-canvas');
-        const ctx = canvas.getContext('2d');
-        let particlesArray = [];
-        const numberOfParticles = 35;
-
-        function resizeCanvas() {
-            canvas.width = window.innerWidth;
-            canvas.height = window.innerHeight;
-        }
-
-        window.addEventListener('resize', resizeCanvas);
-        resizeCanvas();
-
-        class Particle {
-            constructor() {
-                this.reset();
-            }
-
-            reset() {
-                this.x = Math.random() * canvas.width;
-                this.y = Math.random() * canvas.height;
-                this.size = Math.random() * 2 + 0.5;
-                this.speedX = (Math.random() - 0.5) * 0.4;
-                this.speedY = (Math.random() - 0.5) * 0.4;
-                this.opacity = Math.random() * 0.5 + 0.2;
-            }
-
-            update() {
-                this.x += this.speedX;
-                this.y += this.speedY;
-
-                if (this.x < 0 || this.x > canvas.width || this.y < 0 || this.y > canvas.height) {
-                    this.reset();
-                }
-            }
-
-            draw() {
-                ctx.fillStyle = `rgba(216, 180, 254, ${this.opacity})`;
-                ctx.beginPath();
-                ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
-                ctx.fill();
-            }
-        }
-
-        function initParticles() {
-            particlesArray = [];
-            for (let i = 0; i < numberOfParticles; i++) {
-                particlesArray.push(new Particle());
-            }
-        }
-
-        function animateParticles() {
-            ctx.clearRect(0, 0, canvas.width, canvas.height);
-            for (let i = 0; i < particlesArray.length; i++) {
-                particlesArray[i].update();
-                particlesArray[i].draw();
-            }
-            requestAnimationFrame(animateParticles);
-        }
-
-        // Start On Window Load
-        window.onload = function() {
-            initParticles();
-            animateParticles();
-            loadLocalProfile();
-
-            const hasLoadedMainPage = localStorage.getItem('hasLoadedMainPage');
-
-            if (hasLoadedMainPage === 'true') {
-                showMainPageImmediately();
-            } else {
-                startLoading();
-            }
-        };
-    </script>
-</body>
-</html>
+    // -----------------------------
+    // Google Mock
