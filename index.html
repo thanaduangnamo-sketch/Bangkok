@@ -1,11 +1,10 @@
 <!DOCTYPE html>
-<html lang="th" class="h-full bg-slate-950 text-slate-100 font-sans">
+<html lang="th" class="h-full bg-slate-950 text-slate-100">
 
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-  <title>Cyberpunk Bot Studio & Auth</title>
+  <title>Cyberpunk Bot Studio</title>
 
   <script src="https://cdn.tailwindcss.com"></script>
 
@@ -28,27 +27,19 @@
         extend: {
           fontFamily: {
             sans: ['Kanit', 'sans-serif'],
-            mono: ['Fira Code', 'monospace'],
+            mono: ['Fira Code', 'monospace']
           },
-
           colors: {
             neon: {
               cyan: '#00f3ff',
               pink: '#ff007f',
               purple: '#b026ff',
-              green: '#00ff66',
+              green: '#00ff66'
             }
           },
-
           boxShadow: {
             'neon-cyan':
-              '0 0 15px rgba(0, 243, 255, 0.5), 0 0 30px rgba(0, 243, 255, 0.2)',
-
-            'neon-pink':
-              '0 0 15px rgba(255, 0, 127, 0.5), 0 0 30px rgba(255, 0, 127, 0.2)',
-
-            glass:
-              '0 8px 32px 0 rgba(0, 0, 0, 0.37)',
+              '0 0 15px rgba(0,243,255,.5), 0 0 30px rgba(0,243,255,.2)'
           }
         }
       }
@@ -56,68 +47,82 @@
   </script>
 
   <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    html,
+    body {
+      min-height: 100%;
+      margin: 0;
+    }
+
+    body {
+      font-family: Kanit, sans-serif;
+    }
+
+    button,
+    input,
+    textarea {
+      font-family: inherit;
+    }
+
     ::-webkit-scrollbar {
       width: 6px;
       height: 6px;
     }
 
     ::-webkit-scrollbar-track {
-      background: rgba(15, 23, 42, 0.6);
+      background: rgba(15, 23, 42, .7);
     }
 
     ::-webkit-scrollbar-thumb {
-      background: rgba(0, 243, 255, 0.3);
-      border-radius: 3px;
-    }
-
-    ::-webkit-scrollbar-thumb:hover {
-      background: rgba(0, 243, 255, 0.6);
+      background: rgba(0, 243, 255, .35);
+      border-radius: 10px;
     }
 
     .bg-loader {
-      background-image:
+      background:
         linear-gradient(
           to bottom,
-          rgba(10, 10, 26, 0.82),
-          rgba(5, 5, 15, 0.92)
+          rgba(10, 10, 26, .9),
+          rgba(5, 5, 15, .96)
         ),
-        url('https://i.pinimg.com/736x/d1/50/12/d15012026d745a4302fd5bccffc437a2.jpg');
-
+        url("https://i.pinimg.com/736x/d1/50/12/d15012026d745a4302fd5bccffc437a2.jpg");
       background-size: cover;
       background-position: center;
     }
 
     .bg-main {
-      background-image:
+      background:
         linear-gradient(
           to bottom,
-          rgba(15, 23, 42, 0.88),
-          rgba(3, 7, 18, 0.95)
+          rgba(15, 23, 42, .9),
+          rgba(3, 7, 18, .97)
         ),
-        url('https://i.pinimg.com/736x/67/93/f5/6793f5e51071422ae664139f6cf47baa.jpg');
-
+        url("https://i.pinimg.com/736x/67/93/f5/6793f5e51071422ae664139f6cf47baa.jpg");
       background-size: cover;
       background-position: center;
       background-attachment: fixed;
     }
 
     .glass-card {
-      background: rgba(15, 23, 42, 0.65);
+      background: rgba(15, 23, 42, .68);
       backdrop-filter: blur(16px);
       -webkit-backdrop-filter: blur(16px);
-      border: 1px solid rgba(255, 255, 255, 0.1);
+      border: 1px solid rgba(255, 255, 255, .1);
     }
 
     .glass-nav {
-      background: rgba(10, 15, 30, 0.75);
+      background: rgba(10, 15, 30, .82);
       backdrop-filter: blur(20px);
       -webkit-backdrop-filter: blur(20px);
-      border-bottom: 1px solid rgba(0, 243, 255, 0.2);
+      border-bottom: 1px solid rgba(0, 243, 255, .22);
     }
 
     .circle-bg {
       fill: none;
-      stroke: rgba(255, 255, 255, 0.1);
+      stroke: rgba(255, 255, 255, .1);
       stroke-width: 8;
     }
 
@@ -126,14 +131,14 @@
       stroke: #00f3ff;
       stroke-width: 8;
       stroke-linecap: round;
-      transition: stroke-dashoffset 0.1s linear;
       filter: drop-shadow(0 0 8px #00f3ff);
+      transition: stroke-dashoffset .15s linear;
     }
 
     @keyframes status-pulse {
       0% {
-        transform: scale(0.95);
-        box-shadow: 0 0 0 0 rgba(0, 255, 102, 0.7);
+        transform: scale(.95);
+        box-shadow: 0 0 0 0 rgba(0, 255, 102, .7);
       }
 
       70% {
@@ -142,7 +147,7 @@
       }
 
       100% {
-        transform: scale(0.95);
+        transform: scale(.95);
         box-shadow: 0 0 0 0 rgba(0, 255, 102, 0);
       }
     }
@@ -151,161 +156,128 @@
       animation: status-pulse 2s infinite;
     }
 
-    /* Cyberpunk Signup Button */
     .signup-btn {
+      position: relative;
       background:
         linear-gradient(
           135deg,
-          rgba(0, 243, 255, 0.2),
-          rgba(176, 38, 255, 0.28)
+          rgba(0, 243, 255, .2),
+          rgba(176, 38, 255, .28)
         ),
-        rgba(15, 23, 42, 0.9);
-
-      border: 1px solid rgba(0, 243, 255, 0.65);
-
+        rgba(15, 23, 42, .94);
+      border: 1px solid rgba(0, 243, 255, .7);
       box-shadow:
-        0 0 12px rgba(0, 243, 255, 0.25),
-        inset 0 0 14px rgba(0, 243, 255, 0.08);
-    }
-
-    .signup-btn::before {
-      content: "";
-      position: absolute;
-      inset: 0;
-      border-radius: inherit;
-      padding: 1px;
-
-      background: linear-gradient(
-        120deg,
-        #00f3ff,
-        #b026ff,
-        #ff007f,
-        #00f3ff
-      );
-
-      background-size: 300% 300%;
-      animation: signup-border-flow 4s linear infinite;
-
-      -webkit-mask:
-        linear-gradient(#fff 0 0) content-box,
-        linear-gradient(#fff 0 0);
-
-      -webkit-mask-composite: xor;
-      mask-composite: exclude;
-
-      pointer-events: none;
+        0 0 12px rgba(0, 243, 255, .25),
+        inset 0 0 14px rgba(0, 243, 255, .08);
+      transition: .3s ease;
     }
 
     .signup-btn:hover {
       transform: translateY(-2px) scale(1.02);
-
-      border-color: #00f3ff;
-
       box-shadow:
-        0 0 18px rgba(0, 243, 255, 0.65),
-        0 0 35px rgba(176, 38, 255, 0.3),
-        inset 0 0 18px rgba(0, 243, 255, 0.15);
+        0 0 18px rgba(0, 243, 255, .65),
+        0 0 35px rgba(176, 38, 255, .3),
+        inset 0 0 18px rgba(0, 243, 255, .15);
     }
 
     .signup-btn:active {
-      transform: translateY(0) scale(0.98);
+      transform: scale(.98);
     }
 
     .signup-icon {
       width: 30px;
       height: 30px;
-
-      display: flex;
-      align-items: center;
-      justify-content: center;
-
+      display: grid;
+      place-items: center;
       color: #00f3ff;
       border-radius: 9px;
-
-      background: rgba(0, 243, 255, 0.12);
-      border: 1px solid rgba(0, 243, 255, 0.4);
-
-      box-shadow: 0 0 12px rgba(0, 243, 255, 0.25);
-
-      transition: all 0.3s ease;
+      background: rgba(0, 243, 255, .12);
+      border: 1px solid rgba(0, 243, 255, .4);
+      transition: .3s ease;
     }
 
     .signup-btn:hover .signup-icon {
       color: #fff;
       background: #00f3ff;
-      box-shadow: 0 0 18px rgba(0, 243, 255, 0.8);
+      box-shadow: 0 0 18px rgba(0, 243, 255, .8);
       transform: rotate(-8deg) scale(1.08);
     }
 
     .signup-shine {
       position: absolute;
       top: 0;
-      left: -80%;
-
+      left: -90%;
       width: 45%;
       height: 100%;
-
       transform: skewX(-20deg);
-
       background: linear-gradient(
         90deg,
         transparent,
-        rgba(255, 255, 255, 0.25),
+        rgba(255, 255, 255, .25),
         transparent
       );
-
-      transition: left 0.6s ease;
+      transition: left .7s ease;
+      pointer-events: none;
     }
 
     .signup-btn:hover .signup-shine {
       left: 140%;
     }
 
-    @keyframes signup-border-flow {
-      0% {
-        background-position: 0% 50%;
-      }
-
-      50% {
-        background-position: 100% 50%;
-      }
-
-      100% {
-        background-position: 0% 50%;
-      }
-    }
-
-    /* Auth Tabs */
     .auth-tab {
-      position: relative;
-      transition: all 0.3s ease;
+      transition: .3s ease;
     }
 
     .auth-tab:hover {
       color: #67e8f9;
-      background: rgba(0, 243, 255, 0.05);
+      background: rgba(0, 243, 255, .05);
     }
 
     .auth-tab.active {
       color: #22d3ee;
       border-color: #22d3ee;
-      background: rgba(0, 243, 255, 0.06);
-      text-shadow: 0 0 8px rgba(0, 243, 255, 0.7);
+      background: rgba(0, 243, 255, .06);
+      text-shadow: 0 0 8px rgba(0, 243, 255, .7);
+    }
+
+    .fade-hidden {
+      opacity: 0;
+      pointer-events: none;
+    }
+
+    .error-box {
+      position: fixed;
+      inset: 20px;
+      z-index: 999;
+      display: none;
+      padding: 20px;
+      color: #fecaca;
+      background: #450a0a;
+      border: 1px solid #ef4444;
+      border-radius: 12px;
+      font-family: monospace;
+      white-space: pre-wrap;
     }
   </style>
 </head>
 
-<body class="h-full overflow-x-hidden selection:bg-cyan-500 selection:text-black">
+<body class="min-h-screen overflow-x-hidden bg-slate-950">
+
+  <!-- Error Fallback -->
+  <div id="error-box" class="error-box"></div>
 
   <!-- Loading Screen -->
   <div
     id="loading-screen"
-    class="fixed inset-0 z-50 flex flex-col items-center justify-center bg-loader transition-opacity duration-1000"
+    class="fixed inset-0 z-50 flex flex-col items-center justify-center bg-loader transition-opacity duration-700"
   >
-    <div class="relative flex flex-col items-center">
+    <div class="flex flex-col items-center">
 
-      <div class="relative w-48 h-48 sm:w-56 sm:h-56 flex items-center justify-center">
-        <svg class="w-full h-full -rotate-90" viewBox="0 0 100 100">
+      <div class="relative w-48 h-48 sm:w-56 sm:h-56">
+        <svg
+          class="w-full h-full -rotate-90"
+          viewBox="0 0 100 100"
+        >
           <circle
             class="circle-bg"
             cx="50"
@@ -324,101 +296,92 @@
           ></circle>
         </svg>
 
-        <div class="absolute inset-0 flex flex-col items-center justify-center text-center">
+        <div class="absolute inset-0 flex flex-col items-center justify-center">
           <span
             id="load-percent"
-            class="text-4xl sm:text-5xl font-bold font-mono text-cyan-400 drop-shadow-[0_0_10px_rgba(0,243,255,0.8)]"
+            class="text-4xl sm:text-5xl font-bold font-mono text-cyan-400"
           >
             0%
           </span>
 
-          <span class="text-xs tracking-widest text-slate-400 uppercase mt-1">
+          <span class="mt-1 text-xs tracking-widest text-slate-400">
             System Booting
           </span>
         </div>
       </div>
 
-      <div class="mt-6 flex flex-col items-center gap-2">
-        <p
-          id="loader-status"
-          class="text-sm font-mono text-slate-300 animate-pulse"
-        >
-          กำลังโหลดทรัพยากรระบบ...
-        </p>
+      <p
+        id="loader-status"
+        class="mt-6 text-sm font-mono text-slate-300 animate-pulse"
+      >
+        กำลังโหลดทรัพยากรระบบ...
+      </p>
 
-        <div class="flex gap-1.5 mt-1">
-          <div class="w-2 h-2 rounded-full bg-cyan-400 animate-ping"></div>
-          <div class="w-2 h-2 rounded-full bg-cyan-400 animate-ping delay-100"></div>
-          <div class="w-2 h-2 rounded-full bg-cyan-400 animate-ping delay-200"></div>
-        </div>
+      <div class="flex gap-1.5 mt-3">
+        <div class="w-2 h-2 rounded-full bg-cyan-400 animate-ping"></div>
+        <div class="w-2 h-2 rounded-full bg-cyan-400 animate-ping"></div>
+        <div class="w-2 h-2 rounded-full bg-cyan-400 animate-ping"></div>
       </div>
     </div>
   </div>
 
-  <!-- Main Application -->
+  <!-- Main App -->
   <div
     id="main-app"
-    class="hidden min-h-screen bg-main flex flex-col text-slate-200 opacity-0 transition-opacity duration-700"
+    class="hidden min-h-screen bg-main text-slate-200 opacity-0 transition-opacity duration-700"
   >
 
     <!-- Header -->
     <header
-      class="glass-nav sticky top-0 z-30 px-4 py-3 sm:px-6 flex items-center justify-between shadow-lg"
+      class="glass-nav sticky top-0 z-30 flex items-center justify-between px-4 py-3 shadow-lg sm:px-6"
     >
       <div class="flex items-center gap-3">
         <div
-          class="p-2 rounded-lg bg-cyan-500/10 border border-cyan-500/30 text-cyan-400 shadow-neon-cyan"
+          class="p-2 text-cyan-400 border rounded-lg bg-cyan-500/10 border-cyan-500/30 shadow-neon-cyan"
         >
-          <i class="fa-solid fa-code-merge text-xl"></i>
+          <i class="text-xl fa-solid fa-code-merge"></i>
         </div>
 
         <div>
-          <h1
-            class="text-lg sm:text-xl font-bold tracking-wide text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 via-purple-400 to-pink-500"
-          >
+          <h1 class="text-lg font-bold tracking-wide text-transparent sm:text-xl bg-clip-text bg-gradient-to-r from-cyan-400 via-purple-400 to-pink-500">
             หน้าหลัก :: Cyber Studio
           </h1>
 
-          <p class="text-xs text-slate-400 hidden sm:block">
+          <p class="hidden text-xs text-slate-400 sm:block">
             ระบบจัดการโค้ดบอทอัตโนมัติ Cloud Workspace
           </p>
         </div>
       </div>
 
-      <!-- User Controls -->
       <div class="flex items-center gap-3">
 
-        <!-- Logged In -->
+        <!-- User Badge -->
         <div
           id="user-profile-badge"
-          class="hidden items-center gap-3 bg-slate-900/80 p-1.5 pr-3 pl-2 rounded-full border border-cyan-500/30 shadow-md"
+          class="hidden items-center gap-3 rounded-full border border-cyan-500/30 bg-slate-900/80 p-1.5 pl-2 pr-3 shadow-md"
         >
           <div class="relative">
             <img
               id="user-avatar"
               src=""
               alt="Avatar"
-              class="w-8 h-8 rounded-full object-cover border border-cyan-400"
+              class="object-cover w-8 h-8 border rounded-full border-cyan-400"
             >
 
             <span
-              class="absolute bottom-0 right-0 w-2.5 h-2.5 bg-emerald-400 rounded-full status-pulse border border-slate-900"
-              title="Online"
+              class="absolute bottom-0 right-0 w-2.5 h-2.5 rounded-full bg-emerald-400 status-pulse border border-slate-900"
             ></span>
           </div>
 
-          <div class="text-left hidden xs:block">
+          <div class="hidden text-left sm:block">
             <p
               id="user-display-name"
-              class="text-xs font-semibold text-slate-100 leading-tight"
+              class="text-xs font-semibold leading-tight text-slate-100"
             >
               User
             </p>
 
-            <p
-              id="user-role"
-              class="text-[10px] text-cyan-400 font-mono"
-            >
+            <p class="text-[10px] text-cyan-400 font-mono">
               Developer
             </p>
           </div>
@@ -426,16 +389,16 @@
           <button
             id="logout-btn"
             title="ออกจากระบบ"
-            class="ml-1 text-slate-400 hover:text-red-400 transition-colors p-1"
+            class="p-1 ml-1 text-slate-400 hover:text-red-400"
           >
-            <i class="fa-solid fa-right-from-bracket text-sm"></i>
+            <i class="text-sm fa-solid fa-right-from-bracket"></i>
           </button>
         </div>
 
         <!-- Signup Button -->
         <button
           id="open-auth-btn"
-          class="signup-btn group relative overflow-hidden flex items-center gap-2 px-5 py-2.5 rounded-xl text-sm font-semibold text-white transition-all duration-300"
+          class="signup-btn group relative flex items-center gap-2 overflow-hidden rounded-xl px-4 py-2.5 text-sm font-semibold text-white sm:px-5"
         >
           <span class="signup-shine"></span>
 
@@ -445,7 +408,7 @@
             </span>
 
             <span class="flex flex-col items-start leading-tight">
-              <span class="text-[10px] uppercase tracking-[0.2em] text-cyan-200/80">
+              <span class="text-[10px] uppercase tracking-[.2em] text-cyan-200/80">
                 New Access
               </span>
 
@@ -454,127 +417,93 @@
               </span>
             </span>
 
-            <i
-              class="fa-solid fa-arrow-right text-xs text-cyan-200 transition-transform duration-300 group-hover:translate-x-1"
-            ></i>
+            <i class="text-xs fa-solid fa-arrow-right text-cyan-200"></i>
           </span>
         </button>
       </div>
     </header>
 
-    <!-- Main Content -->
-    <main class="flex-1 p-3 sm:p-6 max-w-7xl w-full mx-auto flex flex-col gap-6">
+    <!-- Content -->
+    <main class="flex flex-col w-full max-w-7xl gap-6 p-3 mx-auto sm:p-6">
 
-      <!-- Welcome Banner -->
-      <section
-        class="glass-card rounded-2xl p-4 sm:p-6 relative overflow-hidden border border-cyan-500/20"
-      >
-        <div
-          class="absolute -right-10 -bottom-10 w-48 h-48 bg-cyan-500/10 rounded-full blur-3xl pointer-events-none"
-        ></div>
+      <section class="relative p-4 overflow-hidden border rounded-2xl glass-card sm:p-6 border-cyan-500/20">
+        <div class="absolute w-48 h-48 rounded-full pointer-events-none -right-10 -bottom-10 bg-cyan-500/10 blur-3xl"></div>
 
-        <div
-          class="relative z-10 flex flex-col md:flex-row md:items-center justify-between gap-4"
-        >
+        <div class="relative z-10 flex flex-col justify-between gap-4 md:flex-row md:items-center">
           <div>
-            <div
-              class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-cyan-500/10 border border-cyan-500/30 text-cyan-300 text-xs font-mono mb-2"
-            >
-              <i class="fa-solid fa-bolt text-yellow-400"></i>
+            <div class="inline-flex items-center gap-2 px-3 py-1 mb-2 text-xs font-mono border rounded-full bg-cyan-500/10 border-cyan-500/30 text-cyan-300">
+              <i class="text-yellow-400 fa-solid fa-bolt"></i>
               Modern Cloud Runtime v2.4
             </div>
 
-            <h2 class="text-xl sm:text-2xl font-bold text-white">
+            <h2 class="text-xl font-bold text-white sm:text-2xl">
               ยินดีต้อนรับสู่ระบบควบคุมบอทอัจฉริยะ
             </h2>
 
-            <p class="text-sm text-slate-300 mt-1">
+            <p class="mt-1 text-sm text-slate-300">
               แก้ไขโค้ด บันทึกไฟล์ และสั่งรันบอทของคุณได้ทันทีแบบ Real-time
             </p>
           </div>
 
-          <div class="flex items-center gap-3">
-            <div
-              class="px-4 py-2 rounded-xl bg-slate-900/80 border border-slate-700/60 text-center"
-            >
-              <span class="text-xs text-slate-400 block">
-                สถานะเซิร์ฟเวอร์
-              </span>
+          <div class="px-4 py-2 text-center border rounded-xl bg-slate-900/80 border-slate-700/60">
+            <span class="block text-xs text-slate-400">
+              สถานะเซิร์ฟเวอร์
+            </span>
 
-              <span
-                class="text-sm font-semibold text-emerald-400 flex items-center justify-center gap-1.5"
-              >
-                <span class="w-2 h-2 rounded-full bg-emerald-400 animate-ping"></span>
-                ปกติ
-              </span>
-            </div>
+            <span class="flex items-center justify-center gap-1.5 text-sm font-semibold text-emerald-400">
+              <span class="w-2 h-2 rounded-full bg-emerald-400 animate-ping"></span>
+              ปกติ
+            </span>
           </div>
         </div>
       </section>
 
-      <!-- Editor -->
+      <!-- Workspace -->
       <section
-        class="glass-card rounded-2xl overflow-hidden border border-slate-700/60 shadow-2xl flex flex-col lg:flex-row h-[650px]"
+        class="flex flex-col h-[650px] overflow-hidden border shadow-2xl glass-card rounded-2xl border-slate-700/60 lg:flex-row"
       >
 
         <!-- File Explorer -->
-        <div
-          class="w-full lg:w-60 bg-slate-900/90 border-b lg:border-b-0 lg:border-r border-slate-800 flex flex-col"
-        >
-          <div
-            class="p-3 border-b border-slate-800/80 flex items-center justify-between"
-          >
-            <span
-              class="text-xs font-semibold uppercase tracking-wider text-slate-400 font-mono"
-            >
-              <i class="fa-regular fa-folder-open text-cyan-400 mr-1.5"></i>
+        <aside class="flex flex-col w-full border-b bg-slate-900/90 border-slate-800 lg:w-60 lg:border-b-0 lg:border-r">
+          <div class="flex items-center justify-between p-3 border-b border-slate-800">
+            <span class="text-xs font-semibold tracking-wider text-slate-400 font-mono">
+              <i class="mr-1.5 text-cyan-400 fa-regular fa-folder-open"></i>
               Explorer
             </span>
 
-            <span class="text-[10px] text-slate-500 bg-slate-800 px-2 py-0.5 rounded">
+            <span class="px-2 py-0.5 text-[10px] text-slate-500 bg-slate-800 rounded">
               3 Files
             </span>
           </div>
 
           <div
-            class="flex-1 overflow-y-auto p-2 space-y-1"
             id="file-list"
+            class="flex-1 p-2 space-y-1 overflow-y-auto"
           ></div>
 
-          <div
-            class="p-3 border-t border-slate-800 bg-slate-950/40 text-xs text-slate-500 flex justify-between items-center"
-          >
+          <div class="flex items-center justify-between p-3 text-xs border-t bg-slate-950/40 border-slate-800 text-slate-500">
             <span>
               Auto-Save:
               <strong class="text-emerald-400">ON</strong>
             </span>
 
-            <i class="fa-solid fa-gear text-slate-400 hover:text-white cursor-pointer"></i>
+            <i class="text-slate-400 fa-solid fa-gear"></i>
           </div>
-        </div>
+        </aside>
 
-        <!-- Editor Area -->
-        <div class="flex-1 flex flex-col bg-slate-950/80 min-w-0">
-
-          <div
-            class="bg-slate-900/80 px-4 py-2.5 border-b border-slate-800 flex flex-wrap items-center justify-between gap-3"
-          >
+        <!-- Editor -->
+        <div class="flex flex-col flex-1 min-w-0 bg-slate-950/80">
+          <div class="flex flex-wrap items-center justify-between gap-3 px-4 py-2.5 border-b bg-slate-900/80 border-slate-800">
             <div class="flex items-center gap-2">
               <span id="active-file-icon" class="text-cyan-400">
                 <i class="fa-brands fa-js"></i>
               </span>
 
-              <span
-                id="active-file-name"
-                class="font-mono text-sm text-cyan-300 font-medium"
-              >
+              <span id="active-file-name" class="text-sm font-medium font-mono text-cyan-300">
                 bot.js
               </span>
 
-              <span
-                id="file-lang"
-                class="text-[10px] px-2 py-0.5 bg-slate-800 rounded text-slate-400 font-mono"
-              >
+              <span id="file-lang" class="px-2 py-0.5 text-[10px] rounded bg-slate-800 text-slate-400 font-mono">
                 JavaScript
               </span>
             </div>
@@ -582,15 +511,15 @@
             <div class="flex items-center gap-2">
               <button
                 id="save-code-btn"
-                class="px-3 py-1.5 text-xs font-semibold rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 transition flex items-center gap-1.5"
+                class="flex items-center gap-1.5 rounded-lg border border-slate-700 bg-slate-800 px-3 py-1.5 text-xs font-semibold text-slate-200 hover:bg-slate-700"
               >
-                <i class="fa-regular fa-floppy-disk text-cyan-400"></i>
+                <i class="text-cyan-400 fa-regular fa-floppy-disk"></i>
                 บันทึกโค้ด
               </button>
 
               <button
                 id="run-bot-btn"
-                class="px-3.5 py-1.5 text-xs font-semibold rounded-lg bg-emerald-600 hover:bg-emerald-500 text-white shadow-md hover:shadow-emerald-500/30 transition flex items-center gap-1.5"
+                class="flex items-center gap-1.5 rounded-lg bg-emerald-600 px-3.5 py-1.5 text-xs font-semibold text-white hover:bg-emerald-500"
               >
                 <i class="fa-solid fa-play"></i>
                 Run Bot
@@ -598,7 +527,7 @@
 
               <button
                 id="stop-bot-btn"
-                class="px-3.5 py-1.5 text-xs font-semibold rounded-lg bg-rose-600/80 hover:bg-rose-600 text-white shadow-md transition hidden items-center gap-1.5"
+                class="hidden items-center gap-1.5 rounded-lg bg-rose-600 px-3.5 py-1.5 text-xs font-semibold text-white hover:bg-rose-500"
               >
                 <i class="fa-solid fa-square"></i>
                 Stop Bot
@@ -606,35 +535,31 @@
             </div>
           </div>
 
-          <div
-            class="flex-1 relative overflow-hidden flex font-mono text-xs sm:text-sm bg-slate-950/90"
-          >
+          <div class="flex flex-1 min-h-0 overflow-hidden font-mono text-xs bg-slate-950/90 sm:text-sm">
             <div
               id="line-numbers"
-              class="w-10 py-3 text-right pr-3 bg-slate-900/40 text-slate-600 select-none border-r border-slate-800/60 leading-6 font-mono"
+              class="w-10 shrink-0 overflow-hidden border-r py-3 pr-3 text-right leading-6 text-slate-600 select-none border-slate-800/60"
             >
               1
             </div>
 
             <textarea
               id="code-editor"
-              class="flex-1 p-3 bg-transparent text-slate-200 focus:outline-none resize-none font-mono leading-6 whitespace-pre overflow-auto tracking-wide"
               spellcheck="false"
+              class="flex-1 p-3 overflow-auto leading-6 tracking-wide text-slate-200 resize-none bg-transparent focus:outline-none"
             ></textarea>
           </div>
 
           <!-- Terminal -->
-          <div class="h-48 border-t border-slate-800 bg-slate-950 flex flex-col">
-            <div
-              class="px-3 py-1.5 bg-slate-900/90 border-b border-slate-800/80 flex items-center justify-between"
-            >
-              <div class="flex items-center gap-2 text-xs font-mono text-slate-400">
-                <i class="fa-solid fa-terminal text-pink-500"></i>
-                <span>Terminal Log</span>
+          <div class="flex flex-col h-48 border-t bg-slate-950 border-slate-800">
+            <div class="flex items-center justify-between px-3 py-1.5 border-b bg-slate-900/90 border-slate-800">
+              <div class="flex items-center gap-2 text-xs text-slate-400 font-mono">
+                <i class="text-pink-500 fa-solid fa-terminal"></i>
+                Terminal Log
 
                 <span
                   id="bot-status-indicator"
-                  class="text-[10px] px-2 py-0.5 rounded-full bg-slate-800 text-slate-400"
+                  class="rounded-full bg-slate-800 px-2 py-0.5 text-[10px] text-slate-400"
                 >
                   Stopped
                 </span>
@@ -642,16 +567,16 @@
 
               <button
                 id="clear-term-btn"
-                class="text-[11px] text-slate-500 hover:text-slate-300 font-mono"
+                class="text-[11px] text-slate-500 hover:text-slate-300"
               >
-                <i class="fa-solid fa-trash-can mr-1"></i>
+                <i class="mr-1 fa-solid fa-trash-can"></i>
                 Clear
               </button>
             </div>
 
             <div
               id="terminal-output"
-              class="flex-1 p-3 font-mono text-xs overflow-y-auto space-y-1 text-slate-300"
+              class="flex-1 p-3 space-y-1 overflow-y-auto text-xs text-slate-300 font-mono"
             >
               <div class="text-slate-500">
                 [System] ยินดีต้อนรับสู่ Cyber Console.
@@ -659,16 +584,14 @@
               </div>
             </div>
 
-            <div
-              class="px-3 py-1.5 bg-slate-900/50 border-t border-slate-800/60 flex items-center gap-2"
-            >
-              <span class="text-cyan-400 font-mono text-xs">&gt;</span>
+            <div class="flex items-center gap-2 px-3 py-1.5 border-t bg-slate-900/50 border-slate-800/60">
+              <span class="text-xs text-cyan-400 font-mono">&gt;</span>
 
               <input
-                type="text"
                 id="terminal-input"
+                type="text"
                 placeholder="พิมพ์คำสั่ง เช่น help, ping, status, clear..."
-                class="flex-1 bg-transparent border-none text-xs font-mono text-slate-200 focus:outline-none"
+                class="flex-1 text-xs text-slate-200 bg-transparent border-none font-mono focus:outline-none"
               >
             </div>
           </div>
@@ -680,121 +603,105 @@
   <!-- Auth Modal -->
   <div
     id="auth-modal"
-    class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/80 backdrop-blur-md opacity-0 pointer-events-none transition-all duration-300"
+    class="fixed inset-0 z-50 flex items-center justify-center p-4 transition-all duration-300 opacity-0 pointer-events-none bg-slate-950/80 backdrop-blur-md"
   >
     <div
       id="auth-modal-card"
-      class="glass-card w-full max-w-md rounded-2xl p-6 sm:p-8 border border-cyan-500/30 shadow-2xl relative transform scale-95 transition-all duration-300"
+      class="relative w-full max-w-md p-6 transition-all duration-300 border shadow-2xl glass-card rounded-2xl sm:p-8 border-cyan-500/30 scale-95"
     >
       <button
         id="close-auth-btn"
-        class="absolute top-4 right-4 text-slate-400 hover:text-white transition"
+        class="absolute top-4 right-4 text-slate-400 hover:text-white"
       >
-        <i class="fa-solid fa-xmark text-lg"></i>
+        <i class="text-lg fa-solid fa-xmark"></i>
       </button>
 
-      <!-- Auth Tabs -->
-      <div class="flex border-b border-slate-700/60 mb-6">
+      <div class="flex mb-6 border-b border-slate-700/60">
         <button
           id="tab-login"
-          class="auth-tab active flex-1 py-2.5 text-center font-semibold text-sm border-b-2 border-cyan-400 rounded-t-lg"
+          class="auth-tab active flex-1 rounded-t-lg border-b-2 border-cyan-400 py-2.5 text-center text-sm font-semibold"
         >
-          <i class="fa-solid fa-right-to-bracket mr-1"></i>
+          <i class="mr-1 fa-solid fa-right-to-bracket"></i>
           เข้าสู่ระบบ
         </button>
 
         <button
           id="tab-register"
-          class="auth-tab flex-1 py-2.5 text-center font-semibold text-sm border-b-2 border-transparent text-slate-400 rounded-t-lg"
+          class="auth-tab flex-1 rounded-t-lg border-b-2 border-transparent py-2.5 text-center text-sm font-semibold text-slate-400"
         >
-          <i class="fa-solid fa-user-plus mr-1"></i>
+          <i class="mr-1 fa-solid fa-user-plus"></i>
           สร้างบัญชีใหม่
         </button>
       </div>
 
-      <!-- Auth Form -->
       <form id="auth-form" class="space-y-4">
-
         <div id="field-name" class="hidden">
-          <label class="block text-xs font-medium text-slate-300 mb-1">
+          <label class="block mb-1 text-xs font-medium text-slate-300">
             ชื่อผู้ใช้งาน
           </label>
 
-          <div class="relative">
-            <i class="fa-regular fa-user absolute left-3 top-3 text-slate-500 text-sm"></i>
-
-            <input
-              type="text"
-              id="input-name"
-              placeholder="CyberDev99"
-              class="w-full bg-slate-900/90 border border-slate-700 rounded-lg py-2 pl-9 pr-3 text-sm text-slate-200 focus:outline-none focus:border-cyan-400 transition"
-            >
-          </div>
+          <input
+            id="input-name"
+            type="text"
+            placeholder="CyberDev99"
+            class="w-full rounded-lg border border-slate-700 bg-slate-900/90 py-2 pl-3 pr-3 text-sm text-slate-200 outline-none focus:border-cyan-400"
+          >
         </div>
 
         <div>
-          <label class="block text-xs font-medium text-slate-300 mb-1">
+          <label class="block mb-1 text-xs font-medium text-slate-300">
             อีเมล
           </label>
 
-          <div class="relative">
-            <i class="fa-regular fa-envelope absolute left-3 top-3 text-slate-500 text-sm"></i>
-
-            <input
-              type="email"
-              id="input-email"
-              required
-              placeholder="user@cyber.io"
-              class="w-full bg-slate-900/90 border border-slate-700 rounded-lg py-2 pl-9 pr-3 text-sm text-slate-200 focus:outline-none focus:border-cyan-400 transition"
-            >
-          </div>
+          <input
+            id="input-email"
+            type="email"
+            required
+            placeholder="user@cyber.io"
+            class="w-full rounded-lg border border-slate-700 bg-slate-900/90 py-2 pl-3 pr-3 text-sm text-slate-200 outline-none focus:border-cyan-400"
+          >
         </div>
 
         <div>
-          <label class="block text-xs font-medium text-slate-300 mb-1">
+          <label class="block mb-1 text-xs font-medium text-slate-300">
             รหัสผ่าน
           </label>
 
-          <div class="relative">
-            <i class="fa-solid fa-lock absolute left-3 top-3 text-slate-500 text-sm"></i>
-
-            <input
-              type="password"
-              id="input-password"
-              required
-              placeholder="••••••••"
-              class="w-full bg-slate-900/90 border border-slate-700 rounded-lg py-2 pl-9 pr-3 text-sm text-slate-200 focus:outline-none focus:border-cyan-400 transition"
-            >
-          </div>
+          <input
+            id="input-password"
+            type="password"
+            required
+            minlength="4"
+            placeholder="••••••••"
+            class="w-full rounded-lg border border-slate-700 bg-slate-900/90 py-2 pl-3 pr-3 text-sm text-slate-200 outline-none focus:border-cyan-400"
+          >
         </div>
 
-        <div
-          class="p-3 bg-slate-900/90 border border-slate-700 rounded-lg flex items-center justify-between"
-        >
-          <label class="flex items-center gap-3 cursor-pointer">
+        <label class="flex cursor-pointer items-center justify-between rounded-lg border border-slate-700 bg-slate-900/90 p-3">
+          <span class="flex items-center gap-3">
             <input
-              type="checkbox"
               id="recaptcha-check"
-              class="w-5 h-5 rounded border-slate-600 text-cyan-500 focus:ring-cyan-400 bg-slate-800"
+              type="checkbox"
+              class="w-5 h-5 bg-slate-800"
             >
 
-            <span class="text-xs text-slate-300 font-medium select-none">
+            <span class="text-xs font-medium text-slate-300">
               ฉันไม่ใช่โปรแกรมอัตโนมัติ
             </span>
-          </label>
+          </span>
 
-          <div class="flex flex-col items-center">
-            <i class="fa-solid fa-arrows-spin text-cyan-400 text-lg"></i>
-            <span class="text-[8px] text-slate-500 font-mono">
-              reCAPTCHA
-            </span>
-          </div>
-        </div>
+          <span class="text-center">
+            <i class="text-lg text-cyan-400 fa-solid fa-shield-halved"></i>
+            <small class="block text-[8px] text-slate-500">
+              SECURITY
+            </small>
+          </span>
+        </label>
 
         <button
-          type="submit"
           id="submit-auth-btn"
-          class="w-full py-3 rounded-xl bg-gradient-to-r from-cyan-500 via-blue-600 to-purple-600 text-slate-950 font-bold text-sm shadow-neon-cyan hover:brightness-110 transition transform active:scale-95"
+          type="submit"
+          class="w-full rounded-xl bg-gradient-to-r from-cyan-500 via-blue-600 to-purple-600 py-3 text-sm font-bold text-slate-950 shadow-neon-cyan hover:brightness-110"
         >
           <span class="flex items-center justify-center gap-2">
             <i class="fa-solid fa-right-to-bracket"></i>
@@ -803,83 +710,62 @@
         </button>
       </form>
 
-      <div class="my-5 flex items-center gap-3">
+      <div class="flex items-center gap-3 my-5">
         <div class="flex-1 h-px bg-slate-700/60"></div>
         <span class="text-xs text-slate-500">หรือ</span>
         <div class="flex-1 h-px bg-slate-700/60"></div>
       </div>
 
-      <!-- Google Button -->
       <button
         id="google-auth-btn"
-        class="w-full py-3 px-4 bg-slate-900/80 hover:bg-slate-800 border border-slate-700 hover:border-cyan-400/50 rounded-xl flex items-center justify-center gap-3 text-sm font-medium text-slate-200 transition-all shadow-sm hover:shadow-neon-cyan"
+        class="flex w-full items-center justify-center gap-3 rounded-xl border border-slate-700 bg-slate-900/80 px-4 py-3 text-sm font-medium text-slate-200 hover:border-cyan-400/50 hover:bg-slate-800"
       >
-        <svg class="w-4 h-4" viewBox="0 0 24 24">
-          <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
-          <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
-          <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.06H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.94l2.85-2.22.81-.63z"/>
-          <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.06l3.66 2.84c.87-2.6 3.3-4.52 6.16-4.52z"/>
-        </svg>
-
-        <span>เข้าสู่ระบบด้วย Google</span>
+        <i class="text-red-400 fa-brands fa-google"></i>
+        เข้าสู่ระบบด้วย Google
       </button>
     </div>
   </div>
 
-  <!-- Google Mock Popup -->
+  <!-- Google Popup -->
   <div
     id="google-popup"
-    class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/70 backdrop-blur-sm hidden"
+    class="fixed inset-0 z-[60] hidden items-center justify-center p-4 bg-black/70 backdrop-blur-sm"
   >
-    <div class="bg-white text-slate-800 w-full max-w-sm rounded-2xl p-6 shadow-2xl font-sans text-center">
-
-      <div class="flex justify-center mb-3">
-        <svg class="w-8 h-8" viewBox="0 0 24 24">
-          <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
-          <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
-          <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.06H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.94l2.85-2.22.81-.63z"/>
-          <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.06l3.66 2.84c.87-2.6 3.3-4.52 6.16-4.52z"/>
-        </svg>
-      </div>
+    <div class="w-full max-w-sm p-6 text-center bg-white shadow-2xl rounded-2xl">
+      <i class="mb-3 text-3xl text-blue-500 fa-brands fa-google"></i>
 
       <h3 class="text-lg font-bold text-slate-900">
         Sign in with Google
       </h3>
 
-      <p class="text-xs text-slate-500 mt-1">
+      <p class="mt-1 text-xs text-slate-500">
         เลือกบัญชีจำลองเพื่อเข้าสู่ระบบ
       </p>
 
-      <div class="mt-4 space-y-2 text-left">
-        <button
-          onclick="confirmGoogleLogin(
-            'Cyber Google User',
-            'user.google@gmail.com',
-            'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150'
-          )"
-          class="w-full p-2.5 border rounded-xl flex items-center gap-3 hover:bg-slate-50 transition"
+      <button
+        id="mock-google-account"
+        class="flex items-center w-full gap-3 p-3 mt-4 text-left border rounded-xl hover:bg-slate-50"
+      >
+        <img
+          src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150"
+          class="object-cover w-10 h-10 rounded-full"
+          alt="Google User"
         >
-          <img
-            src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150"
-            class="w-9 h-9 rounded-full object-cover"
-            alt="Google User"
-          >
 
-          <div>
-            <p class="text-sm font-semibold text-slate-800">
-              Cyber Google User
-            </p>
+        <span>
+          <strong class="block text-sm text-slate-800">
+            Cyber Google User
+          </strong>
 
-            <p class="text-xs text-slate-500">
-              user.google@gmail.com
-            </p>
-          </div>
-        </button>
-      </div>
+          <small class="text-xs text-slate-500">
+            user.google@gmail.com
+          </small>
+        </span>
+      </button>
 
       <button
-        onclick="closeGooglePopup()"
-        class="mt-4 text-xs text-slate-500 hover:text-slate-700"
+        id="close-google-btn"
+        class="mt-4 text-xs text-slate-500 hover:text-slate-800"
       >
         ยกเลิก
       </button>
@@ -889,29 +775,47 @@
   <!-- Toast -->
   <div
     id="toast"
-    class="fixed bottom-5 right-5 z-50 transform translate-y-20 opacity-0 transition-all duration-300 glass-card px-4 py-3 rounded-xl border border-cyan-400/40 text-sm flex items-center gap-3 shadow-xl pointer-events-none"
+    class="pointer-events-none fixed bottom-5 right-5 z-[70] flex translate-y-20 items-center gap-3 rounded-xl border border-cyan-400/40 px-4 py-3 text-sm opacity-0 shadow-xl transition-all glass-card"
   >
-    <i
-      id="toast-icon"
-      class="fa-solid fa-circle-check text-cyan-400 text-lg"
-    ></i>
-
-    <span id="toast-msg">
-      ข้อความแจ้งเตือน
-    </span>
+    <i id="toast-icon" class="text-lg text-cyan-400 fa-solid fa-circle-check"></i>
+    <span id="toast-msg">ข้อความแจ้งเตือน</span>
   </div>
 
   <script>
-    // -----------------------------
-    // File System
-    // -----------------------------
+    (() => {
+      'use strict';
 
-    const defaultFiles = {
-      'bot.js': {
-        name: 'bot.js',
-        lang: 'JavaScript',
-        icon: 'fa-brands fa-js text-yellow-400',
-        content: `// Cyberpunk Discord Bot
+      // -----------------------------
+      // Safe localStorage
+      // -----------------------------
+
+      function readStorage(key, fallback) {
+        try {
+          const value = localStorage.getItem(key);
+          return value ? JSON.parse(value) : fallback;
+        } catch {
+          return fallback;
+        }
+      }
+
+      function writeStorage(key, value) {
+        try {
+          localStorage.setItem(key, JSON.stringify(value));
+        } catch {
+          // ไม่ให้แอปหยุดทำงานถ้า localStorage ใช้งานไม่ได้
+        }
+      }
+
+      // -----------------------------
+      // Default Files
+      // -----------------------------
+
+      const defaultFiles = {
+        'bot.js': {
+          name: 'bot.js',
+          lang: 'JavaScript',
+          icon: 'fa-brands fa-js text-yellow-400',
+          content: `// Cyberpunk Discord Bot
 const { Client, GatewayIntentBits } = require('discord.js');
 
 const client = new Client({
@@ -930,13 +834,13 @@ client.on('messageCreate', (msg) => {
 
 console.log("Starting Bot Worker Thread...");
 client.login(process.env.BOT_TOKEN);`
-      },
+        },
 
-      'main.py': {
-        name: 'main.py',
-        lang: 'Python',
-        icon: 'fa-brands fa-python text-cyan-400',
-        content: `# AI Assistant Runner
+        'main.py': {
+          name: 'main.py',
+          lang: 'Python',
+          icon: 'fa-brands fa-python text-cyan-400',
+          content: `# AI Assistant Runner
 import time
 
 def start_bot():
@@ -946,537 +850,630 @@ def start_bot():
 
 if __name__ == "__main__":
     start_bot()`
-      },
+        },
 
-      'config.json': {
-        name: 'config.json',
-        lang: 'JSON',
-        icon: 'fa-solid fa-gear text-pink-400',
-        content: `{
+        'config.json': {
+          name: 'config.json',
+          lang: 'JSON',
+          icon: 'fa-solid fa-gear text-pink-400',
+          content: `{
   "bot_name": "CyberBot-X",
   "version": "2.4.0",
   "auto_restart": true,
   "max_memory": "512MB",
   "prefix": "!"
 }`
-      }
-    };
-
-    // -----------------------------
-    // State
-    // -----------------------------
-
-    let files = JSON.parse(localStorage.getItem('cyber_files')) || defaultFiles;
-    let currentFileKey = 'bot.js';
-    let isBotRunning = false;
-    let botInterval = null;
-    let authMode = 'login';
-
-    // -----------------------------
-    // DOM Elements
-    // -----------------------------
-
-    const loadingScreen = document.getElementById('loading-screen');
-    const mainApp = document.getElementById('main-app');
-    const progressCircle = document.getElementById('progress-circle');
-    const loadPercent = document.getElementById('load-percent');
-    const loaderStatus = document.getElementById('loader-status');
-
-    const codeEditor = document.getElementById('code-editor');
-    const lineNumbers = document.getElementById('line-numbers');
-    const fileListContainer = document.getElementById('file-list');
-    const activeFileName = document.getElementById('active-file-name');
-    const activeFileIcon = document.getElementById('active-file-icon');
-    const fileLangBadge = document.getElementById('file-lang');
-
-    const runBotBtn = document.getElementById('run-bot-btn');
-    const stopBotBtn = document.getElementById('stop-bot-btn');
-    const saveCodeBtn = document.getElementById('save-code-btn');
-    const terminalOutput = document.getElementById('terminal-output');
-    const terminalInput = document.getElementById('terminal-input');
-    const clearTermBtn = document.getElementById('clear-term-btn');
-    const botStatusIndicator = document.getElementById('bot-status-indicator');
-
-    const authModal = document.getElementById('auth-modal');
-    const authModalCard = document.getElementById('auth-modal-card');
-    const openAuthBtn = document.getElementById('open-auth-btn');
-    const closeAuthBtn = document.getElementById('close-auth-btn');
-
-    const userProfileBadge = document.getElementById('user-profile-badge');
-    const userAvatar = document.getElementById('user-avatar');
-    const userDisplayName = document.getElementById('user-display-name');
-    const logoutBtn = document.getElementById('logout-btn');
-
-    const tabLogin = document.getElementById('tab-login');
-    const tabRegister = document.getElementById('tab-register');
-    const fieldName = document.getElementById('field-name');
-    const submitAuthBtn = document.getElementById('submit-auth-btn');
-    const googleAuthBtn = document.getElementById('google-auth-btn');
-    const googlePopup = document.getElementById('google-popup');
-
-    // -----------------------------
-    // Loading Screen
-    // -----------------------------
-
-    function initLoadingScreen() {
-      let progress = 0;
-      const circumference = 263.89;
-
-      const statuses = [
-        'กำลังดาวน์โหลดส่วนประกอบ...',
-        'กำลังตรวจสอบสิทธิ์การเข้าถึง...',
-        'กำลังเชื่อมต่อ Cyber Cloud Workspace...',
-        'พร้อมเข้าสู่ระบบ!'
-      ];
-
-      const interval = setInterval(() => {
-        progress += Math.floor(Math.random() * 8) + 2;
-
-        if (progress > 100) {
-          progress = 100;
         }
-
-        const offset = circumference - (progress / 100) * circumference;
-
-        progressCircle.style.strokeDashoffset = offset;
-        loadPercent.innerText = `${progress}%`;
-
-        if (progress < 30) {
-          loaderStatus.innerText = statuses[0];
-        } else if (progress < 70) {
-          loaderStatus.innerText = statuses[1];
-        } else if (progress < 95) {
-          loaderStatus.innerText = statuses[2];
-        } else {
-          loaderStatus.innerText = statuses[3];
-        }
-
-        if (progress === 100) {
-          clearInterval(interval);
-
-          setTimeout(() => {
-            loadingScreen.classList.add('opacity-0');
-
-            setTimeout(() => {
-              loadingScreen.classList.add('hidden');
-              mainApp.classList.remove('hidden');
-
-              setTimeout(() => {
-                mainApp.classList.remove('opacity-0');
-              }, 50);
-            }, 800);
-          }, 400);
-        }
-      }, 120);
-    }
-
-    // -----------------------------
-    // File Editor
-    // -----------------------------
-
-    function renderFileList() {
-      fileListContainer.innerHTML = '';
-
-      Object.keys(files).forEach((key) => {
-        const file = files[key];
-        const isActive = key === currentFileKey;
-
-        const item = document.createElement('button');
-
-        item.className = `
-          w-full px-3 py-2 rounded-lg text-left text-xs font-mono
-          flex items-center justify-between transition
-          ${
-            isActive
-              ? 'bg-cyan-500/15 text-cyan-300 border border-cyan-500/30 font-semibold'
-              : 'text-slate-400 hover:bg-slate-800/60 hover:text-slate-200'
-          }
-        `;
-
-        item.innerHTML = `
-          <div class="flex items-center gap-2">
-            <i class="${file.icon}"></i>
-            <span>${file.name}</span>
-          </div>
-
-          ${
-            isActive
-              ? '<span class="w-1.5 h-1.5 rounded-full bg-cyan-400"></span>'
-              : ''
-          }
-        `;
-
-        item.onclick = () => switchFile(key);
-        fileListContainer.appendChild(item);
-      });
-    }
-
-    function switchFile(key) {
-      files[currentFileKey].content = codeEditor.value;
-      currentFileKey = key;
-
-      const file = files[currentFileKey];
-
-      codeEditor.value = file.content;
-      activeFileName.innerText = file.name;
-      fileLangBadge.innerText = file.lang;
-      activeFileIcon.innerHTML = `<i class="${file.icon}"></i>`;
-
-      renderFileList();
-      updateLineNumbers();
-    }
-
-    function updateLineNumbers() {
-      const lines = codeEditor.value.split('\n').length;
-      let numbersHtml = '';
-
-      for (let i = 1; i <= lines; i++) {
-        numbersHtml += `${i}<br>`;
-      }
-
-      lineNumbers.innerHTML = numbersHtml;
-    }
-
-    codeEditor.addEventListener('input', updateLineNumbers);
-
-    codeEditor.addEventListener('scroll', () => {
-      lineNumbers.scrollTop = codeEditor.scrollTop;
-    });
-
-    saveCodeBtn.addEventListener('click', () => {
-      files[currentFileKey].content = codeEditor.value;
-
-      localStorage.setItem('cyber_files', JSON.stringify(files));
-
-      showToast('บันทึกโค้ดสำเร็จแล้ว!', 'success');
-      appendTerminal(`[SAVE] บันทึกการเปลี่ยนแปลงในไฟล์ ${currentFileKey} แล้ว`);
-    });
-
-    // -----------------------------
-    // Terminal
-    // -----------------------------
-
-    function appendTerminal(text, type = 'info') {
-      const line = document.createElement('div');
-      const time = new Date().toLocaleTimeString();
-
-      let colorClass = 'text-slate-300';
-
-      if (type === 'success') {
-        colorClass = 'text-emerald-400';
-      }
-
-      if (type === 'error') {
-        colorClass = 'text-rose-400';
-      }
-
-      if (type === 'cmd') {
-        colorClass = 'text-cyan-400 font-semibold';
-      }
-
-      line.className = `${colorClass} leading-relaxed`;
-
-      line.innerHTML = `
-        <span class="text-slate-600 mr-2">[${time}]</span>
-        ${escapeHtml(text)}
-      `;
-
-      terminalOutput.appendChild(line);
-      terminalOutput.scrollTop = terminalOutput.scrollHeight;
-    }
-
-    function escapeHtml(str) {
-      return str
-        .replace(/&/g, '&amp;')
-        .replace(/</g, '&lt;')
-        .replace(/>/g, '&gt;');
-    }
-
-    terminalInput.addEventListener('keydown', (event) => {
-      if (event.key !== 'Enter') {
-        return;
-      }
-
-      const command = terminalInput.value.trim();
-
-      if (!command) {
-        return;
-      }
-
-      appendTerminal(`> ${command}`, 'cmd');
-      terminalInput.value = '';
-
-      switch (command.toLowerCase()) {
-        case 'help':
-          appendTerminal('คำสั่งที่ใช้ได้: ping, status, clear, run, stop, help');
-          break;
-
-        case 'ping':
-          appendTerminal(
-            'Pong! 🏓 Latency: ' +
-            Math.floor(Math.random() * 20 + 10) +
-            'ms',
-            'success'
-          );
-          break;
-
-        case 'status':
-          appendTerminal(
-            `สถานะบอท: ${
-              isBotRunning
-                ? 'กำลังทำงาน (Online)'
-                : 'ปิดอยู่ (Offline)'
-            }`
-          );
-          break;
-
-        case 'clear':
-          terminalOutput.innerHTML = '';
-          break;
-
-        case 'run':
-          startBot();
-          break;
-
-        case 'stop':
-          stopBot();
-          break;
-
-        default:
-          appendTerminal(
-            `ไม่รู้จักคำสั่ง '${command}' (พิมพ์ 'help' เพื่อดูคำสั่งทั้งหมด)`,
-            'error'
-          );
-      }
-    });
-
-    clearTermBtn.addEventListener('click', () => {
-      terminalOutput.innerHTML = '';
-    });
-
-    // -----------------------------
-    // Bot Runner
-    // -----------------------------
-
-    function startBot() {
-      if (isBotRunning) {
-        return;
-      }
-
-      isBotRunning = true;
-
-      runBotBtn.classList.add('hidden');
-      stopBotBtn.classList.remove('hidden');
-      stopBotBtn.classList.add('flex');
-
-      botStatusIndicator.innerText = 'Running';
-
-      botStatusIndicator.className =
-        'text-[10px] px-2 py-0.5 rounded-full bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 font-semibold';
-
-      appendTerminal(
-        `[START] กำลังเริ่มต้นรันบอท (${currentFileKey})...`,
-        'success'
-      );
-
-      let tick = 0;
-
-      botInterval = setInterval(() => {
-        tick++;
-
-        const messages = [
-          `[INFO] Heartbeat acknowledged (Tick #${tick})`,
-          `[PROCESS] Memory usage: ${(Math.random() * 20 + 40).toFixed(1)} MB`,
-          `[EVENT] WebSocket connection active`
-        ];
-
-        const randomMessage =
-          messages[Math.floor(Math.random() * messages.length)];
-
-        appendTerminal(randomMessage);
-      }, 3500);
-    }
-
-    function stopBot() {
-      if (!isBotRunning) {
-        return;
-      }
-
-      isBotRunning = false;
-      clearInterval(botInterval);
-
-      runBotBtn.classList.remove('hidden');
-      stopBotBtn.classList.add('hidden');
-      stopBotBtn.classList.remove('flex');
-
-      botStatusIndicator.innerText = 'Stopped';
-
-      botStatusIndicator.className =
-        'text-[10px] px-2 py-0.5 rounded-full bg-slate-800 text-slate-400';
-
-      appendTerminal('[STOP] สั่งหยุดการทำงานของบอทแล้ว', 'error');
-    }
-
-    runBotBtn.addEventListener('click', startBot);
-    stopBotBtn.addEventListener('click', stopBot);
-
-    // -----------------------------
-    // Authentication
-    // -----------------------------
-
-    function checkSession() {
-      const savedUser = localStorage.getItem('cyber_user_session');
-
-      if (savedUser) {
-        const user = JSON.parse(savedUser);
-        setLoggedInUserUI(user);
-      } else {
-        setLoggedOutUI();
-      }
-    }
-
-    function setLoggedInUserUI(user) {
-      openAuthBtn.classList.add('hidden');
-
-      userProfileBadge.classList.remove('hidden');
-      userProfileBadge.classList.add('flex');
-
-      userAvatar.src =
-        user.avatar ||
-        'https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=150';
-
-      userDisplayName.innerText =
-        user.name || user.email.split('@')[0];
-    }
-
-    function setLoggedOutUI() {
-      openAuthBtn.classList.remove('hidden');
-
-      userProfileBadge.classList.add('hidden');
-      userProfileBadge.classList.remove('flex');
-    }
-
-    function openModal() {
-      authModal.classList.remove(
-        'pointer-events-none',
-        'opacity-0'
-      );
-
-      authModalCard.classList.remove('scale-95');
-      authModalCard.classList.add('scale-100');
-    }
-
-    function closeModal() {
-      authModal.classList.add(
-        'opacity-0',
-        'pointer-events-none'
-      );
-
-      authModalCard.classList.remove('scale-100');
-      authModalCard.classList.add('scale-95');
-    }
-
-    openAuthBtn.addEventListener('click', openModal);
-    closeAuthBtn.addEventListener('click', closeModal);
-
-    // -----------------------------
-    // Auth Tabs
-    // -----------------------------
-
-    tabLogin.addEventListener('click', () => {
-      authMode = 'login';
-
-      tabLogin.classList.add('active');
-      tabRegister.classList.remove('active');
-
-      fieldName.classList.add('hidden');
-
-      submitAuthBtn.innerHTML = `
-        <span class="flex items-center justify-center gap-2">
-          <i class="fa-solid fa-right-to-bracket"></i>
-          เข้าสู่ระบบ
-        </span>
-      `;
-    });
-
-    tabRegister.addEventListener('click', () => {
-      authMode = 'register';
-
-      tabRegister.classList.add('active');
-      tabLogin.classList.remove('active');
-
-      fieldName.classList.remove('hidden');
-
-      submitAuthBtn.innerHTML = `
-        <span class="flex items-center justify-center gap-2">
-          <i class="fa-solid fa-rocket"></i>
-          สร้างบัญชีและเริ่มใช้งาน
-        </span>
-      `;
-    });
-
-    // -----------------------------
-    // Auth Submit
-    // -----------------------------
-
-    document.getElementById('auth-form').addEventListener('submit', (event) => {
-      event.preventDefault();
-
-      const email = document.getElementById('input-email').value;
-      const password = document.getElementById('input-password').value;
-      const isCaptchaChecked =
-        document.getElementById('recaptcha-check').checked;
-
-      const name =
-        document.getElementById('input-name').value ||
-        email.split('@')[0];
-
-      if (!isCaptchaChecked) {
-        showToast(
-          'กรุณายืนยันตัวตน reCAPTCHA ก่อนดำเนินการ!',
-          'error'
-        );
-
-        return;
-      }
-
-      if (!password) {
-        showToast('กรุณากรอกรหัสผ่าน', 'error');
-        return;
-      }
-
-      const userData = {
-        name,
-        email,
-        avatar: `https://api.dicebear.com/7.x/bottts/svg?seed=${encodeURIComponent(name)}`
       };
 
-      localStorage.setItem(
-        'cyber_user_session',
-        JSON.stringify(userData)
-      );
+      // -----------------------------
+      // State
+      // -----------------------------
 
-      setLoggedInUserUI(userData);
-      closeModal();
+      let files = readStorage('cyber_files', defaultFiles);
+      let currentFileKey = 'bot.js';
+      let isBotRunning = false;
+      let botInterval = null;
+      let authMode = 'login';
 
-      showToast(
-        authMode === 'login'
-          ? 'เข้าสู่ระบบสำเร็จ!'
-          : 'สร้างบัญชีและเข้าสู่ระบบสำเร็จ!',
-        'success'
-      );
-    });
+      // -----------------------------
+      // DOM
+      // -----------------------------
 
-    // -----------------------------
-    // Logout
-    // -----------------------------
+      const $ = (id) => document.getElementById(id);
 
-    logoutBtn.addEventListener('click', () => {
-      localStorage.removeItem('cyber_user_session');
-      setLoggedOutUI();
+      const loadingScreen = $('loading-screen');
+      const mainApp = $('main-app');
+      const progressCircle = $('progress-circle');
+      const loadPercent = $('load-percent');
+      const loaderStatus = $('loader-status');
 
-      showToast('ออกจากระบบเรียบร้อยแล้ว', 'success');
-    });
+      const codeEditor = $('code-editor');
+      const lineNumbers = $('line-numbers');
+      const fileList = $('file-list');
+      const activeFileName = $('active-file-name');
+      const activeFileIcon = $('active-file-icon');
+      const fileLang = $('file-lang');
 
-    // -----------------------------
-    // Google Mock
+      const terminalOutput = $('terminal-output');
+      const terminalInput = $('terminal-input');
+      const botStatusIndicator = $('bot-status-indicator');
+
+      const runBotBtn = $('run-bot-btn');
+      const stopBotBtn = $('stop-bot-btn');
+
+      const authModal = $('auth-modal');
+      const authModalCard = $('auth-modal-card');
+      const openAuthBtn = $('open-auth-btn');
+      const closeAuthBtn = $('close-auth-btn');
+
+      const tabLogin = $('tab-login');
+      const tabRegister = $('tab-register');
+      const fieldName = $('field-name');
+      const submitAuthBtn = $('submit-auth-btn');
+
+      const userProfileBadge = $('user-profile-badge');
+      const userAvatar = $('user-avatar');
+      const userDisplayName = $('user-display-name');
+      const logoutBtn = $('logout-btn');
+
+      const googlePopup = $('google-popup');
+      const googleAuthBtn = $('google-auth-btn');
+      const mockGoogleAccount = $('mock-google-account');
+      const closeGoogleBtn = $('close-google-btn');
+
+      // -----------------------------
+      // Loading
+      // -----------------------------
+
+      let appStarted = false;
+
+      function showApp() {
+        if (appStarted) {
+          return;
+        }
+
+        appStarted = true;
+
+        loadingScreen.classList.add('opacity-0');
+
+        setTimeout(() => {
+          loadingScreen.classList.add('hidden');
+          mainApp.classList.remove('hidden');
+
+          requestAnimationFrame(() => {
+            mainApp.classList.remove('opacity-0');
+          });
+        }, 350);
+      }
+
+      function initLoading() {
+        let progress = 0;
+        const circumference = 263.89;
+
+        const statuses = [
+          'กำลังเริ่มต้นระบบ...',
+          'กำลังโหลดทรัพยากรระบบ...',
+          'กำลังเตรียม Cyber Workspace...',
+          'พร้อมใช้งาน!'
+        ];
+
+        const updateProgress = () => {
+          progress = Math.min(progress + 5, 100);
+
+          const offset =
+            circumference - (progress / 100) * circumference;
+
+          progressCircle.style.strokeDashoffset = String(offset);
+          loadPercent.textContent = `${progress}%`;
+
+          if (progress < 30) {
+            loaderStatus.textContent = statuses[0];
+          } else if (progress < 65) {
+            loaderStatus.textContent = statuses[1];
+          } else if (progress < 95) {
+            loaderStatus.textContent = statuses[2];
+          } else {
+            loaderStatus.textContent = statuses[3];
+          }
+
+          if (progress >= 100) {
+            clearInterval(progressTimer);
+            setTimeout(showApp, 250);
+          }
+        };
+
+        const progressTimer = setInterval(updateProgress, 80);
+
+        // Fallback ป้องกันหน้าโหลดค้าง
+        setTimeout(showApp, 4000);
+
+        // เริ่มทันที ไม่ต้องรอรูปภาพภายนอก
+        updateProgress();
+      }
+
+      // -----------------------------
+      // Editor
+      // -----------------------------
+
+      function renderFiles() {
+        fileList.innerHTML = '';
+
+        Object.keys(files).forEach((key) => {
+          const file = files[key];
+          const active = key === currentFileKey;
+
+          const button = document.createElement('button');
+
+          button.className = `
+            flex w-full items-center justify-between rounded-lg px-3 py-2
+            text-left text-xs font-mono transition
+            ${
+              active
+                ? 'border border-cyan-500/30 bg-cyan-500/15 text-cyan-300'
+                : 'text-slate-400 hover:bg-slate-800/60 hover:text-slate-200'
+            }
+          `;
+
+          button.innerHTML = `
+            <span class="flex items-center gap-2">
+              <i class="${file.icon}"></i>
+              <span>${file.name}</span>
+            </span>
+
+            ${
+              active
+                ? '<span class="h-1.5 w-1.5 rounded-full bg-cyan-400"></span>'
+                : ''
+            }
+          `;
+
+          button.addEventListener('click', () => switchFile(key));
+          fileList.appendChild(button);
+        });
+      }
+
+      function updateLineNumbers() {
+        const count = codeEditor.value.split('\n').length;
+
+        lineNumbers.innerHTML = Array.from(
+          { length: count },
+          (_, index) => index + 1
+        ).join('<br>');
+      }
+
+      function switchFile(key) {
+        if (!files[key]) {
+          return;
+        }
+
+        if (files[currentFileKey]) {
+          files[currentFileKey].content = codeEditor.value;
+        }
+
+        currentFileKey = key;
+
+        const file = files[key];
+
+        codeEditor.value = file.content;
+        activeFileName.textContent = file.name;
+        fileLang.textContent = file.lang;
+        activeFileIcon.innerHTML = `<i class="${file.icon}"></i>`;
+
+        updateLineNumbers();
+        renderFiles();
+      }
+
+      codeEditor.addEventListener('input', updateLineNumbers);
+
+      codeEditor.addEventListener('scroll', () => {
+        lineNumbers.scrollTop = codeEditor.scrollTop;
+      });
+
+      $('save-code-btn').addEventListener('click', () => {
+        files[currentFileKey].content = codeEditor.value;
+        writeStorage('cyber_files', files);
+
+        appendTerminal(
+          `[SAVE] บันทึกการเปลี่ยนแปลงในไฟล์ ${currentFileKey} แล้ว`,
+          'success'
+        );
+
+        showToast('บันทึกโค้ดสำเร็จแล้ว');
+      });
+
+      // -----------------------------
+      // Terminal
+      // -----------------------------
+
+      function escapeHtml(value) {
+        return String(value)
+          .replace(/&/g, '&amp;')
+          .replace(/</g, '&lt;')
+          .replace(/>/g, '&gt;');
+      }
+
+      function appendTerminal(text, type = 'info') {
+        const row = document.createElement('div');
+        const time = new Date().toLocaleTimeString();
+
+        const color =
+          type === 'success'
+            ? 'text-emerald-400'
+            : type === 'error'
+              ? 'text-rose-400'
+              : type === 'cmd'
+                ? 'font-semibold text-cyan-400'
+                : 'text-slate-300';
+
+        row.className = `${color} leading-relaxed`;
+        row.innerHTML = `
+          <span class="mr-2 text-slate-600">[${time}]</span>
+          ${escapeHtml(text)}
+        `;
+
+        terminalOutput.appendChild(row);
+        terminalOutput.scrollTop = terminalOutput.scrollHeight;
+      }
+
+      terminalInput.addEventListener('keydown', (event) => {
+        if (event.key !== 'Enter') {
+          return;
+        }
+
+        const command = terminalInput.value.trim();
+
+        if (!command) {
+          return;
+        }
+
+        appendTerminal(`> ${command}`, 'cmd');
+        terminalInput.value = '';
+
+        switch (command.toLowerCase()) {
+          case 'help':
+            appendTerminal(
+              'คำสั่งที่ใช้ได้: ping, status, clear, run, stop, help'
+            );
+            break;
+
+          case 'ping':
+            appendTerminal(
+              `Pong! 🏓 Latency: ${Math.floor(Math.random() * 20 + 10)}ms`,
+              'success'
+            );
+            break;
+
+          case 'status':
+            appendTerminal(
+              `สถานะบอท: ${
+                isBotRunning
+                  ? 'กำลังทำงาน (Online)'
+                  : 'ปิดอยู่ (Offline)'
+              }`
+            );
+            break;
+
+          case 'clear':
+            terminalOutput.innerHTML = '';
+            break;
+
+          case 'run':
+            startBot();
+            break;
+
+          case 'stop':
+            stopBot();
+            break;
+
+          default:
+            appendTerminal(
+              `ไม่รู้จักคำสั่ง '${command}'`,
+              'error'
+            );
+        }
+      });
+
+      $('clear-term-btn').addEventListener('click', () => {
+        terminalOutput.innerHTML = '';
+      });
+
+      // -----------------------------
+      // Bot
+      // -----------------------------
+
+      function startBot() {
+        if (isBotRunning) {
+          return;
+        }
+
+        isBotRunning = true;
+
+        runBotBtn.classList.add('hidden');
+        stopBotBtn.classList.remove('hidden');
+        stopBotBtn.classList.add('flex');
+
+        botStatusIndicator.textContent = 'Running';
+        botStatusIndicator.className =
+          'rounded-full border border-emerald-500/30 bg-emerald-500/20 px-2 py-0.5 text-[10px] font-semibold text-emerald-400';
+
+        appendTerminal(
+          `[START] กำลังเริ่มต้นรันบอท (${currentFileKey})...`,
+          'success'
+        );
+
+        let tick = 0;
+
+        botInterval = setInterval(() => {
+          tick++;
+
+          const messages = [
+            `[INFO] Heartbeat acknowledged (Tick #${tick})`,
+            `[PROCESS] Memory usage: ${(Math.random() * 20 + 40).toFixed(1)} MB`,
+            '[EVENT] WebSocket connection active'
+          ];
+
+          appendTerminal(
+            messages[Math.floor(Math.random() * messages.length)]
+          );
+        }, 3500);
+      }
+
+      function stopBot() {
+        if (!isBotRunning) {
+          return;
+        }
+
+        isBotRunning = false;
+        clearInterval(botInterval);
+
+        runBotBtn.classList.remove('hidden');
+        stopBotBtn.classList.add('hidden');
+        stopBotBtn.classList.remove('flex');
+
+        botStatusIndicator.textContent = 'Stopped';
+        botStatusIndicator.className =
+          'rounded-full bg-slate-800 px-2 py-0.5 text-[10px] text-slate-400';
+
+        appendTerminal('[STOP] สั่งหยุดการทำงานของบอทแล้ว', 'error');
+      }
+
+      runBotBtn.addEventListener('click', startBot);
+      stopBotBtn.addEventListener('click', stopBot);
+
+      // -----------------------------
+      // Authentication
+      // -----------------------------
+
+      function setLoggedInUser(user) {
+        openAuthBtn.classList.add('hidden');
+        userProfileBadge.classList.remove('hidden');
+        userProfileBadge.classList.add('flex');
+
+        userAvatar.src =
+          user.avatar ||
+          'https://api.dicebear.com/7.x/bottts/svg?seed=user';
+
+        userDisplayName.textContent =
+          user.name || user.email.split('@')[0];
+      }
+
+      function setLoggedOutUser() {
+        openAuthBtn.classList.remove('hidden');
+        userProfileBadge.classList.add('hidden');
+        userProfileBadge.classList.remove('flex');
+      }
+
+      function checkSession() {
+        const user = readStorage('cyber_user_session', null);
+
+        if (user) {
+          setLoggedInUser(user);
+        } else {
+          setLoggedOutUser();
+        }
+      }
+
+      function openModal() {
+        authModal.classList.remove(
+          'opacity-0',
+          'pointer-events-none'
+        );
+
+        authModalCard.classList.remove('scale-95');
+        authModalCard.classList.add('scale-100');
+      }
+
+      function closeModal() {
+        authModal.classList.add(
+          'opacity-0',
+          'pointer-events-none'
+        );
+
+        authModalCard.classList.remove('scale-100');
+        authModalCard.classList.add('scale-95');
+      }
+
+      openAuthBtn.addEventListener('click', openModal);
+      closeAuthBtn.addEventListener('click', closeModal);
+
+      document.addEventListener('keydown', (event) => {
+        if (event.key === 'Escape') {
+          closeModal();
+          closeGooglePopup();
+        }
+      });
+
+      function setAuthMode(mode) {
+        authMode = mode;
+
+        const isRegister = mode === 'register';
+
+        fieldName.classList.toggle('hidden', !isRegister);
+        tabRegister.classList.toggle('active', isRegister);
+        tabLogin.classList.toggle('active', !isRegister);
+
+        submitAuthBtn.innerHTML = isRegister
+          ? `
+            <span class="flex items-center justify-center gap-2">
+              <i class="fa-solid fa-rocket"></i>
+              สร้างบัญชีและเริ่มใช้งาน
+            </span>
+          `
+          : `
+            <span class="flex items-center justify-center gap-2">
+              <i class="fa-solid fa-right-to-bracket"></i>
+              เข้าสู่ระบบ
+            </span>
+          `;
+      }
+
+      tabLogin.addEventListener('click', () => {
+        setAuthMode('login');
+      });
+
+      tabRegister.addEventListener('click', () => {
+        setAuthMode('register');
+      });
+
+      $('auth-form').addEventListener('submit', (event) => {
+        event.preventDefault();
+
+        const name = $('input-name').value.trim();
+        const email = $('input-email').value.trim();
+        const password = $('input-password').value;
+        const captcha = $('recaptcha-check').checked;
+
+        if (!captcha) {
+          showToast('กรุณายืนยันว่าไม่ใช่โปรแกรมอัตโนมัติ', 'error');
+          return;
+        }
+
+        if (password.length < 4) {
+          showToast('รหัสผ่านต้องมีอย่างน้อย 4 ตัวอักษร', 'error');
+          return;
+        }
+
+        const finalName =
+          name || email.split('@')[0] || 'Cyber User';
+
+        const user = {
+          name: finalName,
+          email,
+          avatar:
+            `https://api.dicebear.com/7.x/bottts/svg?seed=${encodeURIComponent(finalName)}`
+        };
+
+        writeStorage('cyber_user_session', user);
+        setLoggedInUser(user);
+        closeModal();
+
+        showToast(
+          authMode === 'register'
+            ? 'สร้างบัญชีสำเร็จ!'
+            : 'เข้าสู่ระบบสำเร็จ!'
+        );
+      });
+
+      logoutBtn.addEventListener('click', () => {
+        localStorage.removeItem('cyber_user_session');
+        setLoggedOutUser();
+        showToast('ออกจากระบบเรียบร้อยแล้ว');
+      });
+
+      // -----------------------------
+      // Google Mock
+      // -----------------------------
+
+      googleAuthBtn.addEventListener('click', () => {
+        googlePopup.classList.remove('hidden');
+        googlePopup.classList.add('flex');
+      });
+
+      function closeGooglePopup() {
+        googlePopup.classList.add('hidden');
+        googlePopup.classList.remove('flex');
+      }
+
+      closeGoogleBtn.addEventListener('click', closeGooglePopup);
+
+      mockGoogleAccount.addEventListener('click', () => {
+        const user = {
+          name: 'Cyber Google User',
+          email: 'user.google@gmail.com',
+          avatar:
+            'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150'
+        };
+
+        writeStorage('cyber_user_session', user);
+        setLoggedInUser(user);
+        closeGooglePopup();
+        closeModal();
+
+        showToast('เข้าสู่ระบบด้วย Google เรียบร้อยแล้ว');
+      });
+
+      // -----------------------------
+      // Toast
+      // -----------------------------
+
+      let toastTimer = null;
+
+      function showToast(message, type = 'success') {
+        const toast = $('toast');
+        const icon = $('toast-icon');
+
+        $('toast-msg').textContent = message;
+
+        icon.className =
+          type === 'error'
+            ? 'fa-solid fa-triangle-exclamation text-lg text-rose-400'
+            : 'fa-solid fa-circle-check text-lg text-cyan-400';
+
+        toast.classList.remove('translate-y-20', 'opacity-0');
+
+        clearTimeout(toastTimer);
+
+        toastTimer = setTimeout(() => {
+          toast.classList.add('translate-y-20', 'opacity-0');
+        }, 3000);
+      }
+
+      // -----------------------------
+      // Error Handler
+      // -----------------------------
+
+      window.addEventListener('error', (event) => {
+        const errorBox = $('error-box');
+
+        errorBox.textContent =
+          'เกิดข้อผิดพลาดในระบบ:\n\n' +
+          (event.error?.stack || event.message);
+
+        errorBox.style.display = 'block';
+
+        // ต่อให้เกิด Error ก็ยังเปิดหน้าเว็บได้
+        showApp();
+      });
+
+      // -----------------------------
+      // Init
+      // -----------------------------
+
+      function initApp() {
+        renderFiles();
+        switchFile('bot.js');
+        checkSession();
+        initLoading();
+      }
+
+      if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', initApp);
+      } else {
+        initApp();
+      }
+    })();
+  </script>
+</body>
+
+</html>
