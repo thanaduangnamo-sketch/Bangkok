@@ -3,7 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Somtank Hub | Premium Roblox Scripts</title>
+    <title>Somtank.hub | ศูนย์รวมสคริปต์ Roblox ยอดฮิต</title>
+    <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
         tailwind.config = {
@@ -11,374 +12,436 @@
             theme: {
                 extend: {
                     colors: {
-                        darkBg: '#050202',
-                        cardBg: '#0f0505',
-                        neonRed: '#ef4444',
-                        neonDarkRed: '#991b1b',
+                        darkred: '#8b0000',
+                        crimson: '#dc2626',
+                        lightred: '#ef4444',
+                        cardbg: '#120505',
+                        darkbg: '#080202'
                     }
                 }
             }
         }
     </script>
+    <!-- FontAwesome & Google Fonts -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;500;600;700;800&family=Fira+Code:wght@400;500&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <style>
         body {
-            font-family: 'Prompt', sans-serif;
-            background-color: #050202;
-            color: #f8fafc;
+            font-family: 'Kanit', sans-serif;
+            background-color: #080202;
+            color: #f3f4f6;
             overflow-x: hidden;
-            background-image: radial-gradient(circle at 50% 0%, rgba(220, 38, 38, 0.15) 0%, transparent 50%);
-            background-attachment: fixed;
-        }
-        .glass-panel {
-            background: rgba(15, 5, 5, 0.85);
-            backdrop-filter: blur(16px);
-            border: 1px solid rgba(239, 68, 68, 0.25);
         }
         .glow-red {
-            box-shadow: 0 0 35px -5px rgba(239, 68, 68, 0.35);
+            box-shadow: 0 0 25px rgba(220, 38, 38, 0.4);
         }
-        .glow-text {
-            text-shadow: 0 0 20px rgba(239, 68, 68, 0.6);
+        .glow-red-sm {
+            box-shadow: 0 0 10px rgba(220, 38, 38, 0.3);
         }
+        .bg-gradient-red {
+            background: linear-gradient(135deg, #7f1d1d 0%, #180303 100%);
+        }
+        /* Custom Scrollbar */
         ::-webkit-scrollbar {
             width: 8px;
-            height: 8px;
         }
         ::-webkit-scrollbar-track {
-            background: #050202;
+            background: #080202;
         }
         ::-webkit-scrollbar-thumb {
-            background: #2a0808;
+            background: #7f1d1d;
             border-radius: 4px;
         }
         ::-webkit-scrollbar-thumb:hover {
-            background: #450a0a;
-        }
-        .tab-content {
-            display: none;
-        }
-        .tab-content.active {
-            display: block;
-            animation: fadeIn 0.4s ease-in-out forwards;
-        }
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(8px); }
-            to { opacity: 1; transform: translateY(0); }
+            background: #dc2626;
         }
     </style>
 </head>
-<body class="min-h-screen flex flex-col selection:bg-red-500 selection:text-white">
+<body class="bg-darkbg text-gray-100 min-h-screen flex flex-col selection:bg-red-600 selection:text-white">
 
-    <header class="sticky top-0 z-50 glass-panel border-b border-red-950/50">
+    <!-- Navbar -->
+    <header class="sticky top-0 z-50 bg-darkbg/90 backdrop-blur-md border-b border-red-900/40">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
-            <div class="flex items-center space-x-3 cursor-pointer group" onclick="switchTab('home')">
-                <div class="w-11 h-11 rounded-xl bg-gradient-to-tr from-red-600 via-rose-700 to-black flex items-center justify-center glow-red transition-transform group-hover:scale-105 border border-red-500/40">
-                    <i class="fa-solid fa-terminal text-white text-xl"></i>
+            <div class="flex items-center space-x-3 cursor-pointer" onclick="switchTab('home')">
+                <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-red-700 to-red-500 flex items-center justify-center glow-red-sm">
+                    <i class="fa-solid fa-code text-white text-lg"></i>
                 </div>
-                <div>
-                    <span class="text-xl font-bold bg-gradient-to-r from-red-500 via-rose-400 to-orange-500 bg-clip-text text-transparent">
-                        SOMTANK<span class="text-red-500 font-extrabold">.HUB</span>
-                    </span>
-                    <div class="flex items-center space-x-1.5 text-[10px] text-emerald-400 font-medium">
-                        <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
-                        <span>STATUS: UNDETECTED</span>
-                    </div>
-                </div>
+                <span class="text-2xl font-bold tracking-wider text-transparent bg-clip-text bg-gradient-to-r from-red-500 via-rose-400 to-white">
+                    SOMTANK<span class="text-red-600">.HUB</span>
+                </span>
             </div>
 
+            <!-- Nav Links -->
             <nav class="hidden md:flex items-center space-x-2">
-                <button onclick="switchTab('home')" id="nav-btn-home" class="nav-tab px-5 py-2.5 rounded-xl font-medium text-sm transition-all text-red-400 bg-red-950/40 border border-red-500/30 glow-red">
+                <button onclick="switchTab('home')" id="nav-home" class="nav-btn px-5 py-2 rounded-xl text-sm font-medium transition-all duration-300 bg-red-600/20 text-red-400 border border-red-600/40">
                     <i class="fa-solid fa-house mr-2"></i>หน้าหลัก
                 </button>
-                <button onclick="switchTab('hub')" id="nav-btn-hub" class="nav-tab px-5 py-2.5 rounded-xl font-medium text-sm transition-all text-slate-300 hover:text-white hover:bg-white/5">
-                    <i class="fa-solid fa-code mr-2"></i>แจกสคริปต์
+                <button onclick="switchTab('scripts')" id="nav-scripts" class="nav-btn px-5 py-2 rounded-xl text-sm font-medium transition-all duration-300 text-gray-300 hover:text-white hover:bg-red-950/40">
+                    <i class="fa-solid fa-terminal mr-2"></i>แจกสคริปต์
+                </button>
+                <button onclick="switchTab('tutorial')" id="nav-tutorial" class="nav-btn px-5 py-2 rounded-xl text-sm font-medium transition-all duration-300 text-gray-300 hover:text-white hover:bg-red-950/40">
+                    <i class="fa-solid fa-book-open mr-2"></i>วิธีใช้งาน
                 </button>
             </nav>
 
-            <div class="flex md:hidden items-center">
-                <button onclick="toggleMobileMenu()" class="p-2.5 rounded-xl glass-panel text-slate-300 hover:text-white focus:outline-none">
-                    <i class="fa-solid fa-bars text-xl" id="mobileMenuIcon"></i>
+            <!-- Mobile Menu Button -->
+            <div class="md:hidden">
+                <button onclick="toggleMobileMenu()" class="p-2 text-gray-300 hover:text-white focus:outline-none">
+                    <i class="fa-solid fa-bars text-2xl"></i>
                 </button>
             </div>
         </div>
 
-        <div id="mobileMenu" class="hidden md:hidden px-4 pt-3 pb-5 space-y-2 glass-panel border-t border-red-950/50">
-            <button onclick="switchTab('home'); toggleMobileMenu();" class="w-full text-left px-4 py-3 rounded-xl text-sm font-medium text-red-400 bg-red-950/40">
-                <i class="fa-solid fa-house mr-3"></i>หน้าหลัก
+        <!-- Mobile Menu Dropdown -->
+        <div id="mobile-menu" class="hidden md:hidden bg-darkbg border-b border-red-900/40 px-4 pt-2 pb-4 space-y-2">
+            <button onclick="switchTab('home'); toggleMobileMenu()" class="block w-full text-left px-4 py-2 rounded-lg text-sm font-medium text-gray-200 hover:bg-red-900/30">
+                <i class="fa-solid fa-house mr-2"></i>หน้าหลัก
             </button>
-            <button onclick="switchTab('hub'); toggleMobileMenu();" class="w-full text-left px-4 py-3 rounded-xl text-sm font-medium text-slate-300 hover:bg-white/5">
-                <i class="fa-solid fa-code mr-3"></i>แจกสคริปต์
+            <button onclick="switchTab('scripts'); toggleMobileMenu()" class="block w-full text-left px-4 py-2 rounded-lg text-sm font-medium text-gray-200 hover:bg-red-900/30">
+                <i class="fa-solid fa-terminal mr-2"></i>แจกสคริปต์
+            </button>
+            <button onclick="switchTab('tutorial'); toggleMobileMenu()" class="block w-full text-left px-4 py-2 rounded-lg text-sm font-medium text-gray-200 hover:bg-red-900/30">
+                <i class="fa-solid fa-book-open mr-2"></i>วิธีใช้งาน
             </button>
         </div>
     </header>
 
+    <!-- Main Content Container -->
     <main class="flex-grow">
-        
-        <div id="tab-home" class="tab-content active">
-            <div class="relative overflow-hidden pt-20 pb-28 lg:pt-32 lg:pb-40">
-                <div class="absolute top-1/4 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[350px] bg-red-600/15 blur-[140px] rounded-full pointer-events-none"></div>
+
+        <!-- TAB 1: HOME -->
+        <section id="tab-home" class="tab-content">
+            <!-- Hero Section -->
+            <div class="relative overflow-hidden py-20 lg:py-32">
+                <!-- Glowing background circles -->
+                <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-96 h-96 bg-red-600/15 rounded-full blur-3xl pointer-events-none"></div>
                 
                 <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 text-center">
-                    <div class="inline-flex items-center space-x-2 px-4 py-1.5 rounded-full bg-red-950/60 border border-red-500/30 text-red-400 text-xs md:text-sm font-medium mb-8 glow-red">
-                        <i class="fa-solid fa-bolt-lightning text-amber-400"></i>
-                        <span>ศูนย์รวมสคริปต์ Roblox โทนแดงดำสุดเท่ อัปเดตสดใหม่</span>
-                    </div>
-
-                    <h1 class="text-4xl sm:text-6xl lg:text-7xl font-extrabold tracking-tight mb-6">
-                        คลังสคริปต์ Roblox <br/>
-                        <span class="bg-gradient-to-r from-red-500 via-rose-400 to-orange-500 bg-clip-text text-transparent glow-text">
-                            ปลอดภัย รันลื่นไหล 100%
-                        </span>
-                    </h1>
-
-                    <p class="max-w-2xl mx-auto text-base sm:text-lg text-slate-400 mb-10 font-light leading-relaxed">
-                        แหล่งรวมสคริปต์เกม Roblox ยอดฮิต คัดลอกโค้ดไปรันง่ายๆ รองรับ Executor ทุกรุ่น ระบบเสถียร ปลอดภัย ไม่มีไวรัส
-                    </p>
-
-                    <div class="flex flex-col sm:flex-row items-center justify-center gap-4">
-                        <button onclick="switchTab('hub')" class="w-full sm:w-auto px-8 py-4 rounded-xl bg-gradient-to-r from-red-600 via-rose-600 to-black text-white font-semibold text-base shadow-lg glow-red hover:scale-105 transition-all flex items-center justify-center space-x-3 border border-red-500/40">
-                            <i class="fa-solid fa-rocket text-lg"></i>
-                            <span>เข้าสู่คลังสคริปต์ทั้งหมด</span>
-                        </button>
-                    </div>
-
-                    <div class="mt-20 grid grid-cols-2 md:grid-cols-4 gap-4 max-w-5xl mx-auto">
-                        <div class="glass-panel p-6 rounded-2xl border border-red-500/20 text-center">
-                            <div class="text-3xl sm:text-4xl font-extrabold text-red-500 mb-1">1</div>
-                            <div class="text-xs sm:text-sm text-slate-400 font-medium">สคริปต์ในระบบ</div>
-                        </div>
-                        <div class="glass-panel p-6 rounded-2xl border border-red-500/20 text-center">
-                            <div class="text-3xl sm:text-4xl font-extrabold text-rose-400 mb-1">100%</div>
-                            <div class="text-xs sm:text-sm text-slate-400 font-medium">ความปลอดภัย</div>
-                        </div>
-                        <div class="glass-panel p-6 rounded-2xl border border-red-500/20 text-center">
-                            <div class="text-3xl sm:text-4xl font-extrabold text-amber-400 mb-1">Free</div>
-                            <div class="text-xs sm:text-sm text-slate-400 font-medium">ใช้งานฟรีตลอดชีพ</div>
-                        </div>
-                        <div class="glass-panel p-6 rounded-2xl border border-red-500/20 text-center">
-                            <div class="text-3xl sm:text-4xl font-extrabold text-emerald-400 mb-1">24/7</div>
-                            <div class="text-xs sm:text-sm text-slate-400 font-medium">ออนไลน์ตลอดเวลา</div>
-                        </div>
-                    </div>
-
-                </div>
-            </div>
-        </div>
-
-        <div id="tab-hub" class="tab-content">
-            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-                
-                <div class="flex flex-col md:flex-row items-center justify-between gap-4 mb-8">
-                    <div>
-                        <h2 class="text-3xl font-extrabold text-white">คลังแจกสคริปต์</h2>
-                        <p class="text-sm text-slate-400 mt-1">ค้นหาและคัดลอกสคริปต์ Roblox คุณภาพสูงไปใช้งานได้ทันที</p>
+                    <div class="inline-flex items-center space-x-2 px-4 py-1.5 rounded-full bg-red-950/60 border border-red-800/60 text-red-400 text-xs sm:text-sm font-medium mb-6 glow-red-sm">
+                        <i class="fa-solid fa-shield-halved text-red-500"></i>
+                        <span>สคริปต์ปลอดภัย ใช้งานได้ทุกแมพ อัปเดตใหม่ล่าสุด 2026</span>
                     </div>
                     
-                    <div class="w-full md:w-80 relative">
-                        <i class="fa-solid fa-search absolute left-4 top-1/2 -translate-y-1/2 text-slate-400"></i>
-                        <input type="text" id="searchInput" oninput="filterScripts()" placeholder="ค้นหาสคริปต์หรือเกม..." class="w-full pl-11 pr-4 py-3 rounded-xl glass-panel text-sm text-white placeholder-slate-400 focus:outline-none focus:border-red-500 transition-all">
+                    <h1 class="text-4xl sm:text-6xl lg:text-7xl font-extrabold tracking-tight mb-6">
+                        ยินดีต้อนรับสู่ <span class="text-transparent bg-clip-text bg-gradient-to-r from-red-600 via-rose-500 to-red-400">Somtank.hub</span>
+                    </h1>
+                    
+                    <p class="max-w-2xl mx-auto text-base sm:text-lg text-gray-400 mb-10">
+                        ศูนย์รวมสคริปต์ Roblox คุณภาพสูง รวมฟังก์ชันทรงพลังทั้ง Aimbot, ESP, Player Teleport, Speed และอื่นๆ อีกเพียบ รันง่าย ลื่นไหล ไม่แลค
+                    </p>
+                    
+                    <div class="flex flex-col sm:flex-row items-center justify-center gap-4">
+                        <button onclick="switchTab('scripts')" class="w-full sm:w-auto px-8 py-4 rounded-xl bg-gradient-to-r from-red-600 to-red-700 hover:from-red-500 hover:to-red-600 text-white font-bold text-base shadow-lg glow-red transition-all duration-300 transform hover:-translate-y-0.5">
+                            <i class="fa-solid fa-terminal mr-2"></i> ดูสคริปต์ทั้งหมด
+                        </button>
+                        <button onclick="switchTab('tutorial')" class="w-full sm:w-auto px-8 py-4 rounded-xl bg-darkbg border border-red-800/60 hover:bg-red-950/30 text-gray-200 font-bold text-base transition-all duration-300">
+                            <i class="fa-solid fa-circle-play text-red-500 mr-2"></i> วิธีใช้งานสคริปต์
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Features Cards Grid -->
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-24">
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                    <!-- Feature 1 -->
+                    <div class="p-8 rounded-2xl bg-cardbg border border-red-900/30 hover:border-red-600/60 transition-all duration-300 group">
+                        <div class="w-14 h-14 rounded-xl bg-red-950/60 border border-red-800/50 flex items-center justify-center text-red-500 text-2xl mb-6 group-hover:bg-red-600 group-hover:text-white transition-all duration-300">
+                            <i class="fa-solid fa-bolt"></i>
+                        </div>
+                        <h3 class="text-xl font-bold mb-3 text-white">ทำงานรวดเร็ว & ลื่นไหล</h3>
+                        <p class="text-gray-400 text-sm leading-relaxed">
+                            ตัดฟังก์ชันที่ไม่จำเป็นออก เพื่อให้สคริปต์ทำงานเบาและรวดเร็วที่สุด เหมาะสำหรับทั้งมือถือและคอมพิวเตอร์
+                        </p>
+                    </div>
+
+                    <!-- Feature 2 -->
+                    <div class="p-8 rounded-2xl bg-cardbg border border-red-900/30 hover:border-red-600/60 transition-all duration-300 group">
+                        <div class="w-14 h-14 rounded-xl bg-red-950/60 border border-red-800/50 flex items-center justify-center text-red-500 text-2xl mb-6 group-hover:bg-red-600 group-hover:text-white transition-all duration-300">
+                            <i class="fa-solid fa-crosshairs"></i>
+                        </div>
+                        <h3 class="text-xl font-bold mb-3 text-white">Aimbot & ESP ขั้นเทพ</h3>
+                        <p class="text-gray-400 text-sm leading-relaxed">
+                            ระบบล็อกเป้าหมายอัจฉริยะ ปรับแต่งค่า FOV และความเนียนได้ตามต้องการ พร้อมมองทะลุกำแพง (ESP) ชัดเจน
+                        </p>
+                    </div>
+
+                    <!-- Feature 3 -->
+                    <div class="p-8 rounded-2xl bg-cardbg border border-red-900/30 hover:border-red-600/60 transition-all duration-300 group">
+                        <div class="w-14 h-14 rounded-xl bg-red-950/60 border border-red-800/50 flex items-center justify-center text-red-500 text-2xl mb-6 group-hover:bg-red-600 group-hover:text-white transition-all duration-300">
+                            <i class="fa-solid fa-rotate"></i>
+                        </div>
+                        <h3 class="text-xl font-bold mb-3 text-white">อัปเดตต่อเนื่อง</h3>
+                        <p class="text-gray-400 text-sm leading-relaxed">
+                            ทีมงานอัปเดตสคริปต์ให้อย่างสม่ำเสมอ เพื่อให้แน่ใจว่าใช้งานได้จริงและปลอดภัยจากระบบป้องกันของเกม
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- TAB 2: SCRIPTS HUB -->
+        <section id="tab-scripts" class="tab-content hidden py-12">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <!-- Header Title & Search -->
+                <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-10">
+                    <div>
+                        <h2 class="text-3xl font-extrabold tracking-tight text-white mb-2">ศูนย์รวมสคริปต์ (Script Hub)</h2>
+                        <p class="text-gray-400 text-sm">เลือกสคริปต์ที่คุณต้องการใช้งาน นำไปใส่ตัวรันได้ทันที</p>
+                    </div>
+                    <div class="relative w-full md:w-80">
+                        <span class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-gray-400">
+                            <i class="fa-solid fa-magnifying-glass"></i>
+                        </span>
+                        <input type="text" id="searchInput" oninput="filterScripts()" placeholder="ค้นหาสคริปต์..." class="w-full pl-10 pr-4 py-2.5 rounded-xl bg-cardbg border border-red-900/40 text-sm text-gray-200 focus:outline-none focus:border-red-600 transition-colors">
                     </div>
                 </div>
 
-                <div class="flex flex-wrap gap-2 mb-8">
-                    <button onclick="filterCategory('all')" id="cat-all" class="category-btn px-4 py-2 rounded-xl text-xs sm:text-sm font-medium transition-all bg-red-600 text-white shadow-md glow-red">
-                        ทั้งหมด
-                    </button>
-                    <button onclick="filterCategory('Universal')" id="cat-Universal" class="category-btn px-4 py-2 rounded-xl text-xs sm:text-sm font-medium transition-all bg-red-950/40 text-slate-300 hover:bg-white/5 border border-red-500/20">
-                        Universal
-                    </button>
+                <!-- Category Filters -->
+                <div class="flex items-center space-x-2 overflow-x-auto pb-4 mb-8">
+                    <button onclick="filterCategory('all')" id="cat-all" class="cat-btn px-4 py-2 rounded-xl text-sm font-medium bg-red-600 text-white shrink-0 transition-colors">ทั้งหมด</button>
+                    <button onclick="filterCategory('Universal')" id="cat-Universal" class="cat-btn px-4 py-2 rounded-xl text-sm font-medium bg-cardbg text-gray-300 border border-red-900/40 hover:bg-red-950/40 shrink-0 transition-colors">Universal / ทุกแมพ</button>
                 </div>
 
-                <div id="scriptGrid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                    <!-- Somtank.hub Script Card -->
-                    <div class="script-card glass-panel rounded-2xl p-6 border border-red-500/30 hover:border-red-500/60 transition-all flex flex-col justify-between group glow-red" data-title="somtank.hub universal aimbot esp" data-category="Universal">
+                <!-- Scripts Grid -->
+                <div id="scriptsGrid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                    <!-- Script Card: Somtank.hub -->
+                    <div class="script-card rounded-2xl bg-cardbg border border-red-900/40 hover:border-red-600 transition-all duration-300 flex flex-col justify-between p-6 group" data-category="Universal" data-title="Somtank.hub Universal Script">
                         <div>
                             <div class="flex items-center justify-between mb-4">
-                                <span class="px-3 py-1 rounded-full text-xs font-semibold bg-red-950/80 text-red-400 border border-red-500/40">
-                                    Universal
+                                <span class="px-3 py-1 rounded-lg text-xs font-semibold bg-red-950 text-red-400 border border-red-800/60">Universal</span>
+                                <span class="inline-flex items-center text-xs font-medium text-emerald-400 bg-emerald-950/60 px-2.5 py-1 rounded-full border border-emerald-800/40">
+                                    <i class="fa-solid fa-circle-check mr-1.5 text-[10px]"></i>Verified
                                 </span>
-                                <div class="flex items-center space-x-1.5 text-emerald-400 text-xs font-medium bg-emerald-950/40 px-2.5 py-1 rounded-full border border-emerald-500/30">
-                                    <i class="fa-solid fa-shield-halved"></i>
-                                    <span>Verified</span>
-                                </div>
                             </div>
-                            
-                            <h3 class="text-xl font-bold text-white mb-2 group-hover:text-red-400 transition-colors">
-                                Somtank.hub
-                            </h3>
-                            <p class="text-slate-400 text-sm mb-6 leading-relaxed">
-                                สคริปต์ยูนิเวอร์แซลยอดฮิต ระบบ Aimbot, ESP, Player Teleport, Speed, Fly และ Anti-AFK ครบครันในตัวเดียว
+                            <h3 class="text-xl font-bold text-white mb-2 group-hover:text-red-400 transition-colors">Somtank.hub</h3>
+                            <p class="text-gray-400 text-sm mb-6 leading-relaxed">
+                                สคริปต์ยอดฮิตใช้ได้ทุกแมพ ฟังก์ชันครบครัน: Aimbot แม่นยำสูง, ESP มองทะลุ, Player Teleport วาร์ปหาผู้เล่น, Speed ฮ็ค และบินทะลุกำแพง!
                             </p>
                         </div>
-
-                        <div class="flex items-center gap-2 pt-4 border-t border-red-950/60">
-                            <button onclick="openModal('Somtank.hub', 'loadstring(game:HttpGet(\&quot;https://loader.somtank.space/loader/univeral-script.lua\&quot;))()')" class="flex-1 py-2.5 px-4 rounded-xl bg-red-950/60 hover:bg-red-900/60 text-red-400 hover:text-white text-xs sm:text-sm font-semibold transition-all border border-red-500/30 flex items-center justify-center space-x-2">
-                                <i class="fa-solid fa-code"></i>
-                                <span>ดูโค้ด Lua</span>
+                        <div class="flex items-center space-x-3 pt-4 border-t border-red-950">
+                            <button onclick="openScriptModal('Somtank.hub', 'loadstring(game:HttpGet(\x22https://loader.somtank.space/loader/univeral-script.lua\x22))()')" class="flex-1 py-2.5 px-4 rounded-xl bg-red-950/80 hover:bg-red-900 border border-red-800/60 text-white text-sm font-medium flex items-center justify-center transition-colors">
+                                <i class="fa-solid fa-code mr-2 text-red-400"></i> ดูโค้ด Lua
                             </button>
-                            <button onclick="copyScript('loadstring(game:HttpGet(\'https://loader.somtank.space/loader/univeral-script.lua\'))()', this)" class="py-2.5 px-4 rounded-xl bg-gradient-to-r from-red-600 to-rose-600 hover:from-red-500 hover:to-rose-500 text-white text-xs sm:text-sm font-semibold transition-all shadow-md flex items-center justify-center space-x-2">
-                                <i class="fa-regular fa-copy"></i>
-                                <span>คัดลอก</span>
+                            <button onclick="copyScript('loadstring(game:HttpGet(\x22https://loader.somtank.space/loader/univeral-script.lua\x22))()')" class="py-2.5 px-4 rounded-xl bg-red-600 hover:bg-red-500 text-white text-sm font-medium flex items-center justify-center transition-colors shadow-md">
+                                <i class="fa-solid fa-copy mr-1.5"></i> คัดลอก
                             </button>
                         </div>
                     </div>
                 </div>
 
+                <!-- Empty State (Hidden by default) -->
+                <div id="noScripts" class="hidden text-center py-20">
+                    <div class="w-16 h-16 mx-auto mb-4 rounded-full bg-red-950/50 flex items-center justify-center text-red-500 text-2xl border border-red-900/60">
+                        <i class="fa-solid fa-ghost"></i>
+                    </div>
+                    <h3 class="text-lg font-bold text-white mb-1">ไม่พบสคริปต์ที่คุณค้นหา</h3>
+                    <p class="text-gray-400 text-sm">ลองเปลี่ยนคำค้นหาใหม่อีกครั้ง</p>
+                </div>
             </div>
-        </div>
+        </section>
+
+        <!-- TAB 3: TUTORIAL / HOW TO USE -->
+        <section id="tab-tutorial" class="tab-content hidden py-12">
+            <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="text-center mb-10">
+                    <h2 class="text-3xl font-extrabold tracking-tight text-white mb-2">วิธีใช้งานสคริปต์</h2>
+                    <p class="text-gray-400 text-sm">ดูคลิปสอนใช้งานและทำตามขั้นตอนง่ายๆ ด้านล่างนี้ได้เลย</p>
+                </div>
+
+                <!-- YouTube Video Embed -->
+                <div class="rounded-2xl overflow-hidden bg-cardbg border border-red-900/40 shadow-2xl mb-10">
+                    <div class="relative w-full aspect-video">
+                        <iframe class="absolute top-0 left-0 w-full h-full" src="https://www.youtube.com/embed/Dy-QjEso7p4?start=140" title="วิธีใช้งานสคริปต์ Somtank.hub" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
+                    </div>
+                    <div class="p-6 bg-gradient-to-r from-red-950/40 to-cardbg border-t border-red-950">
+                        <h3 class="text-lg font-bold text-white mb-1 flex items-center">
+                            <i class="fa-brands fa-youtube text-red-600 mr-2 text-xl"></i> แจกสคริปต์ฟรี ใช้ได้ทุกแมพ 💥บิน | วิ่งเร็ว | Aimbot
+                        </h3>
+                        <p class="text-gray-400 text-sm">รับชมวิดีโอรีวิวและวิธีติดตั้งสคริปต์ทีละขั้นตอนจากช่อง Somtank</p>
+                    </div>
+                </div>
+
+                <!-- Step-by-Step Guide -->
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12">
+                    <div class="p-6 rounded-2xl bg-cardbg border border-red-900/30">
+                        <div class="w-10 h-10 rounded-xl bg-red-600 text-white font-bold flex items-center justify-center mb-4">1</div>
+                        <h4 class="text-lg font-bold text-white mb-2">คัดลอกโค้ดสคริปต์</h4>
+                        <p class="text-gray-400 text-sm">ไปที่หน้า <button onclick="switchTab('scripts')" class="text-red-400 underline font-medium">แจกสคริปต์</button> แล้วกดปุ่มคัดลอกโค้ด Lua ของ Somtank.hub</p>
+                    </div>
+                    <div class="p-6 rounded-2xl bg-cardbg border border-red-900/30">
+                        <div class="w-10 h-10 rounded-xl bg-red-600 text-white font-bold flex items-center justify-center mb-4">2</div>
+                        <h4 class="text-lg font-bold text-white mb-2">นำไปใส่ในตัวรัน</h4>
+                        <p class="text-gray-400 text-sm">เปิดเกม Roblox เข้าสู่แมพที่ต้องการ แล้วนำสคริปต์ไปวางใน Executor (ตัวรัน) ของคุณ</p>
+                    </div>
+                    <div class="p-6 rounded-2xl bg-cardbg border border-red-900/30">
+                        <div class="w-10 h-10 rounded-xl bg-red-600 text-white font-bold flex items-center justify-center mb-4">3</div>
+                        <h4 class="text-lg font-bold text-white mb-2">รันและสนุกได้เลย</h4>
+                        <p class="text-gray-400 text-sm">กดปุ่ม Executed แล้วสนุกไปกับฟังก์ชันเสริมสุดเทพ เช่น Aimbot, ESP และบินได้ทันที!</p>
+                    </div>
+                </div>
+            </div>
+        </section>
 
     </main>
 
-    <div id="codeModal" class="fixed inset-0 z-50 bg-black/80 backdrop-blur-md hidden items-center justify-center p-4">
-        <div class="glass-panel w-full max-w-2xl rounded-3xl border border-red-500/40 shadow-2xl p-6 md:p-8 glow-red">
-            <div class="flex items-center justify-between mb-4">
-                <div class="flex items-center space-x-3">
-                    <div class="w-10 h-10 rounded-xl bg-red-950/80 border border-red-500/40 flex items-center justify-center text-red-400">
-                        <i class="fa-solid fa-terminal"></i>
-                    </div>
-                    <div>
-                        <h3 id="modalTitle" class="text-lg font-bold text-white">Lua Script</h3>
-                        <p class="text-xs text-slate-400">คัดลอกโค้ดด้านล่างนี้ไปรันใน Executor ของคุณ</p>
-                    </div>
+    <!-- Footer -->
+    <footer class="bg-darkbg border-t border-red-900/40 py-8 text-center text-gray-400 text-sm">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <p class="mb-2 font-medium text-gray-300">Somtank.hub &copy; 2026 — All Rights Reserved.</p>
+            <p class="text-xs text-gray-400">แพลตฟอร์มรวมสคริปต์ Roblox สำหรับผู้เล่นทุกคน</p>
+        </div>
+    </footer>
+
+    <!-- Lua Code Modal -->
+    <div id="scriptModal" class="fixed inset-0 z-50 hidden bg-black/80 backdrop-blur-sm flex items-center justify-center p-4">
+        <div class="bg-cardbg border border-red-800/60 rounded-2xl w-full max-w-2xl overflow-hidden shadow-2xl glow-red-sm animate-in fade-in zoom-in duration-200">
+            <div class="flex items-center justify-between px-6 py-4 border-b border-red-900/40">
+                <h3 id="modalTitle" class="text-lg font-bold text-white flex items-center">
+                    <i class="fa-solid fa-code text-red-500 mr-2"></i> โค้ด Lua
+                </h3>
+                <button onclick="closeScriptModal()" class="text-gray-400 hover:text-white p-1 rounded-lg hover:bg-red-950/50 transition-colors">
+                    <i class="fa-solid fa-xmark text-xl"></i>
+                </button>
+            </div>
+            <div class="p-6">
+                <div class="relative bg-darkbg rounded-xl border border-red-900/40 p-4 font-mono text-sm text-red-300 overflow-x-auto max-h-64 mb-4 select-all">
+                    <pre><code id="modalCode">loadstring(game:HttpGet("https://loader.somtank.space/loader/univeral-script.lua"))()</code></pre>
                 </div>
-                <button onclick="closeModal()" class="w-9 h-9 rounded-xl bg-white/5 hover:bg-white/10 text-slate-400 hover:text-white flex items-center justify-center transition-all">
-                    <i class="fa-solid fa-xmark text-lg"></i>
-                </button>
-            </div>
-
-            <div class="relative mb-6">
-                <pre class="bg-[#050202] border border-red-950/80 p-4 rounded-2xl text-red-300 font-mono text-xs sm:text-sm overflow-x-auto selection:bg-red-600 selection:text-white"><code id="modalCodeText"></code></pre>
-            </div>
-
-            <div class="flex items-center justify-end gap-3">
-                <button onclick="closeModal()" class="px-5 py-2.5 rounded-xl bg-white/5 hover:bg-white/10 text-slate-300 text-sm font-medium transition-all">
-                    ปิด
-                </button>
-                <button id="modalCopyBtn" onclick="copyModalScript()" class="px-6 py-2.5 rounded-xl bg-gradient-to-r from-red-600 to-rose-600 text-white text-sm font-semibold transition-all shadow-md hover:scale-105 flex items-center space-x-2">
-                    <i class="fa-regular fa-copy"></i>
-                    <span>คัดลอกโค้ด</span>
-                </button>
+                <div class="flex items-center justify-end space-x-3">
+                    <button onclick="closeScriptModal()" class="px-5 py-2.5 rounded-xl bg-cardbg border border-red-900/40 text-gray-300 hover:text-white text-sm font-medium transition-colors">
+                        ปิด
+                    </button>
+                    <button onclick="copyModalCode()" class="px-6 py-2.5 rounded-xl bg-red-600 hover:bg-red-500 text-white text-sm font-medium flex items-center transition-colors shadow-md">
+                        <i class="fa-solid fa-copy mr-2"></i> คัดลอกโค้ด
+                    </button>
+                </div>
             </div>
         </div>
     </div>
 
-    <footer class="glass-panel border-t border-red-950/50 mt-auto py-8 text-center text-slate-500 text-sm">
-        <div class="max-w-7xl mx-auto px-4 flex flex-col md:flex-row items-center justify-between gap-4">
-            <div class="flex items-center space-x-2">
-                <span class="text-slate-300 font-bold">SOMTANK HUB</span>
-                <span>&copy; 2026 All rights reserved.</span>
-            </div>
-            <div class="text-slate-400">
-                Designed with Red & Black Cyberpunk Aesthetic
-            </div>
-        </div>
-    </footer>
+    <!-- Notification Toast -->
+    <div id="toast" class="fixed bottom-5 right-5 z-50 transform translate-y-20 opacity-0 transition-all duration-300 flex items-center space-x-3 px-5 py-3 rounded-xl bg-red-950 border border-red-600 text-white shadow-2xl">
+        <i class="fa-solid fa-circle-check text-emerald-400 text-lg"></i>
+        <span id="toastMessage" class="text-sm font-medium">คัดลอกสคริปต์สำเร็จ!</span>
+    </div>
 
+    <!-- JavaScript Application Logic -->
     <script>
-        function switchTab(tabId) {
-            document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
-            document.getElementById(`tab-${tabId}`).classList.add('active');
+        let currentActiveTab = 'home';
+        let currentCategory = 'all';
+        let activeModalCodeText = '';
 
-            document.querySelectorAll('.nav-tab').forEach(btn => {
-                btn.classList.remove('text-red-400', 'bg-red-950/40', 'border', 'border-red-500/30', 'glow-red');
-                btn.classList.add('text-slate-300');
+        function switchTab(tabId) {
+            document.querySelectorAll('.tab-content').forEach(el => el.classList.add('hidden'));
+            document.getElementById(`tab-${tabId}`).classList.remove('hidden');
+
+            document.querySelectorAll('.nav-btn').forEach(btn => {
+                btn.classList.remove('bg-red-600/20', 'text-red-400', 'border', 'border-red-600/40');
+                btn.classList.add('text-gray-300', 'hover:text-white', 'hover:bg-red-950/40');
             });
 
-            const activeBtn = document.getElementById(`nav-btn-${tabId}`);
+            const activeBtn = document.getElementById(`nav-${tabId}`);
             if (activeBtn) {
-                activeBtn.classList.remove('text-slate-300');
-                activeBtn.classList.add('text-red-400', 'bg-red-950/40', 'border', 'border-red-500/30', 'glow-red');
+                activeBtn.classList.remove('text-gray-300', 'hover:text-white', 'hover:bg-red-950/40');
+                activeBtn.classList.add('bg-red-600/20', 'text-red-400', 'border', 'border-red-600/40');
             }
 
+            currentActiveTab = tabId;
             window.scrollTo({ top: 0, behavior: 'smooth' });
         }
 
         function toggleMobileMenu() {
-            const menu = document.getElementById('mobileMenu');
-            const icon = document.getElementById('mobileMenuIcon');
+            const menu = document.getElementById('mobile-menu');
             menu.classList.toggle('hidden');
-            icon.classList.toggle('fa-bars');
-            icon.classList.toggle('fa-xmark');
         }
 
-        let currentCategory = 'all';
-
-        function filterCategory(category) {
-            currentCategory = category;
-            document.querySelectorAll('.category-btn').forEach(btn => {
-                btn.classList.remove('bg-red-600', 'text-white', 'shadow-md', 'glow-red');
-                btn.classList.add('bg-red-950/40', 'text-slate-300', 'border', 'border-red-500/20');
+        function filterCategory(cat) {
+            currentCategory = cat;
+            document.querySelectorAll('.cat-btn').forEach(btn => {
+                btn.classList.remove('bg-red-600', 'text-white');
+                btn.classList.add('bg-cardbg', 'text-gray-300', 'border', 'border-red-900/40');
             });
-
-            const activeBtn = document.getElementById(`cat-${category}`);
-            if (activeBtn) {
-                activeBtn.classList.remove('bg-red-950/40', 'text-slate-300', 'border', 'border-red-500/20');
-                activeBtn.classList.add('bg-red-600', 'text-white', 'shadow-md', 'glow-red');
+            const selectedBtn = document.getElementById(`cat-${cat}`);
+            if (selectedBtn) {
+                selectedBtn.classList.remove('bg-cardbg', 'text-gray-300', 'border', 'border-red-900/40');
+                selectedBtn.classList.add('bg-red-600', 'text-white');
             }
-
-            filterScripts();
+            applyFilters();
         }
 
         function filterScripts() {
+            applyFilters();
+        }
+
+        function applyFilters() {
             const query = document.getElementById('searchInput').value.toLowerCase();
             const cards = document.querySelectorAll('.script-card');
+            let visibleCount = 0;
 
             cards.forEach(card => {
-                const title = card.getAttribute('data-title');
                 const category = card.getAttribute('data-category');
-                const matchesSearch = title.includes(query);
-                const matchesCategory = currentCategory === 'all' || category === currentCategory;
+                const title = card.getAttribute('data-title').toLowerCase();
+                const matchesCat = (currentCategory === 'all' || category === currentCategory);
+                const matchesQuery = title.includes(query);
 
-                if (matchesSearch && matchesCategory) {
-                    card.style.display = 'flex';
+                if (matchesCat && matchesQuery) {
+                    card.classList.remove('hidden');
+                    visibleCount++;
                 } else {
-                    card.style.display = 'none';
+                    card.classList.add('hidden');
                 }
+            });
+
+            const noScripts = document.getElementById('noScripts');
+            if (visibleCount === 0) {
+                noScripts.classList.remove('hidden');
+            } else {
+                noScripts.classList.add('hidden');
+            }
+        }
+
+        function openScriptModal(title, code) {
+            activeModalCodeText = code;
+            document.getElementById('modalTitle').innerHTML = `<i class="fa-solid fa-code text-red-500 mr-2"></i> ${title}`;
+            document.getElementById('modalCode').innerText = code;
+            document.getElementById('scriptModal').classList.remove('hidden');
+        }
+
+        function closeScriptModal() {
+            document.getElementById('scriptModal').classList.add('hidden');
+        }
+
+        function copyScript(code) {
+            navigator.clipboard.writeText(code).then(() => {
+                showToast("คัดลอกโค้ดสคริปต์สำเร็จ!");
+            }).catch(err => {
+                showToast("เกิดข้อผิดพลาดในการคัดลอก", true);
             });
         }
 
-        let activeCodeText = '';
-
-        function openModal(title, code) {
-            activeCodeText = code;
-            document.getElementById('modalTitle').innerText = title;
-            document.getElementById('modalCodeText').innerText = code;
-            const modal = document.getElementById('codeModal');
-            modal.classList.remove('hidden');
-            modal.classList.add('flex');
+        function copyModalCode() {
+            copyScript(activeModalCodeText);
+            closeScriptModal();
         }
 
-        function closeModal() {
-            const modal = document.getElementById('codeModal');
-            modal.classList.remove('flex');
-            modal.classList.add('hidden');
-        }
+        function showToast(message, isError = false) {
+            const toast = document.getElementById('toast');
+            const toastMessage = document.getElementById('toastMessage');
+            toastMessage.innerText = message;
+            
+            if (isError) {
+                toast.classList.remove('bg-red-950', 'border-red-600');
+                toast.classList.add('bg-zinc-900', 'border-red-500');
+            } else {
+                toast.classList.remove('bg-zinc-900', 'border-red-500');
+                toast.classList.add('bg-red-950', 'border-red-600');
+            }
 
-        function copyScript(code, btnElement) {
-            const textarea = document.createElement('textarea');
-            textarea.value = code;
-            document.body.appendChild(textarea);
-            textarea.select();
-            document.execCommand('copy');
-            document.body.removeChild(textarea);
-
-            const originalHTML = btnElement.innerHTML;
-            btnElement.innerHTML = '<i class="fa-solid fa-check"></i><span>คัดลอกแล้ว!</span>';
-            btnElement.classList.remove('from-red-600', 'to-rose-600');
-            btnElement.classList.add('bg-emerald-600');
-
+            toast.classList.remove('translate-y-20', 'opacity-0');
             setTimeout(() => {
-                btnElement.innerHTML = originalHTML;
-                btnElement.classList.remove('bg-emerald-600');
-                btnElement.classList.add('from-red-600', 'to-rose-600');
-            }, 2000);
-        }
-
-        function copyModalScript() {
-            const btn = document.getElementById('modalCopyBtn');
-            copyScript(activeCodeText, btn);
+                toast.classList.add('translate-y-20', 'opacity-0');
+            }, 3000);
         }
     </script>
 </body>
