@@ -1,1479 +1,235 @@
 <!DOCTYPE html>
-<html lang="th" class="h-full bg-slate-950 text-slate-100">
-
+<html lang="th" class="dark">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Cyberpunk Bot Studio</title>
-
-  <script src="https://cdn.tailwindcss.com"></script>
-
-  <link
-    rel="stylesheet"
-    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
-  >
-
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-
-  <link
-    href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500;600&family=Kanit:wght@300;400;500;600;700&display=swap"
-    rel="stylesheet"
-  >
-
-  <script>
-    tailwind.config = {
-      theme: {
-        extend: {
-          fontFamily: {
-            sans: ['Kanit', 'sans-serif'],
-            mono: ['Fira Code', 'monospace']
-          },
-          colors: {
-            neon: {
-              cyan: '#00f3ff',
-              pink: '#ff007f',
-              purple: '#b026ff',
-              green: '#00ff66'
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nexis Hub | Premium Roblox Scripts</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        darkBg: '#050202',
+                        cardBg: '#0f0505',
+                        neonRed: '#ef4444',
+                        neonDarkRed: '#991b1b',
+                    }
+                }
             }
-          },
-          boxShadow: {
-            'neon-cyan':
-              '0 0 15px rgba(0,243,255,.5), 0 0 30px rgba(0,243,255,.2)'
-          }
         }
-      }
-    };
-  </script>
-
-  <style>
-    * {
-      box-sizing: border-box;
-    }
-
-    html,
-    body {
-      min-height: 100%;
-      margin: 0;
-    }
-
-    body {
-      font-family: Kanit, sans-serif;
-    }
-
-    button,
-    input,
-    textarea {
-      font-family: inherit;
-    }
-
-    ::-webkit-scrollbar {
-      width: 6px;
-      height: 6px;
-    }
-
-    ::-webkit-scrollbar-track {
-      background: rgba(15, 23, 42, .7);
-    }
-
-    ::-webkit-scrollbar-thumb {
-      background: rgba(0, 243, 255, .35);
-      border-radius: 10px;
-    }
-
-    .bg-loader {
-      background:
-        linear-gradient(
-          to bottom,
-          rgba(10, 10, 26, .9),
-          rgba(5, 5, 15, .96)
-        ),
-        url("https://i.pinimg.com/736x/d1/50/12/d15012026d745a4302fd5bccffc437a2.jpg");
-      background-size: cover;
-      background-position: center;
-    }
-
-    .bg-main {
-      background:
-        linear-gradient(
-          to bottom,
-          rgba(15, 23, 42, .9),
-          rgba(3, 7, 18, .97)
-        ),
-        url("https://i.pinimg.com/736x/67/93/f5/6793f5e51071422ae664139f6cf47baa.jpg");
-      background-size: cover;
-      background-position: center;
-      background-attachment: fixed;
-    }
-
-    .glass-card {
-      background: rgba(15, 23, 42, .68);
-      backdrop-filter: blur(16px);
-      -webkit-backdrop-filter: blur(16px);
-      border: 1px solid rgba(255, 255, 255, .1);
-    }
-
-    .glass-nav {
-      background: rgba(10, 15, 30, .82);
-      backdrop-filter: blur(20px);
-      -webkit-backdrop-filter: blur(20px);
-      border-bottom: 1px solid rgba(0, 243, 255, .22);
-    }
-
-    .circle-bg {
-      fill: none;
-      stroke: rgba(255, 255, 255, .1);
-      stroke-width: 8;
-    }
-
-    .circle-progress {
-      fill: none;
-      stroke: #00f3ff;
-      stroke-width: 8;
-      stroke-linecap: round;
-      filter: drop-shadow(0 0 8px #00f3ff);
-      transition: stroke-dashoffset .15s linear;
-    }
-
-    @keyframes status-pulse {
-      0% {
-        transform: scale(.95);
-        box-shadow: 0 0 0 0 rgba(0, 255, 102, .7);
-      }
-
-      70% {
-        transform: scale(1);
-        box-shadow: 0 0 0 8px rgba(0, 255, 102, 0);
-      }
-
-      100% {
-        transform: scale(.95);
-        box-shadow: 0 0 0 0 rgba(0, 255, 102, 0);
-      }
-    }
-
-    .status-pulse {
-      animation: status-pulse 2s infinite;
-    }
-
-    .signup-btn {
-      position: relative;
-      background:
-        linear-gradient(
-          135deg,
-          rgba(0, 243, 255, .2),
-          rgba(176, 38, 255, .28)
-        ),
-        rgba(15, 23, 42, .94);
-      border: 1px solid rgba(0, 243, 255, .7);
-      box-shadow:
-        0 0 12px rgba(0, 243, 255, .25),
-        inset 0 0 14px rgba(0, 243, 255, .08);
-      transition: .3s ease;
-    }
-
-    .signup-btn:hover {
-      transform: translateY(-2px) scale(1.02);
-      box-shadow:
-        0 0 18px rgba(0, 243, 255, .65),
-        0 0 35px rgba(176, 38, 255, .3),
-        inset 0 0 18px rgba(0, 243, 255, .15);
-    }
-
-    .signup-btn:active {
-      transform: scale(.98);
-    }
-
-    .signup-icon {
-      width: 30px;
-      height: 30px;
-      display: grid;
-      place-items: center;
-      color: #00f3ff;
-      border-radius: 9px;
-      background: rgba(0, 243, 255, .12);
-      border: 1px solid rgba(0, 243, 255, .4);
-      transition: .3s ease;
-    }
-
-    .signup-btn:hover .signup-icon {
-      color: #fff;
-      background: #00f3ff;
-      box-shadow: 0 0 18px rgba(0, 243, 255, .8);
-      transform: rotate(-8deg) scale(1.08);
-    }
-
-    .signup-shine {
-      position: absolute;
-      top: 0;
-      left: -90%;
-      width: 45%;
-      height: 100%;
-      transform: skewX(-20deg);
-      background: linear-gradient(
-        90deg,
-        transparent,
-        rgba(255, 255, 255, .25),
-        transparent
-      );
-      transition: left .7s ease;
-      pointer-events: none;
-    }
-
-    .signup-btn:hover .signup-shine {
-      left: 140%;
-    }
-
-    .auth-tab {
-      transition: .3s ease;
-    }
-
-    .auth-tab:hover {
-      color: #67e8f9;
-      background: rgba(0, 243, 255, .05);
-    }
-
-    .auth-tab.active {
-      color: #22d3ee;
-      border-color: #22d3ee;
-      background: rgba(0, 243, 255, .06);
-      text-shadow: 0 0 8px rgba(0, 243, 255, .7);
-    }
-
-    .fade-hidden {
-      opacity: 0;
-      pointer-events: none;
-    }
-
-    .error-box {
-      position: fixed;
-      inset: 20px;
-      z-index: 999;
-      display: none;
-      padding: 20px;
-      color: #fecaca;
-      background: #450a0a;
-      border: 1px solid #ef4444;
-      border-radius: 12px;
-      font-family: monospace;
-      white-space: pre-wrap;
-    }
-  </style>
+    </script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;500;600;700;800&family=Fira+Code:wght@400;500&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Prompt', sans-serif;
+            background-color: #050202;
+            color: #f8fafc;
+            overflow-x: hidden;
+            background-image: radial-gradient(circle at 50% 0%, rgba(220, 38, 38, 0.15) 0%, transparent 50%);
+            background-attachment: fixed;
+        }
+        .glass-panel {
+            background: rgba(15, 5, 5, 0.8);
+            backdrop-filter: blur(16px);
+            border: 1px solid rgba(239, 68, 68, 0.2);
+        }
+        .glow-red {
+            box-shadow: 0 0 35px -5px rgba(239, 68, 68, 0.35);
+        }
+        .glow-text {
+            text-shadow: 0 0 20px rgba(239, 68, 68, 0.6);
+        }
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #050202;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #2a0808;
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #450a0a;
+        }
+        .tab-content {
+            display: none;
+        }
+        .tab-content.active {
+            display: block;
+            animation: fadeIn 0.4s ease-in-out forwards;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(8px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+    </style>
 </head>
+<body class="min-h-screen flex flex-col selection:bg-red-500 selection:text-white">
 
-<body class="min-h-screen overflow-x-hidden bg-slate-950">
+    <header class="sticky top-0 z-50 glass-panel border-b border-red-950/50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
+            <div class="flex items-center space-x-3 cursor-pointer group" onclick="switchTab('home')">
+                <div class="w-11 h-11 rounded-xl bg-gradient-to-tr from-red-600 via-rose-700 to-black flex items-center justify-center glow-red transition-transform group-hover:scale-105 border border-red-500/40">
+                    <i class="fa-solid fa-terminal text-white text-xl"></i>
+                </div>
+                <div>
+                    <span class="text-xl font-bold bg-gradient-to-r from-red-500 via-rose-400 to-orange-500 bg-clip-text text-transparent">
+                        NEXIS<span class="text-red-500 font-extrabold">.HUB</span>
+                    </span>
+                    <div class="flex items-center space-x-1.5 text-[10px] text-emerald-400 font-medium">
+                        <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
+                        <span>STATUS: UNDETECTED</span>
+                    </div>
+                </div>
+            </div>
 
-  <!-- Error Fallback -->
-  <div id="error-box" class="error-box"></div>
+            <nav class="hidden md:flex items-center space-x-2">
+                <button onclick="switchTab('home')" id="nav-btn-home" class="nav-tab px-5 py-2.5 rounded-xl font-medium text-sm transition-all text-red-400 bg-red-950/40 border border-red-500/30 glow-red">
+                    <i class="fa-solid fa-house mr-2"></i>หน้าหลัก
+                </button>
+                <button onclick="switchTab('hub')" id="nav-btn-hub" class="nav-tab px-5 py-2.5 rounded-xl font-medium text-sm transition-all text-slate-300 hover:text-white hover:bg-white/5">
+                    <i class="fa-solid fa-code mr-2"></i>แจกสคริปต์
+                </button>
+            </nav>
 
-  <!-- Loading Screen -->
-  <div
-    id="loading-screen"
-    class="fixed inset-0 z-50 flex flex-col items-center justify-center bg-loader transition-opacity duration-700"
-  >
-    <div class="flex flex-col items-center">
-
-      <div class="relative w-48 h-48 sm:w-56 sm:h-56">
-        <svg
-          class="w-full h-full -rotate-90"
-          viewBox="0 0 100 100"
-        >
-          <circle
-            class="circle-bg"
-            cx="50"
-            cy="50"
-            r="42"
-          ></circle>
-
-          <circle
-            id="progress-circle"
-            class="circle-progress"
-            cx="50"
-            cy="50"
-            r="42"
-            stroke-dasharray="263.89"
-            stroke-dashoffset="263.89"
-          ></circle>
-        </svg>
-
-        <div class="absolute inset-0 flex flex-col items-center justify-center">
-          <span
-            id="load-percent"
-            class="text-4xl sm:text-5xl font-bold font-mono text-cyan-400"
-          >
-            0%
-          </span>
-
-          <span class="mt-1 text-xs tracking-widest text-slate-400">
-            System Booting
-          </span>
-        </div>
-      </div>
-
-      <p
-        id="loader-status"
-        class="mt-6 text-sm font-mono text-slate-300 animate-pulse"
-      >
-        กำลังโหลดทรัพยากรระบบ...
-      </p>
-
-      <div class="flex gap-1.5 mt-3">
-        <div class="w-2 h-2 rounded-full bg-cyan-400 animate-ping"></div>
-        <div class="w-2 h-2 rounded-full bg-cyan-400 animate-ping"></div>
-        <div class="w-2 h-2 rounded-full bg-cyan-400 animate-ping"></div>
-      </div>
-    </div>
-  </div>
-
-  <!-- Main App -->
-  <div
-    id="main-app"
-    class="hidden min-h-screen bg-main text-slate-200 opacity-0 transition-opacity duration-700"
-  >
-
-    <!-- Header -->
-    <header
-      class="glass-nav sticky top-0 z-30 flex items-center justify-between px-4 py-3 shadow-lg sm:px-6"
-    >
-      <div class="flex items-center gap-3">
-        <div
-          class="p-2 text-cyan-400 border rounded-lg bg-cyan-500/10 border-cyan-500/30 shadow-neon-cyan"
-        >
-          <i class="text-xl fa-solid fa-code-merge"></i>
+            <div class="flex md:hidden items-center">
+                <button onclick="toggleMobileMenu()" class="p-2.5 rounded-xl glass-panel text-slate-300 hover:text-white focus:outline-none">
+                    <i class="fa-solid fa-bars text-xl" id="mobileMenuIcon"></i>
+                </button>
+            </div>
         </div>
 
-        <div>
-          <h1 class="text-lg font-bold tracking-wide text-transparent sm:text-xl bg-clip-text bg-gradient-to-r from-cyan-400 via-purple-400 to-pink-500">
-            หน้าหลัก :: Cyber Studio
-          </h1>
-
-          <p class="hidden text-xs text-slate-400 sm:block">
-            ระบบจัดการโค้ดบอทอัตโนมัติ Cloud Workspace
-          </p>
+        <div id="mobileMenu" class="hidden md:hidden px-4 pt-3 pb-5 space-y-2 glass-panel border-t border-red-950/50">
+            <button onclick="switchTab('home'); toggleMobileMenu();" class="w-full text-left px-4 py-3 rounded-xl text-sm font-medium text-red-400 bg-red-950/40">
+                <i class="fa-solid fa-house mr-3"></i>หน้าหลัก
+            </button>
+            <button onclick="switchTab('hub'); toggleMobileMenu();" class="w-full text-left px-4 py-3 rounded-xl text-sm font-medium text-slate-300 hover:bg-white/5">
+                <i class="fa-solid fa-code mr-3"></i>แจกสคริปต์
+            </button>
         </div>
-      </div>
-
-      <div class="flex items-center gap-3">
-
-        <!-- User Badge -->
-        <div
-          id="user-profile-badge"
-          class="hidden items-center gap-3 rounded-full border border-cyan-500/30 bg-slate-900/80 p-1.5 pl-2 pr-3 shadow-md"
-        >
-          <div class="relative">
-            <img
-              id="user-avatar"
-              src=""
-              alt="Avatar"
-              class="object-cover w-8 h-8 border rounded-full border-cyan-400"
-            >
-
-            <span
-              class="absolute bottom-0 right-0 w-2.5 h-2.5 rounded-full bg-emerald-400 status-pulse border border-slate-900"
-            ></span>
-          </div>
-
-          <div class="hidden text-left sm:block">
-            <p
-              id="user-display-name"
-              class="text-xs font-semibold leading-tight text-slate-100"
-            >
-              User
-            </p>
-
-            <p class="text-[10px] text-cyan-400 font-mono">
-              Developer
-            </p>
-          </div>
-
-          <button
-            id="logout-btn"
-            title="ออกจากระบบ"
-            class="p-1 ml-1 text-slate-400 hover:text-red-400"
-          >
-            <i class="text-sm fa-solid fa-right-from-bracket"></i>
-          </button>
-        </div>
-
-        <!-- Signup Button -->
-        <button
-          id="open-auth-btn"
-          class="signup-btn group relative flex items-center gap-2 overflow-hidden rounded-xl px-4 py-2.5 text-sm font-semibold text-white sm:px-5"
-        >
-          <span class="signup-shine"></span>
-
-          <span class="relative z-10 flex items-center gap-2">
-            <span class="signup-icon">
-              <i class="fa-solid fa-user-plus"></i>
-            </span>
-
-            <span class="flex flex-col items-start leading-tight">
-              <span class="text-[10px] uppercase tracking-[.2em] text-cyan-200/80">
-                New Access
-              </span>
-
-              <span class="text-sm font-bold">
-                สร้างบัญชี
-              </span>
-            </span>
-
-            <i class="text-xs fa-solid fa-arrow-right text-cyan-200"></i>
-          </span>
-        </button>
-      </div>
     </header>
 
-    <!-- Content -->
-    <main class="flex flex-col w-full max-w-7xl gap-6 p-3 mx-auto sm:p-6">
+    <main class="flex-grow">
+        
+        <!-- HOME VIEW -->
+        <div id="tab-home" class="tab-content active">
+            <div class="relative overflow-hidden pt-20 pb-28 lg:pt-32 lg:pb-40">
+                <div class="absolute top-1/4 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[350px] bg-red-600/15 blur-[140px] rounded-full pointer-events-none"></div>
+                
+                <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 text-center">
+                    <div class="inline-flex items-center space-x-2 px-4 py-1.5 rounded-full bg-red-950/60 border border-red-500/30 text-red-400 text-xs md:text-sm font-medium mb-8 glow-red">
+                        <i class="fa-solid fa-bolt-lightning text-amber-400"></i>
+                        <span>ศูนย์รวมสคริปต์ Roblox โทนแดงดำสุดเท่ อัปเดตสดใหม่</span>
+                    </div>
 
-      <section class="relative p-4 overflow-hidden border rounded-2xl glass-card sm:p-6 border-cyan-500/20">
-        <div class="absolute w-48 h-48 rounded-full pointer-events-none -right-10 -bottom-10 bg-cyan-500/10 blur-3xl"></div>
+                    <h1 class="text-4xl sm:text-6xl lg:text-7xl font-extrabold tracking-tight mb-6">
+                        คลังสคริปต์ Roblox <br/>
+                        <span class="bg-gradient-to-r from-red-500 via-rose-400 to-orange-500 bg-clip-text text-transparent glow-text">
+                            ปลอดภัย รันลื่นไหล 100%
+                        </span>
+                    </h1>
 
-        <div class="relative z-10 flex flex-col justify-between gap-4 md:flex-row md:items-center">
-          <div>
-            <div class="inline-flex items-center gap-2 px-3 py-1 mb-2 text-xs font-mono border rounded-full bg-cyan-500/10 border-cyan-500/30 text-cyan-300">
-              <i class="text-yellow-400 fa-solid fa-bolt"></i>
-              Modern Cloud Runtime v2.4
+                    <p class="max-w-2xl mx-auto text-base sm:text-lg text-slate-400 mb-10 font-light leading-relaxed">
+                        แหล่งรวมสคริปต์เกม Roblox ยอดฮิต คัดลอกโค้ดไปรันง่ายๆ รองรับ Executor ทุกรุ่น ระบบเสถียร ปลอดภัย ไม่มีไวรัส
+                    </p>
+
+                    <div class="flex flex-col sm:flex-row items-center justify-center gap-4">
+                        <button onclick="switchTab('hub')" class="w-full sm:w-auto px-8 py-4 rounded-xl bg-gradient-to-r from-red-600 via-rose-600 to-black text-white font-semibold text-base shadow-lg glow-red hover:scale-105 transition-all flex items-center justify-center space-x-3 border border-red-500/40">
+                            <i class="fa-solid fa-rocket text-lg"></i>
+                            <span>เข้าสู่คลังสคริปต์ทั้งหมด</span>
+                        </button>
+                    </div>
+
+                    <div class="mt-20 grid grid-cols-2 md:grid-cols-4 gap-4 max-w-5xl mx-auto">
+                        <div class="glass-panel p-6 rounded-2xl border border-red-500/20 text-center">
+                            <div class="text-3xl sm:text-4xl font-extrabold text-red-500 mb-1">0</div>
+                            <div class="text-xs sm:text-sm text-slate-400 font-medium">สคริปต์ในระบบ</div>
+                        </div>
+                        <div class="glass-panel p-6 rounded-2xl border border-red-500/20 text-center">
+                            <div class="text-3xl sm:text-4xl font-extrabold text-rose-400 mb-1">100%</div>
+                            <div class="text-xs sm:text-sm text-slate-400 font-medium">ความปลอดภัย</div>
+                        </div>
+                        <div class="glass-panel p-6 rounded-2xl border border-red-500/20 text-center">
+                            <div class="text-3xl sm:text-4xl font-extrabold text-amber-400 mb-1">Free</div>
+                            <div class="text-xs sm:text-sm text-slate-400 font-medium">ใช้งานฟรีตลอดชีพ</div>
+                        </div>
+                        <div class="glass-panel p-6 rounded-2xl border border-red-500/20 text-center">
+                            <div class="text-3xl sm:text-4xl font-extrabold text-emerald-400 mb-1">24/7</div>
+                            <div class="text-xs sm:text-sm text-slate-400 font-medium">ออนไลน์ตลอดเวลา</div>
+                        </div>
+                    </div>
+
+                </div>
             </div>
-
-            <h2 class="text-xl font-bold text-white sm:text-2xl">
-              ยินดีต้อนรับสู่ระบบควบคุมบอทอัจฉริยะ
-            </h2>
-
-            <p class="mt-1 text-sm text-slate-300">
-              แก้ไขโค้ด บันทึกไฟล์ และสั่งรันบอทของคุณได้ทันทีแบบ Real-time
-            </p>
-          </div>
-
-          <div class="px-4 py-2 text-center border rounded-xl bg-slate-900/80 border-slate-700/60">
-            <span class="block text-xs text-slate-400">
-              สถานะเซิร์ฟเวอร์
-            </span>
-
-            <span class="flex items-center justify-center gap-1.5 text-sm font-semibold text-emerald-400">
-              <span class="w-2 h-2 rounded-full bg-emerald-400 animate-ping"></span>
-              ปกติ
-            </span>
-          </div>
         </div>
-      </section>
 
-      <!-- Workspace -->
-      <section
-        class="flex flex-col h-[650px] overflow-hidden border shadow-2xl glass-card rounded-2xl border-slate-700/60 lg:flex-row"
-      >
-
-        <!-- File Explorer -->
-        <aside class="flex flex-col w-full border-b bg-slate-900/90 border-slate-800 lg:w-60 lg:border-b-0 lg:border-r">
-          <div class="flex items-center justify-between p-3 border-b border-slate-800">
-            <span class="text-xs font-semibold tracking-wider text-slate-400 font-mono">
-              <i class="mr-1.5 text-cyan-400 fa-regular fa-folder-open"></i>
-              Explorer
-            </span>
-
-            <span class="px-2 py-0.5 text-[10px] text-slate-500 bg-slate-800 rounded">
-              3 Files
-            </span>
-          </div>
-
-          <div
-            id="file-list"
-            class="flex-1 p-2 space-y-1 overflow-y-auto"
-          ></div>
-
-          <div class="flex items-center justify-between p-3 text-xs border-t bg-slate-950/40 border-slate-800 text-slate-500">
-            <span>
-              Auto-Save:
-              <strong class="text-emerald-400">ON</strong>
-            </span>
-
-            <i class="text-slate-400 fa-solid fa-gear"></i>
-          </div>
-        </aside>
-
-        <!-- Editor -->
-        <div class="flex flex-col flex-1 min-w-0 bg-slate-950/80">
-          <div class="flex flex-wrap items-center justify-between gap-3 px-4 py-2.5 border-b bg-slate-900/80 border-slate-800">
-            <div class="flex items-center gap-2">
-              <span id="active-file-icon" class="text-cyan-400">
-                <i class="fa-brands fa-js"></i>
-              </span>
-
-              <span id="active-file-name" class="text-sm font-medium font-mono text-cyan-300">
-                bot.js
-              </span>
-
-              <span id="file-lang" class="px-2 py-0.5 text-[10px] rounded bg-slate-800 text-slate-400 font-mono">
-                JavaScript
-              </span>
+        <!-- SCRIPT HUB VIEW WITH EMPTY STATE -->
+        <div id="tab-hub" class="tab-content">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 text-center">
+                <div class="max-w-md mx-auto glass-panel p-10 rounded-3xl border border-red-500/30 shadow-2xl glow-red">
+                    <div class="w-20 h-20 rounded-2xl bg-red-950/60 border border-red-500/40 flex items-center justify-center mx-auto mb-6 text-red-500 text-3xl shadow-inner">
+                        <i class="fa-solid fa-folder-open"></i>
+                    </div>
+                    <h2 class="text-2xl font-bold text-white mb-2">ยังไม่มีสคริปต์ในระบบ</h2>
+                    <p class="text-slate-400 text-sm mb-8 leading-relaxed">
+                        ขณะนี้ยังไม่มีสคริปต์เกม Roblox ถูกเพิ่มเข้ามาในระบบ กรุณากลับมาตรวจสอบใหม่อีกครั้งในเร็วๆ นี้
+                    </p>
+                    <button onclick="switchTab('home')" class="px-6 py-3 rounded-xl bg-gradient-to-r from-red-600 to-rose-600 text-white text-sm font-semibold hover:scale-105 transition-all shadow-md">
+                        <i class="fa-solid fa-house mr-2"></i>กลับสู่หน้าหลัก
+                    </button>
+                </div>
             </div>
-
-            <div class="flex items-center gap-2">
-              <button
-                id="save-code-btn"
-                class="flex items-center gap-1.5 rounded-lg border border-slate-700 bg-slate-800 px-3 py-1.5 text-xs font-semibold text-slate-200 hover:bg-slate-700"
-              >
-                <i class="text-cyan-400 fa-regular fa-floppy-disk"></i>
-                บันทึกโค้ด
-              </button>
-
-              <button
-                id="run-bot-btn"
-                class="flex items-center gap-1.5 rounded-lg bg-emerald-600 px-3.5 py-1.5 text-xs font-semibold text-white hover:bg-emerald-500"
-              >
-                <i class="fa-solid fa-play"></i>
-                Run Bot
-              </button>
-
-              <button
-                id="stop-bot-btn"
-                class="hidden items-center gap-1.5 rounded-lg bg-rose-600 px-3.5 py-1.5 text-xs font-semibold text-white hover:bg-rose-500"
-              >
-                <i class="fa-solid fa-square"></i>
-                Stop Bot
-              </button>
-            </div>
-          </div>
-
-          <div class="flex flex-1 min-h-0 overflow-hidden font-mono text-xs bg-slate-950/90 sm:text-sm">
-            <div
-              id="line-numbers"
-              class="w-10 shrink-0 overflow-hidden border-r py-3 pr-3 text-right leading-6 text-slate-600 select-none border-slate-800/60"
-            >
-              1
-            </div>
-
-            <textarea
-              id="code-editor"
-              spellcheck="false"
-              class="flex-1 p-3 overflow-auto leading-6 tracking-wide text-slate-200 resize-none bg-transparent focus:outline-none"
-            ></textarea>
-          </div>
-
-          <!-- Terminal -->
-          <div class="flex flex-col h-48 border-t bg-slate-950 border-slate-800">
-            <div class="flex items-center justify-between px-3 py-1.5 border-b bg-slate-900/90 border-slate-800">
-              <div class="flex items-center gap-2 text-xs text-slate-400 font-mono">
-                <i class="text-pink-500 fa-solid fa-terminal"></i>
-                Terminal Log
-
-                <span
-                  id="bot-status-indicator"
-                  class="rounded-full bg-slate-800 px-2 py-0.5 text-[10px] text-slate-400"
-                >
-                  Stopped
-                </span>
-              </div>
-
-              <button
-                id="clear-term-btn"
-                class="text-[11px] text-slate-500 hover:text-slate-300"
-              >
-                <i class="mr-1 fa-solid fa-trash-can"></i>
-                Clear
-              </button>
-            </div>
-
-            <div
-              id="terminal-output"
-              class="flex-1 p-3 space-y-1 overflow-y-auto text-xs text-slate-300 font-mono"
-            >
-              <div class="text-slate-500">
-                [System] ยินดีต้อนรับสู่ Cyber Console.
-                พิมพ์ 'help' เพื่อดูคำสั่งที่ใช้ได้
-              </div>
-            </div>
-
-            <div class="flex items-center gap-2 px-3 py-1.5 border-t bg-slate-900/50 border-slate-800/60">
-              <span class="text-xs text-cyan-400 font-mono">&gt;</span>
-
-              <input
-                id="terminal-input"
-                type="text"
-                placeholder="พิมพ์คำสั่ง เช่น help, ping, status, clear..."
-                class="flex-1 text-xs text-slate-200 bg-transparent border-none font-mono focus:outline-none"
-              >
-            </div>
-          </div>
         </div>
-      </section>
+
     </main>
-  </div>
 
-  <!-- Auth Modal -->
-  <div
-    id="auth-modal"
-    class="fixed inset-0 z-50 flex items-center justify-center p-4 transition-all duration-300 opacity-0 pointer-events-none bg-slate-950/80 backdrop-blur-md"
-  >
-    <div
-      id="auth-modal-card"
-      class="relative w-full max-w-md p-6 transition-all duration-300 border shadow-2xl glass-card rounded-2xl sm:p-8 border-cyan-500/30 scale-95"
-    >
-      <button
-        id="close-auth-btn"
-        class="absolute top-4 right-4 text-slate-400 hover:text-white"
-      >
-        <i class="text-lg fa-solid fa-xmark"></i>
-      </button>
-
-      <div class="flex mb-6 border-b border-slate-700/60">
-        <button
-          id="tab-login"
-          class="auth-tab active flex-1 rounded-t-lg border-b-2 border-cyan-400 py-2.5 text-center text-sm font-semibold"
-        >
-          <i class="mr-1 fa-solid fa-right-to-bracket"></i>
-          เข้าสู่ระบบ
-        </button>
-
-        <button
-          id="tab-register"
-          class="auth-tab flex-1 rounded-t-lg border-b-2 border-transparent py-2.5 text-center text-sm font-semibold text-slate-400"
-        >
-          <i class="mr-1 fa-solid fa-user-plus"></i>
-          สร้างบัญชีใหม่
-        </button>
-      </div>
-
-      <form id="auth-form" class="space-y-4">
-        <div id="field-name" class="hidden">
-          <label class="block mb-1 text-xs font-medium text-slate-300">
-            ชื่อผู้ใช้งาน
-          </label>
-
-          <input
-            id="input-name"
-            type="text"
-            placeholder="CyberDev99"
-            class="w-full rounded-lg border border-slate-700 bg-slate-900/90 py-2 pl-3 pr-3 text-sm text-slate-200 outline-none focus:border-cyan-400"
-          >
+    <footer class="glass-panel border-t border-red-950/50 mt-auto py-8 text-center text-slate-500 text-sm">
+        <div class="max-w-7xl mx-auto px-4 flex flex-col md:flex-row items-center justify-between gap-4">
+            <div class="flex items-center space-x-2">
+                <span class="text-slate-300 font-bold">NEXIS HUB</span>
+                <span>&copy; 2026 All rights reserved.</span>
+            </div>
+            <div class="text-slate-400">
+                Designed with Red & Black Cyberpunk Aesthetic
+            </div>
         </div>
-
-        <div>
-          <label class="block mb-1 text-xs font-medium text-slate-300">
-            อีเมล
-          </label>
-
-          <input
-            id="input-email"
-            type="email"
-            required
-            placeholder="user@cyber.io"
-            class="w-full rounded-lg border border-slate-700 bg-slate-900/90 py-2 pl-3 pr-3 text-sm text-slate-200 outline-none focus:border-cyan-400"
-          >
-        </div>
-
-        <div>
-          <label class="block mb-1 text-xs font-medium text-slate-300">
-            รหัสผ่าน
-          </label>
-
-          <input
-            id="input-password"
-            type="password"
-            required
-            minlength="4"
-            placeholder="••••••••"
-            class="w-full rounded-lg border border-slate-700 bg-slate-900/90 py-2 pl-3 pr-3 text-sm text-slate-200 outline-none focus:border-cyan-400"
-          >
-        </div>
-
-        <label class="flex cursor-pointer items-center justify-between rounded-lg border border-slate-700 bg-slate-900/90 p-3">
-          <span class="flex items-center gap-3">
-            <input
-              id="recaptcha-check"
-              type="checkbox"
-              class="w-5 h-5 bg-slate-800"
-            >
-
-            <span class="text-xs font-medium text-slate-300">
-              ฉันไม่ใช่โปรแกรมอัตโนมัติ
-            </span>
-          </span>
-
-          <span class="text-center">
-            <i class="text-lg text-cyan-400 fa-solid fa-shield-halved"></i>
-            <small class="block text-[8px] text-slate-500">
-              SECURITY
-            </small>
-          </span>
-        </label>
-
-        <button
-          id="submit-auth-btn"
-          type="submit"
-          class="w-full rounded-xl bg-gradient-to-r from-cyan-500 via-blue-600 to-purple-600 py-3 text-sm font-bold text-slate-950 shadow-neon-cyan hover:brightness-110"
-        >
-          <span class="flex items-center justify-center gap-2">
-            <i class="fa-solid fa-right-to-bracket"></i>
-            เข้าสู่ระบบ
-          </span>
-        </button>
-      </form>
-
-      <div class="flex items-center gap-3 my-5">
-        <div class="flex-1 h-px bg-slate-700/60"></div>
-        <span class="text-xs text-slate-500">หรือ</span>
-        <div class="flex-1 h-px bg-slate-700/60"></div>
-      </div>
-
-      <button
-        id="google-auth-btn"
-        class="flex w-full items-center justify-center gap-3 rounded-xl border border-slate-700 bg-slate-900/80 px-4 py-3 text-sm font-medium text-slate-200 hover:border-cyan-400/50 hover:bg-slate-800"
-      >
-        <i class="text-red-400 fa-brands fa-google"></i>
-        เข้าสู่ระบบด้วย Google
-      </button>
-    </div>
-  </div>
-
-  <!-- Google Popup -->
-  <div
-    id="google-popup"
-    class="fixed inset-0 z-[60] hidden items-center justify-center p-4 bg-black/70 backdrop-blur-sm"
-  >
-    <div class="w-full max-w-sm p-6 text-center bg-white shadow-2xl rounded-2xl">
-      <i class="mb-3 text-3xl text-blue-500 fa-brands fa-google"></i>
-
-      <h3 class="text-lg font-bold text-slate-900">
-        Sign in with Google
-      </h3>
-
-      <p class="mt-1 text-xs text-slate-500">
-        เลือกบัญชีจำลองเพื่อเข้าสู่ระบบ
-      </p>
-
-      <button
-        id="mock-google-account"
-        class="flex items-center w-full gap-3 p-3 mt-4 text-left border rounded-xl hover:bg-slate-50"
-      >
-        <img
-          src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150"
-          class="object-cover w-10 h-10 rounded-full"
-          alt="Google User"
-        >
-
-        <span>
-          <strong class="block text-sm text-slate-800">
-            Cyber Google User
-          </strong>
-
-          <small class="text-xs text-slate-500">
-            user.google@gmail.com
-          </small>
-        </span>
-      </button>
-
-      <button
-        id="close-google-btn"
-        class="mt-4 text-xs text-slate-500 hover:text-slate-800"
-      >
-        ยกเลิก
-      </button>
-    </div>
-  </div>
-
-  <!-- Toast -->
-  <div
-    id="toast"
-    class="pointer-events-none fixed bottom-5 right-5 z-[70] flex translate-y-20 items-center gap-3 rounded-xl border border-cyan-400/40 px-4 py-3 text-sm opacity-0 shadow-xl transition-all glass-card"
-  >
-    <i id="toast-icon" class="text-lg text-cyan-400 fa-solid fa-circle-check"></i>
-    <span id="toast-msg">ข้อความแจ้งเตือน</span>
-  </div>
-
-  <script>
-    (() => {
-      'use strict';
-
-      // -----------------------------
-      // Safe localStorage
-      // -----------------------------
-
-      function readStorage(key, fallback) {
-        try {
-          const value = localStorage.getItem(key);
-          return value ? JSON.parse(value) : fallback;
-        } catch {
-          return fallback;
-        }
-      }
-
-      function writeStorage(key, value) {
-        try {
-          localStorage.setItem(key, JSON.stringify(value));
-        } catch {
-          // ไม่ให้แอปหยุดทำงานถ้า localStorage ใช้งานไม่ได้
-        }
-      }
-
-      // -----------------------------
-      // Default Files
-      // -----------------------------
-
-      const defaultFiles = {
-        'bot.js': {
-          name: 'bot.js',
-          lang: 'JavaScript',
-          icon: 'fa-brands fa-js text-yellow-400',
-          content: `// Cyberpunk Discord Bot
-const { Client, GatewayIntentBits } = require('discord.js');
-
-const client = new Client({
-  intents: [GatewayIntentBits.Guilds]
-});
-
-client.on('ready', () => {
-  console.log(\`[SUCCESS] Bot logged in as \${client.user.tag}!\`);
-});
-
-client.on('messageCreate', (msg) => {
-  if (msg.content === 'ping') {
-    msg.reply('Pong! 🏓 Neon Cyber Status: OK');
-  }
-});
-
-console.log("Starting Bot Worker Thread...");
-client.login(process.env.BOT_TOKEN);`
-        },
-
-        'main.py': {
-          name: 'main.py',
-          lang: 'Python',
-          icon: 'fa-brands fa-python text-cyan-400',
-          content: `# AI Assistant Runner
-import time
-
-def start_bot():
-    print("[INIT] Loading Python Core Engines...")
-    time.sleep(1)
-    print("[READY] Bot Worker Active! Waiting for commands.")
-
-if __name__ == "__main__":
-    start_bot()`
-        },
-
-        'config.json': {
-          name: 'config.json',
-          lang: 'JSON',
-          icon: 'fa-solid fa-gear text-pink-400',
-          content: `{
-  "bot_name": "CyberBot-X",
-  "version": "2.4.0",
-  "auto_restart": true,
-  "max_memory": "512MB",
-  "prefix": "!"
-}`
-        }
-      };
-
-      // -----------------------------
-      // State
-      // -----------------------------
-
-      let files = readStorage('cyber_files', defaultFiles);
-      let currentFileKey = 'bot.js';
-      let isBotRunning = false;
-      let botInterval = null;
-      let authMode = 'login';
-
-      // -----------------------------
-      // DOM
-      // -----------------------------
-
-      const $ = (id) => document.getElementById(id);
-
-      const loadingScreen = $('loading-screen');
-      const mainApp = $('main-app');
-      const progressCircle = $('progress-circle');
-      const loadPercent = $('load-percent');
-      const loaderStatus = $('loader-status');
-
-      const codeEditor = $('code-editor');
-      const lineNumbers = $('line-numbers');
-      const fileList = $('file-list');
-      const activeFileName = $('active-file-name');
-      const activeFileIcon = $('active-file-icon');
-      const fileLang = $('file-lang');
-
-      const terminalOutput = $('terminal-output');
-      const terminalInput = $('terminal-input');
-      const botStatusIndicator = $('bot-status-indicator');
-
-      const runBotBtn = $('run-bot-btn');
-      const stopBotBtn = $('stop-bot-btn');
-
-      const authModal = $('auth-modal');
-      const authModalCard = $('auth-modal-card');
-      const openAuthBtn = $('open-auth-btn');
-      const closeAuthBtn = $('close-auth-btn');
-
-      const tabLogin = $('tab-login');
-      const tabRegister = $('tab-register');
-      const fieldName = $('field-name');
-      const submitAuthBtn = $('submit-auth-btn');
-
-      const userProfileBadge = $('user-profile-badge');
-      const userAvatar = $('user-avatar');
-      const userDisplayName = $('user-display-name');
-      const logoutBtn = $('logout-btn');
-
-      const googlePopup = $('google-popup');
-      const googleAuthBtn = $('google-auth-btn');
-      const mockGoogleAccount = $('mock-google-account');
-      const closeGoogleBtn = $('close-google-btn');
-
-      // -----------------------------
-      // Loading
-      // -----------------------------
-
-      let appStarted = false;
-
-      function showApp() {
-        if (appStarted) {
-          return;
-        }
-
-        appStarted = true;
-
-        loadingScreen.classList.add('opacity-0');
-
-        setTimeout(() => {
-          loadingScreen.classList.add('hidden');
-          mainApp.classList.remove('hidden');
-
-          requestAnimationFrame(() => {
-            mainApp.classList.remove('opacity-0');
-          });
-        }, 350);
-      }
-
-      function initLoading() {
-        let progress = 0;
-        const circumference = 263.89;
-
-        const statuses = [
-          'กำลังเริ่มต้นระบบ...',
-          'กำลังโหลดทรัพยากรระบบ...',
-          'กำลังเตรียม Cyber Workspace...',
-          'พร้อมใช้งาน!'
-        ];
-
-        const updateProgress = () => {
-          progress = Math.min(progress + 5, 100);
-
-          const offset =
-            circumference - (progress / 100) * circumference;
-
-          progressCircle.style.strokeDashoffset = String(offset);
-          loadPercent.textContent = `${progress}%`;
-
-          if (progress < 30) {
-            loaderStatus.textContent = statuses[0];
-          } else if (progress < 65) {
-            loaderStatus.textContent = statuses[1];
-          } else if (progress < 95) {
-            loaderStatus.textContent = statuses[2];
-          } else {
-            loaderStatus.textContent = statuses[3];
-          }
-
-          if (progress >= 100) {
-            clearInterval(progressTimer);
-            setTimeout(showApp, 250);
-          }
-        };
-
-        const progressTimer = setInterval(updateProgress, 80);
-
-        // Fallback ป้องกันหน้าโหลดค้าง
-        setTimeout(showApp, 4000);
-
-        // เริ่มทันที ไม่ต้องรอรูปภาพภายนอก
-        updateProgress();
-      }
-
-      // -----------------------------
-      // Editor
-      // -----------------------------
-
-      function renderFiles() {
-        fileList.innerHTML = '';
-
-        Object.keys(files).forEach((key) => {
-          const file = files[key];
-          const active = key === currentFileKey;
-
-          const button = document.createElement('button');
-
-          button.className = `
-            flex w-full items-center justify-between rounded-lg px-3 py-2
-            text-left text-xs font-mono transition
-            ${
-              active
-                ? 'border border-cyan-500/30 bg-cyan-500/15 text-cyan-300'
-                : 'text-slate-400 hover:bg-slate-800/60 hover:text-slate-200'
+    </footer>
+
+    <script>
+        function switchTab(tabId) {
+            document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
+            document.getElementById(`tab-${tabId}`).classList.add('active');
+
+            document.querySelectorAll('.nav-tab').forEach(btn => {
+                btn.classList.remove('text-red-400', 'bg-red-950/40', 'border', 'border-red-500/30', 'glow-red');
+                btn.classList.add('text-slate-300');
+            });
+
+            const activeBtn = document.getElementById(`nav-btn-${tabId}`);
+            if (activeBtn) {
+                activeBtn.classList.remove('text-slate-300');
+                activeBtn.classList.add('text-red-400', 'bg-red-950/40', 'border', 'border-red-500/30', 'glow-red');
             }
-          `;
 
-          button.innerHTML = `
-            <span class="flex items-center gap-2">
-              <i class="${file.icon}"></i>
-              <span>${file.name}</span>
-            </span>
-
-            ${
-              active
-                ? '<span class="h-1.5 w-1.5 rounded-full bg-cyan-400"></span>'
-                : ''
-            }
-          `;
-
-          button.addEventListener('click', () => switchFile(key));
-          fileList.appendChild(button);
-        });
-      }
-
-      function updateLineNumbers() {
-        const count = codeEditor.value.split('\n').length;
-
-        lineNumbers.innerHTML = Array.from(
-          { length: count },
-          (_, index) => index + 1
-        ).join('<br>');
-      }
-
-      function switchFile(key) {
-        if (!files[key]) {
-          return;
+            window.scrollTo({ top: 0, behavior: 'smooth' });
         }
 
-        if (files[currentFileKey]) {
-          files[currentFileKey].content = codeEditor.value;
+        function toggleMobileMenu() {
+            const menu = document.getElementById('mobileMenu');
+            const icon = document.getElementById('mobileMenuIcon');
+            menu.classList.toggle('hidden');
+            icon.classList.toggle('fa-bars');
+            icon.classList.toggle('fa-xmark');
         }
-
-        currentFileKey = key;
-
-        const file = files[key];
-
-        codeEditor.value = file.content;
-        activeFileName.textContent = file.name;
-        fileLang.textContent = file.lang;
-        activeFileIcon.innerHTML = `<i class="${file.icon}"></i>`;
-
-        updateLineNumbers();
-        renderFiles();
-      }
-
-      codeEditor.addEventListener('input', updateLineNumbers);
-
-      codeEditor.addEventListener('scroll', () => {
-        lineNumbers.scrollTop = codeEditor.scrollTop;
-      });
-
-      $('save-code-btn').addEventListener('click', () => {
-        files[currentFileKey].content = codeEditor.value;
-        writeStorage('cyber_files', files);
-
-        appendTerminal(
-          `[SAVE] บันทึกการเปลี่ยนแปลงในไฟล์ ${currentFileKey} แล้ว`,
-          'success'
-        );
-
-        showToast('บันทึกโค้ดสำเร็จแล้ว');
-      });
-
-      // -----------------------------
-      // Terminal
-      // -----------------------------
-
-      function escapeHtml(value) {
-        return String(value)
-          .replace(/&/g, '&amp;')
-          .replace(/</g, '&lt;')
-          .replace(/>/g, '&gt;');
-      }
-
-      function appendTerminal(text, type = 'info') {
-        const row = document.createElement('div');
-        const time = new Date().toLocaleTimeString();
-
-        const color =
-          type === 'success'
-            ? 'text-emerald-400'
-            : type === 'error'
-              ? 'text-rose-400'
-              : type === 'cmd'
-                ? 'font-semibold text-cyan-400'
-                : 'text-slate-300';
-
-        row.className = `${color} leading-relaxed`;
-        row.innerHTML = `
-          <span class="mr-2 text-slate-600">[${time}]</span>
-          ${escapeHtml(text)}
-        `;
-
-        terminalOutput.appendChild(row);
-        terminalOutput.scrollTop = terminalOutput.scrollHeight;
-      }
-
-      terminalInput.addEventListener('keydown', (event) => {
-        if (event.key !== 'Enter') {
-          return;
-        }
-
-        const command = terminalInput.value.trim();
-
-        if (!command) {
-          return;
-        }
-
-        appendTerminal(`> ${command}`, 'cmd');
-        terminalInput.value = '';
-
-        switch (command.toLowerCase()) {
-          case 'help':
-            appendTerminal(
-              'คำสั่งที่ใช้ได้: ping, status, clear, run, stop, help'
-            );
-            break;
-
-          case 'ping':
-            appendTerminal(
-              `Pong! 🏓 Latency: ${Math.floor(Math.random() * 20 + 10)}ms`,
-              'success'
-            );
-            break;
-
-          case 'status':
-            appendTerminal(
-              `สถานะบอท: ${
-                isBotRunning
-                  ? 'กำลังทำงาน (Online)'
-                  : 'ปิดอยู่ (Offline)'
-              }`
-            );
-            break;
-
-          case 'clear':
-            terminalOutput.innerHTML = '';
-            break;
-
-          case 'run':
-            startBot();
-            break;
-
-          case 'stop':
-            stopBot();
-            break;
-
-          default:
-            appendTerminal(
-              `ไม่รู้จักคำสั่ง '${command}'`,
-              'error'
-            );
-        }
-      });
-
-      $('clear-term-btn').addEventListener('click', () => {
-        terminalOutput.innerHTML = '';
-      });
-
-      // -----------------------------
-      // Bot
-      // -----------------------------
-
-      function startBot() {
-        if (isBotRunning) {
-          return;
-        }
-
-        isBotRunning = true;
-
-        runBotBtn.classList.add('hidden');
-        stopBotBtn.classList.remove('hidden');
-        stopBotBtn.classList.add('flex');
-
-        botStatusIndicator.textContent = 'Running';
-        botStatusIndicator.className =
-          'rounded-full border border-emerald-500/30 bg-emerald-500/20 px-2 py-0.5 text-[10px] font-semibold text-emerald-400';
-
-        appendTerminal(
-          `[START] กำลังเริ่มต้นรันบอท (${currentFileKey})...`,
-          'success'
-        );
-
-        let tick = 0;
-
-        botInterval = setInterval(() => {
-          tick++;
-
-          const messages = [
-            `[INFO] Heartbeat acknowledged (Tick #${tick})`,
-            `[PROCESS] Memory usage: ${(Math.random() * 20 + 40).toFixed(1)} MB`,
-            '[EVENT] WebSocket connection active'
-          ];
-
-          appendTerminal(
-            messages[Math.floor(Math.random() * messages.length)]
-          );
-        }, 3500);
-      }
-
-      function stopBot() {
-        if (!isBotRunning) {
-          return;
-        }
-
-        isBotRunning = false;
-        clearInterval(botInterval);
-
-        runBotBtn.classList.remove('hidden');
-        stopBotBtn.classList.add('hidden');
-        stopBotBtn.classList.remove('flex');
-
-        botStatusIndicator.textContent = 'Stopped';
-        botStatusIndicator.className =
-          'rounded-full bg-slate-800 px-2 py-0.5 text-[10px] text-slate-400';
-
-        appendTerminal('[STOP] สั่งหยุดการทำงานของบอทแล้ว', 'error');
-      }
-
-      runBotBtn.addEventListener('click', startBot);
-      stopBotBtn.addEventListener('click', stopBot);
-
-      // -----------------------------
-      // Authentication
-      // -----------------------------
-
-      function setLoggedInUser(user) {
-        openAuthBtn.classList.add('hidden');
-        userProfileBadge.classList.remove('hidden');
-        userProfileBadge.classList.add('flex');
-
-        userAvatar.src =
-          user.avatar ||
-          'https://api.dicebear.com/7.x/bottts/svg?seed=user';
-
-        userDisplayName.textContent =
-          user.name || user.email.split('@')[0];
-      }
-
-      function setLoggedOutUser() {
-        openAuthBtn.classList.remove('hidden');
-        userProfileBadge.classList.add('hidden');
-        userProfileBadge.classList.remove('flex');
-      }
-
-      function checkSession() {
-        const user = readStorage('cyber_user_session', null);
-
-        if (user) {
-          setLoggedInUser(user);
-        } else {
-          setLoggedOutUser();
-        }
-      }
-
-      function openModal() {
-        authModal.classList.remove(
-          'opacity-0',
-          'pointer-events-none'
-        );
-
-        authModalCard.classList.remove('scale-95');
-        authModalCard.classList.add('scale-100');
-      }
-
-      function closeModal() {
-        authModal.classList.add(
-          'opacity-0',
-          'pointer-events-none'
-        );
-
-        authModalCard.classList.remove('scale-100');
-        authModalCard.classList.add('scale-95');
-      }
-
-      openAuthBtn.addEventListener('click', openModal);
-      closeAuthBtn.addEventListener('click', closeModal);
-
-      document.addEventListener('keydown', (event) => {
-        if (event.key === 'Escape') {
-          closeModal();
-          closeGooglePopup();
-        }
-      });
-
-      function setAuthMode(mode) {
-        authMode = mode;
-
-        const isRegister = mode === 'register';
-
-        fieldName.classList.toggle('hidden', !isRegister);
-        tabRegister.classList.toggle('active', isRegister);
-        tabLogin.classList.toggle('active', !isRegister);
-
-        submitAuthBtn.innerHTML = isRegister
-          ? `
-            <span class="flex items-center justify-center gap-2">
-              <i class="fa-solid fa-rocket"></i>
-              สร้างบัญชีและเริ่มใช้งาน
-            </span>
-          `
-          : `
-            <span class="flex items-center justify-center gap-2">
-              <i class="fa-solid fa-right-to-bracket"></i>
-              เข้าสู่ระบบ
-            </span>
-          `;
-      }
-
-      tabLogin.addEventListener('click', () => {
-        setAuthMode('login');
-      });
-
-      tabRegister.addEventListener('click', () => {
-        setAuthMode('register');
-      });
-
-      $('auth-form').addEventListener('submit', (event) => {
-        event.preventDefault();
-
-        const name = $('input-name').value.trim();
-        const email = $('input-email').value.trim();
-        const password = $('input-password').value;
-        const captcha = $('recaptcha-check').checked;
-
-        if (!captcha) {
-          showToast('กรุณายืนยันว่าไม่ใช่โปรแกรมอัตโนมัติ', 'error');
-          return;
-        }
-
-        if (password.length < 4) {
-          showToast('รหัสผ่านต้องมีอย่างน้อย 4 ตัวอักษร', 'error');
-          return;
-        }
-
-        const finalName =
-          name || email.split('@')[0] || 'Cyber User';
-
-        const user = {
-          name: finalName,
-          email,
-          avatar:
-            `https://api.dicebear.com/7.x/bottts/svg?seed=${encodeURIComponent(finalName)}`
-        };
-
-        writeStorage('cyber_user_session', user);
-        setLoggedInUser(user);
-        closeModal();
-
-        showToast(
-          authMode === 'register'
-            ? 'สร้างบัญชีสำเร็จ!'
-            : 'เข้าสู่ระบบสำเร็จ!'
-        );
-      });
-
-      logoutBtn.addEventListener('click', () => {
-        localStorage.removeItem('cyber_user_session');
-        setLoggedOutUser();
-        showToast('ออกจากระบบเรียบร้อยแล้ว');
-      });
-
-      // -----------------------------
-      // Google Mock
-      // -----------------------------
-
-      googleAuthBtn.addEventListener('click', () => {
-        googlePopup.classList.remove('hidden');
-        googlePopup.classList.add('flex');
-      });
-
-      function closeGooglePopup() {
-        googlePopup.classList.add('hidden');
-        googlePopup.classList.remove('flex');
-      }
-
-      closeGoogleBtn.addEventListener('click', closeGooglePopup);
-
-      mockGoogleAccount.addEventListener('click', () => {
-        const user = {
-          name: 'Cyber Google User',
-          email: 'user.google@gmail.com',
-          avatar:
-            'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150'
-        };
-
-        writeStorage('cyber_user_session', user);
-        setLoggedInUser(user);
-        closeGooglePopup();
-        closeModal();
-
-        showToast('เข้าสู่ระบบด้วย Google เรียบร้อยแล้ว');
-      });
-
-      // -----------------------------
-      // Toast
-      // -----------------------------
-
-      let toastTimer = null;
-
-      function showToast(message, type = 'success') {
-        const toast = $('toast');
-        const icon = $('toast-icon');
-
-        $('toast-msg').textContent = message;
-
-        icon.className =
-          type === 'error'
-            ? 'fa-solid fa-triangle-exclamation text-lg text-rose-400'
-            : 'fa-solid fa-circle-check text-lg text-cyan-400';
-
-        toast.classList.remove('translate-y-20', 'opacity-0');
-
-        clearTimeout(toastTimer);
-
-        toastTimer = setTimeout(() => {
-          toast.classList.add('translate-y-20', 'opacity-0');
-        }, 3000);
-      }
-
-      // -----------------------------
-      // Error Handler
-      // -----------------------------
-
-      window.addEventListener('error', (event) => {
-        const errorBox = $('error-box');
-
-        errorBox.textContent =
-          'เกิดข้อผิดพลาดในระบบ:\n\n' +
-          (event.error?.stack || event.message);
-
-        errorBox.style.display = 'block';
-
-        // ต่อให้เกิด Error ก็ยังเปิดหน้าเว็บได้
-        showApp();
-      });
-
-      // -----------------------------
-      // Init
-      // -----------------------------
-
-      function initApp() {
-        renderFiles();
-        switchFile('bot.js');
-        checkSession();
-        initLoading();
-      }
-
-      if (document.readyState === 'loading') {
-        document.addEventListener('DOMContentLoaded', initApp);
-      } else {
-        initApp();
-      }
-    })();
-  </script>
+    </script>
 </body>
-
 </html>
+```
+eof
+
+I have updated the application to clear all previous scripts and display the clear empty state message **"ยังไม่มีสคริปต์ในระบบ"** on the Script Hub page, featuring the red and black gradient theme with no Discord links or script addition buttons.
